@@ -1,0 +1,38 @@
+{
+  "name": "otok",
+  "version": "0.0.0",
+  "description": "Hono + Preact Islands framework runtime.",
+  "type": "module",
+  "files": ["dist"],
+  "exports": {
+    "./client": {
+      "types": "./dist/client/index.d.ts",
+      "default": "./dist/client/index.js"
+    },
+    "./server": {
+      "types": "./dist/server/index.d.ts",
+      "default": "./dist/server/index.js"
+    },
+    "./shared": {
+      "types": "./dist/shared/index.d.ts",
+      "default": "./dist/shared/index.js"
+    }
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "hono": "^4.12.18",
+    "preact-render-to-string": "^6.7.0"
+  },
+  "peerDependencies": {
+    "preact": ">=10.26.0"
+  },
+  "devDependencies": {
+    "preact": "^10.28.2",
+    "typescript": "~6.0.2",
+    "vitest": "^4.1.2"
+  }
+}

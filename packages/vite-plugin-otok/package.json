@@ -1,0 +1,29 @@
+{
+  "name": "@otok/vite-plugin",
+  "version": "0.0.0",
+  "description": "Vite plugin for Otok file routes and Preact islands.",
+  "type": "module",
+  "files": ["dist"],
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    }
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "vite": "^8.0.10"
+  },
+  "devDependencies": {
+    "@types/node": "^24.12.2",
+    "typescript": "~6.0.2",
+    "vitest": "^4.1.2"
+  },
+  "peerDependencies": {
+    "vite": ">=6"
+  }
+}

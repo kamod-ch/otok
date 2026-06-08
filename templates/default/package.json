@@ -1,0 +1,34 @@
+{
+  "name": "otok-app",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "pnpm build:client && pnpm build:server",
+    "build:client": "vite build --mode client",
+    "build:server": "vite build",
+    "preview": "vite preview",
+    "start": "node dist/server/server.js",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "check": "pnpm typecheck && pnpm build"
+  },
+  "dependencies": {
+    "@hono/node-server": "^2.0.1",
+    "@kamod-ui/core": "^0.1.4",
+    "@preact/signals": "^2.0.0",
+    "hono": "^4.12.18",
+    "otok": "latest",
+    "preact": "^10.28.2"
+  },
+  "devDependencies": {
+    "@hono/vite-dev-server": "^0.21.0",
+    "@otok/vite-plugin": "latest",
+    "@preact/preset-vite": "^2.10.5",
+    "@tailwindcss/vite": "^4.2.4",
+    "@types/node": "^24.12.2",
+    "tailwindcss": "^4.2.4",
+    "typescript": "~6.0.2",
+    "vite": "^8.0.10"
+  }
+}

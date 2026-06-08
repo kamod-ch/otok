@@ -1,0 +1,53 @@
+{
+  "_chunk-5FBD2NTR-5r_bFCn3.js": {
+    "file": "assets/chunk-5FBD2NTR-5r_bFCn3.js",
+    "name": "chunk-5FBD2NTR",
+    "imports": [
+      "src/client.ts"
+    ]
+  },
+  "src/app/islands/counter.tsx": {
+    "file": "assets/counter-Deo5Fb3n.js",
+    "name": "counter",
+    "src": "src/app/islands/counter.tsx",
+    "isDynamicEntry": true,
+    "imports": [
+      "src/client.ts",
+      "_chunk-5FBD2NTR-5r_bFCn3.js"
+    ]
+  },
+  "src/app/islands/demo-dialog.tsx": {
+    "file": "assets/demo-dialog-B9hY83On.js",
+    "name": "demo-dialog",
+    "src": "src/app/islands/demo-dialog.tsx",
+    "isDynamicEntry": true,
+    "imports": [
+      "src/client.ts",
+      "_chunk-5FBD2NTR-5r_bFCn3.js"
+    ]
+  },
+  "src/app/islands/theme-island.tsx": {
+    "file": "assets/theme-island-Bmanr-HD.js",
+    "name": "theme-island",
+    "src": "src/app/islands/theme-island.tsx",
+    "isDynamicEntry": true,
+    "imports": [
+      "src/client.ts",
+      "_chunk-5FBD2NTR-5r_bFCn3.js"
+    ]
+  },
+  "src/client.ts": {
+    "file": "assets/client-e26KrdWP.js",
+    "name": "client",
+    "src": "src/client.ts",
+    "isEntry": true,
+    "dynamicImports": [
+      "src/app/islands/counter.tsx",
+      "src/app/islands/demo-dialog.tsx",
+      "src/app/islands/theme-island.tsx"
+    ],
+    "css": [
+      "assets/client-BRDmyJLi.css"
+    ]
+  }
+}

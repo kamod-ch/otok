@@ -1,0 +1,14 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "noEmit": true,
+    "types": ["vite/client", "node", "vitest/globals"],
+    "paths": {
+      "otok/client": ["../../packages/otok/src/client/index.tsx"],
+      "otok/server": ["../../packages/otok/src/server/index.tsx"],
+      "otok/shared": ["../../packages/otok/src/shared/index.ts"],
+      "@otok/vite-plugin": ["../../packages/vite-plugin-otok/src/index.ts"]
+    }
+  },
+  "include": ["src", "tests", "vite.config.ts", "playwright.config.ts"]
+}
