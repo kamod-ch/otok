@@ -1,1 +1,0 @@
-import{t as e}from"./client-e26KrdWP.js";import{a as t,t as n}from"./chunk-5FBD2NTR-5r_bFCn3.js";function r({init:r=0}){let[i,a]=t(r);return e(`div`,{class:`flex items-center gap-4`,children:[e(`p`,{class:`text-sm text-muted-foreground`,children:[`Count: `,i]}),e(n,{onClick:()=>a(e=>e+1),children:`Increment`})]})}export{r as default};

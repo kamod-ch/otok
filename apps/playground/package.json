@@ -1,7 +1,7 @@
 {
   "name": "playground",
   "private": true,
-  "version": "0.0.0",
+  "version": "0.1.0",
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -18,7 +18,7 @@
     "@hono/node-server": "^2.0.1",
     "@kamod-ui/core": "file:../../../kamod-ui/packages/core",
     "@preact/signals": "^2.0.0",
-    "hono": "^4.12.18",
+    "hono": "^4.12.25",
     "otok": "workspace:*",
     "preact": "^10.28.2"
   },

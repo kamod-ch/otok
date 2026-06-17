@@ -4,6 +4,7 @@ export type JsonPrimitive = string | number | boolean | null;
 export type JsonValue = JsonPrimitive | JsonValue[] | { [key: string]: JsonValue };
 
 export type IslandProps = Record<string, JsonValue>;
+export type IslandHydrationStrategy = "load" | "idle" | "visible" | "media";
 
 export interface IslandModule<Props extends IslandProps = IslandProps> {
   default?: ComponentType<Props>;
@@ -20,6 +21,14 @@ export interface IslandManifestEntry {
   exportName: string;
   importPath: string;
 }
+
+export interface EncodedIslandProps {
+  attribute: string;
+  propsId?: string;
+  scriptJson?: string;
+}
+
+export const DEFAULT_LARGE_PROPS_THRESHOLD = 2048;
 
 export function encodeIslandProps(props: IslandProps | undefined): string {
   if (!props || Object.keys(props).length === 0) return "";
@@ -45,12 +54,29 @@ export function decodeIslandProps(value: string | null): IslandProps {
   return JSON.parse(new TextDecoder().decode(bytes)) as IslandProps;
 }
 
+export function encodeIslandPropsForHtml(
+  props: IslandProps | undefined,
+  propsId: string,
+  threshold = DEFAULT_LARGE_PROPS_THRESHOLD,
+): EncodedIslandProps {
+  if (!props || Object.keys(props).length === 0) return { attribute: "" };
+
+  const json = JSON.stringify(props);
+  if (json.length <= threshold) {
+    return { attribute: encodeIslandProps(props) };
+  }
+
+  return {
+    attribute: "",
+    propsId,
+    scriptJson: json.replaceAll("<", "\\u003c"),
+  };
+}
+
 export function resolveIslandId(component: ComponentType<IslandProps>, explicitId?: string): string {
   if (explicitId) return explicitId;
   const named = component as ComponentType<IslandProps> & {
-    displayName?: string;
-    name?: string;
     __otokIslandId?: string;
   };
-  return named.__otokIslandId ?? named.displayName ?? named.name ?? "";
+  return named.__otokIslandId ?? "";
 }

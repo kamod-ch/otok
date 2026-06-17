@@ -1,9 +1,9 @@
-import { jsx as _jsx } from "preact/jsx-runtime";
+import { jsx as _jsx, jsxs as _jsxs } from "preact/jsx-runtime";
 import { Fragment, h } from "preact";
 import { hydrate } from "preact";
-import { decodeIslandProps, encodeIslandProps, resolveIslandId, } from "../shared/islands.js";
-import { registerRenderedIsland } from "../server/island-context.js";
-export function Island({ component: Component, props, id, }) {
+import { decodeIslandProps, encodeIslandPropsForHtml, resolveIslandId, } from "../shared/islands.js";
+import { registerRenderedIsland } from "../shared/island-context.js";
+export function Island({ component: Component, props, id, strategy = "load", media, rootMargin, }) {
     if (typeof window !== "undefined") {
         return _jsx(Fragment, {});
     }
@@ -11,8 +11,9 @@ export function Island({ component: Component, props, id, }) {
     if (!islandId) {
         throw new Error("otok: Island components need a name, displayName, or explicit id.");
     }
-    registerRenderedIsland(islandId);
-    return (_jsx("div", { "data-otok-island": islandId, "data-otok-props": encodeIslandProps(props), "data-otok-island-root": "", children: _jsx(Component, { ...props }) }));
+    const instanceId = registerRenderedIsland(islandId);
+    const encodedProps = encodeIslandPropsForHtml(props, instanceId);
+    return (_jsxs(Fragment, { children: [_jsx("div", { "data-otok-island": islandId, "data-otok-props": encodedProps.attribute, "data-otok-props-id": encodedProps.propsId, "data-otok-strategy": strategy, "data-otok-media": media, "data-otok-root-margin": rootMargin, "data-otok-island-root": "", children: _jsx(Component, { ...props }) }), encodedProps.scriptJson ? (_jsx("script", { type: "application/json", "data-otok-props-for": encodedProps.propsId, dangerouslySetInnerHTML: { __html: encodedProps.scriptJson } })) : null] }));
 }
 async function hydrateIsland(element, registry, onError) {
     const id = element.getAttribute("data-otok-island");
@@ -33,7 +34,7 @@ async function hydrateIsland(element, registry, onError) {
         if (typeof Component !== "function") {
             throw new Error(`otok: Island "${id}" does not export a component.`);
         }
-        const props = decodeIslandProps(element.getAttribute("data-otok-props"));
+        const props = decodeIslandPropsFromElement(element);
         hydrate(h(Component, props), element);
         element.setAttribute("data-otok-hydrated", "true");
     }
@@ -44,6 +45,72 @@ async function hydrateIsland(element, registry, onError) {
             throw error;
     }
 }
+function decodeIslandPropsFromElement(element) {
+    const propsId = element.getAttribute("data-otok-props-id");
+    if (propsId) {
+        const script = element.ownerDocument.querySelector(`script[type="application/json"][data-otok-props-for="${cssEscape(propsId)}"]`);
+        if (script?.textContent)
+            return JSON.parse(script.textContent);
+    }
+    return decodeIslandProps(element.getAttribute("data-otok-props"));
+}
+function cssEscape(value) {
+    if (typeof CSS !== "undefined" && CSS.escape)
+        return CSS.escape(value);
+    return value.replaceAll('"', '\\"').replaceAll("\\", "\\\\");
+}
+function scheduleIslandHydration(element, registry, onError) {
+    const strategy = element.getAttribute("data-otok-strategy") ?? "load";
+    if (strategy === "idle")
+        return hydrateWhenIdle(element, registry, onError);
+    if (strategy === "visible")
+        return hydrateWhenVisible(element, registry, onError);
+    if (strategy === "media")
+        return hydrateWhenMediaMatches(element, registry, onError);
+    return hydrateIsland(element, registry, onError);
+}
+function hydrateWhenIdle(element, registry, onError) {
+    return new Promise((resolve) => {
+        const run = () => void hydrateIsland(element, registry, onError).then(resolve);
+        const idle = window.requestIdleCallback;
+        if (idle) {
+            idle(run);
+        }
+        else {
+            globalThis.setTimeout(run, 1);
+        }
+    });
+}
+function hydrateWhenVisible(element, registry, onError) {
+    if (!("IntersectionObserver" in window))
+        return hydrateIsland(element, registry, onError);
+    return new Promise((resolve) => {
+        const observer = new IntersectionObserver((entries) => {
+            if (!entries.some((entry) => entry.isIntersecting))
+                return;
+            observer.disconnect();
+            void hydrateIsland(element, registry, onError).then(resolve);
+        }, { rootMargin: element.getAttribute("data-otok-root-margin") ?? "0px" });
+        observer.observe(element);
+    });
+}
+function hydrateWhenMediaMatches(element, registry, onError) {
+    const media = element.getAttribute("data-otok-media");
+    if (!media || !("matchMedia" in window))
+        return hydrateIsland(element, registry, onError);
+    const query = window.matchMedia(media);
+    if (query.matches)
+        return hydrateIsland(element, registry, onError);
+    return new Promise((resolve) => {
+        const onChange = () => {
+            if (!query.matches)
+                return;
+            query.removeEventListener("change", onChange);
+            void hydrateIsland(element, registry, onError).then(resolve);
+        };
+        query.addEventListener("change", onChange);
+    });
+}
 export function createOtokClient(options = {}) {
     const registry = options.registry ?? window.__OTOK_ISLANDS__;
     if (!registry) {
@@ -51,6 +118,6 @@ export function createOtokClient(options = {}) {
     }
     const root = options.root ?? document;
     const islands = [...root.querySelectorAll("[data-otok-island]")];
-    void Promise.all(islands.map((element) => hydrateIsland(element, registry, options.onError)));
+    void Promise.all(islands.map((element) => scheduleIslandHydration(element, registry, options.onError)));
 }
 //# sourceMappingURL=index.js.map

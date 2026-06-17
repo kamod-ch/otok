@@ -3,9 +3,9 @@ import { serve } from "@hono/node-server";
 import { serveStatic } from "@hono/node-server/serve-static";
 import { Hono } from "hono";
 import { Fragment, h, options } from "preact";
-import { Badge, Button, Card, CardContent, CardDescription, CardHeader, CardTitle, Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger, ThemeToggle } from "@kamod-ui/core";
-import { jsx, jsxs } from "preact/jsx-runtime";
-import { useState } from "preact/hooks";
+import { Avatar, AvatarFallback, Badge, Button, Card, CardContent, CardDescription, CardHeader, CardTitle, Command, CommandDialog, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList, DataTable, Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger, Input, Label, RadioGroup, Select, SelectContent, SelectItem, SelectTrigger, SelectValue, SelectableCard, Separator, TableBody, TableCell, TableHead, TableHeader, TableRow, ThemeToggle } from "@kamod-ui/core";
+import { Fragment as Fragment$1, jsx, jsxs } from "preact/jsx-runtime";
+import { useEffect, useState } from "preact/hooks";
 //#region \0rolldown/runtime.js
 var __defProp = Object.defineProperty;
 var __exportAll = (all, no_symbols) => {
@@ -353,9 +353,21 @@ function J(e) {
 	return null !== e && "object" == typeof e && "function" == typeof e.peek && "value" in e;
 }
 //#endregion
+//#region ../../packages/otok/dist/shared/theme.js
+function resolveDarkModeFromCookie(cookieHeader) {
+	if (!cookieHeader) return false;
+	if (cookieHeader.match(/(?:^|;\s*)theme=(dark|light)(?:;|$)/i)?.[1]?.toLowerCase() === "dark") return true;
+	return false;
+}
+var themeBootstrapScript = `<script>(function(){try{var d=document.documentElement,t=localStorage.getItem("theme");if(t!=="dark"&&t!=="light"){var m=document.cookie.match(/(?:^|;\\s*)theme=(dark|light)(?:;|$)/i);t=m?m[1]:null}if(t==="dark"||(t!=="light"&&matchMedia("(prefers-color-scheme: dark)").matches))d.classList.add("dark");else d.classList.remove("dark")}catch(e){}})();<\/script>`;
+var themeColorSchemeStyle = `<style>html{color-scheme:light}html.dark{color-scheme:dark}</style>`;
+//#endregion
 //#region ../../packages/otok/dist/server/html.js
 function escapeHtml(value) {
 	return value.replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll("\"", "&quot;");
+}
+function escapeScriptJson(value) {
+	return value.replaceAll("<", "\\u003c");
 }
 function publicPath(path, base) {
 	return `${base.endsWith("/") ? base : `${base}/`}${path}`.replace(/\/{2,}/g, "/");
@@ -383,21 +395,44 @@ function renderHead(head) {
 	const title = escapeHtml(head?.title ?? "Otok App");
 	const description = head?.description ? `<meta name="description" content="${escapeHtml(head.description)}">` : "";
 	const meta = Object.entries(head?.meta ?? {}).map(([name, content]) => `<meta name="${escapeHtml(name)}" content="${escapeHtml(content)}">`).join("\n    ");
+	const links = (head?.links ?? []).map((link) => {
+		return `<link ${[
+			`rel="${escapeHtml(link.rel)}"`,
+			`href="${escapeHtml(link.href)}"`,
+			link.crossorigin ? `crossorigin="${escapeHtml(link.crossorigin)}"` : "",
+			link.as ? `as="${escapeHtml(link.as)}"` : "",
+			link.type ? `type="${escapeHtml(link.type)}"` : ""
+		].filter(Boolean).join(" ")}>`;
+	}).join("\n    ");
+	const scripts = (head?.scripts ?? []).map((script) => {
+		return `<script ${[
+			script.src ? `src="${escapeHtml(script.src)}"` : "",
+			script.type ? `type="${escapeHtml(script.type)}"` : "",
+			script.async ? "async" : "",
+			script.defer ? "defer" : ""
+		].filter(Boolean).join(" ")}><\/script>`;
+	}).join("\n    ");
+	const jsonLd = head?.jsonLd ? `<script type="application/ld+json">${escapeScriptJson(JSON.stringify(head.jsonLd))}<\/script>` : "";
 	return [
 		"<meta charset=\"utf-8\">",
 		"<meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">",
 		`<title>${title}</title>`,
 		description,
-		meta
+		meta,
+		links,
+		scripts,
+		jsonLd
 	].filter(Boolean).join("\n    ");
 }
-function pageHtml({ body, head, islands, manifest, clientEntry = "src/client.ts", devClientEntry = "/src/client.ts", base = "/" }) {
+function pageHtml({ body, head, islands, manifest, clientEntry = "src/client.ts", devClientEntry = "/src/client.ts", base = "/", darkMode = false }) {
 	const entry = findEntry(manifest, clientEntry);
 	const stylesheetLinks = collectCss(manifest, entry).map((href) => `<link rel="stylesheet" href="${escapeHtml(publicPath(href, base))}">`).join("\n    ");
 	const clientScript = islands.length > 0 ? entry?.file ? `<script type="module" src="${escapeHtml(publicPath(entry.file, base))}"><\/script>` : `<script type="module" src="${escapeHtml(devClientEntry)}"><\/script>` : "";
 	return `<!doctype html>
-<html lang="${escapeHtml(head?.lang ?? "en")}">
+<html lang="${escapeHtml(head?.lang ?? "en")}"${darkMode ? ` class="dark"` : ""}>
   <head>
+    ${themeBootstrapScript}
+    ${themeColorSchemeStyle}
     ${renderHead(head)}
     ${stylesheetLinks}
   </head>
@@ -406,21 +441,6 @@ function pageHtml({ body, head, islands, manifest, clientEntry = "src/client.ts"
     ${clientScript}
   </body>
 </html>`;
-}
-//#endregion
-//#region ../../packages/otok/dist/server/island-context.js
-var activeContext;
-function withIslandRenderContext(context, render) {
-	const previous = activeContext;
-	activeContext = context;
-	try {
-		return render();
-	} finally {
-		activeContext = previous;
-	}
-}
-function registerRenderedIsland(id) {
-	activeContext?.islands.add(id);
 }
 //#endregion
 //#region ../../packages/otok/dist/server/router.js
@@ -439,6 +459,43 @@ function matchRoute(routes, pathname) {
 	}
 }
 //#endregion
+//#region ../../packages/otok/dist/shared/island-context.js
+var activeContext;
+function withIslandRenderContext(context, render) {
+	const previous = activeContext;
+	activeContext = context;
+	try {
+		return render();
+	} finally {
+		activeContext = previous;
+	}
+}
+function registerRenderedIsland(id) {
+	if (!activeContext) return `otok-${id}`;
+	activeContext.islands.add(id);
+	const instanceId = `otok-${activeContext.nextIslandId}`;
+	activeContext.nextIslandId += 1;
+	return instanceId;
+}
+//#endregion
+//#region ../../packages/otok/dist/shared/routes.js
+var OtokHttpError = class extends Error {
+	status;
+	headers;
+	constructor(status, message = "Otok request failed", headers) {
+		super(message);
+		this.status = status;
+		this.name = "OtokHttpError";
+		this.headers = new Headers(headers);
+	}
+};
+function fail(message = "Internal server error", status = 500) {
+	throw new OtokHttpError(status, message);
+}
+function isOtokHttpError(error) {
+	return error instanceof OtokHttpError;
+}
+//#endregion
 //#region ../../packages/otok/dist/server/index.js
 async function resolveHead(route, data, params) {
 	if (!route.module.head) return { title: "Otok App" };
@@ -452,87 +509,150 @@ function createOtokHandler(options) {
 	return async (c) => {
 		const url = new URL(c.req.url);
 		const match = matchRoute(options.routes, url.pathname);
-		if (!match) {
-			if (!options.notFound) return c.notFound();
-			return renderRoute(c, options.notFound, {}, options, 404);
+		try {
+			if (!match) {
+				const notFoundRoute = options.notFoundRoute ?? options.notFound;
+				if (!notFoundRoute) return c.notFound();
+				return await renderRoute(c, notFoundRoute, {}, options, 404);
+			}
+			return await renderRoute(c, match.route, match.params, options);
+		} catch (error) {
+			return handleRenderError(c, error, options);
 		}
-		return renderRoute(c, match.route, match.params, options);
 	};
 }
-async function renderRoute(c, route, params, options, status = 200) {
+async function renderRoute(c, route, params, options, status = 200, dataOverride) {
 	const context = {
 		hono: c,
 		request: c.req.raw,
 		params,
 		route: route.path
 	};
-	const data = route.module.loader ? await route.module.loader(context) : {};
+	const data = dataOverride ?? (route.module.loader ? await route.module.loader(context) : {});
 	const head = await resolveHead(route, data, params);
 	const Page = route.module.default;
-	const islandContext = { islands: /* @__PURE__ */ new Set() };
+	const props = {
+		data,
+		params,
+		route: route.path
+	};
+	const islandContext = {
+		islands: /* @__PURE__ */ new Set(),
+		nextIslandId: 0
+	};
 	const html = pageHtml({
-		body: withIslandRenderContext(islandContext, () => I(h(Page, {
-			data,
-			params,
-			route: route.path
-		}))),
+		body: withIslandRenderContext(islandContext, () => {
+			let tree = h(Page, props);
+			for (const layout of [...route.layouts ?? []].reverse()) tree = h(layout.default, {
+				...props,
+				children: tree
+			});
+			return I(tree);
+		}),
 		head,
 		islands: [...islandContext.islands],
 		manifest: options.manifest,
 		clientEntry: options.clientEntry,
 		devClientEntry: options.devClientEntry,
-		base: options.base
+		base: options.base,
+		darkMode: resolveDarkModeFromCookie(c.req.header("cookie"))
 	});
 	return new Response(html, {
 		status,
 		headers: { "content-type": "text/html; charset=utf-8" }
 	});
 }
+async function handleRenderError(c, error, options) {
+	if (isOtokHttpError(error)) {
+		if (error.headers.get("location")) return new Response(null, {
+			status: error.status,
+			headers: error.headers
+		});
+		if (error.status === 404) {
+			const notFoundRoute = options.notFoundRoute ?? options.notFound;
+			if (notFoundRoute) return renderFallbackRoute(c, notFoundRoute, options, 404, { message: error.message });
+		}
+		if (options.errorRoute) return renderFallbackRoute(c, options.errorRoute, options, error.status, {
+			message: error.message,
+			status: error.status
+		});
+		return new Response(error.message, {
+			status: error.status,
+			headers: error.headers
+		});
+	}
+	if (options.errorRoute) {
+		const message = error instanceof Error ? error.message : "Internal server error";
+		return renderFallbackRoute(c, options.errorRoute, options, 500, {
+			message,
+			status: 500
+		});
+	}
+	throw error;
+}
+async function renderFallbackRoute(c, route, options, status, data) {
+	try {
+		return await renderRoute(c, route, {}, options, status, data);
+	} catch {
+		return new Response(status === 404 ? "Not found" : "Internal server error", { status });
+	}
+}
+function createOtokApp(options) {
+	const app = new Hono();
+	if (options.health) {
+		const payload = typeof options.health === "object" ? options.health : {
+			ok: true,
+			framework: "otok"
+		};
+		app.get("/api/health", (c) => c.json(payload));
+	}
+	if (options.staticDir) app.use(`${options.assetsPath ?? "/assets"}/*`, serveStatic({ root: options.staticDir }));
+	app.get("*", createOtokHandler(options));
+	return app;
+}
 //#endregion
 //#region src/app/routes/about.tsx
 var about_exports = /* @__PURE__ */ __exportAll({
 	default: () => About,
-	head: () => head$3
+	head: () => head$6
 });
-var head$3 = () => ({
-	title: "About Otok",
+var head$6 = () => ({
+	title: "About | Otok Playground",
 	description: "A static Otok route that ships no client JavaScript."
 });
 function About() {
-	return /* @__PURE__ */ jsxs("main", {
-		class: "mx-auto flex min-h-screen max-w-4xl flex-col gap-8 px-6 py-16",
-		children: [
-			/* @__PURE__ */ jsx("a", {
-				class: "text-sm text-muted-foreground underline",
-				href: "/",
-				children: "Back home"
-			}),
-			/* @__PURE__ */ jsxs("section", {
-				class: "space-y-4",
-				children: [
-					/* @__PURE__ */ jsx(Badge, {
-						variant: "secondary",
-						children: "Zero JS"
-					}),
-					/* @__PURE__ */ jsx("h1", {
-						class: "text-4xl font-semibold tracking-tight",
-						children: "This route has no islands."
-					}),
-					/* @__PURE__ */ jsx("p", {
-						class: "text-muted-foreground",
-						children: "Otok renders this page on the server and omits the client entry script because there is nothing to hydrate."
-					})
-				]
-			}),
-			/* @__PURE__ */ jsxs(Card, { children: [/* @__PURE__ */ jsx(CardHeader, { children: /* @__PURE__ */ jsx(CardTitle, { children: "What still works?" }) }), /* @__PURE__ */ jsxs(CardContent, {
-				class: "space-y-2 text-sm text-muted-foreground",
-				children: [/* @__PURE__ */ jsx("p", { children: "Semantic HTML, Tailwind classes, and presentational kamod-ui components." }), /* @__PURE__ */ jsx("p", { children: "Client state, event handlers, and portals belong in islands." })]
-			})] })
-		]
-	});
+	return /* @__PURE__ */ jsxs(Fragment$1, { children: [/* @__PURE__ */ jsxs("section", {
+		class: "space-y-4",
+		children: [/* @__PURE__ */ jsx(Badge, {
+			variant: "secondary",
+			children: "Zero JS"
+		}), /* @__PURE__ */ jsx("p", {
+			class: "max-w-2xl text-muted-foreground",
+			children: "Otok renders this page on the server and omits the client entry script because there is nothing to hydrate."
+		})]
+	}), /* @__PURE__ */ jsxs(Card, {
+		class: "mt-6",
+		children: [/* @__PURE__ */ jsx(CardHeader, { children: /* @__PURE__ */ jsx(CardTitle, { children: "What still works?" }) }), /* @__PURE__ */ jsxs(CardContent, {
+			class: "space-y-2 text-sm text-muted-foreground",
+			children: [/* @__PURE__ */ jsx("p", { children: "Semantic HTML, Tailwind classes, and presentational kamod-ui components." }), /* @__PURE__ */ jsx("p", { children: "Client state, event handlers, and portals belong in islands." })]
+		})]
+	})] });
+}
+//#endregion
+//#region src/app/routes/boom.tsx
+var boom_exports = /* @__PURE__ */ __exportAll({
+	default: () => Boom,
+	loader: () => loader$3
+});
+var loader$3 = () => {
+	fail("Boom from loader");
+};
+function Boom() {
+	return /* @__PURE__ */ jsx("p", { children: "This page should never render." });
 }
 //#endregion
 //#region ../../packages/otok/dist/shared/islands.js
+var DEFAULT_LARGE_PROPS_THRESHOLD = 2048;
 function encodeIslandProps(props) {
 	if (!props || Object.keys(props).length === 0) return "";
 	const json = JSON.stringify(props);
@@ -542,24 +662,41 @@ function encodeIslandProps(props) {
 	for (const byte of bytes) binary += String.fromCharCode(byte);
 	return btoa(binary).replaceAll("+", "-").replaceAll("/", "_").replace(/=+$/, "");
 }
+function encodeIslandPropsForHtml(props, propsId, threshold = DEFAULT_LARGE_PROPS_THRESHOLD) {
+	if (!props || Object.keys(props).length === 0) return { attribute: "" };
+	const json = JSON.stringify(props);
+	if (json.length <= threshold) return { attribute: encodeIslandProps(props) };
+	return {
+		attribute: "",
+		propsId,
+		scriptJson: json.replaceAll("<", "\\u003c")
+	};
+}
 function resolveIslandId(component, explicitId) {
 	if (explicitId) return explicitId;
-	const named = component;
-	return named.__otokIslandId ?? named.displayName ?? named.name ?? "";
+	return component.__otokIslandId ?? "";
 }
 //#endregion
 //#region ../../packages/otok/dist/client/index.js
-function Island({ component: Component, props, id }) {
+function Island({ component: Component, props, id, strategy = "load", media, rootMargin }) {
 	if (typeof window !== "undefined") return jsx(Fragment, {});
 	const islandId = resolveIslandId(Component, id);
 	if (!islandId) throw new Error("otok: Island components need a name, displayName, or explicit id.");
-	registerRenderedIsland(islandId);
-	return jsx("div", {
+	const encodedProps = encodeIslandPropsForHtml(props, registerRenderedIsland(islandId));
+	return jsxs(Fragment, { children: [jsx("div", {
 		"data-otok-island": islandId,
-		"data-otok-props": encodeIslandProps(props),
+		"data-otok-props": encodedProps.attribute,
+		"data-otok-props-id": encodedProps.propsId,
+		"data-otok-strategy": strategy,
+		"data-otok-media": media,
+		"data-otok-root-margin": rootMargin,
 		"data-otok-island-root": "",
 		children: jsx(Component, { ...props })
-	});
+	}), encodedProps.scriptJson ? jsx("script", {
+		type: "application/json",
+		"data-otok-props-for": encodedProps.propsId,
+		dangerouslySetInnerHTML: { __html: encodedProps.scriptJson }
+	}) : null] });
 }
 //#endregion
 //#region src/app/islands/demo-dialog.tsx
@@ -575,6 +712,7 @@ function DemoDialog({ label }) {
 		})
 	}) })] })] });
 }
+DemoDialog.__otokIslandId = "DemoDialog";
 //#endregion
 //#region src/app/islands/theme-island.tsx
 function ThemeIsland() {
@@ -586,73 +724,358 @@ function ThemeIsland() {
 		})]
 	});
 }
+ThemeIsland.__otokIslandId = "ThemeIsland";
 //#endregion
 //#region src/app/routes/demo.tsx
 var demo_exports = /* @__PURE__ */ __exportAll({
 	default: () => Demo,
-	head: () => head$2
+	head: () => head$5
 });
-var head$2 = () => ({
-	title: "Otok kamod-ui demo",
+var head$5 = () => ({
+	title: "kamod-ui islands | Otok Playground",
 	description: "Interactive kamod-ui components hydrated as islands."
 });
 function Demo() {
-	return /* @__PURE__ */ jsxs("main", {
-		class: "mx-auto flex min-h-screen max-w-4xl flex-col gap-8 px-6 py-16",
-		children: [
-			/* @__PURE__ */ jsx("a", {
-				class: "text-sm text-muted-foreground underline",
-				href: "/",
-				children: "Back home"
-			}),
-			/* @__PURE__ */ jsxs("section", {
-				class: "space-y-3",
-				children: [/* @__PURE__ */ jsx("h1", {
-					class: "text-4xl font-semibold tracking-tight",
-					children: "kamod-ui islands"
-				}), /* @__PURE__ */ jsx("p", {
-					class: "text-muted-foreground",
-					children: "Dialog and theme interactions are isolated islands. The surrounding page remains static."
-				})]
-			}),
-			/* @__PURE__ */ jsxs("div", {
-				class: "grid gap-4 sm:grid-cols-2",
-				children: [/* @__PURE__ */ jsxs(Card, { children: [/* @__PURE__ */ jsxs(CardHeader, { children: [/* @__PURE__ */ jsx(CardTitle, { children: "Dialog" }), /* @__PURE__ */ jsx(CardDescription, { children: "Hydrated only inside this card." })] }), /* @__PURE__ */ jsx(CardContent, { children: /* @__PURE__ */ jsx(Island, {
-					component: DemoDialog,
-					props: { label: "Open dialog" }
-				}) })] }), /* @__PURE__ */ jsxs(Card, { children: [/* @__PURE__ */ jsxs(CardHeader, { children: [/* @__PURE__ */ jsx(CardTitle, { children: "Theme" }), /* @__PURE__ */ jsx(CardDescription, { children: "Theme state stays client-side." })] }), /* @__PURE__ */ jsx(CardContent, { children: /* @__PURE__ */ jsx(Island, {
-					component: ThemeIsland,
-					props: {}
-				}) })] })]
-			})
-		]
+	return /* @__PURE__ */ jsxs("div", {
+		class: "grid gap-4 sm:grid-cols-2",
+		children: [/* @__PURE__ */ jsxs(Card, { children: [/* @__PURE__ */ jsxs(CardHeader, { children: [/* @__PURE__ */ jsx(CardTitle, { children: "Dialog" }), /* @__PURE__ */ jsx(CardDescription, { children: "Hydrated only inside this card." })] }), /* @__PURE__ */ jsx(CardContent, { children: /* @__PURE__ */ jsx(Island, {
+			component: DemoDialog,
+			props: { label: "Open dialog" },
+			strategy: "idle"
+		}) })] }), /* @__PURE__ */ jsxs(Card, { children: [/* @__PURE__ */ jsxs(CardHeader, { children: [/* @__PURE__ */ jsx(CardTitle, { children: "Theme" }), /* @__PURE__ */ jsx(CardDescription, { children: "Theme state stays client-side." })] }), /* @__PURE__ */ jsx(CardContent, { children: /* @__PURE__ */ jsx(Island, {
+			component: ThemeIsland,
+			props: {},
+			strategy: "idle"
+		}) })] })]
 	});
 }
 //#endregion
 //#region src/app/routes/users/[id].tsx
 var _id__exports = /* @__PURE__ */ __exportAll({
 	default: () => UserPage,
-	head: () => head$1,
-	loader: () => loader$1
+	head: () => head$4,
+	loader: () => loader$2
 });
-var loader$1 = async ({ params }) => ({ userId: params.id });
-var head$1 = ({ data }) => ({ title: `User ${data.userId}` });
+var loader$2 = async ({ params }) => ({ userId: params.id });
+var head$4 = ({ data }) => ({ title: `User ${data.userId} | Otok Playground` });
 function UserPage({ data }) {
-	return /* @__PURE__ */ jsxs("main", {
-		class: "mx-auto flex min-h-screen max-w-3xl flex-col gap-8 px-6 py-16",
-		children: [/* @__PURE__ */ jsx("a", {
-			class: "text-sm text-muted-foreground underline",
-			href: "/",
-			children: "Back home"
-		}), /* @__PURE__ */ jsxs(Card, { children: [/* @__PURE__ */ jsx(CardHeader, { children: /* @__PURE__ */ jsx(CardTitle, { children: "Dynamic route" }) }), /* @__PURE__ */ jsxs(CardContent, {
-			class: "space-y-3",
-			children: [/* @__PURE__ */ jsx(Badge, { children: "/users/[id]" }), /* @__PURE__ */ jsxs("p", {
-				class: "text-muted-foreground",
-				children: ["Loaded user id: ", data.userId]
-			})]
+	return /* @__PURE__ */ jsxs(Card, { children: [/* @__PURE__ */ jsx(CardHeader, { children: /* @__PURE__ */ jsx(CardTitle, { children: "/users/[id]" }) }), /* @__PURE__ */ jsxs(CardContent, {
+		class: "space-y-3",
+		children: [/* @__PURE__ */ jsx(Badge, { children: "/users/[id]" }), /* @__PURE__ */ jsxs("p", {
+			class: "text-muted-foreground",
+			children: ["Loaded user id: ", data.userId]
+		})]
+	})] });
+}
+//#endregion
+//#region src/app/components/exercise-chart.tsx
+function ExerciseChart({ data }) {
+	const max = Math.max(...data.map((d) => d.minutes), 1);
+	const width = 480;
+	const height = 200;
+	const padding = {
+		top: 12,
+		right: 12,
+		bottom: 28,
+		left: 12
+	};
+	const chartWidth = width - padding.left - padding.right;
+	const chartHeight = height - padding.top - padding.bottom;
+	const barWidth = chartWidth / data.length - 8;
+	return /* @__PURE__ */ jsxs(Card, {
+		class: "col-span-4",
+		children: [/* @__PURE__ */ jsxs(CardHeader, { children: [/* @__PURE__ */ jsx(CardTitle, { children: "Exercise Minutes" }), /* @__PURE__ */ jsx(CardDescription, { children: "Your exercise minutes are ahead of where you normally are." })] }), /* @__PURE__ */ jsx(CardContent, { children: /* @__PURE__ */ jsx("svg", {
+			viewBox: `0 0 ${width} ${height}`,
+			class: "h-[200px] w-full text-primary",
+			role: "img",
+			"aria-label": "Exercise minutes bar chart",
+			children: data.map((point, index) => {
+				const barHeight = point.minutes / max * chartHeight;
+				const x = padding.left + index * (chartWidth / data.length) + 4;
+				return /* @__PURE__ */ jsxs("g", { children: [/* @__PURE__ */ jsx("rect", {
+					x,
+					y: padding.top + chartHeight - barHeight,
+					width: barWidth,
+					height: barHeight,
+					rx: 4,
+					class: "fill-primary/80"
+				}), /* @__PURE__ */ jsx("text", {
+					x: x + barWidth / 2,
+					y: height - 8,
+					"text-anchor": "middle",
+					class: "fill-muted-foreground text-[10px]",
+					children: point.day
+				})] }, point.day);
+			})
+		}) })]
+	});
+}
+//#endregion
+//#region src/app/components/payments-table.tsx
+function statusVariant(status) {
+	if (status === "success") return "success";
+	if (status === "failed") return "destructive";
+	return "secondary";
+}
+function PaymentsTable({ payments }) {
+	return /* @__PURE__ */ jsxs(Card, {
+		class: "col-span-3",
+		children: [/* @__PURE__ */ jsxs(CardHeader, { children: [/* @__PURE__ */ jsx(CardTitle, { children: "Latest Payments" }), /* @__PURE__ */ jsx(CardDescription, { children: "See recent payments from your customers here." })] }), /* @__PURE__ */ jsxs(CardContent, { children: [/* @__PURE__ */ jsxs(DataTable, { children: [/* @__PURE__ */ jsx(TableHeader, { children: /* @__PURE__ */ jsxs(TableRow, { children: [
+			/* @__PURE__ */ jsx(TableHead, { children: "Customer" }),
+			/* @__PURE__ */ jsx(TableHead, {
+				class: "hidden sm:table-cell",
+				children: "Email"
+			}),
+			/* @__PURE__ */ jsx(TableHead, { children: "Amount" }),
+			/* @__PURE__ */ jsx(TableHead, { children: "Status" })
+		] }) }), /* @__PURE__ */ jsx(TableBody, { children: payments.map((payment) => /* @__PURE__ */ jsxs(TableRow, { children: [
+			/* @__PURE__ */ jsx(TableCell, {
+				class: "font-medium",
+				children: payment.customer
+			}),
+			/* @__PURE__ */ jsx(TableCell, {
+				class: "hidden text-muted-foreground sm:table-cell",
+				children: payment.email
+			}),
+			/* @__PURE__ */ jsx(TableCell, { children: payment.amount }),
+			/* @__PURE__ */ jsx(TableCell, { children: /* @__PURE__ */ jsx(Badge, {
+				variant: statusVariant(payment.status),
+				children: payment.status
+			}) })
+		] }, payment.email)) })] }), /* @__PURE__ */ jsxs("p", {
+			class: "mt-4 text-xs text-muted-foreground",
+			children: [
+				"0 of ",
+				payments.length,
+				" row(s) selected."
+			]
 		})] })]
 	});
 }
+//#endregion
+//#region src/app/components/stat-card.tsx
+function StatCard({ title, value, change }) {
+	return /* @__PURE__ */ jsxs(Card, { children: [/* @__PURE__ */ jsx(CardHeader, {
+		class: "flex flex-row items-center justify-between space-y-0 pb-2",
+		children: /* @__PURE__ */ jsx(CardTitle, {
+			class: "text-sm font-medium",
+			children: title
+		})
+	}), /* @__PURE__ */ jsxs(CardContent, { children: [/* @__PURE__ */ jsx("div", {
+		class: "text-2xl font-bold",
+		children: value
+	}), change ? /* @__PURE__ */ jsx("p", {
+		class: "text-xs text-muted-foreground",
+		children: change
+	}) : null] })] });
+}
+//#endregion
+//#region src/app/data/dashboard.ts
+var dashboardUser = {
+	name: "Toby Belhome",
+	email: "hello@tobybelhome.com",
+	initials: "TB"
+};
+var dashboardStats = {
+	subscriptions: {
+		value: 4850,
+		change: "+180.1% from last month"
+	},
+	revenue: {
+		value: 15231.89,
+		change: "+20.1% from last month"
+	}
+};
+var teamMembers = [
+	{
+		name: "Toby Belhome",
+		email: "contact@bundui.io",
+		role: "Owner",
+		initials: "TB"
+	},
+	{
+		name: "Jackson Lee",
+		email: "pre@example.com",
+		role: "Developer",
+		initials: "JL"
+	},
+	{
+		name: "Hally Gray",
+		email: "hally@site.com",
+		role: "Viewer",
+		initials: "HG"
+	}
+];
+var payments = [
+	{
+		customer: "Kenneth Thompson",
+		email: "ken99@yahoo.com",
+		amount: "$316.00",
+		status: "success"
+	},
+	{
+		customer: "Abraham Lincoln",
+		email: "abe45@gmail.com",
+		amount: "$242.00",
+		status: "success"
+	},
+	{
+		customer: "Monserrat Rodriguez",
+		email: "monserrat44@gmail.com",
+		amount: "$837.00",
+		status: "processing"
+	},
+	{
+		customer: "Silas Johnson",
+		email: "silas22@gmail.com",
+		amount: "$874.00",
+		status: "success"
+	},
+	{
+		customer: "Carmella DeVito",
+		email: "carmella@hotmail.com",
+		amount: "$721.00",
+		status: "failed"
+	},
+	{
+		customer: "Maria Garcia",
+		email: "maria@gmail.com",
+		amount: "$529.00",
+		status: "success"
+	},
+	{
+		customer: "James Wilson",
+		email: "james34@outlook.com",
+		amount: "$438.00",
+		status: "processing"
+	},
+	{
+		customer: "Sarah Jones",
+		email: "sarah.j@yahoo.com",
+		amount: "$692.00",
+		status: "success"
+	}
+];
+var exerciseMinutes = [
+	{
+		day: "Mon",
+		minutes: 28
+	},
+	{
+		day: "Tue",
+		minutes: 42
+	},
+	{
+		day: "Wed",
+		minutes: 35
+	},
+	{
+		day: "Thu",
+		minutes: 58
+	},
+	{
+		day: "Fri",
+		minutes: 48
+	},
+	{
+		day: "Sat",
+		minutes: 62
+	},
+	{
+		day: "Sun",
+		minutes: 44
+	}
+];
+var chatThread = [
+	{
+		author: "Sofia Davis",
+		message: "Hi, how can I help you today?",
+		isUser: false
+	},
+	{
+		author: "You",
+		message: "Hey, I'm having trouble with my account.",
+		isUser: true
+	},
+	{
+		author: "Sofia Davis",
+		message: "What seems to be the problem?",
+		isUser: false
+	},
+	{
+		author: "You",
+		message: "I can't log in.",
+		isUser: true
+	}
+];
+//#endregion
+//#region src/app/islands/chat-card.tsx
+function ChatCard({ contactName, contactEmail, contactInitials, messages: initialMessages }) {
+	const [messages, setMessages] = useState(initialMessages);
+	const [draft, setDraft] = useState("");
+	const send = () => {
+		const text = draft.trim();
+		if (!text) return;
+		setMessages((current) => [...current, {
+			author: "You",
+			message: text,
+			isUser: true
+		}]);
+		setDraft("");
+	};
+	return /* @__PURE__ */ jsxs(Card, { children: [/* @__PURE__ */ jsxs(CardHeader, {
+		class: "flex flex-row items-center gap-3 space-y-0 pb-3",
+		children: [
+			/* @__PURE__ */ jsx(Avatar, {
+				size: "sm",
+				children: /* @__PURE__ */ jsx(AvatarFallback, { children: contactInitials })
+			}),
+			/* @__PURE__ */ jsxs("div", {
+				class: "min-w-0",
+				children: [/* @__PURE__ */ jsx(CardTitle, {
+					class: "text-base",
+					children: contactName
+				}), /* @__PURE__ */ jsx("p", {
+					class: "truncate text-xs text-muted-foreground",
+					children: contactEmail
+				})]
+			}),
+			/* @__PURE__ */ jsx("span", {
+				class: "ms-auto text-xs text-muted-foreground",
+				children: "New message"
+			})
+		]
+	}), /* @__PURE__ */ jsxs(CardContent, {
+		class: "space-y-4",
+		children: [/* @__PURE__ */ jsx("div", {
+			class: "max-h-48 space-y-3 overflow-y-auto rounded-md border bg-muted/20 p-3",
+			children: messages.map((message, index) => /* @__PURE__ */ jsx("div", {
+				class: `text-sm ${message.isUser ? "text-end" : "text-start"}`,
+				children: /* @__PURE__ */ jsx("p", {
+					class: `inline-block rounded-lg px-3 py-2 ${message.isUser ? "bg-primary text-primary-foreground" : "bg-muted"}`,
+					children: message.message
+				})
+			}, `${message.author}-${index}`))
+		}), /* @__PURE__ */ jsxs("div", {
+			class: "flex gap-2",
+			children: [/* @__PURE__ */ jsx(Input, {
+				placeholder: "Type your message...",
+				value: draft,
+				onInput: (event) => setDraft(event.currentTarget.value),
+				onKeyDown: (event) => {
+					if (event.key === "Enter") {
+						event.preventDefault();
+						send();
+					}
+				}
+			}), /* @__PURE__ */ jsx(Button, {
+				onClick: send,
+				children: "Send"
+			})]
+		})]
+	})] });
+}
+ChatCard.__otokIslandId = "ChatCard";
 //#endregion
 //#region src/app/islands/counter.tsx
 function Counter({ init = 0 }) {
@@ -668,51 +1091,613 @@ function Counter({ init = 0 }) {
 		})]
 	});
 }
+Counter.__otokIslandId = "Counter";
+//#endregion
+//#region src/app/islands/payment-form.tsx
+function PaymentForm() {
+	return /* @__PURE__ */ jsxs(Card, {
+		class: "col-span-4 lg:col-span-7",
+		children: [/* @__PURE__ */ jsxs(CardHeader, { children: [/* @__PURE__ */ jsx(CardTitle, { children: "Payment Method" }), /* @__PURE__ */ jsx(CardDescription, { children: "Add a new payment method to your account." })] }), /* @__PURE__ */ jsxs(CardContent, {
+			class: "space-y-6",
+			children: [
+				/* @__PURE__ */ jsxs(RadioGroup, {
+					defaultValue: "card",
+					class: "grid gap-3 sm:grid-cols-3",
+					children: [
+						/* @__PURE__ */ jsx(SelectableCard, {
+							value: "card",
+							children: /* @__PURE__ */ jsx("span", {
+								class: "text-sm font-medium",
+								children: "Card"
+							})
+						}),
+						/* @__PURE__ */ jsx(SelectableCard, {
+							value: "paypal",
+							children: /* @__PURE__ */ jsx("span", {
+								class: "text-sm font-medium",
+								children: "Paypal"
+							})
+						}),
+						/* @__PURE__ */ jsx(SelectableCard, {
+							value: "apple",
+							children: /* @__PURE__ */ jsx("span", {
+								class: "text-sm font-medium",
+								children: "Apple"
+							})
+						})
+					]
+				}),
+				/* @__PURE__ */ jsxs("div", {
+					class: "grid gap-4 sm:grid-cols-2",
+					children: [
+						/* @__PURE__ */ jsxs("div", {
+							class: "space-y-2 sm:col-span-2",
+							children: [/* @__PURE__ */ jsx(Label, {
+								for: "payment-name",
+								children: "Name on the card"
+							}), /* @__PURE__ */ jsx(Input, {
+								id: "payment-name",
+								placeholder: "John Doe",
+								autoComplete: "off"
+							})]
+						}),
+						/* @__PURE__ */ jsxs("div", {
+							class: "space-y-2",
+							children: [/* @__PURE__ */ jsx(Label, {
+								for: "payment-city",
+								children: "City"
+							}), /* @__PURE__ */ jsx(Input, {
+								id: "payment-city",
+								placeholder: "Zurich",
+								autoComplete: "off"
+							})]
+						}),
+						/* @__PURE__ */ jsxs("div", {
+							class: "space-y-2",
+							children: [/* @__PURE__ */ jsx(Label, {
+								for: "payment-card",
+								children: "Card number"
+							}), /* @__PURE__ */ jsx(Input, {
+								id: "payment-card",
+								placeholder: "1234 5678 9012 3456",
+								autoComplete: "off"
+							})]
+						}),
+						/* @__PURE__ */ jsxs("div", {
+							class: "space-y-2",
+							children: [/* @__PURE__ */ jsx(Label, {
+								for: "payment-expires",
+								children: "Expires"
+							}), /* @__PURE__ */ jsx(Input, {
+								id: "payment-expires",
+								placeholder: "MM / YY",
+								autoComplete: "off"
+							})]
+						}),
+						/* @__PURE__ */ jsxs("div", {
+							class: "space-y-2",
+							children: [/* @__PURE__ */ jsx(Label, {
+								for: "payment-cvc",
+								children: "CVC"
+							}), /* @__PURE__ */ jsx(Input, {
+								id: "payment-cvc",
+								placeholder: "123",
+								autoComplete: "off"
+							})]
+						})
+					]
+				}),
+				/* @__PURE__ */ jsx(Button, { children: "Continue" })
+			]
+		})]
+	});
+}
+PaymentForm.__otokIslandId = "PaymentForm";
+//#endregion
+//#region src/app/islands/team-members.tsx
+var roles = [
+	"Viewer",
+	"Developer",
+	"Owner"
+];
+function TeamMembers({ members }) {
+	return /* @__PURE__ */ jsxs(Card, {
+		class: "col-span-4",
+		children: [/* @__PURE__ */ jsxs(CardHeader, { children: [/* @__PURE__ */ jsx(CardTitle, { children: "Team Members" }), /* @__PURE__ */ jsx(CardDescription, { children: "Invite your team members to collaborate." })] }), /* @__PURE__ */ jsxs(CardContent, {
+			class: "space-y-4",
+			children: [members.map((member) => /* @__PURE__ */ jsxs("div", {
+				class: "flex items-center justify-between gap-4",
+				children: [/* @__PURE__ */ jsxs("div", {
+					class: "flex min-w-0 items-center gap-3",
+					children: [/* @__PURE__ */ jsx(Avatar, {
+						size: "sm",
+						children: /* @__PURE__ */ jsx(AvatarFallback, { children: member.initials })
+					}), /* @__PURE__ */ jsxs("div", {
+						class: "min-w-0",
+						children: [/* @__PURE__ */ jsx("p", {
+							class: "truncate text-sm font-medium",
+							children: member.name
+						}), /* @__PURE__ */ jsx("p", {
+							class: "truncate text-xs text-muted-foreground",
+							children: member.email
+						})]
+					})]
+				}), /* @__PURE__ */ jsxs(Select, {
+					defaultValue: member.role,
+					children: [/* @__PURE__ */ jsx(SelectTrigger, {
+						class: "w-[120px]",
+						children: /* @__PURE__ */ jsx(SelectValue, {})
+					}), /* @__PURE__ */ jsx(SelectContent, { children: roles.map((role) => /* @__PURE__ */ jsx(SelectItem, {
+						value: role,
+						children: role
+					}, role)) })]
+				})]
+			}, member.email)), /* @__PURE__ */ jsx(Button, {
+				variant: "outline",
+				size: "sm",
+				class: "w-full",
+				children: "Invite Members"
+			})]
+		})]
+	});
+}
+TeamMembers.__otokIslandId = "TeamMembers";
 //#endregion
 //#region src/app/routes/index.tsx
 var routes_exports = /* @__PURE__ */ __exportAll({
 	default: () => Home,
-	head: () => head,
-	loader: () => loader
+	head: () => head$3,
+	loader: () => loader$1
 });
-var loader = async () => ({ initialCount: 5 });
-var head = () => ({
-	title: "Otok",
-	description: "Hono + Preact Islands + kamod-ui."
+var loader$1 = async () => ({
+	initialCount: 5,
+	dateRange: {
+		from: "12 May 2026",
+		to: "08 Jun 2026"
+	},
+	teamMembers,
+	payments,
+	exerciseMinutes,
+	chatThread,
+	stats: dashboardStats
+});
+var head$3 = () => ({
+	title: "Dashboard | Otok Playground",
+	description: "Shadcn-style admin dashboard built with Otok SSR and kamod-ui islands.",
+	links: [{
+		rel: "canonical",
+		href: "https://example.com/"
+	}],
+	meta: {
+		"og:title": "Otok Playground Dashboard",
+		"og:type": "website"
+	},
+	jsonLd: {
+		"@context": "https://schema.org",
+		"@type": "SoftwareApplication",
+		name: "Otok Playground",
+		applicationCategory: "DeveloperApplication"
+	}
 });
 function Home({ data }) {
-	return /* @__PURE__ */ jsxs("main", {
-		class: "mx-auto flex min-h-screen max-w-5xl flex-col gap-8 px-6 py-16",
-		children: [/* @__PURE__ */ jsxs("section", {
-			class: "space-y-5",
+	const revenue = new Intl.NumberFormat("en-US", {
+		style: "currency",
+		currency: "USD"
+	}).format(data.stats.revenue.value);
+	return /* @__PURE__ */ jsxs("div", {
+		class: "grid gap-4 lg:grid-cols-7",
+		children: [
+			/* @__PURE__ */ jsx(Island, {
+				component: TeamMembers,
+				props: { members: data.teamMembers },
+				strategy: "visible",
+				rootMargin: "160px"
+			}),
+			/* @__PURE__ */ jsxs("div", {
+				class: "col-span-3 flex flex-col gap-4",
+				children: [
+					/* @__PURE__ */ jsx(StatCard, {
+						title: "Subscriptions",
+						value: `+${data.stats.subscriptions.value.toLocaleString()}`,
+						change: data.stats.subscriptions.change
+					}),
+					/* @__PURE__ */ jsx(StatCard, {
+						title: "Total Revenue",
+						value: revenue,
+						change: data.stats.revenue.change
+					}),
+					/* @__PURE__ */ jsx(Island, {
+						component: ChatCard,
+						props: {
+							contactName: "Sofia Davis",
+							contactEmail: "m@example.com",
+							contactInitials: "SD",
+							messages: data.chatThread
+						},
+						strategy: "visible",
+						rootMargin: "160px"
+					})
+				]
+			}),
+			/* @__PURE__ */ jsx(ExerciseChart, { data: data.exerciseMinutes }),
+			/* @__PURE__ */ jsx(PaymentsTable, { payments: data.payments }),
+			/* @__PURE__ */ jsx(Island, {
+				component: PaymentForm,
+				props: {},
+				strategy: "visible",
+				rootMargin: "160px"
+			}),
+			/* @__PURE__ */ jsxs(Card, {
+				class: "col-span-4 lg:col-span-3",
+				children: [/* @__PURE__ */ jsx(CardHeader, { children: /* @__PURE__ */ jsx(CardTitle, { children: "Otok island demo" }) }), /* @__PURE__ */ jsxs(CardContent, {
+					class: "space-y-4",
+					children: [/* @__PURE__ */ jsx(Island, {
+						component: Counter,
+						props: { init: data.initialCount }
+					}), /* @__PURE__ */ jsxs("div", {
+						class: "flex flex-wrap gap-2",
+						children: [
+							/* @__PURE__ */ jsx(Button, {
+								href: "/about",
+								variant: "outline",
+								size: "sm",
+								children: "Zero-JS route"
+							}),
+							/* @__PURE__ */ jsx(Button, {
+								href: "/demo",
+								variant: "outline",
+								size: "sm",
+								children: "kamod-ui islands"
+							}),
+							/* @__PURE__ */ jsx(Badge, {
+								variant: "secondary",
+								children: "SSR + islands"
+							})
+						]
+					})]
+				})]
+			})
+		]
+	});
+}
+//#endregion
+//#region src/app/routes/docs/[...slug].tsx
+var ____slug__exports = /* @__PURE__ */ __exportAll({
+	default: () => DocsPage,
+	head: () => head$2,
+	loader: () => loader
+});
+var loader = ({ params }) => ({
+	slug: params.slug,
+	segments: params.slug.split("/")
+});
+var head$2 = ({ data }) => ({ title: `Docs ${data.slug} | Otok Playground` });
+function DocsPage({ data }) {
+	return /* @__PURE__ */ jsxs(Card, { children: [/* @__PURE__ */ jsx(CardHeader, { children: /* @__PURE__ */ jsx(CardTitle, { children: "Catch-all docs route" }) }), /* @__PURE__ */ jsxs(CardContent, {
+		class: "space-y-4",
+		children: [
+			/* @__PURE__ */ jsx(Badge, { children: "/docs/[...slug]" }),
+			/* @__PURE__ */ jsxs("p", {
+				class: "text-muted-foreground",
+				children: ["Loaded docs slug: ", data.slug]
+			}),
+			/* @__PURE__ */ jsx("div", {
+				class: "flex flex-wrap gap-2",
+				children: data.segments.map((segment) => /* @__PURE__ */ jsx(Badge, {
+					variant: "secondary",
+					children: segment
+				}, segment))
+			})
+		]
+	})] });
+}
+//#endregion
+//#region src/app/routes/_not-found.tsx
+var _not_found_exports = /* @__PURE__ */ __exportAll({
+	default: () => NotFound,
+	head: () => head$1
+});
+var head$1 = () => ({ title: "Not found | Otok Playground" });
+function NotFound() {
+	return /* @__PURE__ */ jsxs(Card, { children: [/* @__PURE__ */ jsx(CardHeader, { children: /* @__PURE__ */ jsx(CardTitle, { children: "Page not found" }) }), /* @__PURE__ */ jsxs(CardContent, {
+		class: "space-y-4",
+		children: [/* @__PURE__ */ jsx("p", {
+			class: "text-muted-foreground",
+			children: "Otok rendered this 404 through the route convention."
+		}), /* @__PURE__ */ jsx(Button, {
+			href: "/",
+			variant: "outline",
+			size: "sm",
+			children: "Back to dashboard"
+		})]
+	})] });
+}
+//#endregion
+//#region src/app/routes/_error.tsx
+var _error_exports = /* @__PURE__ */ __exportAll({
+	default: () => ErrorRoute,
+	head: () => head
+});
+var head = () => ({ title: "Error | Otok Playground" });
+function ErrorRoute({ data }) {
+	return /* @__PURE__ */ jsxs(Card, { children: [/* @__PURE__ */ jsx(CardHeader, { children: /* @__PURE__ */ jsx(CardTitle, { children: "Something went wrong" }) }), /* @__PURE__ */ jsxs(CardContent, {
+		class: "space-y-3 text-sm text-muted-foreground",
+		children: [/* @__PURE__ */ jsxs("p", { children: ["Status: ", data.status ?? 500] }), /* @__PURE__ */ jsx("p", { children: data.message ?? "The error route handled this failure." })]
+	})] });
+}
+//#endregion
+//#region src/app/components/dashboard-nav.ts
+var dashboardNavGroups = [{
+	label: "Dashboards",
+	items: [{
+		label: "Classic Dashboard",
+		href: "/"
+	}]
+}, {
+	label: "Pages",
+	items: [
+		{
+			label: "Zero-JS route",
+			href: "/about"
+		},
+		{
+			label: "kamod-ui islands",
+			href: "/demo"
+		},
+		{
+			label: "Catch-all docs",
+			href: "/docs/routing/catch-all",
+			match: (route) => route.startsWith("/docs/") || route === "/docs/:slug*"
+		},
+		{
+			label: "Dynamic route",
+			href: "/users/alice",
+			match: (route) => route.startsWith("/users/") || route === "/users/:id"
+		}
+	]
+}];
+function isNavItemActive(route, item) {
+	if (item.match) return item.match(route);
+	return route === item.href || item.href !== "/" && route === item.href;
+}
+//#endregion
+//#region src/app/components/dashboard-shell.tsx
+function SidebarNav({ route }) {
+	return /* @__PURE__ */ jsx("nav", {
+		class: "flex flex-col gap-4 px-2 py-4",
+		children: dashboardNavGroups.map((group) => /* @__PURE__ */ jsxs("details", {
+			open: true,
+			class: "group",
+			children: [/* @__PURE__ */ jsx("summary", {
+				class: "cursor-pointer list-none px-2 text-xs font-medium uppercase tracking-wide text-muted-foreground [&::-webkit-details-marker]:hidden",
+				children: group.label
+			}), /* @__PURE__ */ jsx("ul", {
+				class: "mt-2 flex flex-col gap-1",
+				children: group.items.map((item) => {
+					const active = isNavItemActive(route, item);
+					return /* @__PURE__ */ jsx("li", { children: /* @__PURE__ */ jsx("a", {
+						href: item.href,
+						"aria-current": active ? "page" : void 0,
+						class: `block rounded-md px-2 py-1.5 text-sm transition-colors hover:bg-muted ${active ? "bg-muted font-medium text-foreground" : "text-muted-foreground"}`,
+						children: item.label
+					}) }, item.href);
+				})
+			})]
+		}, group.label))
+	});
+}
+function DashboardShell({ route, title, description, toolbar, children }) {
+	return /* @__PURE__ */ jsxs("div", {
+		class: "flex min-h-screen bg-background",
+		children: [/* @__PURE__ */ jsxs("aside", {
+			class: "hidden w-64 shrink-0 border-r bg-muted/20 lg:flex lg:flex-col",
 			children: [
-				/* @__PURE__ */ jsx(Badge, { children: "Otok" }),
-				/* @__PURE__ */ jsxs("div", {
-					class: "space-y-3",
-					children: [/* @__PURE__ */ jsx("h1", {
-						class: "text-4xl font-semibold tracking-tight sm:text-6xl",
-						children: "Hono SSR with Preact islands."
-					}), /* @__PURE__ */ jsx("p", {
-						class: "max-w-2xl text-lg text-muted-foreground",
-						children: "Routes render to static HTML. Only islands ship JavaScript and hydrate on the client."
-					})]
+				/* @__PURE__ */ jsx("div", {
+					class: "flex h-14 items-center border-b px-4",
+					children: /* @__PURE__ */ jsx("a", {
+						href: "/",
+						class: "text-sm font-semibold tracking-tight",
+						children: "Otok Playground"
+					})
 				}),
-				/* @__PURE__ */ jsxs("nav", {
-					class: "flex flex-wrap gap-3",
-					children: [/* @__PURE__ */ jsx(Button, {
-						href: "/about",
-						children: "Zero-JS route"
-					}), /* @__PURE__ */ jsx(Button, {
-						href: "/demo",
-						variant: "secondary",
-						children: "kamod-ui islands"
-					})]
+				/* @__PURE__ */ jsx("div", {
+					class: "flex-1 overflow-y-auto",
+					children: /* @__PURE__ */ jsx(SidebarNav, { route })
+				}),
+				/* @__PURE__ */ jsx("div", {
+					class: "border-t p-4",
+					children: /* @__PURE__ */ jsxs("div", {
+						class: "flex items-center gap-3",
+						children: [/* @__PURE__ */ jsx(Avatar, {
+							size: "sm",
+							children: /* @__PURE__ */ jsx(AvatarFallback, { children: dashboardUser.initials })
+						}), /* @__PURE__ */ jsxs("div", {
+							class: "min-w-0",
+							children: [/* @__PURE__ */ jsx("p", {
+								class: "truncate text-sm font-medium",
+								children: dashboardUser.name
+							}), /* @__PURE__ */ jsx("p", {
+								class: "truncate text-xs text-muted-foreground",
+								children: dashboardUser.email
+							})]
+						})]
+					})
 				})
 			]
-		}), /* @__PURE__ */ jsxs(Card, { children: [/* @__PURE__ */ jsx(CardHeader, { children: /* @__PURE__ */ jsx(CardTitle, { children: "Counter island" }) }), /* @__PURE__ */ jsx(CardContent, { children: /* @__PURE__ */ jsx(Island, {
-			component: Counter,
-			props: { init: data.initialCount }
-		}) })] })]
+		}), /* @__PURE__ */ jsxs("div", {
+			class: "flex min-w-0 flex-1 flex-col",
+			children: [/* @__PURE__ */ jsxs("header", {
+				class: "sticky top-0 z-10 flex h-14 items-center gap-4 border-b bg-background/95 px-4 backdrop-blur supports-[backdrop-filter]:bg-background/60",
+				children: [
+					/* @__PURE__ */ jsxs("details", {
+						class: "lg:hidden",
+						children: [/* @__PURE__ */ jsx("summary", {
+							class: "cursor-pointer list-none rounded-md border px-2.5 py-1.5 text-sm [&::-webkit-details-marker]:hidden",
+							children: "Menu"
+						}), /* @__PURE__ */ jsx("div", {
+							class: "absolute left-0 right-0 top-14 z-20 border-b bg-background p-4 shadow-sm",
+							children: /* @__PURE__ */ jsx(SidebarNav, { route })
+						})]
+					}),
+					toolbar,
+					/* @__PURE__ */ jsx("div", {
+						class: "ms-auto flex items-center gap-2",
+						children: /* @__PURE__ */ jsx(Avatar, {
+							size: "sm",
+							class: "lg:hidden",
+							children: /* @__PURE__ */ jsx(AvatarFallback, { children: dashboardUser.initials })
+						})
+					})
+				]
+			}), /* @__PURE__ */ jsxs("main", {
+				class: "flex-1 p-4 md:p-6",
+				children: [
+					/* @__PURE__ */ jsxs("div", {
+						class: "mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between",
+						children: [/* @__PURE__ */ jsxs("div", {
+							class: "space-y-1",
+							children: [/* @__PURE__ */ jsx("h1", {
+								class: "text-2xl font-semibold tracking-tight md:text-3xl",
+								children: title
+							}), description ? /* @__PURE__ */ jsx("p", {
+								class: "text-sm text-muted-foreground",
+								children: description
+							}) : null]
+						}), /* @__PURE__ */ jsx("div", {
+							class: "flex items-center gap-2",
+							children: /* @__PURE__ */ jsx(Button, {
+								variant: "outline",
+								size: "sm",
+								children: "Download"
+							})
+						})]
+					}),
+					/* @__PURE__ */ jsx(Separator, { class: "mb-6" }),
+					children
+				]
+			})]
+		})]
+	});
+}
+//#endregion
+//#region src/app/islands/dashboard-toolbar.tsx
+var commands = [
+	{
+		label: "Classic Dashboard",
+		href: "/"
+	},
+	{
+		label: "Zero-JS route",
+		href: "/about"
+	},
+	{
+		label: "kamod-ui islands",
+		href: "/demo"
+	},
+	{
+		label: "Dynamic route",
+		href: "/users/alice"
+	}
+];
+function DashboardToolbar() {
+	const [open, setOpen] = useState(false);
+	useEffect(() => {
+		const onKeyDown = (event) => {
+			if ((event.metaKey || event.ctrlKey) && event.key.toLowerCase() === "k") {
+				event.preventDefault();
+				setOpen((current) => !current);
+			}
+		};
+		window.addEventListener("keydown", onKeyDown);
+		return () => window.removeEventListener("keydown", onKeyDown);
+	}, []);
+	return /* @__PURE__ */ jsxs(Fragment$1, { children: [
+		/* @__PURE__ */ jsxs(Button, {
+			variant: "outline",
+			size: "sm",
+			class: "hidden h-8 w-64 justify-start text-muted-foreground sm:flex",
+			onClick: () => setOpen(true),
+			children: ["Search for a command to run...", /* @__PURE__ */ jsx("kbd", {
+				class: "pointer-events-none ms-auto hidden rounded border bg-muted px-1.5 font-mono text-[10px] font-medium sm:inline",
+				children: "⌘K"
+			})]
+		}),
+		/* @__PURE__ */ jsx(Button, {
+			variant: "outline",
+			size: "sm",
+			class: "sm:hidden",
+			onClick: () => setOpen(true),
+			children: "Search"
+		}),
+		/* @__PURE__ */ jsx(ThemeToggle, {}),
+		/* @__PURE__ */ jsx(CommandDialog, {
+			open,
+			onOpenChange: setOpen,
+			children: /* @__PURE__ */ jsxs(Command, { children: [/* @__PURE__ */ jsx(CommandInput, { placeholder: "Search for a command to run..." }), /* @__PURE__ */ jsxs(CommandList, { children: [/* @__PURE__ */ jsx(CommandEmpty, { children: "No results found." }), /* @__PURE__ */ jsx(CommandGroup, {
+				heading: "Pages",
+				children: commands.map((command) => /* @__PURE__ */ jsx(CommandItem, {
+					value: command.label,
+					onSelect: () => {
+						setOpen(false);
+						window.location.href = command.href;
+					},
+					children: command.label
+				}, command.href))
+			})] })] })
+		})
+	] });
+}
+DashboardToolbar.__otokIslandId = "DashboardToolbar";
+//#endregion
+//#region src/app/routes/_layout.tsx
+var _layout_exports = /* @__PURE__ */ __exportAll({ default: () => Layout });
+function routeChrome({ route, params, data }) {
+	if (route === "/") {
+		const dateRange = data && typeof data === "object" && "dateRange" in data ? data.dateRange : void 0;
+		return {
+			title: "Dashboard",
+			description: dateRange?.from && dateRange.to ? `${dateRange.from} - ${dateRange.to}` : "Otok dashboard",
+			toolbar: /* @__PURE__ */ jsx(Island, {
+				component: DashboardToolbar,
+				props: {},
+				strategy: "load"
+			})
+		};
+	}
+	if (route === "/demo") return {
+		title: "kamod-ui islands",
+		description: "Dialog and theme interactions are isolated islands.",
+		toolbar: /* @__PURE__ */ jsx(Island, {
+			component: DashboardToolbar,
+			props: {},
+			strategy: "load"
+		})
+	};
+	if (route === "/users/:id") return {
+		title: "Dynamic route",
+		description: `Server-rendered route for ${params.id}.`
+	};
+	if (route === "/docs/:slug*") return {
+		title: "Catch-all route",
+		description: "A catch-all route powered by Otok file routing."
+	};
+	return {
+		title: "Zero-JS route",
+		description: "This route has no islands."
+	};
+}
+function Layout({ children, data, params, route }) {
+	const chrome = routeChrome({
+		route,
+		params,
+		data
+	});
+	return /* @__PURE__ */ jsx(DashboardShell, {
+		route,
+		title: chrome.title,
+		description: chrome.description,
+		toolbar: chrome.toolbar,
+		children
 	});
 }
 //#endregion
@@ -723,48 +1708,85 @@ var routes = [
 		path: "/about",
 		pattern: /* @__PURE__ */ new RegExp("^/about/?$"),
 		params: [],
-		module: about_exports
+		module: about_exports,
+		layouts: [_layout_exports]
+	},
+	{
+		id: "boom",
+		path: "/boom",
+		pattern: /* @__PURE__ */ new RegExp("^/boom/?$"),
+		params: [],
+		module: boom_exports,
+		layouts: [_layout_exports]
 	},
 	{
 		id: "demo",
 		path: "/demo",
 		pattern: /* @__PURE__ */ new RegExp("^/demo/?$"),
 		params: [],
-		module: demo_exports
+		module: demo_exports,
+		layouts: [_layout_exports]
 	},
 	{
 		id: "users.[id]",
 		path: "/users/:id",
 		pattern: /* @__PURE__ */ new RegExp("^/users/([^/]+)/?$"),
 		params: ["id"],
-		module: _id__exports
+		module: _id__exports,
+		layouts: [_layout_exports]
 	},
 	{
 		id: "index",
 		path: "/",
-		pattern: /* @__PURE__ */ new RegExp("^//?$"),
+		pattern: /* @__PURE__ */ new RegExp("^/?$"),
 		params: [],
-		module: routes_exports
+		module: routes_exports,
+		layouts: [_layout_exports]
+	},
+	{
+		id: "docs.[...slug]",
+		path: "/docs/:slug*",
+		pattern: /* @__PURE__ */ new RegExp("^/docs/(.+)/?$"),
+		params: ["slug"],
+		module: ____slug__exports,
+		layouts: [_layout_exports]
 	}
 ];
+var notFoundRoute = {
+	id: "_not-found",
+	path: "/",
+	pattern: /* @__PURE__ */ new RegExp("^/?$"),
+	params: [],
+	module: _not_found_exports,
+	layouts: [_layout_exports]
+};
+var errorRoute = {
+	id: "_error",
+	path: "/",
+	pattern: /* @__PURE__ */ new RegExp("^/?$"),
+	params: [],
+	module: _error_exports,
+	layouts: [_layout_exports]
+};
 //#endregion
 //#region src/server.ts
 function readManifest() {
 	const manifestUrl = new URL("../client/.vite/manifest.json", import.meta.url);
 	return JSON.parse(readFileSync(manifestUrl, "utf8"));
 }
-var app = new Hono();
-app.get("/api/health", (c) => c.json({
-	ok: true,
-	framework: "otok"
-}));
-app.use("/assets/*", serveStatic({ root: "./dist/client" }));
-app.get("*", createOtokHandler({
+var app = createOtokApp({
 	routes,
+	notFoundRoute,
+	errorRoute,
 	manifest: readManifest(),
 	clientEntry: "src/client.ts",
-	devClientEntry: "/src/client.ts"
-}));
+	devClientEntry: "/src/client.ts",
+	staticDir: "./dist/client",
+	health: {
+		ok: true,
+		framework: "otok"
+	}
+});
 serve({
 	fetch: app.fetch,
 	port: Number(process.env.PORT ?? 3e3)

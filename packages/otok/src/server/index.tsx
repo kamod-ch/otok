@@ -1,10 +1,20 @@
+import { serveStatic } from "@hono/node-server/serve-static";
 import type { Context, Handler } from "hono";
+import { Hono } from "hono";
 import { h } from "preact";
+import type { ComponentType, VNode } from "preact";
 import renderToString from "preact-render-to-string";
 import { pageHtml, type ViteManifest } from "./html.js";
-import { withIslandRenderContext } from "./island-context.js";
 import { matchRoute } from "./router.js";
-import type { LoaderResult, OtokHead, OtokRoute } from "../shared/routes.js";
+import { withIslandRenderContext } from "../shared/island-context.js";
+import {
+  isOtokHttpError,
+  type LoaderResult,
+  type OtokContext,
+  type OtokHead,
+  type OtokRoute,
+} from "../shared/routes.js";
+import { resolveDarkModeFromCookie } from "../shared/theme.js";
 
 export interface CreateOtokHandlerOptions {
   routes: OtokRoute[];
@@ -13,6 +23,14 @@ export interface CreateOtokHandlerOptions {
   devClientEntry?: string;
   base?: string;
   notFound?: OtokRoute;
+  notFoundRoute?: OtokRoute;
+  errorRoute?: OtokRoute;
+}
+
+export interface CreateOtokAppOptions extends CreateOtokHandlerOptions {
+  staticDir?: string;
+  assetsPath?: string;
+  health?: boolean | Record<string, unknown>;
 }
 
 async function resolveHead(route: OtokRoute, data: LoaderResult, params: Record<string, string>): Promise<OtokHead> {
@@ -29,12 +47,17 @@ export function createOtokHandler(options: CreateOtokHandlerOptions): Handler {
     const url = new URL(c.req.url);
     const match = matchRoute(options.routes, url.pathname);
 
-    if (!match) {
-      if (!options.notFound) return c.notFound();
-      return renderRoute(c, options.notFound, {}, options, 404);
-    }
+    try {
+      if (!match) {
+        const notFoundRoute = options.notFoundRoute ?? options.notFound;
+        if (!notFoundRoute) return c.notFound();
+        return await renderRoute(c, notFoundRoute, {}, options, 404);
+      }
 
-    return renderRoute(c, match.route, match.params, options);
+      return await renderRoute(c, match.route, match.params, options);
+    } catch (error) {
+      return handleRenderError(c, error, options);
+    }
   };
 }
 
@@ -44,20 +67,29 @@ async function renderRoute(
   params: Record<string, string>,
   options: CreateOtokHandlerOptions,
   status = 200,
+  dataOverride?: LoaderResult,
 ): Promise<Response> {
-  const context = {
+  const context: OtokContext = {
     hono: c,
     request: c.req.raw,
     params,
     route: route.path,
   };
-  const data = route.module.loader ? await route.module.loader(context) : {};
+  const data = dataOverride ?? (route.module.loader ? await route.module.loader(context) : {});
   const head = await resolveHead(route, data, params);
   const Page = route.module.default;
-  const islandContext = { islands: new Set<string>() };
-  const body = withIslandRenderContext(islandContext, () =>
-    renderToString(h(Page, { data, params, route: route.path })),
-  );
+  const props = { data, params, route: route.path };
+  const islandContext = { islands: new Set<string>(), nextIslandId: 0 };
+  const body = withIslandRenderContext(islandContext, () => {
+    let tree: VNode<any> = h(Page as ComponentType<typeof props>, props);
+    for (const layout of [...(route.layouts ?? [])].reverse()) {
+      tree = h(layout.default as ComponentType<typeof props & { children: VNode<any> }>, {
+        ...props,
+        children: tree,
+      });
+    }
+    return renderToString(tree);
+  });
   const html = pageHtml({
     body,
     head,
@@ -66,6 +98,7 @@ async function renderRoute(
     clientEntry: options.clientEntry,
     devClientEntry: options.devClientEntry,
     base: options.base,
+    darkMode: resolveDarkModeFromCookie(c.req.header("cookie")),
   });
 
   return new Response(html, {
@@ -76,13 +109,81 @@ async function renderRoute(
   });
 }
 
+async function handleRenderError(
+  c: Context,
+  error: unknown,
+  options: CreateOtokHandlerOptions,
+): Promise<Response> {
+  if (isOtokHttpError(error)) {
+    const location = error.headers.get("location");
+    if (location) {
+      return new Response(null, { status: error.status, headers: error.headers });
+    }
+
+    if (error.status === 404) {
+      const notFoundRoute = options.notFoundRoute ?? options.notFound;
+      if (notFoundRoute) return renderFallbackRoute(c, notFoundRoute, options, 404, { message: error.message });
+    }
+
+    if (options.errorRoute) {
+      return renderFallbackRoute(c, options.errorRoute, options, error.status, {
+        message: error.message,
+        status: error.status,
+      });
+    }
+
+    return new Response(error.message, { status: error.status, headers: error.headers });
+  }
+
+  if (options.errorRoute) {
+    const message = error instanceof Error ? error.message : "Internal server error";
+    return renderFallbackRoute(c, options.errorRoute, options, 500, { message, status: 500 });
+  }
+
+  throw error;
+}
+
+async function renderFallbackRoute(
+  c: Context,
+  route: OtokRoute,
+  options: CreateOtokHandlerOptions,
+  status: number,
+  data: LoaderResult,
+): Promise<Response> {
+  try {
+    return await renderRoute(c, route, {}, options, status, data);
+  } catch {
+    return new Response(status === 404 ? "Not found" : "Internal server error", { status });
+  }
+}
+
+export function createOtokApp(options: CreateOtokAppOptions): Hono {
+  const app = new Hono();
+
+  if (options.health) {
+    const payload = typeof options.health === "object" ? options.health : { ok: true, framework: "otok" };
+    app.get("/api/health", (c) => c.json(payload));
+  }
+
+  if (options.staticDir) {
+    app.use(`${options.assetsPath ?? "/assets"}/*`, serveStatic({ root: options.staticDir }));
+  }
+
+  app.get("*", createOtokHandler(options));
+  return app;
+}
+
 export { pageHtml, type ViteManifest, type ViteManifestEntry } from "./html.js";
 export { matchRoute, type RouteMatch } from "./router.js";
+export { fail, isOtokHttpError, notFound, OtokHttpError, redirect } from "../shared/routes.js";
 export type {
   InferLoaderData,
   LoaderResult,
   OtokContext,
   OtokHead,
+  OtokHeadLink,
+  OtokHeadScript,
+  OtokLayoutProps,
   OtokLoader,
   OtokPageProps,
   OtokRoute,

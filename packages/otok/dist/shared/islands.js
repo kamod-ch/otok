@@ -1,3 +1,4 @@
+export const DEFAULT_LARGE_PROPS_THRESHOLD = 2048;
 export function encodeIslandProps(props) {
     if (!props || Object.keys(props).length === 0)
         return "";
@@ -23,10 +24,23 @@ export function decodeIslandProps(value) {
     const bytes = Uint8Array.from(binary, (char) => char.charCodeAt(0));
     return JSON.parse(new TextDecoder().decode(bytes));
 }
+export function encodeIslandPropsForHtml(props, propsId, threshold = DEFAULT_LARGE_PROPS_THRESHOLD) {
+    if (!props || Object.keys(props).length === 0)
+        return { attribute: "" };
+    const json = JSON.stringify(props);
+    if (json.length <= threshold) {
+        return { attribute: encodeIslandProps(props) };
+    }
+    return {
+        attribute: "",
+        propsId,
+        scriptJson: json.replaceAll("<", "\\u003c"),
+    };
+}
 export function resolveIslandId(component, explicitId) {
     if (explicitId)
         return explicitId;
     const named = component;
-    return named.__otokIslandId ?? named.displayName ?? named.name ?? "";
+    return named.__otokIslandId ?? "";
 }
 //# sourceMappingURL=islands.js.map

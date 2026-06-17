@@ -1,16 +1,18 @@
 {
   "name": "otok-workspace",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "private": true,
   "type": "module",
   "scripts": {
     "build": "pnpm -r --filter './packages/*' build && pnpm --filter playground build",
+    "check:scaffold": "node ./scripts/sync-scaffold.mjs --check",
     "dev": "pnpm --filter playground dev",
     "preview": "pnpm --filter playground preview",
+    "sync:scaffold": "node ./scripts/sync-scaffold.mjs",
     "typecheck": "pnpm -r typecheck",
     "test": "pnpm -r test",
     "test:e2e": "pnpm --filter playground test:e2e",
-    "check": "pnpm typecheck && pnpm test && pnpm build"
+    "check": "pnpm check:scaffold && pnpm typecheck && pnpm test && pnpm build"
   },
   "devDependencies": {
     "@types/node": "^24.12.2",

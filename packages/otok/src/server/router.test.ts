@@ -14,9 +14,16 @@ describe("matchRoute", () => {
       module: { default: component },
     },
     {
+      id: "docs.[...slug]",
+      path: "/docs/:slug*",
+      pattern: /^\/docs\/(.+)\/?$/,
+      params: ["slug"],
+      module: { default: component },
+    },
+    {
       id: "index",
       path: "/",
-      pattern: /^\/\/?$/,
+      pattern: /^\/?$/,
       params: [],
       module: { default: component },
     },
@@ -28,5 +35,11 @@ describe("matchRoute", () => {
 
   it("returns undefined for missing routes", () => {
     expect(matchRoute(routes, "/missing")).toBeUndefined();
+  });
+
+  it("matches catch-all params", () => {
+    expect(matchRoute(routes, "/docs/routing/catch-all")?.params).toEqual({
+      slug: "routing/catch-all",
+    });
   });
 });

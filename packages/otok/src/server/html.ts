@@ -1,4 +1,5 @@
 import type { OtokHead } from "../shared/routes.js";
+import { themeBootstrapScript, themeColorSchemeStyle } from "../shared/theme.js";
 
 export interface ViteManifestEntry {
   file?: string;
@@ -17,6 +18,8 @@ export interface PageHtmlOptions {
   clientEntry?: string;
   devClientEntry?: string;
   base?: string;
+  /** When true, SSR emits `<html class="dark">` from the theme cookie. */
+  darkMode?: boolean;
 }
 
 function escapeHtml(value: string): string {
@@ -25,6 +28,10 @@ function escapeHtml(value: string): string {
     .replaceAll("<", "&lt;")
     .replaceAll(">", "&gt;")
     .replaceAll('"', "&quot;");
+}
+
+function escapeScriptJson(value: string): string {
+  return value.replaceAll("<", "\\u003c");
 }
 
 function publicPath(path: string, base: string): string {
@@ -68,12 +75,41 @@ function renderHead(head: OtokHead | undefined): string {
   const meta = Object.entries(head?.meta ?? {})
     .map(([name, content]) => `<meta name="${escapeHtml(name)}" content="${escapeHtml(content)}">`)
     .join("\n    ");
+  const links = (head?.links ?? [])
+    .map((link) => {
+      const attrs = [
+        `rel="${escapeHtml(link.rel)}"`,
+        `href="${escapeHtml(link.href)}"`,
+        link.crossorigin ? `crossorigin="${escapeHtml(link.crossorigin)}"` : "",
+        link.as ? `as="${escapeHtml(link.as)}"` : "",
+        link.type ? `type="${escapeHtml(link.type)}"` : "",
+      ].filter(Boolean);
+      return `<link ${attrs.join(" ")}>`;
+    })
+    .join("\n    ");
+  const scripts = (head?.scripts ?? [])
+    .map((script) => {
+      const attrs = [
+        script.src ? `src="${escapeHtml(script.src)}"` : "",
+        script.type ? `type="${escapeHtml(script.type)}"` : "",
+        script.async ? "async" : "",
+        script.defer ? "defer" : "",
+      ].filter(Boolean);
+      return `<script ${attrs.join(" ")}></script>`;
+    })
+    .join("\n    ");
+  const jsonLd = head?.jsonLd
+    ? `<script type="application/ld+json">${escapeScriptJson(JSON.stringify(head.jsonLd))}</script>`
+    : "";
   return [
     '<meta charset="utf-8">',
     '<meta name="viewport" content="width=device-width, initial-scale=1">',
     `<title>${title}</title>`,
     description,
     meta,
+    links,
+    scripts,
+    jsonLd,
   ]
     .filter(Boolean)
     .join("\n    ");
@@ -87,6 +123,7 @@ export function pageHtml({
   clientEntry = "src/client.ts",
   devClientEntry = "/src/client.ts",
   base = "/",
+  darkMode = false,
 }: PageHtmlOptions): string {
   const entry = findEntry(manifest, clientEntry);
   const css = collectCss(manifest, entry);
@@ -100,10 +137,13 @@ export function pageHtml({
       : `<script type="module" src="${escapeHtml(devClientEntry)}"></script>`
     : "";
   const lang = escapeHtml(head?.lang ?? "en");
+  const htmlClass = darkMode ? ` class="dark"` : "";
 
   return `<!doctype html>
-<html lang="${lang}">
+<html lang="${lang}"${htmlClass}>
   <head>
+    ${themeBootstrapScript}
+    ${themeColorSchemeStyle}
     ${renderHead(head)}
     ${stylesheetLinks}
   </head>

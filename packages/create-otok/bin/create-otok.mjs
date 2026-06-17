@@ -9,20 +9,29 @@ function usage() {
   console.log(`create-otok
 
 Usage:
-  pnpm create otok <app-name>
+  pnpm create otok <app-name> [--template minimal|full]
 
 Options:
+  --template    Select a template. "minimal" and "full" currently use the default template.
   --help, -h    Show this help message
 `);
 }
 
-function resolveTemplateDir() {
+function resolveTemplateDir(template) {
+  if (template !== "minimal" && template !== "full") {
+    throw new Error(`Unknown template "${template}". Expected "minimal" or "full".`);
+  }
+
   const candidates = [
-    path.resolve(__dirname, "../../../templates/default"),
     path.resolve(__dirname, "../template"),
+    path.resolve(__dirname, "../../../templates/default"),
   ];
   const found = candidates.find((candidate) => fs.existsSync(path.join(candidate, "package.json")));
-  if (!found) throw new Error("Could not locate the Otok default template.");
+  if (!found) {
+    throw new Error(
+      "Could not locate the Otok default template. Expected packages/create-otok/template or templates/default.",
+    );
+  }
   return found;
 }
 
@@ -50,7 +59,22 @@ if (args.includes("--help") || args.includes("-h")) {
   process.exit(0);
 }
 
-const name = args[0];
+let name;
+let template = "minimal";
+for (let index = 0; index < args.length; index += 1) {
+  const arg = args[index];
+  if (arg === "--template") {
+    template = args[index + 1];
+    index += 1;
+  } else if (!name) {
+    name = arg;
+  } else {
+    console.error(`Unexpected argument: ${arg}`);
+    usage();
+    process.exit(1);
+  }
+}
+
 if (!name) {
   usage();
   process.exit(1);
@@ -62,10 +86,10 @@ if (fs.existsSync(target) && fs.readdirSync(target).length > 0) {
   process.exit(1);
 }
 
-copyDir(resolveTemplateDir(), target);
+copyDir(resolveTemplateDir(template), target);
 updatePackageName(target, path.basename(target));
 
-console.log(`Created ${path.basename(target)}.
+console.log(`Created ${path.basename(target)} with the ${template} template.
 
 Next steps:
   cd ${path.relative(process.cwd(), target) || "."}

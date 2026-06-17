@@ -1,6 +1,6 @@
 {
   "name": "create-otok",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "description": "Scaffold a new Otok app.",
   "type": "module",
   "bin": {
@@ -8,9 +8,9 @@
   },
   "files": ["bin", "template"],
   "scripts": {
-    "build": "node ./bin/create-otok.mjs --help >/dev/null",
-    "typecheck": "node ./bin/create-otok.mjs --help >/dev/null",
-    "test": "node ./bin/create-otok.mjs --help >/dev/null"
+    "build": "npm pack --dry-run >/dev/null",
+    "typecheck": "node --check ./bin/create-otok.mjs && node --check ./test/create-otok.test.mjs",
+    "test": "node --test ./test/create-otok.test.mjs"
   },
   "engines": {
     "node": ">=20"

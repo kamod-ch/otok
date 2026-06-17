@@ -33,52 +33,112 @@ function pascalCase(value) {
 function stripExtension(file) {
     return file.replace(/\.[cm]?[tj]sx?$/, "");
 }
-function segmentToRoute(segment) {
-    if (segment === "index")
-        return undefined;
-    if (segment.startsWith("_"))
-        return undefined;
-    const match = /^\[([^\]]+)\]$/.exec(segment);
-    if (match)
-        return { part: `:${match[1]}`, param: match[1], dynamic: true };
-    return { part: segment, dynamic: false };
+function escapeRegex(value) {
+    return value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 }
-function routeFileToEntry(file, routesDir) {
+function emptyVariant() {
+    return { parts: [], params: [], staticCount: 0, dynamicCount: 0, catchAllCount: 0 };
+}
+function appendPart(variant, part) {
+    return {
+        parts: [...variant.parts, part],
+        params: part.param ? [...variant.params, part.param] : variant.params,
+        staticCount: variant.staticCount + (part.kind === "static" ? 1 : 0),
+        dynamicCount: variant.dynamicCount + (part.kind === "dynamic" ? 1 : 0),
+        catchAllCount: variant.catchAllCount + (part.kind === "catchall" ? 1 : 0),
+    };
+}
+function segmentToVariants(segment, variants) {
+    if (segment === "index" || segment.startsWith("_") || /^\(.+\)$/.test(segment))
+        return variants;
+    const catchAll = /^\[\.\.\.([^\]]+)\]$/.exec(segment);
+    if (catchAll) {
+        return variants.map((variant) => appendPart(variant, {
+            part: `:${catchAll[1]}*`,
+            pattern: "(.+)",
+            kind: "catchall",
+            param: catchAll[1],
+        }));
+    }
+    const optional = /^\[\[([^\]]+)\]\]$/.exec(segment);
+    if (optional) {
+        return variants.flatMap((variant) => [
+            variant,
+            appendPart(variant, {
+                part: `:${optional[1]}`,
+                pattern: "([^/]+)",
+                kind: "dynamic",
+                param: optional[1],
+            }),
+        ]);
+    }
+    const dynamic = /^\[([^\]]+)\]$/.exec(segment);
+    if (dynamic) {
+        return variants.map((variant) => appendPart(variant, {
+            part: `:${dynamic[1]}`,
+            pattern: "([^/]+)",
+            kind: "dynamic",
+            param: dynamic[1],
+        }));
+    }
+    return variants.map((variant) => appendPart(variant, {
+        part: segment,
+        pattern: escapeRegex(segment),
+        kind: "static",
+    }));
+}
+function routeFileToEntries(file, routesDir, layoutMap) {
     const relative = normalizePath(path.relative(routesDir, stripExtension(file)));
     const segments = relative.split("/");
-    const params = [];
-    const routeParts = [];
-    let dynamicCount = 0;
-    for (const segment of segments) {
-        const converted = segmentToRoute(segment);
-        if (!converted)
-            continue;
-        routeParts.push(converted.part);
-        if (converted.param)
-            params.push(converted.param);
-        if (converted.dynamic)
-            dynamicCount += 1;
-    }
-    const routePath = `/${routeParts.join("/")}`.replace(/\/$/, "") || "/";
-    const patternParts = routeParts.map((part) => part.startsWith(":") ? "([^/]+)" : part.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"));
-    const pattern = `^/${patternParts.join("/")}/?$`;
-    const staticCount = routeParts.length - dynamicCount;
-    return {
-        id: relative.replaceAll("/", "."),
-        file,
-        routePath,
-        pattern,
-        params,
-        score: staticCount * 10 - dynamicCount,
-    };
+    const variants = segments.reduce((current, segment) => segmentToVariants(segment, current), [emptyVariant()]);
+    const layouts = layoutFilesForRoute(relative, layoutMap);
+    return variants.map((variant, index) => {
+        const routeParts = variant.parts.map((part) => part.part);
+        const routePath = `/${routeParts.join("/")}`.replace(/\/$/, "") || "/";
+        const patternParts = variant.parts.map((part) => part.pattern);
+        const pattern = patternParts.length > 0 ? `^/${patternParts.join("/")}/?$` : "^/?$";
+        return {
+            id: `${relative.replaceAll("/", ".")}${variants.length > 1 ? `.${index}` : ""}`,
+            file,
+            routePath,
+            pattern,
+            params: variant.params,
+            score: variant.staticCount * 100 - variant.dynamicCount * 10 - variant.catchAllCount * 1000,
+            layouts,
+        };
+    });
+}
+function layoutFilesForRoute(relative, layoutMap) {
+    const dir = normalizePath(path.dirname(relative));
+    const segments = dir === "." ? [] : dir.split("/");
+    const keys = ["", ...segments.map((_, index) => segments.slice(0, index + 1).join("/"))];
+    return keys.map((key) => layoutMap.get(key)).filter((file) => Boolean(file));
 }
 function scanRoutes(root, routesDir) {
     const absoluteRoutesDir = path.resolve(root, routesDir);
-    return walk(absoluteRoutesDir)
-        .filter((file) => !path.basename(file).startsWith("$"))
-        .map((file) => routeFileToEntry(file, absoluteRoutesDir))
-        .filter((entry) => Boolean(entry))
-        .sort((a, b) => b.score - a.score || a.routePath.localeCompare(b.routePath));
+    const files = walk(absoluteRoutesDir).filter((file) => !path.basename(file).startsWith("$"));
+    const layoutMap = new Map();
+    for (const file of files) {
+        if (path.basename(stripExtension(file)) !== "_layout")
+            continue;
+        const relativeDir = normalizePath(path.dirname(path.relative(absoluteRoutesDir, file)));
+        layoutMap.set(relativeDir === "." ? "" : relativeDir, file);
+    }
+    const pages = files.filter((file) => {
+        const name = path.basename(stripExtension(file));
+        return name !== "_layout" && name !== "_not-found" && name !== "_error";
+    });
+    return {
+        routes: pages
+            .flatMap((file) => routeFileToEntries(file, absoluteRoutesDir, layoutMap))
+            .sort((a, b) => b.score - a.score || a.routePath.localeCompare(b.routePath)),
+        notFoundRoute: files
+            .filter((file) => path.basename(stripExtension(file)) === "_not-found")
+            .flatMap((file) => routeFileToEntries(file, absoluteRoutesDir, layoutMap))[0],
+        errorRoute: files
+            .filter((file) => path.basename(stripExtension(file)) === "_error")
+            .flatMap((file) => routeFileToEntries(file, absoluteRoutesDir, layoutMap))[0],
+    };
 }
 function scanIslands(root, appDir, islandsDir, routesDir) {
     const absoluteIslandsDir = path.resolve(root, islandsDir);
@@ -111,20 +171,38 @@ function scanIslands(root, appDir, islandsDir, routesDir) {
 function modulePath(file) {
     return normalizePath(file);
 }
-function generateRoutesModule(routes) {
-    const imports = routes.map((route, index) => `import * as route${index} from "${modulePath(route.file)}";`);
-    const entries = routes.map((route, index) => `{
+function routeToModuleEntry(route, moduleName, layoutNames) {
+    return `{
     id: ${JSON.stringify(route.id)},
     path: ${JSON.stringify(route.routePath)},
     pattern: new RegExp(${JSON.stringify(route.pattern)}),
     params: ${JSON.stringify(route.params)},
-    module: route${index}
-  }`);
-    return `${imports.join("\n")}
+    module: ${moduleName},
+    layouts: [${layoutNames.join(", ")}]
+  }`;
+}
+function generateRoutesModule(scan) {
+    const routeImports = scan.routes.map((route, index) => `import * as route${index} from "${modulePath(route.file)}";`);
+    const specialRoutes = [scan.notFoundRoute, scan.errorRoute].filter((route) => Boolean(route));
+    const specialImports = specialRoutes.map((route, index) => `import * as specialRoute${index} from "${modulePath(route.file)}";`);
+    const layoutFiles = [...new Set([...scan.routes, ...specialRoutes].flatMap((route) => route.layouts))];
+    const layoutImports = layoutFiles.map((file, index) => `import * as layout${index} from "${modulePath(file)}";`);
+    const layoutNameForFile = new Map(layoutFiles.map((file, index) => [file, `layout${index}`]));
+    const routeEntries = scan.routes.map((route, index) => routeToModuleEntry(route, `route${index}`, route.layouts.map((file) => layoutNameForFile.get(file) ?? "").filter(Boolean)));
+    const notFoundRoute = scan.notFoundRoute
+        ? routeToModuleEntry(scan.notFoundRoute, "specialRoute0", scan.notFoundRoute.layouts.map((file) => layoutNameForFile.get(file) ?? "").filter(Boolean))
+        : "undefined";
+    const errorRoute = scan.errorRoute
+        ? routeToModuleEntry(scan.errorRoute, `specialRoute${scan.notFoundRoute ? 1 : 0}`, scan.errorRoute.layouts.map((file) => layoutNameForFile.get(file) ?? "").filter(Boolean))
+        : "undefined";
+    return `${[...routeImports, ...specialImports, ...layoutImports].join("\n")}
 
 export const routes = [
-  ${entries.join(",\n  ")}
+  ${routeEntries.join(",\n  ")}
 ];
+
+export const notFoundRoute = ${notFoundRoute};
+export const errorRoute = ${errorRoute};
 `;
 }
 function generateIslandsModule(islands) {
@@ -146,6 +224,41 @@ if (typeof window !== "undefined") {
 export default islandModules;
 `;
 }
+function isIslandFile(file, routesPath, islandsPath) {
+    const normalized = normalizePath(file);
+    return (normalized.startsWith(normalizePath(islandsPath)) ||
+        (normalized.startsWith(normalizePath(routesPath)) && path.basename(normalized).startsWith("$")));
+}
+function islandIdForFile(file) {
+    return pascalCase(path.basename(stripExtension(file)));
+}
+function injectIslandId(code, id) {
+    const defaultFunction = /\bexport\s+default\s+function\s+([A-Za-z_$][\w$]*)\s*\(/.exec(code);
+    if (defaultFunction) {
+        return `${code}\n\n${defaultFunction[1]}.__otokIslandId = ${JSON.stringify(id)};\n`;
+    }
+    const anonymousFunction = /\bexport\s+default\s+function\s*\(/;
+    if (anonymousFunction.test(code)) {
+        return `${code.replace(anonymousFunction, "function __OtokDefaultIsland(")}
+
+__OtokDefaultIsland.__otokIslandId = ${JSON.stringify(id)};
+export default __OtokDefaultIsland;
+`;
+    }
+    const defaultIdentifier = /\bexport\s+default\s+([A-Za-z_$][\w$]*)\s*;?\s*$/.exec(code);
+    if (defaultIdentifier) {
+        return `${code}\n\n${defaultIdentifier[1]}.__otokIslandId = ${JSON.stringify(id)};\n`;
+    }
+    const defaultExpression = /\bexport\s+default\s+/;
+    if (defaultExpression.test(code)) {
+        return `${code.replace(defaultExpression, "const __OtokDefaultIsland = ")}
+
+__OtokDefaultIsland.__otokIslandId = ${JSON.stringify(id)};
+export default __OtokDefaultIsland;
+`;
+    }
+    return code;
+}
 function invalidateVirtualModules(server) {
     for (const id of [ROUTES_MODULE_ID, ISLANDS_MODULE_ID]) {
         const mod = server.moduleGraph.getModuleById(`\0${id}`);
@@ -158,11 +271,15 @@ export default function otok(options = {}) {
     const routesDir = options.routesDir ?? path.join(appDir, "routes");
     const islandsDir = options.islandsDir ?? path.join(appDir, "islands");
     let root = process.cwd();
+    let routesPath = path.resolve(root, routesDir);
+    let islandsPath = path.resolve(root, islandsDir);
     return {
         name: "otok",
         enforce: "pre",
         configResolved(config) {
             root = config.root;
+            routesPath = path.resolve(root, routesDir);
+            islandsPath = path.resolve(root, islandsDir);
         },
         resolveId(id) {
             if (id === ROUTES_MODULE_ID)
@@ -180,11 +297,19 @@ export default function otok(options = {}) {
             }
             return undefined;
         },
+        transform(code, id) {
+            const file = id.split("?")[0];
+            if (!/\.[cm]?[tj]sx?$/.test(file) || !isIslandFile(file, routesPath, islandsPath))
+                return undefined;
+            return injectIslandId(code, islandIdForFile(file));
+        },
         configureServer(server) {
-            const routesPath = path.resolve(root, routesDir);
-            const islandsPath = path.resolve(root, islandsDir);
             server.watcher.add([routesPath, islandsPath]);
             server.watcher.on("add", (file) => {
+                if (file.startsWith(routesPath) || file.startsWith(islandsPath))
+                    invalidateVirtualModules(server);
+            });
+            server.watcher.on("change", (file) => {
                 if (file.startsWith(routesPath) || file.startsWith(islandsPath))
                     invalidateVirtualModules(server);
             });
@@ -196,4 +321,9 @@ export default function otok(options = {}) {
     };
 }
 export { otok };
+export const __testing = {
+    generateRoutesModule,
+    injectIslandId,
+    scanRoutes,
+};
 //# sourceMappingURL=index.js.map

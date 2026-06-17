@@ -14,6 +14,8 @@ export interface PageHtmlOptions {
     clientEntry?: string;
     devClientEntry?: string;
     base?: string;
+    /** When true, SSR emits `<html class="dark">` from the theme cookie. */
+    darkMode?: boolean;
 }
-export declare function pageHtml({ body, head, islands, manifest, clientEntry, devClientEntry, base, }: PageHtmlOptions): string;
+export declare function pageHtml({ body, head, islands, manifest, clientEntry, devClientEntry, base, darkMode, }: PageHtmlOptions): string;
 //# sourceMappingURL=html.d.ts.map

@@ -22,16 +22,16 @@ importers:
     dependencies:
       '@hono/node-server':
         specifier: ^2.0.1
-        version: 2.0.4(hono@4.12.24)
+        version: 2.0.4(hono@4.12.25)
       '@kamod-ui/core':
         specifier: file:../../../kamod-ui/packages/core
-        version: file:../kamod-ui/packages/core(@preact/signals@2.9.1(preact@10.29.2))(preact@10.29.2)(tailwindcss@4.3.0)
+        version: '@kamod-ch/ui@file:../kamod-ui/packages/core(@preact/signals@2.9.1(preact@10.29.2))(preact@10.29.2)(tailwindcss@4.3.0)'
       '@preact/signals':
         specifier: ^2.0.0
         version: 2.9.1(preact@10.29.2)
       hono:
-        specifier: ^4.12.18
-        version: 4.12.24
+        specifier: ^4.12.25
+        version: 4.12.25
       otok:
         specifier: workspace:*
         version: link:../../packages/otok
@@ -41,7 +41,7 @@ importers:
     devDependencies:
       '@hono/vite-dev-server':
         specifier: ^0.21.0
-        version: 0.21.1(hono@4.12.24)
+        version: 0.21.1(hono@4.12.25)
       '@otok/vite-plugin':
         specifier: workspace:*
         version: link:../../packages/vite-plugin-otok
@@ -74,9 +74,12 @@ importers:
 
   packages/otok:
     dependencies:
+      '@hono/node-server':
+        specifier: ^2.0.1
+        version: 2.0.4(hono@4.12.25)
       hono:
-        specifier: ^4.12.18
-        version: 4.12.24
+        specifier: ^4.12.25
+        version: 4.12.25
       preact-render-to-string:
         specifier: ^6.7.0
         version: 6.7.0(preact@10.29.2)
@@ -252,12 +255,12 @@ packages:
   '@jridgewell/trace-mapping@0.3.31':
     resolution: {integrity: sha512-zzNR+SdQSDJzc8joaeP8QQoCQr8NuYx2dIIytl1QeBEZHJ9uW6hebsrYgbz8hJwUQao3TWCMtmfV8Nu1twOLAw==}
 
-  '@kamod-ui/core@file:../kamod-ui/packages/core':
+  '@kamod-ch/ui@file:../kamod-ui/packages/core':
     resolution: {directory: ../kamod-ui/packages/core, type: directory}
     engines: {node: '>=20'}
     peerDependencies:
-      '@preact/signals': ^2.0.1
-      preact: ^10.26.0
+      '@preact/signals': ^2.9.1
+      preact: ^10.29.2
 
   '@napi-rs/wasm-runtime@1.1.4':
     resolution: {integrity: sha512-3NQNNgA1YSlJb/kMH1ildASP9HW7/7kYnRI2szWJaofaS1hWmbGI4H+d3+22aGzXXN9IJ+n+GiFVcGipJP18ow==}
@@ -687,8 +690,8 @@ packages:
     resolution: {integrity: sha512-F/1DnUGPopORZi0ni+CvrCgHQ5FyEAHRLSApuYWMmrbSwoN2Mn/7k+Gl38gJnR7yyDZk6WLXwiGod1JOWNDKGw==}
     hasBin: true
 
-  hono@4.12.24:
-    resolution: {integrity: sha512-I36D1s+HgQc55KbhEr4iybfxv/9o1zdpw+XEM6dJa91LqQD0HCoSGdxpRJCZE+aavs87j4V3Ls2OJzq8C/U4iw==}
+  hono@4.12.25:
+    resolution: {integrity: sha512-2NFaIyNVgJmBs/ecmtGzlmluTFs5cHEWGTdu0t1HBwYzoGXOL5nUQBRMXsXWla5i4KkG//QMzVP88m1+I3fdAQ==}
     engines: {node: '>=16.9.0'}
 
   jiti@2.7.0:
@@ -1181,18 +1184,18 @@ snapshots:
       tslib: 2.8.1
     optional: true
 
-  '@hono/node-server@1.19.14(hono@4.12.24)':
+  '@hono/node-server@1.19.14(hono@4.12.25)':
     dependencies:
-      hono: 4.12.24
+      hono: 4.12.25
 
-  '@hono/node-server@2.0.4(hono@4.12.24)':
+  '@hono/node-server@2.0.4(hono@4.12.25)':
     dependencies:
-      hono: 4.12.24
+      hono: 4.12.25
 
-  '@hono/vite-dev-server@0.21.1(hono@4.12.24)':
+  '@hono/vite-dev-server@0.21.1(hono@4.12.25)':
     dependencies:
-      '@hono/node-server': 1.19.14(hono@4.12.24)
-      hono: 4.12.24
+      '@hono/node-server': 1.19.14(hono@4.12.25)
+      hono: 4.12.25
       minimatch: 9.0.9
 
   '@jridgewell/gen-mapping@0.3.13':
@@ -1214,7 +1217,7 @@ snapshots:
       '@jridgewell/resolve-uri': 3.1.2
       '@jridgewell/sourcemap-codec': 1.5.5
 
-  '@kamod-ui/core@file:../kamod-ui/packages/core(@preact/signals@2.9.1(preact@10.29.2))(preact@10.29.2)(tailwindcss@4.3.0)':
+  '@kamod-ch/ui@file:../kamod-ui/packages/core(@preact/signals@2.9.1(preact@10.29.2))(preact@10.29.2)(tailwindcss@4.3.0)':
     dependencies:
       '@preact/signals': 2.9.1(preact@10.29.2)
       clsx: 2.1.1
@@ -1585,7 +1588,7 @@ snapshots:
 
   he@1.2.0: {}
 
-  hono@4.12.24: {}
+  hono@4.12.25: {}
 
   jiti@2.7.0: {}
 

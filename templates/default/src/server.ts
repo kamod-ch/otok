@@ -1,9 +1,7 @@
 import { readFileSync } from "node:fs";
 import { serve } from "@hono/node-server";
-import { serveStatic } from "@hono/node-server/serve-static";
-import { Hono } from "hono";
-import { createOtokHandler, type ViteManifest } from "otok/server";
-import { routes } from "virtual:otok-routes";
+import { createOtokApp, type ViteManifest } from "otok/server";
+import { errorRoute, notFoundRoute, routes } from "virtual:otok-routes";
 import "./style.css";
 
 function readManifest(): ViteManifest | undefined {
@@ -12,19 +10,16 @@ function readManifest(): ViteManifest | undefined {
   return JSON.parse(readFileSync(manifestUrl, "utf8")) as ViteManifest;
 }
 
-const app = new Hono();
-
-app.get("/api/health", (c) => c.json({ ok: true, framework: "otok" }));
-app.use("/assets/*", serveStatic({ root: "./dist/client" }));
-app.get(
-  "*",
-  createOtokHandler({
-    routes,
-    manifest: readManifest(),
-    clientEntry: "src/client.ts",
-    devClientEntry: "/src/client.ts",
-  }),
-);
+const app = createOtokApp({
+  routes,
+  notFoundRoute,
+  errorRoute,
+  manifest: readManifest(),
+  clientEntry: "src/client.ts",
+  devClientEntry: "/src/client.ts",
+  staticDir: "./dist/client",
+  health: { ok: true, framework: "otok" },
+});
 
 export default app;
 

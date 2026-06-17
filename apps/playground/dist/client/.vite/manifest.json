@@ -1,53 +1,168 @@
 {
-  "_chunk-5FBD2NTR-5r_bFCn3.js": {
-    "file": "assets/chunk-5FBD2NTR-5r_bFCn3.js",
+  "_chunk-4BJJOHZT-qrmLQGQY.js": {
+    "file": "assets/chunk-4BJJOHZT-qrmLQGQY.js",
+    "name": "chunk-4BJJOHZT",
+    "imports": [
+      "src/client.ts",
+      "_chunk-5FBD2NTR-DVQ7g7OT.js",
+      "_chunk-PPYJQNE5-DensvA3d.js",
+      "_signals.module-BC1QSF7C.js"
+    ]
+  },
+  "_chunk-5FBD2NTR-DVQ7g7OT.js": {
+    "file": "assets/chunk-5FBD2NTR-DVQ7g7OT.js",
     "name": "chunk-5FBD2NTR",
     "imports": [
       "src/client.ts"
     ]
   },
+  "_chunk-67J4KBOW-C1kRz6yK.js": {
+    "file": "assets/chunk-67J4KBOW-C1kRz6yK.js",
+    "name": "chunk-67J4KBOW",
+    "imports": [
+      "src/client.ts",
+      "_chunk-5FBD2NTR-DVQ7g7OT.js"
+    ]
+  },
+  "_chunk-6RASPU5N-BxOn4mVu.js": {
+    "file": "assets/chunk-6RASPU5N-BxOn4mVu.js",
+    "name": "chunk-6RASPU5N",
+    "imports": [
+      "src/client.ts",
+      "_chunk-5FBD2NTR-DVQ7g7OT.js"
+    ]
+  },
+  "_chunk-GKH7GU3F-DypTF9xS.js": {
+    "file": "assets/chunk-GKH7GU3F-DypTF9xS.js",
+    "name": "chunk-GKH7GU3F",
+    "imports": [
+      "src/client.ts",
+      "_chunk-5FBD2NTR-DVQ7g7OT.js"
+    ]
+  },
+  "_chunk-PGOCR4LG-zrfTH8XL.js": {
+    "file": "assets/chunk-PGOCR4LG-zrfTH8XL.js",
+    "name": "chunk-PGOCR4LG",
+    "imports": [
+      "src/client.ts",
+      "_chunk-5FBD2NTR-DVQ7g7OT.js"
+    ]
+  },
+  "_chunk-PPYJQNE5-DensvA3d.js": {
+    "file": "assets/chunk-PPYJQNE5-DensvA3d.js",
+    "name": "chunk-PPYJQNE5",
+    "imports": [
+      "_signals.module-BC1QSF7C.js"
+    ]
+  },
+  "_signals.module-BC1QSF7C.js": {
+    "file": "assets/signals.module-BC1QSF7C.js",
+    "name": "signals.module",
+    "imports": [
+      "src/client.ts",
+      "_chunk-5FBD2NTR-DVQ7g7OT.js"
+    ]
+  },
+  "src/app/islands/chat-card.tsx": {
+    "file": "assets/chat-card-CJpb2hPQ.js",
+    "name": "chat-card",
+    "src": "src/app/islands/chat-card.tsx",
+    "isDynamicEntry": true,
+    "imports": [
+      "src/client.ts",
+      "_chunk-5FBD2NTR-DVQ7g7OT.js",
+      "_chunk-67J4KBOW-C1kRz6yK.js",
+      "_chunk-6RASPU5N-BxOn4mVu.js",
+      "_chunk-PGOCR4LG-zrfTH8XL.js"
+    ]
+  },
   "src/app/islands/counter.tsx": {
-    "file": "assets/counter-Deo5Fb3n.js",
+    "file": "assets/counter-1_IYYypY.js",
     "name": "counter",
     "src": "src/app/islands/counter.tsx",
     "isDynamicEntry": true,
     "imports": [
       "src/client.ts",
-      "_chunk-5FBD2NTR-5r_bFCn3.js"
+      "_chunk-5FBD2NTR-DVQ7g7OT.js"
+    ]
+  },
+  "src/app/islands/dashboard-toolbar.tsx": {
+    "file": "assets/dashboard-toolbar-BOwY_32p.js",
+    "name": "dashboard-toolbar",
+    "src": "src/app/islands/dashboard-toolbar.tsx",
+    "isDynamicEntry": true,
+    "imports": [
+      "src/client.ts",
+      "_chunk-4BJJOHZT-qrmLQGQY.js",
+      "_chunk-5FBD2NTR-DVQ7g7OT.js",
+      "_chunk-GKH7GU3F-DypTF9xS.js",
+      "_signals.module-BC1QSF7C.js"
     ]
   },
   "src/app/islands/demo-dialog.tsx": {
-    "file": "assets/demo-dialog-B9hY83On.js",
+    "file": "assets/demo-dialog-7Vc6102C.js",
     "name": "demo-dialog",
     "src": "src/app/islands/demo-dialog.tsx",
     "isDynamicEntry": true,
     "imports": [
       "src/client.ts",
-      "_chunk-5FBD2NTR-5r_bFCn3.js"
+      "_chunk-4BJJOHZT-qrmLQGQY.js",
+      "_chunk-5FBD2NTR-DVQ7g7OT.js"
+    ]
+  },
+  "src/app/islands/payment-form.tsx": {
+    "file": "assets/payment-form-CNjarBj2.js",
+    "name": "payment-form",
+    "src": "src/app/islands/payment-form.tsx",
+    "isDynamicEntry": true,
+    "imports": [
+      "src/client.ts",
+      "_chunk-5FBD2NTR-DVQ7g7OT.js",
+      "_chunk-67J4KBOW-C1kRz6yK.js",
+      "_chunk-6RASPU5N-BxOn4mVu.js",
+      "_signals.module-BC1QSF7C.js"
+    ]
+  },
+  "src/app/islands/team-members.tsx": {
+    "file": "assets/team-members-Cn4al9h7.js",
+    "name": "team-members",
+    "src": "src/app/islands/team-members.tsx",
+    "isDynamicEntry": true,
+    "imports": [
+      "src/client.ts",
+      "_chunk-5FBD2NTR-DVQ7g7OT.js",
+      "_chunk-67J4KBOW-C1kRz6yK.js",
+      "_chunk-PGOCR4LG-zrfTH8XL.js",
+      "_chunk-PPYJQNE5-DensvA3d.js",
+      "_signals.module-BC1QSF7C.js"
     ]
   },
   "src/app/islands/theme-island.tsx": {
-    "file": "assets/theme-island-Bmanr-HD.js",
+    "file": "assets/theme-island-CtSHHcaU.js",
     "name": "theme-island",
     "src": "src/app/islands/theme-island.tsx",
     "isDynamicEntry": true,
     "imports": [
       "src/client.ts",
-      "_chunk-5FBD2NTR-5r_bFCn3.js"
+      "_chunk-GKH7GU3F-DypTF9xS.js"
     ]
   },
   "src/client.ts": {
-    "file": "assets/client-e26KrdWP.js",
+    "file": "assets/client-BC0Qh7To.js",
     "name": "client",
     "src": "src/client.ts",
     "isEntry": true,
     "dynamicImports": [
+      "src/app/islands/chat-card.tsx",
       "src/app/islands/counter.tsx",
+      "src/app/islands/dashboard-toolbar.tsx",
       "src/app/islands/demo-dialog.tsx",
+      "src/app/islands/payment-form.tsx",
+      "src/app/islands/team-members.tsx",
       "src/app/islands/theme-island.tsx"
     ],
     "css": [
-      "assets/client-BRDmyJLi.css"
+      "assets/client-Bn6ROlKS.css"
     ]
   }
 }

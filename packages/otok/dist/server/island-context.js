@@ -1,15 +1,2 @@
-let activeContext;
-export function withIslandRenderContext(context, render) {
-    const previous = activeContext;
-    activeContext = context;
-    try {
-        return render();
-    }
-    finally {
-        activeContext = previous;
-    }
-}
-export function registerRenderedIsland(id) {
-    activeContext?.islands.add(id);
-}
+export { registerRenderedIsland, withIslandRenderContext, } from "../shared/island-context.js";
 //# sourceMappingURL=island-context.js.map

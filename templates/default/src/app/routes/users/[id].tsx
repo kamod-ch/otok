@@ -6,24 +6,23 @@ export const loader = async ({ params }: OtokContext) => ({
 });
 
 export const head = ({ data }: { data: { userId: string } }) => ({
-  title: `User ${data.userId}`,
+  title: `User ${data.userId} | Otok Playground`,
 });
 
-export default function UserPage({ data }: { data: { userId: string } }) {
+export default function UserPage({
+  data,
+}: {
+  data: { userId: string };
+}) {
   return (
-    <main class="mx-auto flex min-h-screen max-w-3xl flex-col gap-8 px-6 py-16">
-      <a class="text-sm text-muted-foreground underline" href="/">
-        Back home
-      </a>
-      <Card>
-        <CardHeader>
-          <CardTitle>Dynamic route</CardTitle>
-        </CardHeader>
-        <CardContent class="space-y-3">
-          <Badge>/users/[id]</Badge>
-          <p class="text-muted-foreground">Loaded user id: {data.userId}</p>
-        </CardContent>
-      </Card>
-    </main>
+    <Card>
+      <CardHeader>
+        <CardTitle>/users/[id]</CardTitle>
+      </CardHeader>
+      <CardContent class="space-y-3">
+        <Badge>/users/[id]</Badge>
+        <p class="text-muted-foreground">Loaded user id: {data.userId}</p>
+      </CardContent>
+    </Card>
   );
 }

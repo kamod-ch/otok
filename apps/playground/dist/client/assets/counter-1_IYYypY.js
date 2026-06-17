@@ -1,0 +1,1 @@
+import{t as e}from"./client-BC0Qh7To.js";import{o as t,t as n}from"./chunk-5FBD2NTR-DVQ7g7OT.js";function r({init:r=0}){let[i,a]=t(r);return e(`div`,{class:`flex items-center gap-4`,children:[e(`p`,{class:`text-sm text-muted-foreground`,children:[`Count: `,i]}),e(n,{onClick:()=>a(e=>e+1),children:`Increment`})]})}r.__otokIslandId=`Counter`;export{r as default};
