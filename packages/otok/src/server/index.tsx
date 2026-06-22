@@ -14,6 +14,7 @@ import {
   type OtokHead,
   type OtokRoute,
 } from "../shared/routes.js";
+import { OTOK_PAGE_ATTR } from "../shared/navigation.js";
 import { resolveDarkModeFromCookie } from "../shared/theme.js";
 
 export interface CreateOtokHandlerOptions {
@@ -81,7 +82,11 @@ async function renderRoute(
   const props = { data, params, route: route.path };
   const islandContext = { islands: new Set<string>(), nextIslandId: 0 };
   const body = withIslandRenderContext(islandContext, () => {
-    let tree: VNode<any> = h(Page as ComponentType<typeof props>, props);
+    let tree: VNode<any> = h(
+      "div",
+      { [OTOK_PAGE_ATTR]: "" },
+      h(Page as ComponentType<typeof props>, props),
+    );
     for (const layout of [...(route.layouts ?? [])].reverse()) {
       tree = h(layout.default as ComponentType<typeof props & { children: VNode<any> }>, {
         ...props,

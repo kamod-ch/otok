@@ -27,7 +27,8 @@ src/app/islands/       Interactive Preact components
 3. Pages render on the server with Preact.
 4. `<Island>` marks interactive regions in the HTML.
 5. `createOtokClient()` hydrates only those island roots.
-6. If a page renders no islands, Otok omits the client module script.
+6. With `softNav: true`, internal links fetch the next page and swap only marked regions so layout chrome can stay mounted.
+7. If a page renders no islands, Otok omits the client module script.
 
 ```mermaid
 flowchart LR
@@ -39,7 +40,34 @@ flowchart LR
   Server --> HTML[serverRenderedHtml]
   VirtualIslands --> Client[createOtokClient]
   HTML --> Client
+  Client --> SoftNav[softNavSwap]
 ```
+
+## Soft Navigation
+
+Enable partial page updates so persistent layout chrome (sidebars, shells) does not reload on every click:
+
+```ts
+createOtokClient({ registry: islandModules, softNav: true });
+```
+
+Otok wraps each page in `data-otok-page`. Mark layout regions that change with the route using `data-otok-swap`:
+
+```tsx
+<nav data-otok-swap="sidebar-nav">...</nav>
+<header data-otok-swap="topbar">...</header>
+<main>{children}</main>
+```
+
+On internal link clicks Otok:
+
+1. fetches the destination HTML
+2. replaces `[data-otok-page]`
+3. patches every matching `[data-otok-swap]`
+4. hydrates new islands
+5. updates the URL with `history.pushState`
+
+Use `data-otok-no-nav` to opt a link out (downloads, external flows). If the fetched HTML has no page region, Otok falls back to a full navigation.
 
 ## Routing
 

@@ -95,7 +95,8 @@ export function pageHtml({ body, head, islands, manifest, clientEntry = "src/cli
         .map((href) => `<link rel="stylesheet" href="${escapeHtml(publicPath(href, base))}">`)
         .join("\n    ");
     const hasIslands = islands.length > 0;
-    const clientScript = hasIslands
+    const needsDevClientEntry = !manifest;
+    const clientScript = hasIslands || needsDevClientEntry
         ? entry?.file
             ? `<script type="module" src="${escapeHtml(publicPath(entry.file, base))}"></script>`
             : `<script type="module" src="${escapeHtml(devClientEntry)}"></script>`

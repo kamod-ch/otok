@@ -1,5 +1,6 @@
 import { h, type ComponentType } from "preact";
 import { type IslandHydrationStrategy, type IslandProps, type IslandRegistry } from "../shared/islands.js";
+import { type SoftNavOptions } from "./soft-nav.js";
 export interface IslandComponentProps<Props extends IslandProps = IslandProps> {
     component: ComponentType<Props>;
     props?: Props;
@@ -18,8 +19,11 @@ export interface CreateOtokClientOptions {
     registry?: IslandRegistry;
     root?: ParentNode;
     onError?: (error: unknown, element: Element) => void;
+    softNav?: boolean | SoftNavOptions;
 }
 export declare function createOtokClient(options?: CreateOtokClientOptions): void;
 export type { InferIslandProps } from "../shared/routes.js";
 export type { IslandHydrationStrategy, IslandProps, IslandRegistry } from "../shared/islands.js";
+export type { SoftNavOptions } from "./soft-nav.js";
+export { isSoftNavLink, setupSoftNavigation, softNavigate } from "./soft-nav.js";
 //# sourceMappingURL=index.d.ts.map

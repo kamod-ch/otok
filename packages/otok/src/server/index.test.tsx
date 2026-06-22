@@ -52,6 +52,18 @@ describe("createOtokHandler", () => {
     expect(html).toContain('<html lang="en" class="dark">');
   });
 
+  it("wraps page output in a soft-navigation page region", async () => {
+    const app = new Hono();
+    app.get("*", createOtokHandler({ routes: [route("/", /^\/?$/)] }));
+
+    const response = await app.request("/");
+    const html = await response.text();
+
+    expect(response.status).toBe(200);
+    expect(html).toContain("data-otok-page");
+    expect(html).toContain("<p>OK</p>");
+  });
+
   it("renders convention-based error routes", async () => {
     const app = new Hono();
     app.get(

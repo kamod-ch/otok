@@ -6,6 +6,7 @@ import { pageHtml } from "./html.js";
 import { matchRoute } from "./router.js";
 import { withIslandRenderContext } from "../shared/island-context.js";
 import { isOtokHttpError, } from "../shared/routes.js";
+import { OTOK_PAGE_ATTR } from "../shared/navigation.js";
 import { resolveDarkModeFromCookie } from "../shared/theme.js";
 async function resolveHead(route, data, params) {
     if (!route.module.head)
@@ -47,7 +48,7 @@ async function renderRoute(c, route, params, options, status = 200, dataOverride
     const props = { data, params, route: route.path };
     const islandContext = { islands: new Set(), nextIslandId: 0 };
     const body = withIslandRenderContext(islandContext, () => {
-        let tree = h(Page, props);
+        let tree = h("div", { [OTOK_PAGE_ATTR]: "" }, h(Page, props));
         for (const layout of [...(route.layouts ?? [])].reverse()) {
             tree = h(layout.default, {
                 ...props,

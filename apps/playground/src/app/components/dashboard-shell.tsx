@@ -18,7 +18,7 @@ type DashboardShellProps = {
 
 function SidebarNav({ route }: { route: string }) {
   return (
-    <nav class="flex flex-col gap-4 px-2 py-4">
+    <nav class="flex flex-col gap-4 px-2 py-4" data-otok-swap="sidebar-nav">
       {dashboardNavGroups.map((group) => (
         <details key={group.label} open class="group">
           <summary class="cursor-pointer list-none px-2 text-xs font-medium uppercase tracking-wide text-muted-foreground [&::-webkit-details-marker]:hidden">
@@ -80,7 +80,10 @@ export function DashboardShell({
       </aside>
 
       <div class="flex min-w-0 flex-1 flex-col">
-        <header class="sticky top-0 z-10 flex h-14 items-center gap-4 border-b bg-background/95 px-4 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+        <header
+          class="sticky top-0 z-10 flex h-14 items-center gap-4 border-b bg-background/95 px-4 backdrop-blur supports-[backdrop-filter]:bg-background/60"
+          data-otok-swap="header"
+        >
           <details class="lg:hidden">
             <summary class="cursor-pointer list-none rounded-md border px-2.5 py-1.5 text-sm [&::-webkit-details-marker]:hidden">
               Menu
@@ -98,7 +101,10 @@ export function DashboardShell({
         </header>
 
         <main class="flex-1 p-4 md:p-6">
-          <div class="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+          <div
+            class="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between"
+            data-otok-swap="page-heading"
+          >
             <div class="space-y-1">
               <h1 class="text-2xl font-semibold tracking-tight md:text-3xl">{title}</h1>
               {description ? <p class="text-sm text-muted-foreground">{description}</p> : null}

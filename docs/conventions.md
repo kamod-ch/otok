@@ -53,6 +53,23 @@ export default function Layout({ children }: OtokLayoutProps) {
 
 Nested layouts apply from root to leaf. Layout files are not matched as pages.
 
+## Soft Navigation
+
+Enable partial page updates in `src/client.ts`:
+
+```ts
+createOtokClient({ registry: islandModules, softNav: true });
+```
+
+The server wraps each page in `data-otok-page`. Mark route-dependent layout regions with `data-otok-swap`:
+
+```tsx
+<nav data-otok-swap="sidebar-nav">...</nav>
+<header data-otok-swap="topbar">...</header>
+```
+
+On internal link clicks Otok fetches HTML, replaces the page region, patches swap regions, hydrates new islands, and updates the URL. Add `data-otok-no-nav` to opt out. Missing page markers fall back to a full reload.
+
 ## Special Routes
 
 Two reserved files provide convention-based fallbacks:
