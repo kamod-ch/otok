@@ -1,11 +1,11 @@
 // @vitest-environment jsdom
 
 import { describe, expect, it } from "vitest";
-import { OTOK_PAGE_ATTR, OTOK_SWAP_ATTR } from "../shared/navigation.js";
-import { applySoftNavigationDocument, isSoftNavLink } from "./soft-nav.js";
+import { OTOK_HEAD_ATTR, OTOK_PAGE_ATTR, OTOK_SWAP_ATTR } from "../shared/navigation.js";
+import { applySoftNavigationDocument, isSoftNavLink, syncSoftNavigationHead } from "./soft-nav.js";
 
-function renderDoc(body: string, title = "Page"): Document {
-  const html = `<!doctype html><html><head><title>${title}</title></head><body>${body}</body></html>`;
+function renderDoc(body: string, title = "Page", headExtra = ""): Document {
+  const html = `<!doctype html><html><head><title ${OTOK_HEAD_ATTR}="title">${title}</title>${headExtra}</head><body>${body}</body></html>`;
   return new DOMParser().parseFromString(html, "text/html");
 }
 
@@ -34,6 +34,25 @@ describe("isSoftNavLink", () => {
     const api = document.createElement("a");
     api.href = "http://localhost/api/documents/1/download";
     expect(isSoftNavLink(api, new URL("http://localhost/") as unknown as Location)).toBe(false);
+  });
+});
+
+describe("syncSoftNavigationHead", () => {
+  it("syncs managed meta tags and title", () => {
+    document.head.innerHTML = `<title ${OTOK_HEAD_ATTR}="title">Old</title><meta ${OTOK_HEAD_ATTR}="description" name="description" content="Old desc">`;
+    document.title = "Old";
+
+    const next = renderDoc(
+      "",
+      "New",
+      `<meta ${OTOK_HEAD_ATTR}="description" name="description" content="New desc">`,
+    );
+
+    syncSoftNavigationHead(next);
+    expect(document.title).toBe("New");
+    expect(document.querySelector(`meta[${OTOK_HEAD_ATTR}="description"]`)?.getAttribute("content")).toBe(
+      "New desc",
+    );
   });
 });
 

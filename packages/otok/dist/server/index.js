@@ -17,6 +17,15 @@ async function resolveHead(route, data, params) {
         route: route.path,
     });
 }
+async function resolveChrome(route, data, params) {
+    if (!route.module.chrome)
+        return undefined;
+    return await route.module.chrome({
+        data,
+        params,
+        route: route.path,
+    });
+}
 export function createOtokHandler(options) {
     return async (c) => {
         const url = new URL(c.req.url);
@@ -44,8 +53,9 @@ async function renderRoute(c, route, params, options, status = 200, dataOverride
     };
     const data = dataOverride ?? (route.module.loader ? await route.module.loader(context) : {});
     const head = await resolveHead(route, data, params);
+    const chrome = await resolveChrome(route, data, params);
     const Page = route.module.default;
-    const props = { data, params, route: route.path };
+    const props = { data, params, route: route.path, chrome };
     const islandContext = { islands: new Set(), nextIslandId: 0 };
     const body = withIslandRenderContext(islandContext, () => {
         let tree = h("div", { [OTOK_PAGE_ATTR]: "" }, h(Page, props));
@@ -57,6 +67,7 @@ async function renderRoute(c, route, params, options, status = 200, dataOverride
         }
         return renderToString(tree);
     });
+    const themeEnabled = options.theme ?? false;
     const html = pageHtml({
         body,
         head,
@@ -65,7 +76,8 @@ async function renderRoute(c, route, params, options, status = 200, dataOverride
         clientEntry: options.clientEntry,
         devClientEntry: options.devClientEntry,
         base: options.base,
-        darkMode: resolveDarkModeFromCookie(c.req.header("cookie")),
+        theme: themeEnabled,
+        darkMode: themeEnabled ? resolveDarkModeFromCookie(c.req.header("cookie")) : false,
     });
     return new Response(html, {
         status,
@@ -109,6 +121,7 @@ async function renderFallbackRoute(c, route, options, status, data) {
 }
 export function createOtokApp(options) {
     const app = new Hono();
+    options.configure?.(app);
     if (options.health) {
         const payload = typeof options.health === "object" ? options.health : { ok: true, framework: "otok" };
         app.get("/api/health", (c) => c.json(payload));
@@ -120,6 +133,7 @@ export function createOtokApp(options) {
     return app;
 }
 export { pageHtml } from "./html.js";
+export { readOtokManifest } from "./manifest.js";
 export { matchRoute } from "./router.js";
 export { fail, isOtokHttpError, notFound, OtokHttpError, redirect } from "../shared/routes.js";
 //# sourceMappingURL=index.js.map

@@ -8,7 +8,7 @@ import {
 } from "../shared/islands.js";
 import { registerRenderedIsland } from "../shared/island-context.js";
 import { hydrateIslands } from "./hydration.js";
-import { setupSoftNavigation, softNavigate, type SoftNavOptions } from "./soft-nav.js";
+import { prefetchSoftNavUrl, setupSoftNavigation, softNavigate, type SoftNavOptions } from "./soft-nav.js";
 
 export interface IslandComponentProps<Props extends IslandProps = IslandProps> {
   component: ComponentType<Props>;
@@ -25,6 +25,8 @@ declare global {
   }
 }
 
+let islandClientWarningShown = false;
+
 export function Island<Props extends IslandProps = IslandProps>({
   component: Component,
   props,
@@ -34,6 +36,16 @@ export function Island<Props extends IslandProps = IslandProps>({
   rootMargin,
 }: IslandComponentProps<Props>) {
   if (typeof window !== "undefined") {
+    if (
+      !islandClientWarningShown &&
+      typeof import.meta !== "undefined" &&
+      (import.meta as ImportMeta & { env?: { DEV?: boolean } }).env?.DEV
+    ) {
+      islandClientWarningShown = true;
+      console.warn(
+        "otok: <Island> is server-only. It renders nothing in the browser; islands hydrate from SSR markers.",
+      );
+    }
     return <Fragment />;
   }
 
@@ -44,6 +56,7 @@ export function Island<Props extends IslandProps = IslandProps>({
 
   const instanceId = registerRenderedIsland(islandId);
   const encodedProps = encodeIslandPropsForHtml(props, instanceId);
+  const hydrationStrategy = strategy === "client-only" ? "load" : strategy;
 
   return (
     <Fragment>
@@ -51,12 +64,12 @@ export function Island<Props extends IslandProps = IslandProps>({
         data-otok-island={islandId}
         data-otok-props={encodedProps.attribute}
         data-otok-props-id={encodedProps.propsId}
-        data-otok-strategy={strategy}
+        data-otok-strategy={hydrationStrategy}
         data-otok-media={media}
         data-otok-root-margin={rootMargin}
         data-otok-island-root=""
       >
-        <Component {...(props as Props)} />
+        {strategy === "client-only" ? null : <Component {...(props as Props)} />}
       </div>
       {encodedProps.scriptJson ? (
         <script
@@ -99,7 +112,8 @@ export function createOtokClient(options: CreateOtokClientOptions = {}): void {
   }
 }
 
-export type { InferIslandProps } from "../shared/routes.js";
+export type { InferIslandProps, OtokChrome } from "../shared/routes.js";
 export type { IslandHydrationStrategy, IslandProps, IslandRegistry } from "../shared/islands.js";
 export type { SoftNavOptions } from "./soft-nav.js";
-export { isSoftNavLink, setupSoftNavigation, softNavigate } from "./soft-nav.js";
+export { cancelPendingHydration, hydrateIslands } from "./hydration.js";
+export { isSoftNavLink, prefetchSoftNavUrl, setupSoftNavigation, softNavigate } from "./soft-nav.js";

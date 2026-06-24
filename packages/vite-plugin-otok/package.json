@@ -1,7 +1,8 @@
 {
   "name": "@otok/vite-plugin",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Vite plugin for Otok file routes and Preact islands.",
+  "license": "MIT",
   "type": "module",
   "files": ["dist", "client.d.ts"],
   "exports": {

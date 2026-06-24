@@ -1,8 +1,8 @@
-import { readFileSync } from "node:fs";
 import { serve } from "@hono/node-server";
 import { serveStatic } from "@hono/node-server/serve-static";
 import { Hono } from "hono";
 import { Fragment, h, options } from "preact";
+import { readFileSync } from "node:fs";
 import { Avatar, AvatarFallback, Badge, Button, Card, CardContent, CardDescription, CardHeader, CardTitle, Command, CommandDialog, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList, DataTable, Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger, Input, Label, RadioGroup, Select, SelectContent, SelectItem, SelectTrigger, SelectValue, SelectableCard, Separator, TableBody, TableCell, TableHead, TableHeader, TableRow, ThemeToggle } from "@kamod-ui/core";
 import { Fragment as Fragment$1, jsx, jsxs } from "preact/jsx-runtime";
 import { useEffect, useState } from "preact/hooks";
@@ -353,6 +353,12 @@ function J(e) {
 	return null !== e && "object" == typeof e && "function" == typeof e.peek && "value" in e;
 }
 //#endregion
+//#region ../../packages/otok/dist/shared/navigation.js
+/** Marks the server-rendered page region replaced during soft navigation. */
+var OTOK_PAGE_ATTR = "data-otok-page";
+/** Marks head elements synced during soft navigation. */
+var OTOK_HEAD_ATTR = "data-otok-head";
+//#endregion
 //#region ../../packages/otok/dist/shared/theme.js
 function resolveDarkModeFromCookie(cookieHeader) {
 	if (!cookieHeader) return false;
@@ -393,10 +399,11 @@ function collectCss(manifest, entry) {
 }
 function renderHead(head) {
 	const title = escapeHtml(head?.title ?? "Otok App");
-	const description = head?.description ? `<meta name="description" content="${escapeHtml(head.description)}">` : "";
-	const meta = Object.entries(head?.meta ?? {}).map(([name, content]) => `<meta name="${escapeHtml(name)}" content="${escapeHtml(content)}">`).join("\n    ");
+	const description = head?.description ? `<meta ${OTOK_HEAD_ATTR}="description" name="description" content="${escapeHtml(head.description)}">` : "";
+	const meta = Object.entries(head?.meta ?? {}).map(([name, content]) => `<meta ${OTOK_HEAD_ATTR}="${escapeHtml(name)}" name="${escapeHtml(name)}" content="${escapeHtml(content)}">`).join("\n    ");
 	const links = (head?.links ?? []).map((link) => {
 		return `<link ${[
+			`${OTOK_HEAD_ATTR}="${escapeHtml(link.rel === "canonical" ? "canonical" : `link:${link.rel}:${link.href}`)}"`,
 			`rel="${escapeHtml(link.rel)}"`,
 			`href="${escapeHtml(link.href)}"`,
 			link.crossorigin ? `crossorigin="${escapeHtml(link.crossorigin)}"` : "",
@@ -404,19 +411,20 @@ function renderHead(head) {
 			link.type ? `type="${escapeHtml(link.type)}"` : ""
 		].filter(Boolean).join(" ")}>`;
 	}).join("\n    ");
-	const scripts = (head?.scripts ?? []).map((script) => {
+	const scripts = (head?.scripts ?? []).map((script, index) => {
 		return `<script ${[
+			`${OTOK_HEAD_ATTR}="script:${index}"`,
 			script.src ? `src="${escapeHtml(script.src)}"` : "",
 			script.type ? `type="${escapeHtml(script.type)}"` : "",
 			script.async ? "async" : "",
 			script.defer ? "defer" : ""
 		].filter(Boolean).join(" ")}><\/script>`;
 	}).join("\n    ");
-	const jsonLd = head?.jsonLd ? `<script type="application/ld+json">${escapeScriptJson(JSON.stringify(head.jsonLd))}<\/script>` : "";
+	const jsonLd = head?.jsonLd ? `<script ${OTOK_HEAD_ATTR}="json-ld" type="application/ld+json">${escapeScriptJson(JSON.stringify(head.jsonLd))}<\/script>` : "";
 	return [
 		"<meta charset=\"utf-8\">",
 		"<meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">",
-		`<title>${title}</title>`,
+		`<title ${OTOK_HEAD_ATTR}="title">${title}</title>`,
 		description,
 		meta,
 		links,
@@ -424,15 +432,14 @@ function renderHead(head) {
 		jsonLd
 	].filter(Boolean).join("\n    ");
 }
-function pageHtml({ body, head, islands, manifest, clientEntry = "src/client.ts", devClientEntry = "/src/client.ts", base = "/", darkMode = false }) {
+function pageHtml({ body, head, islands, manifest, clientEntry = "src/client.ts", devClientEntry = "/src/client.ts", base = "/", darkMode = false, theme = false }) {
 	const entry = findEntry(manifest, clientEntry);
 	const stylesheetLinks = collectCss(manifest, entry).map((href) => `<link rel="stylesheet" href="${escapeHtml(publicPath(href, base))}">`).join("\n    ");
-	const clientScript = islands.length > 0 ? entry?.file ? `<script type="module" src="${escapeHtml(publicPath(entry.file, base))}"><\/script>` : `<script type="module" src="${escapeHtml(devClientEntry)}"><\/script>` : "";
+	const clientScript = islands.length > 0 || !manifest ? entry?.file ? `<script type="module" src="${escapeHtml(publicPath(entry.file, base))}"><\/script>` : `<script type="module" src="${escapeHtml(devClientEntry)}"><\/script>` : "";
 	return `<!doctype html>
 <html lang="${escapeHtml(head?.lang ?? "en")}"${darkMode ? ` class="dark"` : ""}>
   <head>
-    ${themeBootstrapScript}
-    ${themeColorSchemeStyle}
+    ${theme ? `${themeBootstrapScript}\n    ${themeColorSchemeStyle}` : ""}
     ${renderHead(head)}
     ${stylesheetLinks}
   </head>
@@ -496,10 +503,35 @@ function isOtokHttpError(error) {
 	return error instanceof OtokHttpError;
 }
 //#endregion
+//#region ../../packages/otok/dist/server/manifest.js
+/**
+* Read the Vite client manifest produced by `vite build --mode client`.
+*
+* @example
+* ```ts
+* const manifest = readOtokManifest(import.meta.url);
+* ```
+*/
+function readOtokManifest(moduleUrl, options = {}) {
+	const prodOnly = options.prodOnly ?? true;
+	const isProd = options.isProd ?? (typeof import.meta !== "undefined" && true);
+	if (prodOnly && !isProd) return void 0;
+	const manifestUrl = new URL(options.manifestPath ?? "../client/.vite/manifest.json", moduleUrl);
+	return JSON.parse(readFileSync(manifestUrl, "utf8"));
+}
+//#endregion
 //#region ../../packages/otok/dist/server/index.js
 async function resolveHead(route, data, params) {
 	if (!route.module.head) return { title: "Otok App" };
 	return await route.module.head({
+		data,
+		params,
+		route: route.path
+	});
+}
+async function resolveChrome(route, data, params) {
+	if (!route.module.chrome) return void 0;
+	return await route.module.chrome({
 		data,
 		params,
 		route: route.path
@@ -530,32 +562,37 @@ async function renderRoute(c, route, params, options, status = 200, dataOverride
 	};
 	const data = dataOverride ?? (route.module.loader ? await route.module.loader(context) : {});
 	const head = await resolveHead(route, data, params);
+	const chrome = await resolveChrome(route, data, params);
 	const Page = route.module.default;
 	const props = {
 		data,
 		params,
-		route: route.path
+		route: route.path,
+		chrome
 	};
 	const islandContext = {
 		islands: /* @__PURE__ */ new Set(),
 		nextIslandId: 0
 	};
+	const body = withIslandRenderContext(islandContext, () => {
+		let tree = h("div", { [OTOK_PAGE_ATTR]: "" }, h(Page, props));
+		for (const layout of [...route.layouts ?? []].reverse()) tree = h(layout.default, {
+			...props,
+			children: tree
+		});
+		return I(tree);
+	});
+	const themeEnabled = options.theme ?? false;
 	const html = pageHtml({
-		body: withIslandRenderContext(islandContext, () => {
-			let tree = h(Page, props);
-			for (const layout of [...route.layouts ?? []].reverse()) tree = h(layout.default, {
-				...props,
-				children: tree
-			});
-			return I(tree);
-		}),
+		body,
 		head,
 		islands: [...islandContext.islands],
 		manifest: options.manifest,
 		clientEntry: options.clientEntry,
 		devClientEntry: options.devClientEntry,
 		base: options.base,
-		darkMode: resolveDarkModeFromCookie(c.req.header("cookie"))
+		theme: themeEnabled,
+		darkMode: themeEnabled ? resolveDarkModeFromCookie(c.req.header("cookie")) : false
 	});
 	return new Response(html, {
 		status,
@@ -599,6 +636,7 @@ async function renderFallbackRoute(c, route, options, status, data) {
 }
 function createOtokApp(options) {
 	const app = new Hono();
+	options.configure?.(app);
 	if (options.health) {
 		const payload = typeof options.health === "object" ? options.health : {
 			ok: true,
@@ -613,12 +651,17 @@ function createOtokApp(options) {
 //#endregion
 //#region src/app/routes/about.tsx
 var about_exports = /* @__PURE__ */ __exportAll({
+	chrome: () => chrome$4,
 	default: () => About,
 	head: () => head$6
 });
 var head$6 = () => ({
 	title: "About | Otok Playground",
 	description: "A static Otok route that ships no client JavaScript."
+});
+var chrome$4 = () => ({
+	title: "Zero-JS route",
+	description: "This route has no islands."
 });
 function About() {
 	return /* @__PURE__ */ jsxs(Fragment$1, { children: [/* @__PURE__ */ jsxs("section", {
@@ -683,15 +726,16 @@ function Island({ component: Component, props, id, strategy = "load", media, roo
 	const islandId = resolveIslandId(Component, id);
 	if (!islandId) throw new Error("otok: Island components need a name, displayName, or explicit id.");
 	const encodedProps = encodeIslandPropsForHtml(props, registerRenderedIsland(islandId));
+	const hydrationStrategy = strategy === "client-only" ? "load" : strategy;
 	return jsxs(Fragment, { children: [jsx("div", {
 		"data-otok-island": islandId,
 		"data-otok-props": encodedProps.attribute,
 		"data-otok-props-id": encodedProps.propsId,
-		"data-otok-strategy": strategy,
+		"data-otok-strategy": hydrationStrategy,
 		"data-otok-media": media,
 		"data-otok-root-margin": rootMargin,
 		"data-otok-island-root": "",
-		children: jsx(Component, { ...props })
+		children: strategy === "client-only" ? null : jsx(Component, { ...props })
 	}), encodedProps.scriptJson ? jsx("script", {
 		type: "application/json",
 		"data-otok-props-for": encodedProps.propsId,
@@ -714,6 +758,75 @@ function DemoDialog({ label }) {
 }
 DemoDialog.__otokIslandId = "DemoDialog";
 //#endregion
+//#region src/app/islands/dashboard-toolbar.tsx
+var commands = [
+	{
+		label: "Classic Dashboard",
+		href: "/"
+	},
+	{
+		label: "Zero-JS route",
+		href: "/about"
+	},
+	{
+		label: "kamod-ui islands",
+		href: "/demo"
+	},
+	{
+		label: "Dynamic route",
+		href: "/users/alice"
+	}
+];
+function DashboardToolbar() {
+	const [open, setOpen] = useState(false);
+	useEffect(() => {
+		const onKeyDown = (event) => {
+			if ((event.metaKey || event.ctrlKey) && event.key.toLowerCase() === "k") {
+				event.preventDefault();
+				setOpen((current) => !current);
+			}
+		};
+		window.addEventListener("keydown", onKeyDown);
+		return () => window.removeEventListener("keydown", onKeyDown);
+	}, []);
+	return /* @__PURE__ */ jsxs(Fragment$1, { children: [
+		/* @__PURE__ */ jsxs(Button, {
+			variant: "outline",
+			size: "sm",
+			class: "hidden h-8 w-64 justify-start text-muted-foreground sm:flex",
+			onClick: () => setOpen(true),
+			children: ["Search for a command to run...", /* @__PURE__ */ jsx("kbd", {
+				class: "pointer-events-none ms-auto hidden rounded border bg-muted px-1.5 font-mono text-[10px] font-medium sm:inline",
+				children: "⌘K"
+			})]
+		}),
+		/* @__PURE__ */ jsx(Button, {
+			variant: "outline",
+			size: "sm",
+			class: "sm:hidden",
+			onClick: () => setOpen(true),
+			children: "Search"
+		}),
+		/* @__PURE__ */ jsx(ThemeToggle, {}),
+		/* @__PURE__ */ jsx(CommandDialog, {
+			open,
+			onOpenChange: setOpen,
+			children: /* @__PURE__ */ jsxs(Command, { children: [/* @__PURE__ */ jsx(CommandInput, { placeholder: "Search for a command to run..." }), /* @__PURE__ */ jsxs(CommandList, { children: [/* @__PURE__ */ jsx(CommandEmpty, { children: "No results found." }), /* @__PURE__ */ jsx(CommandGroup, {
+				heading: "Pages",
+				children: commands.map((command) => /* @__PURE__ */ jsx(CommandItem, {
+					value: command.label,
+					onSelect: () => {
+						setOpen(false);
+						window.location.href = command.href;
+					},
+					children: command.label
+				}, command.href))
+			})] })] })
+		})
+	] });
+}
+DashboardToolbar.__otokIslandId = "DashboardToolbar";
+//#endregion
 //#region src/app/islands/theme-island.tsx
 function ThemeIsland() {
 	return /* @__PURE__ */ jsxs("div", {
@@ -728,12 +841,22 @@ ThemeIsland.__otokIslandId = "ThemeIsland";
 //#endregion
 //#region src/app/routes/demo.tsx
 var demo_exports = /* @__PURE__ */ __exportAll({
+	chrome: () => chrome$3,
 	default: () => Demo,
 	head: () => head$5
 });
 var head$5 = () => ({
 	title: "kamod-ui islands | Otok Playground",
 	description: "Interactive kamod-ui components hydrated as islands."
+});
+var chrome$3 = () => ({
+	title: "kamod-ui islands",
+	description: "Dialog and theme interactions are isolated islands.",
+	toolbar: /* @__PURE__ */ jsx(Island, {
+		component: DashboardToolbar,
+		props: {},
+		strategy: "load"
+	})
 });
 function Demo() {
 	return /* @__PURE__ */ jsxs("div", {
@@ -752,12 +875,17 @@ function Demo() {
 //#endregion
 //#region src/app/routes/users/[id].tsx
 var _id__exports = /* @__PURE__ */ __exportAll({
+	chrome: () => chrome$2,
 	default: () => UserPage,
 	head: () => head$4,
 	loader: () => loader$2
 });
 var loader$2 = async ({ params }) => ({ userId: params.id });
 var head$4 = ({ data }) => ({ title: `User ${data.userId} | Otok Playground` });
+var chrome$2 = ({ params }) => ({
+	title: "Dynamic route",
+	description: `Server-rendered route for ${params.id}.`
+});
 function UserPage({ data }) {
 	return /* @__PURE__ */ jsxs(Card, { children: [/* @__PURE__ */ jsx(CardHeader, { children: /* @__PURE__ */ jsx(CardTitle, { children: "/users/[id]" }) }), /* @__PURE__ */ jsxs(CardContent, {
 		class: "space-y-3",
@@ -1245,6 +1373,7 @@ TeamMembers.__otokIslandId = "TeamMembers";
 //#endregion
 //#region src/app/routes/index.tsx
 var routes_exports = /* @__PURE__ */ __exportAll({
+	chrome: () => chrome$1,
 	default: () => Home,
 	head: () => head$3,
 	loader: () => loader$1
@@ -1278,6 +1407,15 @@ var head$3 = () => ({
 		name: "Otok Playground",
 		applicationCategory: "DeveloperApplication"
 	}
+});
+var chrome$1 = ({ data }) => ({
+	title: "Dashboard",
+	description: data.dateRange?.from && data.dateRange.to ? `${data.dateRange.from} - ${data.dateRange.to}` : "Otok dashboard",
+	toolbar: /* @__PURE__ */ jsx(Island, {
+		component: DashboardToolbar,
+		props: {},
+		strategy: "load"
+	})
 });
 function Home({ data }) {
 	const revenue = new Intl.NumberFormat("en-US", {
@@ -1363,6 +1501,7 @@ function Home({ data }) {
 //#endregion
 //#region src/app/routes/docs/[...slug].tsx
 var ____slug__exports = /* @__PURE__ */ __exportAll({
+	chrome: () => chrome,
 	default: () => DocsPage,
 	head: () => head$2,
 	loader: () => loader
@@ -1372,6 +1511,10 @@ var loader = ({ params }) => ({
 	segments: params.slug.split("/")
 });
 var head$2 = ({ data }) => ({ title: `Docs ${data.slug} | Otok Playground` });
+var chrome = () => ({
+	title: "Catch-all route",
+	description: "A catch-all route powered by Otok file routing."
+});
 function DocsPage({ data }) {
 	return /* @__PURE__ */ jsxs(Card, { children: [/* @__PURE__ */ jsx(CardHeader, { children: /* @__PURE__ */ jsx(CardTitle, { children: "Catch-all docs route" }) }), /* @__PURE__ */ jsxs(CardContent, {
 		class: "space-y-4",
@@ -1465,6 +1608,7 @@ function isNavItemActive(route, item) {
 function SidebarNav({ route }) {
 	return /* @__PURE__ */ jsx("nav", {
 		class: "flex flex-col gap-4 px-2 py-4",
+		"data-otok-swap": "sidebar-nav",
 		children: dashboardNavGroups.map((group) => /* @__PURE__ */ jsxs("details", {
 			open: true,
 			class: "group",
@@ -1528,6 +1672,7 @@ function DashboardShell({ route, title, description, toolbar, children }) {
 			class: "flex min-w-0 flex-1 flex-col",
 			children: [/* @__PURE__ */ jsxs("header", {
 				class: "sticky top-0 z-10 flex h-14 items-center gap-4 border-b bg-background/95 px-4 backdrop-blur supports-[backdrop-filter]:bg-background/60",
+				"data-otok-swap": "header",
 				children: [
 					/* @__PURE__ */ jsxs("details", {
 						class: "lg:hidden",
@@ -1554,6 +1699,7 @@ function DashboardShell({ route, title, description, toolbar, children }) {
 				children: [
 					/* @__PURE__ */ jsxs("div", {
 						class: "mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between",
+						"data-otok-swap": "page-heading",
 						children: [/* @__PURE__ */ jsxs("div", {
 							class: "space-y-1",
 							children: [/* @__PURE__ */ jsx("h1", {
@@ -1580,212 +1726,100 @@ function DashboardShell({ route, title, description, toolbar, children }) {
 	});
 }
 //#endregion
-//#region src/app/islands/dashboard-toolbar.tsx
-var commands = [
-	{
-		label: "Classic Dashboard",
-		href: "/"
-	},
-	{
-		label: "Zero-JS route",
-		href: "/about"
-	},
-	{
-		label: "kamod-ui islands",
-		href: "/demo"
-	},
-	{
-		label: "Dynamic route",
-		href: "/users/alice"
-	}
-];
-function DashboardToolbar() {
-	const [open, setOpen] = useState(false);
-	useEffect(() => {
-		const onKeyDown = (event) => {
-			if ((event.metaKey || event.ctrlKey) && event.key.toLowerCase() === "k") {
-				event.preventDefault();
-				setOpen((current) => !current);
-			}
-		};
-		window.addEventListener("keydown", onKeyDown);
-		return () => window.removeEventListener("keydown", onKeyDown);
-	}, []);
-	return /* @__PURE__ */ jsxs(Fragment$1, { children: [
-		/* @__PURE__ */ jsxs(Button, {
-			variant: "outline",
-			size: "sm",
-			class: "hidden h-8 w-64 justify-start text-muted-foreground sm:flex",
-			onClick: () => setOpen(true),
-			children: ["Search for a command to run...", /* @__PURE__ */ jsx("kbd", {
-				class: "pointer-events-none ms-auto hidden rounded border bg-muted px-1.5 font-mono text-[10px] font-medium sm:inline",
-				children: "⌘K"
-			})]
-		}),
-		/* @__PURE__ */ jsx(Button, {
-			variant: "outline",
-			size: "sm",
-			class: "sm:hidden",
-			onClick: () => setOpen(true),
-			children: "Search"
-		}),
-		/* @__PURE__ */ jsx(ThemeToggle, {}),
-		/* @__PURE__ */ jsx(CommandDialog, {
-			open,
-			onOpenChange: setOpen,
-			children: /* @__PURE__ */ jsxs(Command, { children: [/* @__PURE__ */ jsx(CommandInput, { placeholder: "Search for a command to run..." }), /* @__PURE__ */ jsxs(CommandList, { children: [/* @__PURE__ */ jsx(CommandEmpty, { children: "No results found." }), /* @__PURE__ */ jsx(CommandGroup, {
-				heading: "Pages",
-				children: commands.map((command) => /* @__PURE__ */ jsx(CommandItem, {
-					value: command.label,
-					onSelect: () => {
-						setOpen(false);
-						window.location.href = command.href;
-					},
-					children: command.label
-				}, command.href))
-			})] })] })
-		})
-	] });
-}
-DashboardToolbar.__otokIslandId = "DashboardToolbar";
-//#endregion
 //#region src/app/routes/_layout.tsx
 var _layout_exports = /* @__PURE__ */ __exportAll({ default: () => Layout });
-function routeChrome({ route, params, data }) {
-	if (route === "/") {
-		const dateRange = data && typeof data === "object" && "dateRange" in data ? data.dateRange : void 0;
-		return {
-			title: "Dashboard",
-			description: dateRange?.from && dateRange.to ? `${dateRange.from} - ${dateRange.to}` : "Otok dashboard",
-			toolbar: /* @__PURE__ */ jsx(Island, {
-				component: DashboardToolbar,
-				props: {},
-				strategy: "load"
-			})
-		};
-	}
-	if (route === "/demo") return {
-		title: "kamod-ui islands",
-		description: "Dialog and theme interactions are isolated islands.",
-		toolbar: /* @__PURE__ */ jsx(Island, {
-			component: DashboardToolbar,
-			props: {},
-			strategy: "load"
-		})
-	};
-	if (route === "/users/:id") return {
-		title: "Dynamic route",
-		description: `Server-rendered route for ${params.id}.`
-	};
-	if (route === "/docs/:slug*") return {
-		title: "Catch-all route",
-		description: "A catch-all route powered by Otok file routing."
-	};
-	return {
-		title: "Zero-JS route",
-		description: "This route has no islands."
-	};
-}
-function Layout({ children, data, params, route }) {
-	const chrome = routeChrome({
-		route,
-		params,
-		data
-	});
+var defaultChrome = {
+	title: "Otok Playground",
+	description: "Server-rendered Preact with islands."
+};
+function Layout({ children, chrome, route }) {
+	const resolved = chrome ?? defaultChrome;
 	return /* @__PURE__ */ jsx(DashboardShell, {
 		route,
-		title: chrome.title,
-		description: chrome.description,
-		toolbar: chrome.toolbar,
+		title: resolved.title ?? "Otok Playground",
+		description: resolved.description ?? defaultChrome.description,
+		toolbar: resolved.toolbar,
 		children
 	});
 }
 //#endregion
-//#region \0virtual:otok-routes
-var routes = [
-	{
-		id: "about",
-		path: "/about",
-		pattern: /* @__PURE__ */ new RegExp("^/about/?$"),
-		params: [],
-		module: about_exports,
-		layouts: [_layout_exports]
-	},
-	{
-		id: "boom",
-		path: "/boom",
-		pattern: /* @__PURE__ */ new RegExp("^/boom/?$"),
-		params: [],
-		module: boom_exports,
-		layouts: [_layout_exports]
-	},
-	{
-		id: "demo",
-		path: "/demo",
-		pattern: /* @__PURE__ */ new RegExp("^/demo/?$"),
-		params: [],
-		module: demo_exports,
-		layouts: [_layout_exports]
-	},
-	{
-		id: "users.[id]",
-		path: "/users/:id",
-		pattern: /* @__PURE__ */ new RegExp("^/users/([^/]+)/?$"),
-		params: ["id"],
-		module: _id__exports,
-		layouts: [_layout_exports]
-	},
-	{
-		id: "index",
+//#region src/server.ts
+var app = createOtokApp({
+	routes: [
+		{
+			id: "about",
+			path: "/about",
+			pattern: /* @__PURE__ */ new RegExp("^/about/?$"),
+			params: [],
+			module: about_exports,
+			layouts: [_layout_exports]
+		},
+		{
+			id: "boom",
+			path: "/boom",
+			pattern: /* @__PURE__ */ new RegExp("^/boom/?$"),
+			params: [],
+			module: boom_exports,
+			layouts: [_layout_exports]
+		},
+		{
+			id: "demo",
+			path: "/demo",
+			pattern: /* @__PURE__ */ new RegExp("^/demo/?$"),
+			params: [],
+			module: demo_exports,
+			layouts: [_layout_exports]
+		},
+		{
+			id: "users.[id]",
+			path: "/users/:id",
+			pattern: /* @__PURE__ */ new RegExp("^/users/([^/]+)/?$"),
+			params: ["id"],
+			module: _id__exports,
+			layouts: [_layout_exports]
+		},
+		{
+			id: "index",
+			path: "/",
+			pattern: /* @__PURE__ */ new RegExp("^/?$"),
+			params: [],
+			module: routes_exports,
+			layouts: [_layout_exports]
+		},
+		{
+			id: "docs.[...slug]",
+			path: "/docs/:slug*",
+			pattern: /* @__PURE__ */ new RegExp("^/docs/(.+)/?$"),
+			params: ["slug"],
+			module: ____slug__exports,
+			layouts: [_layout_exports]
+		}
+	],
+	notFoundRoute: {
+		id: "_not-found",
 		path: "/",
 		pattern: /* @__PURE__ */ new RegExp("^/?$"),
 		params: [],
-		module: routes_exports,
+		module: _not_found_exports,
 		layouts: [_layout_exports]
 	},
-	{
-		id: "docs.[...slug]",
-		path: "/docs/:slug*",
-		pattern: /* @__PURE__ */ new RegExp("^/docs/(.+)/?$"),
-		params: ["slug"],
-		module: ____slug__exports,
+	errorRoute: {
+		id: "_error",
+		path: "/",
+		pattern: /* @__PURE__ */ new RegExp("^/?$"),
+		params: [],
+		module: _error_exports,
 		layouts: [_layout_exports]
-	}
-];
-var notFoundRoute = {
-	id: "_not-found",
-	path: "/",
-	pattern: /* @__PURE__ */ new RegExp("^/?$"),
-	params: [],
-	module: _not_found_exports,
-	layouts: [_layout_exports]
-};
-var errorRoute = {
-	id: "_error",
-	path: "/",
-	pattern: /* @__PURE__ */ new RegExp("^/?$"),
-	params: [],
-	module: _error_exports,
-	layouts: [_layout_exports]
-};
-//#endregion
-//#region src/server.ts
-function readManifest() {
-	const manifestUrl = new URL("../client/.vite/manifest.json", import.meta.url);
-	return JSON.parse(readFileSync(manifestUrl, "utf8"));
-}
-var app = createOtokApp({
-	routes,
-	notFoundRoute,
-	errorRoute,
-	manifest: readManifest(),
+	},
+	manifest: readOtokManifest(import.meta.url),
 	clientEntry: "src/client.ts",
 	devClientEntry: "/src/client.ts",
 	staticDir: "./dist/client",
 	health: {
 		ok: true,
 		framework: "otok"
-	}
+	},
+	theme: true
 });
 serve({
 	fetch: app.fetch,

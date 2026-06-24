@@ -4,7 +4,7 @@ export type JsonPrimitive = string | number | boolean | null;
 export type JsonValue = JsonPrimitive | JsonValue[] | { [key: string]: JsonValue };
 
 export type IslandProps = Record<string, JsonValue>;
-export type IslandHydrationStrategy = "load" | "idle" | "visible" | "media";
+export type IslandHydrationStrategy = "load" | "idle" | "visible" | "media" | "client-only";
 
 export interface IslandModule<Props extends IslandProps = IslandProps> {
   default?: ComponentType<Props>;

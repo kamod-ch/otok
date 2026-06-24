@@ -129,10 +129,11 @@ The plugin injects a stable island ID into each island module based on the filen
 `<Island>` supports four strategies:
 
 ```text
-load      Hydrate immediately
-idle      Hydrate with requestIdleCallback or a timeout fallback
-visible   Hydrate through IntersectionObserver
-media     Hydrate when matchMedia(media) matches
+load         Hydrate immediately
+idle         Hydrate with requestIdleCallback or a timeout fallback
+visible      Hydrate through IntersectionObserver
+media        Hydrate when matchMedia(media) matches
+client-only  Emit an empty island shell on the server; hydrate on the client
 ```
 
 For visible hydration, `rootMargin` is forwarded to `IntersectionObserver`.
@@ -167,4 +168,31 @@ Apps should reference the plugin types once:
 /// <reference types="@otok/vite-plugin/client" />
 ```
 
-This declares `virtual:otok-routes` and `virtual:otok-islands`.
+This declares `virtual:otok-routes`, `virtual:otok-islands`, and exports `routePaths` / `OtokRoutePath`.
+
+## Route Chrome
+
+Route modules may export `chrome` to provide layout shell metadata:
+
+```tsx
+export const chrome = ({ data, params }) => ({
+  title: "Documents",
+  description: `Review for ${params.id}`,
+  toolbar: <Island component={Toolbar} props={{}} />,
+});
+```
+
+Layouts receive `chrome` on `OtokLayoutProps`. This avoids central route switches inside `_layout.tsx`.
+
+## Security
+
+- Island props are JSON-serialized into HTML. Treat loader output as untrusted when it comes from users or external systems.
+- Escape or sanitize user content inside island and page components before rendering.
+- Otok escapes HTML in `head()` output and neutralizes `<` in JSON script payloads.
+- For strict Content Security Policy, prefer hashed or nonce-based policies and avoid inline scripts outside Otok's managed payloads.
+- Soft navigation only applies to same-origin links and skips `/api/` paths.
+
+## Theme
+
+Pass `theme: true` to `createOtokHandler()` / `createOtokApp()` to emit the built-in dark-mode bootstrap script and SSR `class="dark"` from the `theme` cookie. Theme is opt-in and disabled by default.
+

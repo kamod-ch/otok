@@ -1,6 +1,21 @@
 import { h, type ComponentType } from "preact";
 import { hydrate } from "preact";
+import { cssEscape } from "../shared/css.js";
+import { OTOK_CANCEL_HYDRATION } from "../shared/navigation.js";
 import { decodeIslandProps, type IslandProps, type IslandRegistry } from "../shared/islands.js";
+
+interface PendingHydration {
+  abort: () => void;
+}
+
+const pendingHydrations = new WeakMap<Element, PendingHydration>();
+
+export function cancelPendingHydration(root: ParentNode): void {
+  for (const element of root.querySelectorAll("[data-otok-island]:not([data-otok-hydrated])")) {
+    pendingHydrations.get(element)?.abort();
+    pendingHydrations.delete(element);
+  }
+}
 
 export async function hydrateIsland(
   element: Element,
@@ -27,6 +42,7 @@ export async function hydrateIsland(
     const props = decodeIslandPropsFromElement(element);
     hydrate(h(Component as ComponentType<IslandProps>, props), element);
     element.setAttribute("data-otok-hydrated", "true");
+    pendingHydrations.delete(element);
   } catch (error) {
     if (onError) onError(error, element);
     else throw error;
@@ -45,9 +61,9 @@ function decodeIslandPropsFromElement(element: Element): IslandProps {
   return decodeIslandProps(element.getAttribute("data-otok-props"));
 }
 
-function cssEscape(value: string): string {
-  if (typeof CSS !== "undefined" && CSS.escape) return CSS.escape(value);
-  return value.replaceAll('"', '\\"').replaceAll("\\", "\\\\");
+function trackPending(element: Element, abort: () => void): void {
+  pendingHydrations.get(element)?.abort();
+  pendingHydrations.set(element, { abort });
 }
 
 function scheduleIslandHydration(
@@ -68,13 +84,37 @@ function hydrateWhenIdle(
   onError?: (error: unknown, element: Element) => void,
 ): Promise<void> {
   return new Promise((resolve) => {
-    const run = () => void hydrateIsland(element, registry, onError).then(resolve);
+    let cancelled = false;
+    const idleId = { value: 0 as number | undefined };
+    const timeoutId = { value: undefined as ReturnType<typeof globalThis.setTimeout> | undefined };
+
+    const cleanup = () => {
+      cancelled = true;
+      pendingHydrations.delete(element);
+    };
+
+    trackPending(element, cleanup);
+
+    const run = () => {
+      if (cancelled) return resolve();
+      void hydrateIsland(element, registry, onError).then(resolve);
+    };
+
     const idle = (window as Window & { requestIdleCallback?: (callback: () => void) => number }).requestIdleCallback;
     if (idle) {
-      idle(run);
+      idleId.value = idle(run);
     } else {
-      globalThis.setTimeout(run, 1);
+      timeoutId.value = globalThis.setTimeout(run, 1);
     }
+
+    element.addEventListener(
+      OTOK_CANCEL_HYDRATION,
+      () => {
+        cleanup();
+        resolve();
+      },
+      { once: true },
+    );
   });
 }
 
@@ -86,15 +126,34 @@ function hydrateWhenVisible(
   if (!("IntersectionObserver" in window)) return hydrateIsland(element, registry, onError);
 
   return new Promise((resolve) => {
+    let cancelled = false;
     const observer = new IntersectionObserver(
       (entries) => {
-        if (!entries.some((entry) => entry.isIntersecting)) return;
+        if (cancelled || !entries.some((entry) => entry.isIntersecting)) return;
         observer.disconnect();
+        pendingHydrations.delete(element);
         void hydrateIsland(element, registry, onError).then(resolve);
       },
       { rootMargin: element.getAttribute("data-otok-root-margin") ?? "0px" },
     );
+
+    trackPending(element, () => {
+      cancelled = true;
+      observer.disconnect();
+    });
+
     observer.observe(element);
+
+    element.addEventListener(
+      OTOK_CANCEL_HYDRATION,
+      () => {
+        cancelled = true;
+        observer.disconnect();
+        pendingHydrations.delete(element);
+        resolve();
+      },
+      { once: true },
+    );
   });
 }
 
@@ -110,12 +169,31 @@ function hydrateWhenMediaMatches(
   if (query.matches) return hydrateIsland(element, registry, onError);
 
   return new Promise((resolve) => {
+    let cancelled = false;
     const onChange = () => {
-      if (!query.matches) return;
+      if (cancelled || !query.matches) return;
       query.removeEventListener("change", onChange);
+      pendingHydrations.delete(element);
       void hydrateIsland(element, registry, onError).then(resolve);
     };
+
+    trackPending(element, () => {
+      cancelled = true;
+      query.removeEventListener("change", onChange);
+    });
+
     query.addEventListener("change", onChange);
+
+    element.addEventListener(
+      OTOK_CANCEL_HYDRATION,
+      () => {
+        cancelled = true;
+        query.removeEventListener("change", onChange);
+        pendingHydrations.delete(element);
+        resolve();
+      },
+      { once: true },
+    );
   });
 }
 

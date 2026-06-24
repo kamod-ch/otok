@@ -1,14 +1,18 @@
+import { cssEscape } from "../shared/css.js";
 import {
+  OTOK_CANCEL_HYDRATION,
+  OTOK_HEAD_ATTR,
   OTOK_HISTORY_STATE_KEY,
   OTOK_NO_NAV_ATTR,
   OTOK_PAGE_ATTR,
   OTOK_SWAP_ATTR,
 } from "../shared/navigation.js";
 import type { IslandRegistry } from "../shared/islands.js";
-import { hydrateIslands } from "./hydration.js";
+import { cancelPendingHydration, hydrateIslands } from "./hydration.js";
 
 export interface SoftNavOptions {
   scroll?: boolean | ScrollBehavior;
+  prefetch?: boolean;
   onNavigate?: (detail: { url: string }) => void;
   onError?: (error: unknown) => void;
 }
@@ -20,9 +24,14 @@ export interface SoftNavigateOptions {
 
 let activeNavigation: AbortController | null = null;
 
-function cssEscape(value: string): string {
-  if (typeof CSS !== "undefined" && CSS.escape) return CSS.escape(value);
-  return value.replaceAll('"', '\\"').replaceAll("\\", "\\\\");
+const prefetchCache = new Map<string, Document>();
+const MAX_PREFETCH_CACHE = 10;
+
+function dispatchCancelHydration(root: ParentNode): void {
+  cancelPendingHydration(root);
+  for (const element of root.querySelectorAll("[data-otok-island]:not([data-otok-hydrated])")) {
+    element.dispatchEvent(new CustomEvent(OTOK_CANCEL_HYDRATION));
+  }
 }
 
 export function isSoftNavLink(anchor: HTMLAnchorElement, location: Location = window.location): boolean {
@@ -47,24 +56,103 @@ export function isSoftNavLink(anchor: HTMLAnchorElement, location: Location = wi
   return true;
 }
 
+export function syncSoftNavigationHead(nextDoc: Document, currentDoc: Document = document): void {
+  const nextTitle = nextDoc.querySelector("title")?.textContent;
+  if (nextTitle) currentDoc.title = nextTitle;
+
+  const managedSelector = `[${OTOK_HEAD_ATTR}]`;
+  const nextManaged = [...nextDoc.head.querySelectorAll(managedSelector)];
+  const keys = new Set(nextManaged.map((el) => el.getAttribute(OTOK_HEAD_ATTR)).filter(Boolean) as string[]);
+
+  for (const key of keys) {
+    const nextEl = nextDoc.head.querySelector(`[${OTOK_HEAD_ATTR}="${cssEscape(key)}"]`);
+    const currentEl = currentDoc.head.querySelector(`[${OTOK_HEAD_ATTR}="${cssEscape(key)}"]`);
+    if (!nextEl) continue;
+    const clone = nextEl.cloneNode(true);
+    if (currentEl) currentEl.replaceWith(clone);
+    else currentDoc.head.appendChild(clone);
+  }
+
+  for (const currentEl of currentDoc.head.querySelectorAll(managedSelector)) {
+    const key = currentEl.getAttribute(OTOK_HEAD_ATTR);
+    if (key && !keys.has(key)) currentEl.remove();
+  }
+}
+
 export function applySoftNavigationDocument(nextDoc: Document, currentDoc: Document = document): boolean {
   const nextPage = nextDoc.querySelector(`[${OTOK_PAGE_ATTR}]`);
   const currentPage = currentDoc.querySelector(`[${OTOK_PAGE_ATTR}]`);
   if (!nextPage || !currentPage) return false;
 
+  dispatchCancelHydration(currentDoc);
+
   for (const nextRegion of nextDoc.querySelectorAll(`[${OTOK_SWAP_ATTR}]`)) {
     const swapId = nextRegion.getAttribute(OTOK_SWAP_ATTR);
     if (!swapId) continue;
     const currentRegion = currentDoc.querySelector(`[${OTOK_SWAP_ATTR}="${cssEscape(swapId)}"]`);
-    if (currentRegion) currentRegion.outerHTML = nextRegion.outerHTML;
+    if (currentRegion) {
+      dispatchCancelHydration(currentRegion);
+      currentRegion.outerHTML = nextRegion.outerHTML;
+    }
   }
 
+  dispatchCancelHydration(currentPage);
   currentPage.outerHTML = nextPage.outerHTML;
-
-  const nextTitle = nextDoc.querySelector("title")?.textContent;
-  if (nextTitle) currentDoc.title = nextTitle;
+  syncSoftNavigationHead(nextDoc, currentDoc);
 
   return true;
+}
+
+async function fetchNavigationDocument(
+  url: string,
+  signal: AbortSignal,
+): Promise<Document | null> {
+  const cached = prefetchCache.get(url);
+  if (cached) {
+    prefetchCache.delete(url);
+    return cached;
+  }
+
+  const response = await fetch(url, {
+    signal,
+    headers: { Accept: "text/html" },
+    credentials: "same-origin",
+    redirect: "follow",
+  });
+
+  if (!response.ok) return null;
+
+  const finalUrl = response.url;
+  if (finalUrl) {
+    const final = new URL(finalUrl, window.location.href);
+    const requested = new URL(url, window.location.href);
+    if (final.origin !== requested.origin) return null;
+  }
+
+  const html = await response.text();
+  return new DOMParser().parseFromString(html, "text/html");
+}
+
+export function prefetchSoftNavUrl(url: string): void {
+  if (prefetchCache.has(url)) return;
+
+  void fetch(url, {
+    headers: { Accept: "text/html" },
+    credentials: "same-origin",
+  })
+    .then((response) => {
+      if (!response.ok) return undefined;
+      return response.text();
+    })
+    .then((html) => {
+      if (!html) return;
+      if (prefetchCache.size >= MAX_PREFETCH_CACHE) {
+        const first = prefetchCache.keys().next().value;
+        if (first) prefetchCache.delete(first);
+      }
+      prefetchCache.set(url, new DOMParser().parseFromString(html, "text/html"));
+    })
+    .catch(() => undefined);
 }
 
 export async function softNavigate(
@@ -77,19 +165,12 @@ export async function softNavigate(
   activeNavigation = controller;
 
   try {
-    const response = await fetch(url, {
-      signal: controller.signal,
-      headers: { Accept: "text/html" },
-      credentials: "same-origin",
-    });
-
-    if (!response.ok) {
+    const nextDoc = await fetchNavigationDocument(url, controller.signal);
+    if (!nextDoc) {
       window.location.assign(url);
       return false;
     }
 
-    const html = await response.text();
-    const nextDoc = new DOMParser().parseFromString(html, "text/html");
     const applied = applySoftNavigationDocument(nextDoc);
     if (!applied) {
       window.location.assign(url);
@@ -125,6 +206,8 @@ export async function softNavigate(
 }
 
 export function setupSoftNavigation(registry: IslandRegistry, options: SoftNavOptions = {}): () => void {
+  const prefetchEnabled = options.prefetch !== false;
+
   const onClick = (event: MouseEvent) => {
     if (event.defaultPrevented) return;
     if (event.button !== 0) return;
@@ -147,6 +230,16 @@ export function setupSoftNavigation(registry: IslandRegistry, options: SoftNavOp
     });
   };
 
+  const onPointerOver = (event: Event) => {
+    if (!prefetchEnabled) return;
+    const target = event.target;
+    if (!(target instanceof Element)) return;
+    const anchor = target.closest("a");
+    if (!(anchor instanceof HTMLAnchorElement)) return;
+    if (!isSoftNavLink(anchor)) return;
+    prefetchSoftNavUrl(anchor.href);
+  };
+
   const onPopState = () => {
     const path = `${window.location.pathname}${window.location.search}${window.location.hash}`;
     void softNavigate(path, registry, {
@@ -157,12 +250,15 @@ export function setupSoftNavigation(registry: IslandRegistry, options: SoftNavOp
   };
 
   document.addEventListener("click", onClick, true);
+  document.addEventListener("mouseover", onPointerOver, true);
   window.addEventListener("popstate", onPopState);
 
   return () => {
     document.removeEventListener("click", onClick, true);
+    document.removeEventListener("mouseover", onPointerOver, true);
     window.removeEventListener("popstate", onPopState);
     activeNavigation?.abort();
     activeNavigation = null;
+    prefetchCache.clear();
   };
 }

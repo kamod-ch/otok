@@ -1,5 +1,27 @@
 # Changelog
 
+## 0.2.0
+
+### Added
+
+- Soft navigation head sync via `data-otok-head` markers (title, meta, canonical, JSON-LD).
+- Link prefetch on hover for soft navigation.
+- Pending island hydration cancellation before soft-nav DOM swaps.
+- Route `chrome` export convention passed to layouts via `OtokLayoutProps`.
+- `readOtokManifest()` helper for production client manifests.
+- `createOtokApp({ configure })` hook for API routes and middleware.
+- `routePaths` / `OtokRoutePath` exports from `virtual:otok-routes`.
+- Island id collision warnings in `@otok/vite-plugin`.
+- `client-only` island hydration strategy.
+- Minimal `create-otok` template (default); `full` template retains the dashboard demo.
+- MIT LICENSE, full-stack documentation, and security conventions.
+
+### Changed
+
+- Theme bootstrap is opt-in via `theme: true` on server handlers (disabled by default).
+- `@hono/node-server` is now an optional peer dependency of `otok`.
+- Soft navigation E2E coverage in the playground.
+
 ## 0.1.0
 
 ### Breaking Changes

@@ -4,5 +4,8 @@ export const OTOK_PAGE_ATTR = "data-otok-page";
 export const OTOK_SWAP_ATTR = "data-otok-swap";
 /** Opts a link out of soft navigation. */
 export const OTOK_NO_NAV_ATTR = "data-otok-no-nav";
+/** Marks head elements synced during soft navigation. */
+export const OTOK_HEAD_ATTR = "data-otok-head";
+export const OTOK_CANCEL_HYDRATION = "otok:cancel-hydration";
 export const OTOK_HISTORY_STATE_KEY = "otokSoftNav";
 //# sourceMappingURL=navigation.js.map

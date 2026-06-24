@@ -20,7 +20,17 @@ test("dynamic route params are loaded on the server", async ({ page }) => {
   await expect(page.getByText("Loaded user id: alice")).toBeVisible();
 });
 
-test("dashboard navigation reaches zero-js route", async ({ page }) => {
+test("soft navigation swaps page content and updates heading", async ({ page }) => {
+  await page.goto("/");
+  await expect(page.getByRole("heading", { name: "Dashboard" })).toBeVisible();
+
+  await page.getByRole("link", { name: "kamod-ui islands" }).first().click();
+  await expect(page).toHaveURL("/demo");
+  await expect(page.getByRole("heading", { name: "kamod-ui islands" })).toBeVisible();
+  await expect(page.getByText("Dialog and theme interactions are isolated islands.")).toBeVisible();
+});
+
+test("soft navigation reaches zero-js route", async ({ page }) => {
   await page.goto("/");
   await page.getByRole("link", { name: "Zero-JS route" }).first().click();
   await expect(page).toHaveURL("/about");

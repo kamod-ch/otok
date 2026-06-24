@@ -9,6 +9,11 @@ export const head = ({ data }: { data: { userId: string } }) => ({
   title: `User ${data.userId} | Otok Playground`,
 });
 
+export const chrome = ({ params }: { params: { id: string } }) => ({
+  title: "Dynamic route",
+  description: `Server-rendered route for ${params.id}.`,
+});
+
 export default function UserPage({
   data,
 }: {

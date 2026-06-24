@@ -12,6 +12,7 @@ import {
 } from "../data/dashboard";
 import ChatCard from "../islands/chat-card";
 import Counter from "../islands/counter";
+import DashboardToolbar from "../islands/dashboard-toolbar";
 import PaymentForm from "../islands/payment-form";
 import TeamMembers from "../islands/team-members";
 
@@ -42,6 +43,15 @@ export const head = () => ({
 });
 
 type HomeData = Awaited<ReturnType<typeof loader>>;
+
+export const chrome = ({ data }: { data: HomeData }) => ({
+  title: "Dashboard",
+  description:
+    data.dateRange?.from && data.dateRange.to
+      ? `${data.dateRange.from} - ${data.dateRange.to}`
+      : "Otok dashboard",
+  toolbar: <Island component={DashboardToolbar} props={{}} strategy="load" />,
+});
 
 export default function Home({ data }: { data: HomeData }) {
   const revenue = new Intl.NumberFormat("en-US", {

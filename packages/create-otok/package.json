@@ -1,12 +1,12 @@
 {
   "name": "create-otok",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Scaffold a new Otok app.",
   "type": "module",
   "bin": {
     "create-otok": "./bin/create-otok.mjs"
   },
-  "files": ["bin", "template"],
+  "files": ["bin", "template", "template-minimal"],
   "scripts": {
     "build": "npm pack --dry-run >/dev/null",
     "typecheck": "node --check ./bin/create-otok.mjs && node --check ./test/create-otok.test.mjs",

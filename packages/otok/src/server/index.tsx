@@ -10,6 +10,7 @@ import { withIslandRenderContext } from "../shared/island-context.js";
 import {
   isOtokHttpError,
   type LoaderResult,
+  type OtokChrome,
   type OtokContext,
   type OtokHead,
   type OtokRoute,
@@ -26,17 +27,34 @@ export interface CreateOtokHandlerOptions {
   notFound?: OtokRoute;
   notFoundRoute?: OtokRoute;
   errorRoute?: OtokRoute;
+  /** Include theme bootstrap script and SSR dark-mode class from cookie. Defaults to false. */
+  theme?: boolean;
 }
 
 export interface CreateOtokAppOptions extends CreateOtokHandlerOptions {
   staticDir?: string;
   assetsPath?: string;
   health?: boolean | Record<string, unknown>;
+  /** Register API routes, middleware, or other Hono handlers before SSR. */
+  configure?: (app: Hono) => void;
 }
 
 async function resolveHead(route: OtokRoute, data: LoaderResult, params: Record<string, string>): Promise<OtokHead> {
   if (!route.module.head) return { title: "Otok App" };
   return await route.module.head({
+    data,
+    params,
+    route: route.path,
+  });
+}
+
+async function resolveChrome(
+  route: OtokRoute,
+  data: LoaderResult,
+  params: Record<string, string>,
+): Promise<OtokChrome | undefined> {
+  if (!route.module.chrome) return undefined;
+  return await route.module.chrome({
     data,
     params,
     route: route.path,
@@ -78,8 +96,9 @@ async function renderRoute(
   };
   const data = dataOverride ?? (route.module.loader ? await route.module.loader(context) : {});
   const head = await resolveHead(route, data, params);
+  const chrome = await resolveChrome(route, data, params);
   const Page = route.module.default;
-  const props = { data, params, route: route.path };
+  const props = { data, params, route: route.path, chrome };
   const islandContext = { islands: new Set<string>(), nextIslandId: 0 };
   const body = withIslandRenderContext(islandContext, () => {
     let tree: VNode<any> = h(
@@ -95,6 +114,7 @@ async function renderRoute(
     }
     return renderToString(tree);
   });
+  const themeEnabled = options.theme ?? false;
   const html = pageHtml({
     body,
     head,
@@ -103,7 +123,8 @@ async function renderRoute(
     clientEntry: options.clientEntry,
     devClientEntry: options.devClientEntry,
     base: options.base,
-    darkMode: resolveDarkModeFromCookie(c.req.header("cookie")),
+    theme: themeEnabled,
+    darkMode: themeEnabled ? resolveDarkModeFromCookie(c.req.header("cookie")) : false,
   });
 
   return new Response(html, {
@@ -165,6 +186,8 @@ async function renderFallbackRoute(
 export function createOtokApp(options: CreateOtokAppOptions): Hono {
   const app = new Hono();
 
+  options.configure?.(app);
+
   if (options.health) {
     const payload = typeof options.health === "object" ? options.health : { ok: true, framework: "otok" };
     app.get("/api/health", (c) => c.json(payload));
@@ -179,11 +202,13 @@ export function createOtokApp(options: CreateOtokAppOptions): Hono {
 }
 
 export { pageHtml, type ViteManifest, type ViteManifestEntry } from "./html.js";
+export { readOtokManifest, type ReadOtokManifestOptions } from "./manifest.js";
 export { matchRoute, type RouteMatch } from "./router.js";
 export { fail, isOtokHttpError, notFound, OtokHttpError, redirect } from "../shared/routes.js";
 export type {
   InferLoaderData,
   LoaderResult,
+  OtokChrome,
   OtokContext,
   OtokHead,
   OtokHeadLink,

@@ -5,6 +5,11 @@ export const head = () => ({
   description: "A static Otok route that ships no client JavaScript.",
 });
 
+export const chrome = () => ({
+  title: "Zero-JS route",
+  description: "This route has no islands.",
+});
+
 export default function About() {
   return (
     <>

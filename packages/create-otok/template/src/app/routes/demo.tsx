@@ -1,11 +1,18 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@kamod-ui/core";
 import { Island } from "otok/client";
 import DemoDialog from "../islands/demo-dialog";
+import DashboardToolbar from "../islands/dashboard-toolbar";
 import ThemeIsland from "../islands/theme-island";
 
 export const head = () => ({
   title: "kamod-ui islands | Otok Playground",
   description: "Interactive kamod-ui components hydrated as islands.",
+});
+
+export const chrome = () => ({
+  title: "kamod-ui islands",
+  description: "Dialog and theme interactions are isolated islands.",
+  toolbar: <Island component={DashboardToolbar} props={{}} strategy="load" />,
 });
 
 export default function Demo() {

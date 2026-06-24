@@ -1,4 +1,5 @@
 import type { OtokHead } from "../shared/routes.js";
+import { OTOK_HEAD_ATTR } from "../shared/navigation.js";
 import { themeBootstrapScript, themeColorSchemeStyle } from "../shared/theme.js";
 
 export interface ViteManifestEntry {
@@ -20,6 +21,8 @@ export interface PageHtmlOptions {
   base?: string;
   /** When true, SSR emits `<html class="dark">` from the theme cookie. */
   darkMode?: boolean;
+  /** Include theme bootstrap script and color-scheme styles. Defaults to false. */
+  theme?: boolean;
 }
 
 function escapeHtml(value: string): string {
@@ -70,14 +73,19 @@ function collectCss(manifest: ViteManifest | undefined, entry: ViteManifestEntry
 function renderHead(head: OtokHead | undefined): string {
   const title = escapeHtml(head?.title ?? "Otok App");
   const description = head?.description
-    ? `<meta name="description" content="${escapeHtml(head.description)}">`
+    ? `<meta ${OTOK_HEAD_ATTR}="description" name="description" content="${escapeHtml(head.description)}">`
     : "";
   const meta = Object.entries(head?.meta ?? {})
-    .map(([name, content]) => `<meta name="${escapeHtml(name)}" content="${escapeHtml(content)}">`)
+    .map(
+      ([name, content]) =>
+        `<meta ${OTOK_HEAD_ATTR}="${escapeHtml(name)}" name="${escapeHtml(name)}" content="${escapeHtml(content)}">`,
+    )
     .join("\n    ");
   const links = (head?.links ?? [])
     .map((link) => {
+      const headKey = link.rel === "canonical" ? "canonical" : `link:${link.rel}:${link.href}`;
       const attrs = [
+        `${OTOK_HEAD_ATTR}="${escapeHtml(headKey)}"`,
         `rel="${escapeHtml(link.rel)}"`,
         `href="${escapeHtml(link.href)}"`,
         link.crossorigin ? `crossorigin="${escapeHtml(link.crossorigin)}"` : "",
@@ -88,8 +96,9 @@ function renderHead(head: OtokHead | undefined): string {
     })
     .join("\n    ");
   const scripts = (head?.scripts ?? [])
-    .map((script) => {
+    .map((script, index) => {
       const attrs = [
+        `${OTOK_HEAD_ATTR}="script:${index}"`,
         script.src ? `src="${escapeHtml(script.src)}"` : "",
         script.type ? `type="${escapeHtml(script.type)}"` : "",
         script.async ? "async" : "",
@@ -99,12 +108,12 @@ function renderHead(head: OtokHead | undefined): string {
     })
     .join("\n    ");
   const jsonLd = head?.jsonLd
-    ? `<script type="application/ld+json">${escapeScriptJson(JSON.stringify(head.jsonLd))}</script>`
+    ? `<script ${OTOK_HEAD_ATTR}="json-ld" type="application/ld+json">${escapeScriptJson(JSON.stringify(head.jsonLd))}</script>`
     : "";
   return [
     '<meta charset="utf-8">',
     '<meta name="viewport" content="width=device-width, initial-scale=1">',
-    `<title>${title}</title>`,
+    `<title ${OTOK_HEAD_ATTR}="title">${title}</title>`,
     description,
     meta,
     links,
@@ -124,6 +133,7 @@ export function pageHtml({
   devClientEntry = "/src/client.ts",
   base = "/",
   darkMode = false,
+  theme = false,
 }: PageHtmlOptions): string {
   const entry = findEntry(manifest, clientEntry);
   const css = collectCss(manifest, entry);
@@ -139,12 +149,12 @@ export function pageHtml({
     : "";
   const lang = escapeHtml(head?.lang ?? "en");
   const htmlClass = darkMode ? ` class="dark"` : "";
+  const themeHead = theme ? `${themeBootstrapScript}\n    ${themeColorSchemeStyle}` : "";
 
   return `<!doctype html>
 <html lang="${lang}"${htmlClass}>
   <head>
-    ${themeBootstrapScript}
-    ${themeColorSchemeStyle}
+    ${themeHead}
     ${renderHead(head)}
     ${stylesheetLinks}
   </head>

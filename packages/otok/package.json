@@ -1,7 +1,13 @@
 {
   "name": "otok",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Hono + Preact Islands framework runtime.",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/kamod/otok",
+    "directory": "packages/otok"
+  },
   "type": "module",
   "files": ["dist"],
   "exports": {
@@ -25,14 +31,20 @@
     "test": "vitest run"
   },
   "dependencies": {
-    "@hono/node-server": "^2.0.1",
     "hono": "^4.12.25",
     "preact-render-to-string": "^6.7.0"
   },
   "peerDependencies": {
+    "@hono/node-server": ">=2.0.0",
     "preact": ">=10.26.0"
   },
+  "peerDependenciesMeta": {
+    "@hono/node-server": {
+      "optional": true
+    }
+  },
   "devDependencies": {
+    "@hono/node-server": "^2.0.1",
     "preact": "^10.28.2",
     "typescript": "~6.0.2",
     "vitest": "^4.1.2"

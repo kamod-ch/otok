@@ -12,7 +12,8 @@ Usage:
   pnpm create otok <app-name> [--template minimal|full]
 
 Options:
-  --template    Select a template. "minimal" and "full" currently use the default template.
+  --template    "minimal" ships a small counter demo without UI libraries.
+                "full" includes kamod-ui, Tailwind, and the dashboard playground.
   --help, -h    Show this help message
 `);
 }
@@ -22,14 +23,20 @@ function resolveTemplateDir(template) {
     throw new Error(`Unknown template "${template}". Expected "minimal" or "full".`);
   }
 
-  const candidates = [
-    path.resolve(__dirname, "../template"),
-    path.resolve(__dirname, "../../../templates/default"),
-  ];
+  const candidates =
+    template === "minimal"
+      ? [path.resolve(__dirname, "../template-minimal")]
+      : [
+          path.resolve(__dirname, "../template"),
+          path.resolve(__dirname, "../../../templates/default"),
+        ];
+
   const found = candidates.find((candidate) => fs.existsSync(path.join(candidate, "package.json")));
   if (!found) {
     throw new Error(
-      "Could not locate the Otok default template. Expected packages/create-otok/template or templates/default.",
+      template === "minimal"
+        ? "Could not locate the Otok minimal template. Expected packages/create-otok/template-minimal."
+        : "Could not locate the Otok default template. Expected packages/create-otok/template or templates/default.",
     );
   }
   return found;

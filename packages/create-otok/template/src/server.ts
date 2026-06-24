@@ -1,24 +1,18 @@
-import { readFileSync } from "node:fs";
 import { serve } from "@hono/node-server";
-import { createOtokApp, type ViteManifest } from "otok/server";
+import { createOtokApp, readOtokManifest } from "otok/server";
 import { errorRoute, notFoundRoute, routes } from "virtual:otok-routes";
 import "./style.css";
-
-function readManifest(): ViteManifest | undefined {
-  if (!import.meta.env.PROD) return undefined;
-  const manifestUrl = new URL("../client/.vite/manifest.json", import.meta.url);
-  return JSON.parse(readFileSync(manifestUrl, "utf8")) as ViteManifest;
-}
 
 const app = createOtokApp({
   routes,
   notFoundRoute,
   errorRoute,
-  manifest: readManifest(),
+  manifest: readOtokManifest(import.meta.url),
   clientEntry: "src/client.ts",
   devClientEntry: "/src/client.ts",
   staticDir: "./dist/client",
   health: { ok: true, framework: "otok" },
+  theme: true,
 });
 
 export default app;

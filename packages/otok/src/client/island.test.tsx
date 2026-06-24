@@ -28,4 +28,11 @@ describe("Island", () => {
     expect(html).toContain('type="application/json"');
     expect(html).toContain('data-otok-props-for="otok-LargeProps"');
   });
+
+  it("omits SSR content for client-only islands", () => {
+    const html = renderToString(<Island component={Counter} props={{ init: 3 }} strategy="client-only" />);
+
+    expect(html).toContain('data-otok-island="Counter"');
+    expect(html).not.toContain("Count: 3");
+  });
 });

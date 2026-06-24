@@ -148,6 +148,7 @@ function scanIslands(root, appDir, islandsDir, routesDir) {
         ...walk(absoluteRoutesDir).filter((file) => path.basename(file).startsWith("$")),
     ];
     const seen = new Set();
+    const idOwners = new Map();
     return files
         .filter((file) => {
         if (seen.has(file))
@@ -159,6 +160,13 @@ function scanIslands(root, appDir, islandsDir, routesDir) {
         const base = path.basename(stripExtension(file));
         const exportName = pascalCase(base);
         const relative = normalizePath(path.relative(path.resolve(root, appDir), stripExtension(file)));
+        const existing = idOwners.get(exportName);
+        if (existing) {
+            console.warn(`[otok] Island id collision "${exportName}": ${existing} and ${file}. Hydration may load the wrong component.`);
+        }
+        else {
+            idOwners.set(exportName, file);
+        }
         return {
             id: exportName,
             altId: base.replace(/^\$/, ""),
@@ -196,6 +204,8 @@ function generateRoutesModule(scan) {
         ? routeToModuleEntry(scan.errorRoute, `specialRoute${scan.notFoundRoute ? 1 : 0}`, scan.errorRoute.layouts.map((file) => layoutNameForFile.get(file) ?? "").filter(Boolean))
         : "undefined";
     return `${[...routeImports, ...specialImports, ...layoutImports].join("\n")}
+
+export const routePaths = ${JSON.stringify([...new Set(scan.routes.map((route) => route.routePath))])};
 
 export const routes = [
   ${routeEntries.join(",\n  ")}

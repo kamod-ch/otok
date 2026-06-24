@@ -2,6 +2,7 @@ import { Hono } from "hono";
 import { describe, expect, it } from "vitest";
 import { createOtokHandler } from "./index.js";
 import type { OtokRoute } from "../shared/routes.js";
+import { redirect } from "../shared/routes.js";
 
 const Page = () => <p>OK</p>;
 const NotFound = () => <p>Custom 404</p>;
@@ -39,9 +40,9 @@ describe("createOtokHandler", () => {
     expect(html).toContain("Custom 404");
   });
 
-  it("renders dark mode from the theme cookie", async () => {
+  it("renders dark mode from the theme cookie when theme is enabled", async () => {
     const app = new Hono();
-    app.get("*", createOtokHandler({ routes: [route("/", /^\/?$/)] }));
+    app.get("*", createOtokHandler({ routes: [route("/", /^\/?$/)], theme: true }));
 
     const response = await app.request("/", {
       headers: { cookie: "theme=dark" },
@@ -50,6 +51,63 @@ describe("createOtokHandler", () => {
 
     expect(response.status).toBe(200);
     expect(html).toContain('<html lang="en" class="dark">');
+  });
+
+  it("returns redirect responses from loaders", async () => {
+    const app = new Hono();
+    app.get(
+      "*",
+      createOtokHandler({
+        routes: [
+          {
+            ...route("/old", /^\/old\/?$/),
+            module: {
+              default: Page,
+              loader: () => {
+                redirect("/new");
+              },
+            },
+          },
+          route("/new", /^\/new\/?$/),
+        ],
+      }),
+    );
+
+    const response = await app.request("/old", { redirect: "manual" });
+    expect(response.status).toBe(302);
+    expect(response.headers.get("location")).toBe("/new");
+  });
+
+  it("passes route chrome to layouts", async () => {
+    const Layout = ({ chrome, children }: { chrome?: { title?: string }; children: unknown }) => (
+      <div>
+        <h1>{chrome?.title}</h1>
+        {children}
+      </div>
+    );
+
+    const app = new Hono();
+    app.get(
+      "*",
+      createOtokHandler({
+        routes: [
+          {
+            ...route("/dashboard", /^\/dashboard\/?$/),
+            module: {
+              default: Page,
+              chrome: () => ({ title: "Dashboard chrome" }),
+            },
+            layouts: [{ default: Layout as NonNullable<OtokRoute["layouts"]>[number]["default"] }],
+          },
+        ],
+      }),
+    );
+
+    const response = await app.request("/dashboard");
+    const html = await response.text();
+
+    expect(response.status).toBe(200);
+    expect(html).toContain("Dashboard chrome");
   });
 
   it("wraps page output in a soft-navigation page region", async () => {

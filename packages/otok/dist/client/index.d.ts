@@ -22,8 +22,9 @@ export interface CreateOtokClientOptions {
     softNav?: boolean | SoftNavOptions;
 }
 export declare function createOtokClient(options?: CreateOtokClientOptions): void;
-export type { InferIslandProps } from "../shared/routes.js";
+export type { InferIslandProps, OtokChrome } from "../shared/routes.js";
 export type { IslandHydrationStrategy, IslandProps, IslandRegistry } from "../shared/islands.js";
 export type { SoftNavOptions } from "./soft-nav.js";
-export { isSoftNavLink, setupSoftNavigation, softNavigate } from "./soft-nav.js";
+export { cancelPendingHydration, hydrateIslands } from "./hydration.js";
+export { isSoftNavLink, prefetchSoftNavUrl, setupSoftNavigation, softNavigate } from "./soft-nav.js";
 //# sourceMappingURL=index.d.ts.map

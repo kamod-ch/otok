@@ -4,6 +4,12 @@ import type { IslandProps, JsonValue } from "./islands.js";
 
 export type RouteParams = Record<string, string>;
 
+export interface OtokChrome {
+  title?: string;
+  description?: string;
+  toolbar?: ComponentChildren;
+}
+
 export interface OtokContext<Env = unknown> {
   hono: Context<Env extends object ? Env : object>;
   request: Request;
@@ -25,12 +31,14 @@ export interface OtokPageProps<Data extends LoaderResult = LoaderResult> {
 
 export interface OtokLayoutProps<Data extends LoaderResult = LoaderResult> extends OtokPageProps<Data> {
   children: ComponentChildren;
+  chrome?: OtokChrome;
 }
 
 export interface RouteModule<Data extends LoaderResult = LoaderResult> {
   default: ComponentType<OtokPageProps<Data>>;
   loader?: OtokLoader<Data>;
   head?: (props: OtokPageProps<Data>) => OtokHead | Promise<OtokHead>;
+  chrome?: (props: OtokPageProps<Data>) => OtokChrome | Promise<OtokChrome>;
 }
 
 export interface LayoutModule<Data extends LoaderResult = LoaderResult> {

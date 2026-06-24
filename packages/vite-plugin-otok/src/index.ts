@@ -220,6 +220,7 @@ function scanIslands(root: string, appDir: string, islandsDir: string, routesDir
     ...walk(absoluteRoutesDir).filter((file) => path.basename(file).startsWith("$")),
   ];
   const seen = new Set<string>();
+  const idOwners = new Map<string, string>();
 
   return files
     .filter((file) => {
@@ -231,6 +232,14 @@ function scanIslands(root: string, appDir: string, islandsDir: string, routesDir
       const base = path.basename(stripExtension(file));
       const exportName = pascalCase(base);
       const relative = normalizePath(path.relative(path.resolve(root, appDir), stripExtension(file)));
+      const existing = idOwners.get(exportName);
+      if (existing) {
+        console.warn(
+          `[otok] Island id collision "${exportName}": ${existing} and ${file}. Hydration may load the wrong component.`,
+        );
+      } else {
+        idOwners.set(exportName, file);
+      }
       return {
         id: exportName,
         altId: base.replace(/^\$/, ""),
@@ -289,6 +298,8 @@ function generateRoutesModule(scan: RoutesScanResult): string {
     : "undefined";
 
   return `${[...routeImports, ...specialImports, ...layoutImports].join("\n")}
+
+export const routePaths = ${JSON.stringify([...new Set(scan.routes.map((route) => route.routePath))])};
 
 export const routes = [
   ${routeEntries.join(",\n  ")}

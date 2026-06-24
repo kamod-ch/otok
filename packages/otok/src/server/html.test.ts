@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { pageHtml } from "./html.js";
 import { resolveDarkModeFromCookie } from "../shared/theme.js";
+import { OTOK_HEAD_ATTR } from "../shared/navigation.js";
 
 describe("resolveDarkModeFromCookie", () => {
   it("returns true when the theme cookie is dark", () => {
@@ -16,8 +17,14 @@ describe("resolveDarkModeFromCookie", () => {
 });
 
 describe("pageHtml theme bootstrap", () => {
-  it("includes blocking theme script on every page", () => {
+  it("omits theme script by default", () => {
     const html = pageHtml({ body: "<main>Hi</main>", islands: [] });
+    expect(html).not.toContain('localStorage.getItem("theme")');
+    expect(html).not.toContain("html.dark{color-scheme:dark}");
+  });
+
+  it("includes blocking theme script when theme is enabled", () => {
+    const html = pageHtml({ body: "<main>Hi</main>", islands: [], theme: true });
     expect(html).toContain('localStorage.getItem("theme")');
     expect(html).toContain("html.dark{color-scheme:dark}");
   });
@@ -31,5 +38,27 @@ describe("pageHtml theme bootstrap", () => {
     const html = pageHtml({ body: "<main>Hi</main>", islands: [] });
     expect(html).toContain('<html lang="en">');
     expect(html).not.toContain('<html lang="en" class="dark">');
+  });
+});
+
+describe("pageHtml soft-nav head markers", () => {
+  it("marks description, meta, canonical, and json-ld for head sync", () => {
+    const html = pageHtml({
+      body: "<main>Hi</main>",
+      islands: [],
+      head: {
+        title: "Dashboard",
+        description: "Server-rendered dashboard",
+        meta: { "og:type": "website" },
+        links: [{ rel: "canonical", href: "https://example.com/" }],
+        jsonLd: { "@type": "SoftwareApplication", name: "Otok" },
+      },
+    });
+
+    expect(html).toContain(`${OTOK_HEAD_ATTR}="title"`);
+    expect(html).toContain(`${OTOK_HEAD_ATTR}="description"`);
+    expect(html).toContain(`${OTOK_HEAD_ATTR}="og:type"`);
+    expect(html).toContain(`${OTOK_HEAD_ATTR}="canonical"`);
+    expect(html).toContain(`${OTOK_HEAD_ATTR}="json-ld"`);
   });
 });
