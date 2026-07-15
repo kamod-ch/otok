@@ -12,6 +12,7 @@ interface RouteEntry {
     params: string[];
     score: number;
     layouts: string[];
+    middleware: string[];
 }
 interface RoutesScanResult {
     routes: RouteEntry[];

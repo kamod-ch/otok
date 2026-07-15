@@ -30,10 +30,13 @@ describe("otok vite plugin", () => {
     withFixture(
       {
         "src/app/routes/_layout.tsx": "export default function Layout() {}",
+        "src/app/routes/_middleware.ts": "export default async function RootMiddleware(_c, next) { await next(); }",
+        "src/app/routes/admin/_middleware.ts": "export default async function AdminMiddleware(_c, next) { await next(); }",
         "src/app/routes/_not-found.tsx": "export default function NotFound() {}",
         "src/app/routes/_error.tsx": "export default function ErrorRoute() {}",
         "src/app/routes/index.tsx": "export default function Home() {}",
         "src/app/routes/users/[id].tsx": "export default function User() {}",
+        "src/app/routes/admin/users/[id].tsx": "export default function AdminUser() {}",
         "src/app/routes/docs/[...slug].tsx": "export default function Docs() {}",
         "src/app/routes/(marketing)/[[lang]]/about.tsx": "export default function About() {}",
       },
@@ -43,9 +46,11 @@ describe("otok vite plugin", () => {
         expect(scan.notFoundRoute?.file).toContain("_not-found.tsx");
         expect(scan.errorRoute?.file).toContain("_error.tsx");
         expect(scan.routes.map((route) => route.routePath)).toEqual(
-          expect.arrayContaining(["/", "/users/:id", "/docs/:slug*", "/about", "/:lang/about"]),
+          expect.arrayContaining(["/", "/users/:id", "/admin/users/:id", "/docs/:slug*", "/about", "/:lang/about"]),
         );
         expect(scan.routes.find((route) => route.routePath === "/users/:id")?.layouts).toHaveLength(1);
+        expect(scan.routes.find((route) => route.routePath === "/users/:id")?.middleware).toHaveLength(1);
+        expect(scan.routes.find((route) => route.routePath === "/admin/users/:id")?.middleware).toHaveLength(2);
       },
     );
   });
@@ -53,6 +58,7 @@ describe("otok vite plugin", () => {
   it("generates special route exports", () => {
     withFixture(
       {
+        "src/app/routes/_middleware.ts": "export default async function Middleware(_c, next) { await next(); }",
         "src/app/routes/_not-found.tsx": "export default function NotFound() {}",
         "src/app/routes/_error.tsx": "export default function ErrorRoute() {}",
         "src/app/routes/index.tsx": "export default function Home() {}",
@@ -69,6 +75,8 @@ describe("otok vite plugin", () => {
         expect(code).not.toContain('"/_error"');
         expect(code).toContain("export const notFoundRoute");
         expect(code).toContain("export const errorRoute");
+        expect(code).toContain("import * as middleware0");
+        expect(code).toContain("middleware: [middleware0]");
       },
     );
   });

@@ -12,10 +12,12 @@ import {
   json,
   type ActionResult,
   type LoaderResult,
+  type MiddlewareModule,
   type OtokActionContext,
   type OtokChrome,
   type OtokContext,
   type OtokHead,
+  type OtokMiddleware,
   type OtokRoute,
 } from "../shared/routes.js";
 import { OTOK_PAGE_ATTR } from "../shared/navigation.js";
@@ -81,10 +83,10 @@ export function createOtokHandler(options: CreateOtokHandlerOptions): Handler {
       }
 
       if (isActionRequest(c.req.method)) {
-        return await handleAction(c, match.route, match.params, options);
+        return await runRouteMiddleware(c, match.route, () => handleAction(c, match.route, match.params, options));
       }
 
-      return await renderRoute(c, match.route, match.params, options);
+      return await runRouteMiddleware(c, match.route, () => renderRoute(c, match.route, match.params, options));
     } catch (error) {
       return handleRenderError(c, error, options);
     }
@@ -154,6 +156,33 @@ function statusForActionResult(result: ActionResult): number {
   return typeof result === "object" && result !== null && "status" in result && typeof result.status === "number"
     ? result.status
     : 200;
+}
+
+function middlewareFromModule(module: MiddlewareModule): OtokMiddleware | undefined {
+  return module.default ?? module.middleware;
+}
+
+async function runRouteMiddleware(c: Context, route: OtokRoute, render: () => Promise<Response>): Promise<Response> {
+  const stack = (route.middleware ?? []).map(middlewareFromModule).filter((middleware): middleware is OtokMiddleware => Boolean(middleware));
+  let index = -1;
+
+  const dispatch = async (position: number): Promise<Response> => {
+    if (position <= index) throw new Error("otok: middleware next() called multiple times.");
+    index = position;
+    const middleware = stack[position];
+    if (!middleware) return await render();
+
+    let downstream: Response | undefined;
+    const result = await middleware(c, async () => {
+      downstream = await dispatch(position + 1);
+    });
+
+    if (result instanceof Response) return result;
+    if (downstream) return downstream;
+    return c.res;
+  };
+
+  return dispatch(0);
 }
 
 async function renderRoute(
@@ -285,17 +314,19 @@ export function createOtokApp(options: CreateOtokAppOptions): Hono {
 export { pageHtml, type ViteManifest, type ViteManifestEntry } from "./html.js";
 export { readOtokManifest, type ReadOtokManifestOptions } from "./manifest.js";
 export { matchRoute, type RouteMatch } from "./router.js";
-export { fail, isOtokHttpError, isOtokResponse, json, notFound, OtokHttpError, redirect } from "../shared/routes.js";
+export { defineMiddleware, fail, isOtokHttpError, isOtokResponse, json, notFound, OtokHttpError, redirect } from "../shared/routes.js";
 export type {
   ActionResult,
   InferLoaderData,
   LoaderResult,
+  MiddlewareModule,
   OtokAction,
   OtokActionContext,
   OtokFailure,
   OtokResponse,
   OtokChrome,
   OtokContext,
+  OtokMiddleware,
   OtokHead,
   OtokHeadLink,
   OtokHeadScript,

@@ -1,4 +1,4 @@
-import type { Context } from "hono";
+import type { Context, MiddlewareHandler } from "hono";
 import type { ComponentChildren, ComponentType } from "preact";
 import type { IslandProps, JsonValue } from "./islands.js";
 
@@ -68,6 +68,13 @@ export interface RouteModule<Data extends LoaderResult = LoaderResult> {
   chrome?: (props: OtokPageProps<Data>) => OtokChrome | Promise<OtokChrome>;
 }
 
+export type OtokMiddleware = MiddlewareHandler;
+
+export interface MiddlewareModule {
+  default?: OtokMiddleware;
+  middleware?: OtokMiddleware;
+}
+
 export interface LayoutModule<Data extends LoaderResult = LoaderResult> {
   default: ComponentType<OtokLayoutProps<Data>>;
 }
@@ -79,6 +86,7 @@ export interface OtokRoute {
   params: string[];
   module: RouteModule;
   layouts?: LayoutModule[];
+  middleware?: MiddlewareModule[];
 }
 
 export interface OtokHead {
@@ -173,6 +181,10 @@ export function isOtokHttpError(error: unknown): error is OtokHttpError {
 
 export function isOtokResponse(value: unknown): value is OtokResponse {
   return value instanceof Response || isOtokHttpError(value);
+}
+
+export function defineMiddleware<T extends OtokMiddleware>(middleware: T): T {
+  return middleware;
 }
 
 export type InferLoaderData<T extends OtokLoader> = Awaited<ReturnType<T>>;

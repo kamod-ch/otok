@@ -20,6 +20,7 @@ export const dashboardNavGroups: NavGroup[] = [
       { label: "Zero-JS route", href: "/about" },
       { label: "kamod-ui islands", href: "/demo" },
       { label: "Progressive forms", href: "/projects" },
+      { label: "Protected admin", href: "/admin?demoUser=1", match: (route) => route === "/admin" },
       {
         label: "Catch-all docs",
         href: "/docs/routing/catch-all",

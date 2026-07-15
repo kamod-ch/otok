@@ -322,6 +322,109 @@ describe("createOtokHandler", () => {
     expect(html).toContain("Dashboard chrome");
   });
 
+  it("runs route middleware in order and shares Hono context values", async () => {
+    const calls: string[] = [];
+    const UserPage = ({ data }: { data: { user: string } }) => <p>User: {data.user}</p>;
+    const app = new Hono();
+    app.all(
+      "*",
+      createOtokHandler({
+        routes: [
+          {
+            ...route("/admin", /^\/admin\/?$/, UserPage as unknown as OtokRoute["module"]["default"]),
+            module: {
+              default: UserPage as unknown as OtokRoute["module"]["default"],
+              loader: ({ hono }) => ({ user: (hono as any).get("user") as string }),
+            },
+            middleware: [
+              {
+                default: async (c, next) => {
+                  calls.push("root:before");
+                  await next();
+                  calls.push("root:after");
+                },
+              },
+              {
+                default: async (c, next) => {
+                  calls.push("admin:before");
+                  c.set("user", "Ada");
+                  await next();
+                  calls.push("admin:after");
+                },
+              },
+            ],
+          },
+        ],
+      }),
+    );
+
+    const response = await app.request("/admin");
+    const html = await response.text();
+
+    expect(response.status).toBe(200);
+    expect(html).toContain("User: Ada");
+    expect(calls).toEqual(["root:before", "admin:before", "admin:after", "root:after"]);
+  });
+
+  it("allows route middleware to short-circuit and redirect", async () => {
+    const app = new Hono();
+    app.all(
+      "*",
+      createOtokHandler({
+        routes: [
+          {
+            ...route("/admin", /^\/admin\/?$/),
+            middleware: [
+              {
+                default: () => redirect("/login", 303),
+              },
+            ],
+          },
+        ],
+      }),
+    );
+
+    const response = await app.request("/admin", { redirect: "manual" });
+
+    expect(response.status).toBe(303);
+    expect(response.headers.get("location")).toBe("/login");
+  });
+
+  it("runs route middleware for actions exactly once", async () => {
+    let count = 0;
+    const app = new Hono();
+    app.all(
+      "*",
+      createOtokHandler({
+        routes: [
+          {
+            ...route("/action", /^\/action\/?$/),
+            module: {
+              default: ({ actionData }: { actionData?: { count?: number } }) => <p>Count: {actionData?.count}</p>,
+              action: ({ hono }: any) => ({ count: hono.get("count") as number }),
+            } as unknown as OtokRoute["module"],
+            middleware: [
+              {
+                default: async (c, next) => {
+                  count += 1;
+                  c.set("count", count);
+                  await next();
+                },
+              },
+            ],
+          },
+        ],
+      }),
+    );
+
+    const response = await app.request("/action", { method: "POST", body: new URLSearchParams() });
+    const html = await response.text();
+
+    expect(response.status).toBe(200);
+    expect(count).toBe(1);
+    expect(html).toContain("Count: 1");
+  });
+
   it("wraps page output in a soft-navigation page region", async () => {
     const app = new Hono();
     app.get("*", createOtokHandler({ routes: [route("/", /^\/?$/)] }));

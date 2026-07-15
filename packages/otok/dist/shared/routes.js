@@ -53,4 +53,7 @@ export function isOtokHttpError(error) {
 export function isOtokResponse(value) {
     return value instanceof Response || isOtokHttpError(value);
 }
+export function defineMiddleware(middleware) {
+    return middleware;
+}
 //# sourceMappingURL=routes.js.map

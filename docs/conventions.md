@@ -173,6 +173,43 @@ export const client = true;
 
 Enhanced forms are limited to same-origin `GET` and `POST` forms, respect `data-otok-no-nav`, include submitter values, update head and swap regions, hydrate new islands, and fall back to native navigation when unsupported. Otok does not provide automatic CSRF protection; applications using cookie-based sessions should configure CSRF checks in Hono middleware or route middleware.
 
+## Route Middleware
+
+Place `_middleware.ts` files inside `src/app/routes` to apply Hono-style middleware to every route in that directory and its children.
+
+```text
+src/app/routes/
+  _middleware.ts
+  admin/
+    _middleware.ts
+    index.tsx
+```
+
+Middleware runs from parent to child before loaders, actions, and rendering:
+
+```text
+root middleware -> admin middleware -> loader/action -> render
+```
+
+```ts
+import { defineMiddleware, redirect } from "otok/server";
+
+export default defineMiddleware(async (c, next) => {
+  const user = c.get("user");
+  if (!user) redirect("/login", 303);
+  await next();
+});
+```
+
+Middleware receives Hono's `Context` and `next`. It may:
+
+- call `await next()` to continue;
+- return a native `Response` to short-circuit;
+- throw Otok helpers such as `redirect()`, `notFound()`, or `fail()`;
+- use `c.set()` / `c.get()` to share request-scoped values with loaders and actions.
+
+Route groups such as `(marketing)` do not affect the URL, but their `_middleware.ts` files still participate in inheritance. Global API routes registered through `createOtokApp({ configure })` remain normal Hono routes and are not affected by route middleware unless they explicitly call the Otok handler.
+
 ## Head Metadata
 
 `head()` can return title, description, language, meta tags, links, scripts, and JSON-LD.

@@ -1,4 +1,4 @@
-import type { Context } from "hono";
+import type { Context, MiddlewareHandler } from "hono";
 import type { ComponentChildren, ComponentType } from "preact";
 import type { IslandProps, JsonValue } from "./islands.js";
 export type RouteParams = Record<string, string>;
@@ -50,6 +50,11 @@ export interface RouteModule<Data extends LoaderResult = LoaderResult> {
     head?: (props: OtokPageProps<Data>) => OtokHead | Promise<OtokHead>;
     chrome?: (props: OtokPageProps<Data>) => OtokChrome | Promise<OtokChrome>;
 }
+export type OtokMiddleware = MiddlewareHandler;
+export interface MiddlewareModule {
+    default?: OtokMiddleware;
+    middleware?: OtokMiddleware;
+}
 export interface LayoutModule<Data extends LoaderResult = LoaderResult> {
     default: ComponentType<OtokLayoutProps<Data>>;
 }
@@ -60,6 +65,7 @@ export interface OtokRoute {
     params: string[];
     module: RouteModule;
     layouts?: LayoutModule[];
+    middleware?: MiddlewareModule[];
 }
 export interface OtokHead {
     title?: string;
@@ -96,6 +102,7 @@ export declare function fail(status: number, failure: Omit<OtokFailure, "status"
 export declare function fail(message?: string, status?: number): never;
 export declare function isOtokHttpError(error: unknown): error is OtokHttpError;
 export declare function isOtokResponse(value: unknown): value is OtokResponse;
+export declare function defineMiddleware<T extends OtokMiddleware>(middleware: T): T;
 export type InferLoaderData<T extends OtokLoader> = Awaited<ReturnType<T>>;
 export type InferIslandProps<T> = T extends ComponentType<infer Props> ? Props extends IslandProps ? Props : never : never;
 //# sourceMappingURL=routes.d.ts.map

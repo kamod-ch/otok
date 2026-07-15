@@ -537,6 +537,9 @@ function normalizeFieldErrors(fieldErrors) {
 function isOtokHttpError(error) {
 	return error instanceof OtokHttpError;
 }
+function defineMiddleware(middleware) {
+	return middleware;
+}
 //#endregion
 //#region ../../packages/otok/dist/server/manifest.js
 /**
@@ -582,8 +585,8 @@ function createOtokHandler(options) {
 				if (!notFoundRoute) return c.notFound();
 				return await renderRoute(c, notFoundRoute, {}, options, 404);
 			}
-			if (isActionRequest(c.req.method)) return await handleAction(c, match.route, match.params, options);
-			return await renderRoute(c, match.route, match.params, options);
+			if (isActionRequest(c.req.method)) return await runRouteMiddleware(c, match.route, () => handleAction(c, match.route, match.params, options));
+			return await runRouteMiddleware(c, match.route, () => renderRoute(c, match.route, match.params, options));
 		} catch (error) {
 			return handleRenderError(c, error, options);
 		}
@@ -636,6 +639,27 @@ async function handleAction(c, route, params, options) {
 }
 function statusForActionResult(result) {
 	return typeof result === "object" && result !== null && "status" in result && typeof result.status === "number" ? result.status : 200;
+}
+function middlewareFromModule(module) {
+	return module.default ?? module.middleware;
+}
+async function runRouteMiddleware(c, route, render) {
+	const stack = (route.middleware ?? []).map(middlewareFromModule).filter((middleware) => Boolean(middleware));
+	let index = -1;
+	const dispatch = async (position) => {
+		if (position <= index) throw new Error("otok: middleware next() called multiple times.");
+		index = position;
+		const middleware = stack[position];
+		if (!middleware) return await render();
+		let downstream;
+		const result = await middleware(c, async () => {
+			downstream = await dispatch(position + 1);
+		});
+		if (result instanceof Response) return result;
+		if (downstream) return downstream;
+		return c.res;
+	};
+	return dispatch(0);
 }
 async function renderRoute(c, route, params, options, status = 200, dataOverride, actionData) {
 	const context = {
@@ -743,7 +767,7 @@ function createOtokApp(options) {
 //#endregion
 //#region src/app/routes/about.tsx
 var about_exports = /* @__PURE__ */ __exportAll({
-	chrome: () => chrome$5,
+	chrome: () => chrome$6,
 	default: () => About,
 	head: () => head$7
 });
@@ -751,7 +775,7 @@ var head$7 = () => ({
 	title: "About | Otok Playground",
 	description: "A static Otok route that ships no client JavaScript."
 });
-var chrome$5 = () => ({
+var chrome$6 = () => ({
 	title: "Zero-JS route",
 	description: "This route has no islands."
 });
@@ -772,6 +796,41 @@ function About() {
 			children: [/* @__PURE__ */ jsx("p", { children: "Semantic HTML, Tailwind classes, and presentational kamod-ui components." }), /* @__PURE__ */ jsx("p", { children: "Client state, event handlers, and portals belong in islands." })]
 		})]
 	})] });
+}
+//#endregion
+//#region src/app/routes/admin/index.tsx
+var admin_exports = /* @__PURE__ */ __exportAll({
+	chrome: () => chrome$5,
+	default: () => AdminPage,
+	loader: () => loader$5
+});
+var chrome$5 = () => ({
+	title: "Protected admin",
+	description: "Route-level middleware demo."
+});
+var loader$5 = ({ hono }) => ({ user: String(hono.get("demoUser") ?? "unknown") });
+function AdminPage({ data }) {
+	return /* @__PURE__ */ jsxs("section", {
+		class: "space-y-4",
+		children: [
+			/* @__PURE__ */ jsx("p", {
+				class: "text-sm font-medium text-sky-600 dark:text-sky-300",
+				children: "Route middleware"
+			}),
+			/* @__PURE__ */ jsx("h2", {
+				class: "text-3xl font-semibold tracking-tight text-slate-950 dark:text-white",
+				children: "Protected admin"
+			}),
+			/* @__PURE__ */ jsxs("p", {
+				class: "text-slate-600 dark:text-slate-300",
+				children: [
+					"Hello ",
+					data.user,
+					". This page is guarded by admin/_middleware.ts."
+				]
+			})
+		]
+	});
 }
 //#endregion
 //#region src/app/routes/boom.tsx
@@ -1845,6 +1904,11 @@ var dashboardNavGroups = [{
 			href: "/projects"
 		},
 		{
+			label: "Protected admin",
+			href: "/admin?demoUser=1",
+			match: (route) => route === "/admin"
+		},
+		{
 			label: "Catch-all docs",
 			href: "/docs/routing/catch-all",
 			match: (route) => route.startsWith("/docs/") || route === "/docs/:slug*"
@@ -2000,6 +2064,14 @@ function Layout({ children, chrome, route }) {
 	});
 }
 //#endregion
+//#region src/app/routes/admin/_middleware.ts
+var _middleware_exports = /* @__PURE__ */ __exportAll({ default: () => _middleware_default });
+var _middleware_default = defineMiddleware(async (c, next) => {
+	if (c.req.query("demoUser") !== "1") redirect("/projects", 303);
+	c.set("demoUser", "Demo User");
+	await next();
+});
+//#endregion
 //#region src/server.ts
 var app = createOtokApp({
 	routes: [
@@ -2009,7 +2081,17 @@ var app = createOtokApp({
 			pattern: /* @__PURE__ */ new RegExp("^/about/?$"),
 			params: [],
 			module: about_exports,
-			layouts: [_layout_exports]
+			layouts: [_layout_exports],
+			middleware: []
+		},
+		{
+			id: "admin.index",
+			path: "/admin",
+			pattern: /* @__PURE__ */ new RegExp("^/admin/?$"),
+			params: [],
+			module: admin_exports,
+			layouts: [_layout_exports],
+			middleware: [_middleware_exports]
 		},
 		{
 			id: "boom",
@@ -2017,7 +2099,8 @@ var app = createOtokApp({
 			pattern: /* @__PURE__ */ new RegExp("^/boom/?$"),
 			params: [],
 			module: boom_exports,
-			layouts: [_layout_exports]
+			layouts: [_layout_exports],
+			middleware: []
 		},
 		{
 			id: "demo",
@@ -2025,7 +2108,8 @@ var app = createOtokApp({
 			pattern: /* @__PURE__ */ new RegExp("^/demo/?$"),
 			params: [],
 			module: demo_exports,
-			layouts: [_layout_exports]
+			layouts: [_layout_exports],
+			middleware: []
 		},
 		{
 			id: "projects",
@@ -2033,7 +2117,8 @@ var app = createOtokApp({
 			pattern: /* @__PURE__ */ new RegExp("^/projects/?$"),
 			params: [],
 			module: projects_exports,
-			layouts: [_layout_exports]
+			layouts: [_layout_exports],
+			middleware: []
 		},
 		{
 			id: "users.[id]",
@@ -2041,7 +2126,8 @@ var app = createOtokApp({
 			pattern: /* @__PURE__ */ new RegExp("^/users/([^/]+)/?$"),
 			params: ["id"],
 			module: _id__exports,
-			layouts: [_layout_exports]
+			layouts: [_layout_exports],
+			middleware: []
 		},
 		{
 			id: "index",
@@ -2049,7 +2135,8 @@ var app = createOtokApp({
 			pattern: /* @__PURE__ */ new RegExp("^/?$"),
 			params: [],
 			module: routes_exports,
-			layouts: [_layout_exports]
+			layouts: [_layout_exports],
+			middleware: []
 		},
 		{
 			id: "docs.[...slug]",
@@ -2057,7 +2144,8 @@ var app = createOtokApp({
 			pattern: /* @__PURE__ */ new RegExp("^/docs/(.+)/?$"),
 			params: ["slug"],
 			module: ____slug__exports,
-			layouts: [_layout_exports]
+			layouts: [_layout_exports],
+			middleware: []
 		}
 	],
 	notFoundRoute: {
@@ -2066,7 +2154,8 @@ var app = createOtokApp({
 		pattern: /* @__PURE__ */ new RegExp("^/?$"),
 		params: [],
 		module: _not_found_exports,
-		layouts: [_layout_exports]
+		layouts: [_layout_exports],
+		middleware: []
 	},
 	errorRoute: {
 		id: "_error",
@@ -2074,7 +2163,8 @@ var app = createOtokApp({
 		pattern: /* @__PURE__ */ new RegExp("^/?$"),
 		params: [],
 		module: _error_exports,
-		layouts: [_layout_exports]
+		layouts: [_layout_exports],
+		middleware: []
 	},
 	manifest: readOtokManifest(import.meta.url),
 	clientEntry: "src/client.ts",

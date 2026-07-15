@@ -173,6 +173,22 @@ export default function ProjectForm({ actionData }: OtokPageProps) {
 
 For browser forms that need `PUT`, `PATCH`, or `DELETE`, use a hidden `_method` field. Otok exposes the effective method as `context.method` in the action. Production pages without islands normally omit the client module; export `client = true` from a no-island route when direct visits should still get progressive form enhancement. Otok does not provide automatic CSRF protection; configure CSRF checks for cookie-authenticated applications.
 
+## Route Middleware
+
+Colocate server middleware in `_middleware.ts` files under `src/app/routes`. Parent middleware runs before child middleware for loaders, actions, and rendering.
+
+```ts
+// src/app/routes/admin/_middleware.ts
+import { defineMiddleware, redirect } from "otok/server";
+
+export default defineMiddleware(async (c, next) => {
+  if (!c.get("user")) redirect("/login", 303);
+  await next();
+});
+```
+
+Middleware uses Hono's context and `next()` model. It may return a native `Response`, throw Otok helpers such as `redirect()` / `fail()`, or set values with `c.set()` for loaders and actions.
+
 The Vite plugin also exports `routePaths` and `OtokRoutePath` from `virtual:otok-routes`. The ambient type is a broad fallback today; a fully typed route builder is planned separately.
 
 ## Islands

@@ -10,6 +10,7 @@ export type {
   OtokChrome,
   OtokContext,
   OtokHead,
+  OtokMiddleware,
   OtokHeadLink,
   OtokHeadScript,
   OtokLayoutProps,
@@ -17,10 +18,11 @@ export type {
   OtokPageProps,
   OtokRoute,
   LayoutModule,
+  MiddlewareModule,
   RouteModule,
   RouteParams,
 } from "./routes.js";
-export { fail, isOtokHttpError, isOtokResponse, json, notFound, OtokHttpError, redirect } from "./routes.js";
+export { defineMiddleware, fail, isOtokHttpError, isOtokResponse, json, notFound, OtokHttpError, redirect } from "./routes.js";
 export {
   decodeIslandProps,
   DEFAULT_LARGE_PROPS_THRESHOLD,

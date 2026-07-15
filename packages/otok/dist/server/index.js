@@ -38,9 +38,9 @@ export function createOtokHandler(options) {
                 return await renderRoute(c, notFoundRoute, {}, options, 404);
             }
             if (isActionRequest(c.req.method)) {
-                return await handleAction(c, match.route, match.params, options);
+                return await runRouteMiddleware(c, match.route, () => handleAction(c, match.route, match.params, options));
             }
-            return await renderRoute(c, match.route, match.params, options);
+            return await runRouteMiddleware(c, match.route, () => renderRoute(c, match.route, match.params, options));
         }
         catch (error) {
             return handleRenderError(c, error, options);
@@ -100,6 +100,31 @@ function statusForActionResult(result) {
     return typeof result === "object" && result !== null && "status" in result && typeof result.status === "number"
         ? result.status
         : 200;
+}
+function middlewareFromModule(module) {
+    return module.default ?? module.middleware;
+}
+async function runRouteMiddleware(c, route, render) {
+    const stack = (route.middleware ?? []).map(middlewareFromModule).filter((middleware) => Boolean(middleware));
+    let index = -1;
+    const dispatch = async (position) => {
+        if (position <= index)
+            throw new Error("otok: middleware next() called multiple times.");
+        index = position;
+        const middleware = stack[position];
+        if (!middleware)
+            return await render();
+        let downstream;
+        const result = await middleware(c, async () => {
+            downstream = await dispatch(position + 1);
+        });
+        if (result instanceof Response)
+            return result;
+        if (downstream)
+            return downstream;
+        return c.res;
+    };
+    return dispatch(0);
 }
 async function renderRoute(c, route, params, options, status = 200, dataOverride, actionData) {
     const context = {
@@ -198,5 +223,5 @@ export function createOtokApp(options) {
 export { pageHtml } from "./html.js";
 export { readOtokManifest } from "./manifest.js";
 export { matchRoute } from "./router.js";
-export { fail, isOtokHttpError, isOtokResponse, json, notFound, OtokHttpError, redirect } from "../shared/routes.js";
+export { defineMiddleware, fail, isOtokHttpError, isOtokResponse, json, notFound, OtokHttpError, redirect } from "../shared/routes.js";
 //# sourceMappingURL=index.js.map

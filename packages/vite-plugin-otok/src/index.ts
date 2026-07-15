@@ -22,6 +22,7 @@ interface RouteEntry {
   params: string[];
   score: number;
   layouts: string[];
+  middleware: string[];
 }
 
 interface RoutesScanResult {
@@ -149,7 +150,12 @@ function segmentToVariants(segment: string, variants: RouteVariant[]): RouteVari
   );
 }
 
-function routeFileToEntries(file: string, routesDir: string, layoutMap: Map<string, string>): RouteEntry[] {
+function routeFileToEntries(
+  file: string,
+  routesDir: string,
+  layoutMap: Map<string, string>,
+  middlewareMap: Map<string, string>,
+): RouteEntry[] {
   const relative = normalizePath(path.relative(routesDir, stripExtension(file)));
   const segments = relative.split("/");
   const variants = segments.reduce(
@@ -157,6 +163,7 @@ function routeFileToEntries(file: string, routesDir: string, layoutMap: Map<stri
     [emptyVariant()] as RouteVariant[],
   );
   const layouts = layoutFilesForRoute(relative, layoutMap);
+  const middleware = middlewareFilesForRoute(relative, middlewareMap);
 
   return variants.map((variant, index) => {
     const routeParts = variant.parts.map((part) => part.part);
@@ -172,6 +179,7 @@ function routeFileToEntries(file: string, routesDir: string, layoutMap: Map<stri
       params: variant.params,
       score: variant.staticCount * 100 - variant.dynamicCount * 10 - variant.catchAllCount * 1000,
       layouts,
+      middleware,
     };
   });
 }
@@ -183,32 +191,43 @@ function layoutFilesForRoute(relative: string, layoutMap: Map<string, string>): 
   return keys.map((key) => layoutMap.get(key)).filter((file): file is string => Boolean(file));
 }
 
+function middlewareFilesForRoute(relative: string, middlewareMap: Map<string, string>): string[] {
+  const dir = normalizePath(path.dirname(relative));
+  const segments = dir === "." ? [] : dir.split("/");
+  const keys = ["", ...segments.map((_, index) => segments.slice(0, index + 1).join("/"))];
+  return keys.map((key) => middlewareMap.get(key)).filter((file): file is string => Boolean(file));
+}
+
 function scanRoutes(root: string, routesDir: string): RoutesScanResult {
   const absoluteRoutesDir = path.resolve(root, routesDir);
   const files = walk(absoluteRoutesDir).filter((file) => !path.basename(file).startsWith("$"));
   const layoutMap = new Map<string, string>();
+  const middlewareMap = new Map<string, string>();
 
   for (const file of files) {
-    if (path.basename(stripExtension(file)) !== "_layout") continue;
+    const name = path.basename(stripExtension(file));
+    if (name !== "_layout" && name !== "_middleware") continue;
     const relativeDir = normalizePath(path.dirname(path.relative(absoluteRoutesDir, file)));
-    layoutMap.set(relativeDir === "." ? "" : relativeDir, file);
+    const key = relativeDir === "." ? "" : relativeDir;
+    if (name === "_layout") layoutMap.set(key, file);
+    else middlewareMap.set(key, file);
   }
 
   const pages = files.filter((file) => {
     const name = path.basename(stripExtension(file));
-    return name !== "_layout" && name !== "_not-found" && name !== "_error";
+    return name !== "_layout" && name !== "_middleware" && name !== "_not-found" && name !== "_error";
   });
 
   return {
     routes: pages
-      .flatMap((file) => routeFileToEntries(file, absoluteRoutesDir, layoutMap))
+      .flatMap((file) => routeFileToEntries(file, absoluteRoutesDir, layoutMap, middlewareMap))
       .sort((a, b) => b.score - a.score || a.routePath.localeCompare(b.routePath)),
     notFoundRoute: files
       .filter((file) => path.basename(stripExtension(file)) === "_not-found")
-      .flatMap((file) => routeFileToEntries(file, absoluteRoutesDir, layoutMap))[0],
+      .flatMap((file) => routeFileToEntries(file, absoluteRoutesDir, layoutMap, middlewareMap))[0],
     errorRoute: files
       .filter((file) => path.basename(stripExtension(file)) === "_error")
-      .flatMap((file) => routeFileToEntries(file, absoluteRoutesDir, layoutMap))[0],
+      .flatMap((file) => routeFileToEntries(file, absoluteRoutesDir, layoutMap, middlewareMap))[0],
   };
 }
 
@@ -254,14 +273,20 @@ function modulePath(file: string): string {
   return normalizePath(file);
 }
 
-function routeToModuleEntry(route: RouteEntry, moduleName: string, layoutNames: string[]): string {
+function routeToModuleEntry(
+  route: RouteEntry,
+  moduleName: string,
+  layoutNames: string[],
+  middlewareNames: string[],
+): string {
   return `{
     id: ${JSON.stringify(route.id)},
     path: ${JSON.stringify(route.routePath)},
     pattern: new RegExp(${JSON.stringify(route.pattern)}),
     params: ${JSON.stringify(route.params)},
     module: ${moduleName},
-    layouts: [${layoutNames.join(", ")}]
+    layouts: [${layoutNames.join(", ")}],
+    middleware: [${middlewareNames.join(", ")}]
   }`;
 }
 
@@ -274,11 +299,17 @@ function generateRoutesModule(scan: RoutesScanResult): string {
   const layoutFiles = [...new Set([...scan.routes, ...specialRoutes].flatMap((route) => route.layouts))];
   const layoutImports = layoutFiles.map((file, index) => `import * as layout${index} from "${modulePath(file)}";`);
   const layoutNameForFile = new Map(layoutFiles.map((file, index) => [file, `layout${index}`]));
+  const middlewareFiles = [...new Set([...scan.routes, ...specialRoutes].flatMap((route) => route.middleware))];
+  const middlewareImports = middlewareFiles.map(
+    (file, index) => `import * as middleware${index} from "${modulePath(file)}";`,
+  );
+  const middlewareNameForFile = new Map(middlewareFiles.map((file, index) => [file, `middleware${index}`]));
   const routeEntries = scan.routes.map((route, index) =>
     routeToModuleEntry(
       route,
       `route${index}`,
       route.layouts.map((file) => layoutNameForFile.get(file) ?? "").filter(Boolean),
+      route.middleware.map((file) => middlewareNameForFile.get(file) ?? "").filter(Boolean),
     ),
   );
 
@@ -287,6 +318,7 @@ function generateRoutesModule(scan: RoutesScanResult): string {
         scan.notFoundRoute,
         "specialRoute0",
         scan.notFoundRoute.layouts.map((file) => layoutNameForFile.get(file) ?? "").filter(Boolean),
+        scan.notFoundRoute.middleware.map((file) => middlewareNameForFile.get(file) ?? "").filter(Boolean),
       )
     : "undefined";
   const errorRoute = scan.errorRoute
@@ -294,10 +326,11 @@ function generateRoutesModule(scan: RoutesScanResult): string {
         scan.errorRoute,
         `specialRoute${scan.notFoundRoute ? 1 : 0}`,
         scan.errorRoute.layouts.map((file) => layoutNameForFile.get(file) ?? "").filter(Boolean),
+        scan.errorRoute.middleware.map((file) => middlewareNameForFile.get(file) ?? "").filter(Boolean),
       )
     : "undefined";
 
-  return `${[...routeImports, ...specialImports, ...layoutImports].join("\n")}
+  return `${[...routeImports, ...specialImports, ...layoutImports, ...middlewareImports].join("\n")}
 
 export const routePaths = ${JSON.stringify([...new Set(scan.routes.map((route) => route.routePath))])};
 
