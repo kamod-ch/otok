@@ -489,15 +489,45 @@ function registerRenderedIsland(id) {
 var OtokHttpError = class extends Error {
 	status;
 	headers;
-	constructor(status, message = "Otok request failed", headers) {
+	failure;
+	constructor(status, message = "Otok request failed", headers, failure) {
 		super(message);
 		this.status = status;
 		this.name = "OtokHttpError";
 		this.headers = new Headers(headers);
+		this.failure = failure;
 	}
 };
-function fail(message = "Internal server error", status = 500) {
-	throw new OtokHttpError(status, message);
+function json(data, init) {
+	const responseInit = typeof init === "number" ? { status: init } : init;
+	const headers = new Headers(responseInit?.headers);
+	if (!headers.has("content-type")) headers.set("content-type", "application/json; charset=utf-8");
+	return new Response(JSON.stringify(data), {
+		...responseInit,
+		headers
+	});
+}
+function fail(first = "Internal server error", second = 500) {
+	if (typeof first === "number") {
+		const failure = normalizeFailure(first, second && typeof second === "object" ? second : {});
+		throw new OtokHttpError(failure.status, failure.message ?? "Request failed", void 0, failure);
+	}
+	const status = typeof second === "number" ? second : 500;
+	throw new OtokHttpError(status, first, void 0, {
+		status,
+		message: first
+	});
+}
+function normalizeFailure(status, failure) {
+	return {
+		status,
+		...failure,
+		fieldErrors: normalizeFieldErrors(failure.fieldErrors)
+	};
+}
+function normalizeFieldErrors(fieldErrors) {
+	if (!fieldErrors) return void 0;
+	return Object.fromEntries(Object.entries(fieldErrors).map(([field, errors]) => [field, [...errors]]));
 }
 function isOtokHttpError(error) {
 	return error instanceof OtokHttpError;
@@ -561,6 +591,7 @@ async function renderRoute(c, route, params, options, status = 200, dataOverride
 		route: route.path
 	};
 	const data = dataOverride ?? (route.module.loader ? await route.module.loader(context) : {});
+	if (data instanceof Response) return data;
 	const head = await resolveHead(route, data, params);
 	const chrome = await resolveChrome(route, data, params);
 	const Page = route.module.default;
@@ -610,9 +641,13 @@ async function handleRenderError(c, error, options) {
 			const notFoundRoute = options.notFoundRoute ?? options.notFound;
 			if (notFoundRoute) return renderFallbackRoute(c, notFoundRoute, options, 404, { message: error.message });
 		}
-		if (options.errorRoute) return renderFallbackRoute(c, options.errorRoute, options, error.status, {
+		if (options.errorRoute) return renderFallbackRoute(c, options.errorRoute, options, error.status, error.failure ?? {
 			message: error.message,
 			status: error.status
+		});
+		if (error.failure) return json(error.failure, {
+			status: error.status,
+			headers: error.headers
 		});
 		return new Response(error.message, {
 			status: error.status,

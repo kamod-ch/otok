@@ -17,7 +17,17 @@ export interface OtokContext<Env = unknown> {
   route: string;
 }
 
-export type LoaderResult = JsonValue | Record<string, JsonValue> | void;
+export type LoaderResult = JsonValue | Record<string, JsonValue> | OtokFailure | Response | void;
+
+export interface OtokFailure<T = unknown> {
+  status: number;
+  message?: string;
+  fieldErrors?: Record<string, string[]>;
+  formErrors?: string[];
+  data?: T;
+}
+
+export type OtokResponse = Response | OtokHttpError;
 
 export type OtokLoader<Data extends LoaderResult = LoaderResult> = (
   context: OtokContext,
@@ -81,32 +91,71 @@ export interface OtokHeadScript {
 
 export class OtokHttpError extends Error {
   readonly headers: Headers;
+  readonly failure?: OtokFailure;
 
   constructor(
     readonly status: number,
     message = "Otok request failed",
     headers?: HeadersInit,
+    failure?: OtokFailure,
   ) {
     super(message);
     this.name = "OtokHttpError";
     this.headers = new Headers(headers);
+    this.failure = failure;
   }
 }
 
+export function json<T>(data: T, init?: ResponseInit | number): Response {
+  const responseInit = typeof init === "number" ? { status: init } : init;
+  const headers = new Headers(responseInit?.headers);
+  if (!headers.has("content-type")) headers.set("content-type", "application/json; charset=utf-8");
+  return new Response(JSON.stringify(data), { ...responseInit, headers });
+}
+
 export function redirect(location: string, status = 302): never {
+  if (!location) throw new TypeError("otok: redirect() requires a Location value.");
+  if (status < 300 || status > 399) throw new RangeError("otok: redirect() status must be a 3xx status code.");
   throw new OtokHttpError(status, "Redirect", { location });
 }
 
 export function notFound(message = "Not found"): never {
-  throw new OtokHttpError(404, message);
+  throw new OtokHttpError(404, message, undefined, { status: 404, message });
 }
 
-export function fail(message = "Internal server error", status = 500): never {
-  throw new OtokHttpError(status, message);
+export function fail(status: number, failure: Omit<OtokFailure, "status">): never;
+export function fail(message?: string, status?: number): never;
+export function fail(first: number | string = "Internal server error", second: Omit<OtokFailure, "status"> | number = 500): never {
+  if (typeof first === "number") {
+    const failure = normalizeFailure(first, second && typeof second === "object" ? second : {});
+    throw new OtokHttpError(failure.status, failure.message ?? "Request failed", undefined, failure);
+  }
+
+  const status = typeof second === "number" ? second : 500;
+  throw new OtokHttpError(status, first, undefined, { status, message: first });
+}
+
+function normalizeFailure(status: number, failure: Omit<OtokFailure, "status">): OtokFailure {
+  return {
+    status,
+    ...failure,
+    fieldErrors: normalizeFieldErrors(failure.fieldErrors),
+  };
+}
+
+function normalizeFieldErrors(
+  fieldErrors: Record<string, string[]> | undefined,
+): Record<string, string[]> | undefined {
+  if (!fieldErrors) return undefined;
+  return Object.fromEntries(Object.entries(fieldErrors).map(([field, errors]) => [field, [...errors]]));
 }
 
 export function isOtokHttpError(error: unknown): error is OtokHttpError {
   return error instanceof OtokHttpError;
+}
+
+export function isOtokResponse(value: unknown): value is OtokResponse {
+  return value instanceof Response || isOtokHttpError(value);
 }
 
 export type InferLoaderData<T extends OtokLoader> = Awaited<ReturnType<T>>;

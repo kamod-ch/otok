@@ -2,6 +2,8 @@ export type {
   InferIslandProps,
   InferLoaderData,
   LoaderResult,
+  OtokFailure,
+  OtokResponse,
   OtokChrome,
   OtokContext,
   OtokHead,
@@ -15,7 +17,7 @@ export type {
   RouteModule,
   RouteParams,
 } from "./routes.js";
-export { fail, isOtokHttpError, notFound, OtokHttpError, redirect } from "./routes.js";
+export { fail, isOtokHttpError, isOtokResponse, json, notFound, OtokHttpError, redirect } from "./routes.js";
 export {
   decodeIslandProps,
   DEFAULT_LARGE_PROPS_THRESHOLD,

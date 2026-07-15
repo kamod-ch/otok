@@ -79,17 +79,39 @@ _not-found.tsx    Rendered for unmatched routes or `notFound()`
 _error.tsx        Rendered for thrown errors and `fail()`
 ```
 
-Use helpers from `otok/server` or `otok/shared` inside loaders:
+Use helpers from `otok/server` or `otok/shared` inside loaders. Loaders can return normal serializable data, a native `Response`, or one of Otok's controlled response helpers:
 
 ```ts
-import { notFound, redirect } from "otok/server";
+import { fail, json, notFound, redirect } from "otok/server";
 
 export const loader = ({ params }) => {
   if (!params.id) notFound();
   if (params.id === "latest") redirect("/users/alice");
+  if (params.id === "api") return json({ userId: "alice" });
+  if (params.id === "invalid") {
+    fail(400, {
+      message: "Validation failed",
+      fieldErrors: { email: ["Enter a valid email address"] },
+      formErrors: ["Please fix the form"],
+    });
+  }
   return { userId: params.id };
 };
 ```
+
+`fail(status, failure)` accepts a validation-library-independent shape:
+
+```ts
+interface OtokFailure<T = JsonValue> {
+  status: number;
+  message?: string;
+  fieldErrors?: Record<string, string[]>;
+  formErrors?: string[];
+  data?: T;
+}
+```
+
+Controlled failures render `_error.tsx` when present and preserve the intended status code. Without an error route, Otok returns the failure as JSON. Unexpected exceptions still hide raw details by default.
 
 ## Head Metadata
 
@@ -168,7 +190,7 @@ Apps should reference the plugin types once:
 /// <reference types="@otok/vite-plugin/client" />
 ```
 
-This declares `virtual:otok-routes`, `virtual:otok-islands`, and exports `routePaths` / `OtokRoutePath`. The generated `virtual:otok-routes` module emits `routePaths` as a literal tuple, so app code importing from it can use `OtokRoutePath` as a route-path union during Vite builds.
+This declares `virtual:otok-routes`, `virtual:otok-islands`, and exports `routePaths` / `OtokRoutePath`. The ambient `OtokRoutePath` type is a broad fallback today; a fully typed route builder is planned separately.
 
 ## Route Chrome
 

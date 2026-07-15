@@ -9,6 +9,7 @@ import { matchRoute } from "./router.js";
 import { withIslandRenderContext } from "../shared/island-context.js";
 import {
   isOtokHttpError,
+  json,
   type LoaderResult,
   type OtokChrome,
   type OtokContext,
@@ -99,6 +100,7 @@ async function renderRoute(
     route: route.path,
   };
   const data = dataOverride ?? (route.module.loader ? await route.module.loader(context) : {});
+  if (data instanceof Response) return data;
   const head = await resolveHead(route, data, params);
   const chrome = await resolveChrome(route, data, params);
   const Page = route.module.default;
@@ -157,12 +159,13 @@ async function handleRenderError(
     }
 
     if (options.errorRoute) {
-      return renderFallbackRoute(c, options.errorRoute, options, error.status, {
+      return renderFallbackRoute(c, options.errorRoute, options, error.status, error.failure ?? {
         message: error.message,
         status: error.status,
       });
     }
 
+    if (error.failure) return json(error.failure, { status: error.status, headers: error.headers });
     return new Response(error.message, { status: error.status, headers: error.headers });
   }
 
@@ -209,10 +212,12 @@ export function createOtokApp(options: CreateOtokAppOptions): Hono {
 export { pageHtml, type ViteManifest, type ViteManifestEntry } from "./html.js";
 export { readOtokManifest, type ReadOtokManifestOptions } from "./manifest.js";
 export { matchRoute, type RouteMatch } from "./router.js";
-export { fail, isOtokHttpError, notFound, OtokHttpError, redirect } from "../shared/routes.js";
+export { fail, isOtokHttpError, isOtokResponse, json, notFound, OtokHttpError, redirect } from "../shared/routes.js";
 export type {
   InferLoaderData,
   LoaderResult,
+  OtokFailure,
+  OtokResponse,
   OtokChrome,
   OtokContext,
   OtokHead,

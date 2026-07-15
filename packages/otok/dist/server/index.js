@@ -5,7 +5,7 @@ import renderToString from "preact-render-to-string";
 import { pageHtml } from "./html.js";
 import { matchRoute } from "./router.js";
 import { withIslandRenderContext } from "../shared/island-context.js";
-import { isOtokHttpError, } from "../shared/routes.js";
+import { isOtokHttpError, json, } from "../shared/routes.js";
 import { OTOK_PAGE_ATTR } from "../shared/navigation.js";
 import { resolveDarkModeFromCookie } from "../shared/theme.js";
 async function resolveHead(route, data, params) {
@@ -52,6 +52,8 @@ async function renderRoute(c, route, params, options, status = 200, dataOverride
         route: route.path,
     };
     const data = dataOverride ?? (route.module.loader ? await route.module.loader(context) : {});
+    if (data instanceof Response)
+        return data;
     const head = await resolveHead(route, data, params);
     const chrome = await resolveChrome(route, data, params);
     const Page = route.module.default;
@@ -99,11 +101,13 @@ async function handleRenderError(c, error, options) {
                 return renderFallbackRoute(c, notFoundRoute, options, 404, { message: error.message });
         }
         if (options.errorRoute) {
-            return renderFallbackRoute(c, options.errorRoute, options, error.status, {
+            return renderFallbackRoute(c, options.errorRoute, options, error.status, error.failure ?? {
                 message: error.message,
                 status: error.status,
             });
         }
+        if (error.failure)
+            return json(error.failure, { status: error.status, headers: error.headers });
         return new Response(error.message, { status: error.status, headers: error.headers });
     }
     if (options.errorRoute) {
@@ -136,5 +140,5 @@ export function createOtokApp(options) {
 export { pageHtml } from "./html.js";
 export { readOtokManifest } from "./manifest.js";
 export { matchRoute } from "./router.js";
-export { fail, isOtokHttpError, notFound, OtokHttpError, redirect } from "../shared/routes.js";
+export { fail, isOtokHttpError, isOtokResponse, json, notFound, OtokHttpError, redirect } from "../shared/routes.js";
 //# sourceMappingURL=index.js.map

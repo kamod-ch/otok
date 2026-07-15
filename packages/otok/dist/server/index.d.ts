@@ -30,6 +30,6 @@ export declare function createOtokApp(options: CreateOtokAppOptions): Hono;
 export { pageHtml, type ViteManifest, type ViteManifestEntry } from "./html.js";
 export { readOtokManifest, type ReadOtokManifestOptions } from "./manifest.js";
 export { matchRoute, type RouteMatch } from "./router.js";
-export { fail, isOtokHttpError, notFound, OtokHttpError, redirect } from "../shared/routes.js";
-export type { InferLoaderData, LoaderResult, OtokChrome, OtokContext, OtokHead, OtokHeadLink, OtokHeadScript, OtokLayoutProps, OtokLoader, OtokPageProps, OtokRoute, RouteModule, RouteParams, } from "../shared/routes.js";
+export { fail, isOtokHttpError, isOtokResponse, json, notFound, OtokHttpError, redirect } from "../shared/routes.js";
+export type { InferLoaderData, LoaderResult, OtokFailure, OtokResponse, OtokChrome, OtokContext, OtokHead, OtokHeadLink, OtokHeadScript, OtokLayoutProps, OtokLoader, OtokPageProps, OtokRoute, RouteModule, RouteParams, } from "../shared/routes.js";
 //# sourceMappingURL=index.d.ts.map

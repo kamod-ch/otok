@@ -13,7 +13,15 @@ export interface OtokContext<Env = unknown> {
     params: RouteParams;
     route: string;
 }
-export type LoaderResult = JsonValue | Record<string, JsonValue> | void;
+export type LoaderResult = JsonValue | Record<string, JsonValue> | OtokFailure | Response | void;
+export interface OtokFailure<T = unknown> {
+    status: number;
+    message?: string;
+    fieldErrors?: Record<string, string[]>;
+    formErrors?: string[];
+    data?: T;
+}
+export type OtokResponse = Response | OtokHttpError;
 export type OtokLoader<Data extends LoaderResult = LoaderResult> = (context: OtokContext) => Data | Promise<Data>;
 export interface OtokPageProps<Data extends LoaderResult = LoaderResult> {
     data: Data;
@@ -66,12 +74,16 @@ export interface OtokHeadScript {
 export declare class OtokHttpError extends Error {
     readonly status: number;
     readonly headers: Headers;
-    constructor(status: number, message?: string, headers?: HeadersInit);
+    readonly failure?: OtokFailure;
+    constructor(status: number, message?: string, headers?: HeadersInit, failure?: OtokFailure);
 }
+export declare function json<T>(data: T, init?: ResponseInit | number): Response;
 export declare function redirect(location: string, status?: number): never;
 export declare function notFound(message?: string): never;
+export declare function fail(status: number, failure: Omit<OtokFailure, "status">): never;
 export declare function fail(message?: string, status?: number): never;
 export declare function isOtokHttpError(error: unknown): error is OtokHttpError;
+export declare function isOtokResponse(value: unknown): value is OtokResponse;
 export type InferLoaderData<T extends OtokLoader> = Awaited<ReturnType<T>>;
 export type InferIslandProps<T> = T extends ComponentType<infer Props> ? Props extends IslandProps ? Props : never : never;
 //# sourceMappingURL=routes.d.ts.map
