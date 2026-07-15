@@ -34,6 +34,7 @@ test("progressive form submission updates the page without full navigation", asy
   await page.getByRole("button", { name: "Save project" }).click();
   await expect(page).toHaveURL("/projects");
   await expect(page.getByRole("alert").filter({ hasText: "Name is required" })).toBeVisible();
+  await expect(page.locator("#project-name")).toHaveAttribute("aria-invalid", "true");
 
   await page.locator("#project-name").fill("Enhanced Project");
   await page.getByLabel("Featured").check();
@@ -42,6 +43,27 @@ test("progressive form submission updates the page without full navigation", asy
   await expect(page).toHaveURL(/\/projects\?created=1$/);
   await expect(page.getByText("Enhanced Project")).toBeVisible();
   await expect(page.getByText("Featured").first()).toBeVisible();
+});
+
+test("keyboard submission, submitter values, checkbox values, and back navigation work", async ({ page }) => {
+  await page.goto("/projects");
+  await page.locator("#project-name").fill("Keyboard Project");
+  await page.getByLabel("Featured").check();
+  await page.locator("#project-name").press("Enter");
+
+  await expect(page).toHaveURL(/\/projects\?created=1$/);
+  await expect(page.getByText("Keyboard Project")).toBeVisible();
+  await expect(page.getByRole("listitem").filter({ hasText: "Keyboard Project" }).getByText("Featured")).toBeVisible();
+
+  await page.goBack();
+  await expect(page).toHaveURL("/projects");
+});
+
+test("opt-out form uses native submission", async ({ page }) => {
+  await page.goto("/projects");
+  await page.getByRole("button", { name: "Native opt-out submit" }).click();
+  await expect(page).toHaveURL(/\/projects\?created=1$/);
+  await expect(page.getByText("Opt out project")).toBeVisible();
 });
 
 test("method override deletes projects through actions", async ({ page }) => {

@@ -21,6 +21,7 @@ export const dashboardNavGroups: NavGroup[] = [
       { label: "kamod-ui islands", href: "/demo" },
       { label: "Progressive forms", href: "/projects" },
       { label: "Protected admin", href: "/admin?demoUser=1", match: (route) => route === "/admin" },
+      { label: "Island strategies", href: "/strategies" },
       {
         label: "Catch-all docs",
         href: "/docs/routing/catch-all",

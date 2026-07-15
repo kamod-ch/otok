@@ -61,3 +61,31 @@ test("visible strategy islands hydrate when observed", async ({ page }) => {
   await expect(teamIsland).toHaveAttribute("data-otok-strategy", "visible");
   await expect(teamIsland).toHaveAttribute("data-otok-hydrated", "true");
 });
+
+test("all island strategies hydrate and do not double hydrate", async ({ page }) => {
+  await page.goto("/strategies");
+
+  const strategies = ["load", "idle", "visible", "media", "client-only", "large props"];
+  for (const label of strategies) {
+    const island = page.locator('[data-otok-island="StrategyLab"]').filter({ hasText: label }).first();
+    await expect(island).toHaveAttribute("data-otok-hydrated", "true");
+    await island.getByRole("button", { name: new RegExp(`${label} count 0`) }).click();
+    await expect(island.getByRole("button", { name: new RegExp(`${label} count 1`) })).toBeVisible();
+  }
+
+  await expect(page.locator('script[type="application/json"][data-otok-props-for]')).toHaveCount(1);
+  await expect(page.getByText("Payload length: 2600")).toBeVisible();
+});
+
+test("new islands hydrate after soft navigation and removed islands disappear", async ({ page }) => {
+  await page.goto("/about");
+  await expect(page.locator("[data-otok-island]")).toHaveCount(0);
+
+  await page.getByRole("link", { name: "Island strategies" }).first().click();
+  await expect(page).toHaveURL("/strategies");
+  await expect(page.locator('[data-otok-island="StrategyLab"]').first()).toHaveAttribute("data-otok-hydrated", "true");
+
+  await page.getByRole("link", { name: "Zero-JS route" }).first().click();
+  await expect(page).toHaveURL("/about");
+  await expect(page.locator("[data-otok-island]")).toHaveCount(0);
+});

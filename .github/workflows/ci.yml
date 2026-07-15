@@ -37,3 +37,13 @@ jobs:
 
       - name: E2E
         run: pnpm test:e2e
+
+      - name: Upload Playwright artifacts
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-artifacts
+          path: |
+            apps/playground/playwright-report
+            apps/playground/test-results
+          if-no-files-found: ignore

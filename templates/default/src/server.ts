@@ -13,6 +13,9 @@ const app = createOtokApp({
   devStylesheets: ["/src/style.css"],
   staticDir: "./dist/client",
   health: { ok: true, framework: "otok" },
+  configure: (app) => {
+    app.get("/plain-html", (c) => c.html("<!doctype html><title>Plain</title><p>No Otok page region</p>"));
+  },
   theme: true,
 });
 

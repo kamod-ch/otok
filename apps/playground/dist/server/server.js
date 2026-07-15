@@ -775,15 +775,15 @@ function createOtokApp(options) {
 //#endregion
 //#region src/app/routes/about.tsx
 var about_exports = /* @__PURE__ */ __exportAll({
-	chrome: () => chrome$6,
+	chrome: () => chrome$7,
 	default: () => About,
-	head: () => head$7
+	head: () => head$8
 });
-var head$7 = () => ({
+var head$8 = () => ({
 	title: "About | Otok Playground",
 	description: "A static Otok route that ships no client JavaScript."
 });
-var chrome$6 = () => ({
+var chrome$7 = () => ({
 	title: "Zero-JS route",
 	description: "This route has no islands."
 });
@@ -808,15 +808,15 @@ function About() {
 //#endregion
 //#region src/app/routes/admin/index.tsx
 var admin_exports = /* @__PURE__ */ __exportAll({
-	chrome: () => chrome$5,
+	chrome: () => chrome$6,
 	default: () => AdminPage,
-	loader: () => loader$5
+	loader: () => loader$6
 });
-var chrome$5 = () => ({
+var chrome$6 = () => ({
 	title: "Protected admin",
 	description: "Route-level middleware demo."
 });
-var loader$5 = ({ hono }) => ({ user: String(hono.get("demoUser") ?? "unknown") });
+var loader$6 = ({ hono }) => ({ user: String(hono.get("demoUser") ?? "unknown") });
 function AdminPage({ data }) {
 	return /* @__PURE__ */ jsxs("section", {
 		class: "space-y-4",
@@ -844,12 +844,24 @@ function AdminPage({ data }) {
 //#region src/app/routes/boom.tsx
 var boom_exports = /* @__PURE__ */ __exportAll({
 	default: () => Boom,
-	loader: () => loader$4
+	loader: () => loader$5
 });
-var loader$4 = () => {
+var loader$5 = () => {
 	fail("Boom from loader");
 };
 function Boom() {
+	return /* @__PURE__ */ jsx("p", { children: "This page should never render." });
+}
+//#endregion
+//#region src/app/routes/crash.tsx
+var crash_exports = /* @__PURE__ */ __exportAll({
+	default: () => Crash,
+	loader: () => loader$4
+});
+var loader$4 = () => {
+	throw new Error("Secret stack detail");
+};
+function Crash() {
 	return /* @__PURE__ */ jsx("p", { children: "This page should never render." });
 }
 //#endregion
@@ -1000,15 +1012,15 @@ ThemeIsland.__otokIslandId = "ThemeIsland";
 //#endregion
 //#region src/app/routes/demo.tsx
 var demo_exports = /* @__PURE__ */ __exportAll({
-	chrome: () => chrome$4,
+	chrome: () => chrome$5,
 	default: () => Demo,
-	head: () => head$6
+	head: () => head$7
 });
-var head$6 = () => ({
+var head$7 = () => ({
 	title: "kamod-ui islands | Otok Playground",
 	description: "Interactive kamod-ui components hydrated as islands."
 });
-var chrome$4 = () => ({
+var chrome$5 = () => ({
 	title: "kamod-ui islands",
 	description: "Dialog and theme interactions are isolated islands.",
 	toolbar: /* @__PURE__ */ jsx(Island, {
@@ -1035,10 +1047,10 @@ function Demo() {
 //#region src/app/routes/projects.tsx
 var projects_exports = /* @__PURE__ */ __exportAll({
 	action: () => action,
-	chrome: () => chrome$3,
+	chrome: () => chrome$4,
 	client: () => true,
 	default: () => ProjectsPage,
-	head: () => head$5,
+	head: () => head$6,
 	loader: () => loader$3
 });
 var projects = [{
@@ -1046,11 +1058,11 @@ var projects = [{
 	name: "Otok",
 	featured: true
 }];
-var chrome$3 = () => ({
+var chrome$4 = () => ({
 	title: "Projects",
 	description: "Progressive route actions and HTML forms."
 });
-var head$5 = () => ({
+var head$6 = () => ({
 	title: "Projects | Otok Playground",
 	description: "Progressive forms powered by Otok route actions."
 });
@@ -1188,6 +1200,94 @@ function ProjectsPage({ data, actionData }) {
 					value: "create",
 					children: "Native opt-out submit"
 				})]
+			})
+		]
+	});
+}
+//#endregion
+//#region src/app/islands/strategy-lab.tsx
+function StrategyLab({ label, payload = "" }) {
+	const [count, setCount] = useState(0);
+	return /* @__PURE__ */ jsxs("section", {
+		"aria-label": `${label} island`,
+		"data-payload": payload,
+		children: [
+			/* @__PURE__ */ jsxs("p", { children: [label, " hydrated"] }),
+			payload ? /* @__PURE__ */ jsxs("p", { children: ["Payload length: ", payload.length] }) : null,
+			/* @__PURE__ */ jsxs("button", {
+				type: "button",
+				onClick: () => setCount((value) => value + 1),
+				children: [
+					label,
+					" count ",
+					count
+				]
+			})
+		]
+	});
+}
+StrategyLab.__otokIslandId = "StrategyLab";
+//#endregion
+//#region src/app/routes/strategies.tsx
+var strategies_exports = /* @__PURE__ */ __exportAll({
+	chrome: () => chrome$3,
+	default: () => StrategiesPage,
+	head: () => head$5
+});
+var largePayload = Array.from({ length: 2600 }, (_, index) => (index % 10).toString()).join("");
+var head$5 = () => ({
+	title: "Island strategies | Otok Playground",
+	description: "Hydration strategy coverage for Otok islands."
+});
+var chrome$3 = () => ({
+	title: "Island strategies",
+	description: "load, idle, visible, media, client-only, and large props."
+});
+function StrategiesPage() {
+	return /* @__PURE__ */ jsxs("section", {
+		class: "space-y-8",
+		children: [
+			/* @__PURE__ */ jsxs("div", { children: [/* @__PURE__ */ jsx("p", {
+				class: "text-sm font-medium text-sky-600 dark:text-sky-300",
+				children: "Hydration strategies"
+			}), /* @__PURE__ */ jsx("h2", {
+				class: "text-3xl font-semibold tracking-tight text-slate-950 dark:text-white",
+				children: "Island strategies"
+			})] }),
+			/* @__PURE__ */ jsx(Island, {
+				component: StrategyLab,
+				props: { label: "load" },
+				strategy: "load"
+			}),
+			/* @__PURE__ */ jsx(Island, {
+				component: StrategyLab,
+				props: { label: "idle" },
+				strategy: "idle"
+			}),
+			/* @__PURE__ */ jsx(Island, {
+				component: StrategyLab,
+				props: { label: "visible" },
+				strategy: "visible",
+				rootMargin: "200px"
+			}),
+			/* @__PURE__ */ jsx(Island, {
+				component: StrategyLab,
+				props: { label: "media" },
+				strategy: "media",
+				media: "(min-width: 1px)"
+			}),
+			/* @__PURE__ */ jsx(Island, {
+				component: StrategyLab,
+				props: { label: "client-only" },
+				strategy: "client-only"
+			}),
+			/* @__PURE__ */ jsx(Island, {
+				component: StrategyLab,
+				props: {
+					label: "large props",
+					payload: largePayload
+				},
+				strategy: "load"
 			})
 		]
 	});
@@ -1917,6 +2017,10 @@ var dashboardNavGroups = [{
 			match: (route) => route === "/admin"
 		},
 		{
+			label: "Island strategies",
+			href: "/strategies"
+		},
+		{
 			label: "Catch-all docs",
 			href: "/docs/routing/catch-all",
 			match: (route) => route.startsWith("/docs/") || route === "/docs/:slug*"
@@ -2111,6 +2215,15 @@ var app = createOtokApp({
 			middleware: []
 		},
 		{
+			id: "crash",
+			path: "/crash",
+			pattern: /* @__PURE__ */ new RegExp("^/crash/?$"),
+			params: [],
+			module: crash_exports,
+			layouts: [_layout_exports],
+			middleware: []
+		},
+		{
 			id: "demo",
 			path: "/demo",
 			pattern: /* @__PURE__ */ new RegExp("^/demo/?$"),
@@ -2125,6 +2238,15 @@ var app = createOtokApp({
 			pattern: /* @__PURE__ */ new RegExp("^/projects/?$"),
 			params: [],
 			module: projects_exports,
+			layouts: [_layout_exports],
+			middleware: []
+		},
+		{
+			id: "strategies",
+			path: "/strategies",
+			pattern: /* @__PURE__ */ new RegExp("^/strategies/?$"),
+			params: [],
+			module: strategies_exports,
 			layouts: [_layout_exports],
 			middleware: []
 		},
@@ -2182,6 +2304,9 @@ var app = createOtokApp({
 	health: {
 		ok: true,
 		framework: "otok"
+	},
+	configure: (app) => {
+		app.get("/plain-html", (c) => c.html("<!doctype html><title>Plain</title><p>No Otok page region</p>"));
 	},
 	theme: true
 });
