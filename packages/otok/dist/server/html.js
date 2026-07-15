@@ -92,9 +92,9 @@ function renderHead(head) {
         .filter(Boolean)
         .join("\n    ");
 }
-export function pageHtml({ body, head, islands, manifest, clientEntry = "src/client.ts", devClientEntry = "/src/client.ts", base = "/", darkMode = false, theme = false, }) {
+export function pageHtml({ body, head, islands, manifest, clientEntry = "src/client.ts", devClientEntry = "/src/client.ts", devStylesheets = [], base = "/", darkMode = false, theme = false, }) {
     const entry = findEntry(manifest, clientEntry);
-    const css = collectCss(manifest, entry);
+    const css = manifest ? collectCss(manifest, entry) : devStylesheets;
     const stylesheetLinks = css
         .map((href) => `<link rel="stylesheet" href="${escapeHtml(publicPath(href, base))}">`)
         .join("\n    ");

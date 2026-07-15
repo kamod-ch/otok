@@ -41,6 +41,27 @@ describe("pageHtml theme bootstrap", () => {
   });
 });
 
+describe("pageHtml stylesheets", () => {
+  it("emits dev stylesheets before the body when no manifest is available", () => {
+    const html = pageHtml({ body: "<main>Hi</main>", islands: [], devStylesheets: ["/src/style.css"] });
+
+    expect(html).toContain('<link rel="stylesheet" href="/src/style.css">');
+    expect(html.indexOf('<link rel="stylesheet" href="/src/style.css">')).toBeLessThan(html.indexOf("<body>"));
+  });
+
+  it("prefers manifest css over dev stylesheets in production", () => {
+    const html = pageHtml({
+      body: "<main>Hi</main>",
+      islands: [],
+      manifest: { "src/client.ts": { file: "assets/client.js", css: ["assets/client.css"], isEntry: true } },
+      devStylesheets: ["/src/style.css"],
+    });
+
+    expect(html).toContain('<link rel="stylesheet" href="/assets/client.css">');
+    expect(html).not.toContain("/src/style.css");
+  });
+});
+
 describe("pageHtml soft-nav head markers", () => {
   it("marks description, meta, canonical, and json-ld for head sync", () => {
     const html = pageHtml({

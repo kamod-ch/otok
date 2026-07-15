@@ -75,6 +75,7 @@ async function renderRoute(c, route, params, options, status = 200, dataOverride
         manifest: options.manifest,
         clientEntry: options.clientEntry,
         devClientEntry: options.devClientEntry,
+        devStylesheets: options.devStylesheets,
         base: options.base,
         theme: themeEnabled,
         darkMode: themeEnabled ? resolveDarkModeFromCookie(c.req.header("cookie")) : false,
@@ -106,7 +107,7 @@ async function handleRenderError(c, error, options) {
         return new Response(error.message, { status: error.status, headers: error.headers });
     }
     if (options.errorRoute) {
-        const message = error instanceof Error ? error.message : "Internal server error";
+        const message = options.exposeErrorDetails === true && error instanceof Error ? error.message : "Internal server error";
         return renderFallbackRoute(c, options.errorRoute, options, 500, { message, status: 500 });
     }
     throw error;

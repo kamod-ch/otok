@@ -3,7 +3,7 @@ import path from "node:path";
 import { normalizePath } from "vite";
 const ROUTES_MODULE_ID = "virtual:otok-routes";
 const ISLANDS_MODULE_ID = "virtual:otok-islands";
-const RESOLVED_ROUTES_MODULE_ID = `\0${ROUTES_MODULE_ID}`;
+const RESOLVED_ROUTES_MODULE_ID = `\0${ROUTES_MODULE_ID}.ts`;
 const RESOLVED_ISLANDS_MODULE_ID = `\0${ISLANDS_MODULE_ID}`;
 function walk(dir) {
     if (!fs.existsSync(dir))
@@ -270,8 +270,8 @@ export default __OtokDefaultIsland;
     return code;
 }
 function invalidateVirtualModules(server) {
-    for (const id of [ROUTES_MODULE_ID, ISLANDS_MODULE_ID]) {
-        const mod = server.moduleGraph.getModuleById(`\0${id}`);
+    for (const id of [RESOLVED_ROUTES_MODULE_ID, RESOLVED_ISLANDS_MODULE_ID]) {
+        const mod = server.moduleGraph.getModuleById(id);
         if (mod)
             server.moduleGraph.invalidateModule(mod);
     }

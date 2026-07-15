@@ -23,6 +23,8 @@ export interface CreateOtokHandlerOptions {
   manifest?: ViteManifest;
   clientEntry?: string;
   devClientEntry?: string;
+  /** Stylesheet URLs to emit in dev before the client module loads. */
+  devStylesheets?: string[];
   base?: string;
   notFound?: OtokRoute;
   notFoundRoute?: OtokRoute;
@@ -124,6 +126,7 @@ async function renderRoute(
     manifest: options.manifest,
     clientEntry: options.clientEntry,
     devClientEntry: options.devClientEntry,
+    devStylesheets: options.devStylesheets,
     base: options.base,
     theme: themeEnabled,
     darkMode: themeEnabled ? resolveDarkModeFromCookie(c.req.header("cookie")) : false,

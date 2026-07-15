@@ -299,8 +299,7 @@ function generateRoutesModule(scan: RoutesScanResult): string {
 
   return `${[...routeImports, ...specialImports, ...layoutImports].join("\n")}
 
-export const routePaths = ${JSON.stringify([...new Set(scan.routes.map((route) => route.routePath))])} as const;
-export type OtokRoutePath = (typeof routePaths)[number];
+export const routePaths = ${JSON.stringify([...new Set(scan.routes.map((route) => route.routePath))])};
 
 export const routes = [
   ${routeEntries.join(",\n  ")}

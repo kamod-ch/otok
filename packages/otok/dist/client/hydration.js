@@ -70,7 +70,18 @@ function hydrateWhenIdle(element, registry, onError) {
         const idleId = { value: 0 };
         const timeoutId = { value: undefined };
         const cleanup = () => {
+            if (cancelled)
+                return;
             cancelled = true;
+            const cancelIdle = window.cancelIdleCallback;
+            if (idleId.value !== undefined && cancelIdle) {
+                cancelIdle(idleId.value);
+                idleId.value = undefined;
+            }
+            if (timeoutId.value !== undefined) {
+                globalThis.clearTimeout(timeoutId.value);
+                timeoutId.value = undefined;
+            }
             pendingHydrations.delete(element);
         };
         trackPending(element, cleanup);

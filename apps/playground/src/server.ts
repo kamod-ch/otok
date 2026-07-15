@@ -10,6 +10,7 @@ const app = createOtokApp({
   manifest: readOtokManifest(import.meta.url),
   clientEntry: "src/client.ts",
   devClientEntry: "/src/client.ts",
+  devStylesheets: ["/src/style.css"],
   staticDir: "./dist/client",
   health: { ok: true, framework: "otok" },
   theme: true,

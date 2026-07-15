@@ -62,8 +62,8 @@ describe("otok vite plugin", () => {
 
         expect(code).toContain("export const routes");
         expect(code).toContain("export const routePaths =");
-        expect(code).toContain("as const");
-        expect(code).toContain("export type OtokRoutePath = (typeof routePaths)[number]");
+        expect(code).not.toContain("as const");
+        expect(code).not.toContain("export type OtokRoutePath");
         expect(code).toContain('"/"');
         expect(code).not.toContain('"/_not-found"');
         expect(code).not.toContain('"/_error"');
