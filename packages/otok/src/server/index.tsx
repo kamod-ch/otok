@@ -326,6 +326,7 @@ export { defineMiddleware, fail, isOtokHttpError, isOtokResponse, json, notFound
 export type {
   ActionResult,
   InferLoaderData,
+  LayoutModule,
   LoaderResult,
   MiddlewareModule,
   OtokAction,

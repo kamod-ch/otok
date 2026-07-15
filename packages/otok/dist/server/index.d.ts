@@ -33,5 +33,5 @@ export { pageHtml, type ViteManifest, type ViteManifestEntry } from "./html.js";
 export { readOtokManifest, type ReadOtokManifestOptions } from "./manifest.js";
 export { matchRoute, type RouteMatch } from "./router.js";
 export { defineMiddleware, fail, isOtokHttpError, isOtokResponse, json, notFound, OtokHttpError, redirect } from "../shared/routes.js";
-export type { ActionResult, InferLoaderData, LoaderResult, MiddlewareModule, OtokAction, OtokActionContext, OtokFailure, OtokResponse, OtokChrome, OtokContext, OtokMiddleware, OtokHead, OtokHeadLink, OtokHeadScript, OtokLayoutProps, OtokLoader, OtokPageProps, OtokRoute, RouteModule, RouteParams, } from "../shared/routes.js";
+export type { ActionResult, InferLoaderData, LayoutModule, LoaderResult, MiddlewareModule, OtokAction, OtokActionContext, OtokFailure, OtokResponse, OtokChrome, OtokContext, OtokMiddleware, OtokHead, OtokHeadLink, OtokHeadScript, OtokLayoutProps, OtokLoader, OtokPageProps, OtokRoute, RouteModule, RouteParams, } from "../shared/routes.js";
 //# sourceMappingURL=index.d.ts.map

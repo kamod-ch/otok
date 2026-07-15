@@ -305,6 +305,22 @@ The client build writes a Vite manifest. Use `readOtokManifest(import.meta.url)`
 
 Node is the Phase 1 reference runtime. The default server entry supports `PORT`, `HOST`, and graceful shutdown on `SIGTERM` / `SIGINT`. See `docs/deployment/node.md` and `examples/deployment/node/` for a production smoke test, Docker example, reverse-proxy notes, health checks, and asset caching guidance.
 
+## Testing
+
+Use `@otok/test` for server-side unit tests without a browser or Vite dev server:
+
+```ts
+import { createTestApp, renderRoute } from "@otok/test";
+
+const app = createTestApp({
+  routes: [{ path: "/users/:id", component: ({ params }) => <p>User {params.id}</p> }],
+});
+
+const { response, html } = await renderRoute(app, "/users/123");
+```
+
+`@otok/test` uses Otok's real Hono handler and `app.request()` under the hood, so it is suitable for loaders, actions, middleware, redirects, cookies, headers, error routes, and SSR HTML. Use Playwright for hydration and browser behavior.
+
 ## Learn More
 
 See `docs/conventions.md` for the complete route, layout, island, head, security, and error-handling conventions.
