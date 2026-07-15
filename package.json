@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "type": "module",
+  "author": "Klaus Zahiragic <watzak>",
   "scripts": {
     "build": "pnpm -r --filter './packages/*' build && pnpm --filter playground build",
     "check:scaffold": "node ./scripts/sync-scaffold.mjs --check",
