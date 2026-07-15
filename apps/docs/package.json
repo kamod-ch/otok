@@ -1,0 +1,13 @@
+{
+  "name": "docs",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "description": "Otok documentation site, structured for PreactPress-style static publishing.",
+  "scripts": {
+    "dev": "node ./scripts/dev.mjs",
+    "build": "node ./scripts/build.mjs",
+    "typecheck": "node --check ./scripts/build.mjs && node --check ./scripts/dev.mjs",
+    "test": "node ./scripts/build.mjs --check"
+  }
+}

@@ -323,4 +323,4 @@ const { response, html } = await renderRoute(app, "/users/123");
 
 ## Learn More
 
-See `docs/conventions.md` for the complete route, layout, island, head, security, and error-handling conventions.
+See `apps/docs` for the documentation site and `docs/conventions.md` for the complete route, layout, island, head, security, and error-handling conventions.

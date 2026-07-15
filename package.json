@@ -5,7 +5,7 @@
   "type": "module",
   "author": "Klaus Zahiragic <watzak>",
   "scripts": {
-    "build": "pnpm -r --filter './packages/*' build && pnpm --filter playground build",
+    "build": "pnpm -r --filter './packages/*' build && pnpm --filter playground build && pnpm --filter docs build",
     "check:scaffold": "node ./scripts/sync-scaffold.mjs --check",
     "changeset": "pnpm dlx @changesets/cli",
     "dev": "pnpm --filter playground dev",

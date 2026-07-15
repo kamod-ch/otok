@@ -1,0 +1,7 @@
+{
+  "title": "Otok Docs",
+  "description": "Lightweight Hono + Preact framework for server-rendered applications with islands, progressive enhancement, and minimal client JavaScript.",
+  "base": "/otok/",
+  "canonicalOrigin": "https://kamod-ch.github.io",
+  "githubEditBase": "https://github.com/kamod-ch/otok/edit/main/apps/docs/content"
+}

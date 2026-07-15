@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Route Middleware | Otok Docs</title>
+  <meta name="description" content="Lightweight Hono + Preact framework for server-rendered applications with islands, progressive enhancement, and minimal client JavaScript.">
+  <link rel="canonical" href="https://kamod-ch.github.io/otok/core-concepts/middleware/">
+  <meta property="og:title" content="Route Middleware">
+  <meta property="og:description" content="Lightweight Hono + Preact framework for server-rendered applications with islands, progressive enhancement, and minimal client JavaScript.">
+  <meta property="og:type" content="website">
+  <link rel="stylesheet" href="/otok/assets/style.css">
+  <script type="application/json" id="search-index">[{"title":"What is Otok?","url":"/otok/","description":"Lightweight Hono + Preact framework for server-rendered applications with islands and progressive enhancement."},{"title":"Server Rendering","url":"/otok/core-concepts/server-rendering/","description":"Lightweight Hono + Preact framework for server-rendered applications with islands, progressive enhancement, and minimal client JavaScript."},{"title":"File-based Routing","url":"/otok/core-concepts/routing/","description":"Lightweight Hono + Preact framework for server-rendered applications with islands, progressive enhancement, and minimal client JavaScript."},{"title":"Loaders, Actions, and Forms","url":"/otok/core-concepts/loaders-actions-forms/","description":"Lightweight Hono + Preact framework for server-rendered applications with islands, progressive enhancement, and minimal client JavaScript."},{"title":"Route Middleware","url":"/otok/core-concepts/middleware/","description":"Lightweight Hono + Preact framework for server-rendered applications with islands, progressive enhancement, and minimal client JavaScript."},{"title":"Islands and Soft Navigation","url":"/otok/core-concepts/islands-soft-navigation/","description":"Lightweight Hono + Preact framework for server-rendered applications with islands, progressive enhancement, and minimal client JavaScript."},{"title":"Error Handling","url":"/otok/core-concepts/errors/","description":"Lightweight Hono + Preact framework for server-rendered applications with islands, progressive enhancement, and minimal client JavaScript."},{"title":"Testing","url":"/otok/guides/testing/","description":"Lightweight Hono + Preact framework for server-rendered applications with islands, progressive enhancement, and minimal client JavaScript."},{"title":"Node and Docker Deployment","url":"/otok/guides/deployment/","description":"Lightweight Hono + Preact framework for server-rendered applications with islands, progressive enhancement, and minimal client JavaScript."},{"title":"Auth, CRUD, Styling, and Uploads","url":"/otok/guides/auth-crud-styling/","description":"Lightweight Hono + Preact framework for server-rendered applications with islands, progressive enhancement, and minimal client JavaScript."},{"title":"API Reference","url":"/otok/reference/api/","description":"Lightweight Hono + Preact framework for server-rendered applications with islands, progressive enhancement, and minimal client JavaScript."},{"title":"Migration and Comparison","url":"/otok/migration/comparison/","description":"Lightweight Hono + Preact framework for server-rendered applications with islands, progressive enhancement, and minimal client JavaScript."},{"title":"Project Roadmap","url":"/otok/project/roadmap/","description":"Lightweight Hono + Preact framework for server-rendered applications with islands, progressive enhancement, and minimal client JavaScript."},{"title":"Built with Otok","url":"/otok/showcase/built-with-otok/","description":"Lightweight Hono + Preact framework for server-rendered applications with islands, progressive enhancement, and minimal client JavaScript."}]</script>
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="/otok/">Otok</a>
+    <span>Lightweight Hono + Preact SSR with islands</span>
+    <input id="search" type="search" placeholder="Search docs" aria-label="Search docs">
+  </header>
+  <div class="shell">
+    <nav class="sidebar" aria-label="Documentation">
+    <section class="nav-group">
+      <h2>Introduction</h2>
+      <a class="" href="/otok/">What is Otok?</a>
+    </section>
+    <section class="nav-group">
+      <h2>Core Concepts</h2>
+      <a class="" href="/otok/core-concepts/server-rendering/">Server Rendering</a><a class="" href="/otok/core-concepts/routing/">File-based Routing</a><a class="" href="/otok/core-concepts/loaders-actions-forms/">Loaders, Actions, and Forms</a><a class="active" href="/otok/core-concepts/middleware/">Route Middleware</a><a class="" href="/otok/core-concepts/islands-soft-navigation/">Islands and Soft Navigation</a><a class="" href="/otok/core-concepts/errors/">Error Handling</a>
+    </section>
+    <section class="nav-group">
+      <h2>Guides</h2>
+      <a class="" href="/otok/guides/testing/">Testing</a><a class="" href="/otok/guides/deployment/">Node and Docker Deployment</a><a class="" href="/otok/guides/auth-crud-styling/">Auth, CRUD, Styling, and Uploads</a>
+    </section>
+    <section class="nav-group">
+      <h2>Reference</h2>
+      <a class="" href="/otok/reference/api/">API Reference</a>
+    </section>
+    <section class="nav-group">
+      <h2>Migration</h2>
+      <a class="" href="/otok/migration/comparison/">Migration and Comparison</a>
+    </section>
+    <section class="nav-group">
+      <h2>Project</h2>
+      <a class="" href="/otok/project/roadmap/">Project Roadmap</a>
+    </section>
+    <section class="nav-group">
+      <h2>Showcase</h2>
+      <a class="" href="/otok/showcase/built-with-otok/">Built with Otok</a>
+    </section></nav>
+    <main>
+      <article><h1 id="route-middleware"><a href="#route-middleware">Route Middleware</a></h1>
+<p>Use <code>_middleware.ts</code> files to colocate Hono-compatible middleware with routes.</p>
+<pre><code>import { defineMiddleware, redirect } from &quot;otok/server&quot;;
+
+export default defineMiddleware(async (c, next) =&gt; {
+  const user = c.get(&quot;user&quot;);
+  if (!user) redirect(&quot;/login&quot;, 303);
+  await next();
+});</code></pre>
+<p>Middleware runs from parent to child and applies to loaders, actions, and rendering.</p>
+<pre><code>src/app/routes/_middleware.ts
+src/app/routes/admin/_middleware.ts
+src/app/routes/admin/index.tsx</code></pre>
+<p>Global API routes registered through <code>createOtokApp({ configure })</code> remain normal Hono routes.</p></article>
+      <p class="edit"><a href="https://github.com/kamod-ch/otok/edit/main/apps/docs/content/core-concepts/middleware.md">Edit this page on GitHub</a></p>
+    </main>
+    <aside class="toc" aria-label="On this page"></aside>
+  </div>
+  <script src="/otok/assets/search.js"></script>
+</body>
+</html>
