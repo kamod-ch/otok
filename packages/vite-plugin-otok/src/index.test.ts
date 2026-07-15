@@ -61,7 +61,12 @@ describe("otok vite plugin", () => {
         const code = __testing.generateRoutesModule(__testing.scanRoutes(root, "src/app/routes"));
 
         expect(code).toContain("export const routes");
-        expect(code).toContain("export const routePaths");
+        expect(code).toContain("export const routePaths =");
+        expect(code).toContain("as const");
+        expect(code).toContain("export type OtokRoutePath = (typeof routePaths)[number]");
+        expect(code).toContain('"/"');
+        expect(code).not.toContain('"/_not-found"');
+        expect(code).not.toContain('"/_error"');
         expect(code).toContain("export const notFoundRoute");
         expect(code).toContain("export const errorRoute");
       },

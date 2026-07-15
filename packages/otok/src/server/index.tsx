@@ -29,6 +29,8 @@ export interface CreateOtokHandlerOptions {
   errorRoute?: OtokRoute;
   /** Include theme bootstrap script and SSR dark-mode class from cookie. Defaults to false. */
   theme?: boolean;
+  /** Expose unexpected Error.message values to the error route. Defaults to false. */
+  exposeErrorDetails?: boolean;
 }
 
 export interface CreateOtokAppOptions extends CreateOtokHandlerOptions {
@@ -162,7 +164,7 @@ async function handleRenderError(
   }
 
   if (options.errorRoute) {
-    const message = error instanceof Error ? error.message : "Internal server error";
+    const message = options.exposeErrorDetails === true && error instanceof Error ? error.message : "Internal server error";
     return renderFallbackRoute(c, options.errorRoute, options, 500, { message, status: 500 });
   }
 

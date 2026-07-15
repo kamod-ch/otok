@@ -7,13 +7,20 @@
   "scripts": {
     "build": "pnpm -r --filter './packages/*' build && pnpm --filter playground build",
     "check:scaffold": "node ./scripts/sync-scaffold.mjs --check",
+    "changeset": "pnpm dlx @changesets/cli",
     "dev": "pnpm --filter playground dev",
+    "format:check": "node ./scripts/format-check.mjs",
+    "format": "node ./scripts/format-check.mjs",
+    "lint": "node ./scripts/lint.mjs",
+    "pack:check": "pnpm -r --filter './packages/*' build && pnpm -r --filter './packages/*' exec npm pack --dry-run",
     "preview": "pnpm --filter playground preview",
+    "release": "pnpm check && pnpm dlx @changesets/cli publish",
     "sync:scaffold": "node ./scripts/sync-scaffold.mjs",
     "typecheck": "pnpm -r typecheck",
     "test": "pnpm -r test",
     "test:e2e": "pnpm --filter playground test:e2e",
-    "check": "pnpm check:scaffold && pnpm typecheck && pnpm test && pnpm build"
+    "version-packages": "pnpm dlx @changesets/cli version",
+    "check": "pnpm check:scaffold && pnpm lint && pnpm format:check && pnpm typecheck && pnpm test && pnpm build"
   },
   "devDependencies": {
     "@types/node": "^24.12.2",

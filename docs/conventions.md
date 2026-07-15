@@ -168,7 +168,7 @@ Apps should reference the plugin types once:
 /// <reference types="@otok/vite-plugin/client" />
 ```
 
-This declares `virtual:otok-routes`, `virtual:otok-islands`, and exports `routePaths` / `OtokRoutePath`.
+This declares `virtual:otok-routes`, `virtual:otok-islands`, and exports `routePaths` / `OtokRoutePath`. The generated `virtual:otok-routes` module emits `routePaths` as a literal tuple, so app code importing from it can use `OtokRoutePath` as a route-path union during Vite builds.
 
 ## Route Chrome
 
@@ -191,6 +191,7 @@ Layouts receive `chrome` on `OtokLayoutProps`. This avoids central route switche
 - Otok escapes HTML in `head()` output and neutralizes `<` in JSON script payloads.
 - For strict Content Security Policy, prefer hashed or nonce-based policies and avoid inline scripts outside Otok's managed payloads.
 - Soft navigation only applies to same-origin links and skips `/api/` paths.
+- Unexpected 500 error details are hidden from `_error.tsx` by default. Set `exposeErrorDetails: true` on `createOtokHandler()` / `createOtokApp()` only when you intentionally want raw error messages, such as local development.
 
 ## Theme
 

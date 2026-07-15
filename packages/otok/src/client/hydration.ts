@@ -89,7 +89,17 @@ function hydrateWhenIdle(
     const timeoutId = { value: undefined as ReturnType<typeof globalThis.setTimeout> | undefined };
 
     const cleanup = () => {
+      if (cancelled) return;
       cancelled = true;
+      const cancelIdle = (window as Window & { cancelIdleCallback?: (id: number) => void }).cancelIdleCallback;
+      if (idleId.value !== undefined && cancelIdle) {
+        cancelIdle(idleId.value);
+        idleId.value = undefined;
+      }
+      if (timeoutId.value !== undefined) {
+        globalThis.clearTimeout(timeoutId.value);
+        timeoutId.value = undefined;
+      }
       pendingHydrations.delete(element);
     };
 

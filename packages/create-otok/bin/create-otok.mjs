@@ -60,6 +60,13 @@ function updatePackageName(target, name) {
   fs.writeFileSync(`${pkgPath}`, `${JSON.stringify(pkg, null, 2)}\n`);
 }
 
+function isValidPackageName(name) {
+  if (!name || name.length > 214) return false;
+  if (name === "." || name === "..") return false;
+  if (name.startsWith(".") || name.startsWith("_")) return false;
+  return /^[a-z0-9][a-z0-9._-]*$/.test(name);
+}
+
 const args = process.argv.slice(2);
 if (args.includes("--help") || args.includes("-h")) {
   usage();
@@ -88,15 +95,21 @@ if (!name) {
 }
 
 const target = path.resolve(process.cwd(), name);
+const packageName = path.basename(target);
+if (!isValidPackageName(packageName)) {
+  console.error(`Invalid package name "${packageName}". Use a lowercase npm-compatible name such as "my-app".`);
+  process.exit(1);
+}
+
 if (fs.existsSync(target) && fs.readdirSync(target).length > 0) {
   console.error(`Target directory is not empty: ${target}`);
   process.exit(1);
 }
 
 copyDir(resolveTemplateDir(template), target);
-updatePackageName(target, path.basename(target));
+updatePackageName(target, packageName);
 
-console.log(`Created ${path.basename(target)} with the ${template} template.
+console.log(`Created ${packageName} with the ${template} template.
 
 Next steps:
   cd ${path.relative(process.cwd(), target) || "."}

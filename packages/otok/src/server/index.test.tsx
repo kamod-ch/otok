@@ -2,7 +2,7 @@ import { Hono } from "hono";
 import { describe, expect, it } from "vitest";
 import { createOtokHandler } from "./index.js";
 import type { OtokRoute } from "../shared/routes.js";
-import { redirect } from "../shared/routes.js";
+import { fail, redirect } from "../shared/routes.js";
 
 const Page = () => <p>OK</p>;
 const NotFound = () => <p>Custom 404</p>;
@@ -122,7 +122,7 @@ describe("createOtokHandler", () => {
     expect(html).toContain("<p>OK</p>");
   });
 
-  it("renders convention-based error routes", async () => {
+  it("hides unexpected error details by default", async () => {
     const app = new Hono();
     app.get(
       "*",
@@ -146,6 +146,62 @@ describe("createOtokHandler", () => {
     const html = await response.text();
 
     expect(response.status).toBe(500);
+    expect(html).toContain("Error: Internal server error");
+    expect(html).not.toContain("boom");
+  });
+
+  it("exposes unexpected error details when opted in", async () => {
+    const app = new Hono();
+    app.get(
+      "*",
+      createOtokHandler({
+        routes: [
+          {
+            ...route("/boom", /^\/boom\/?$/),
+            module: {
+              default: Page,
+              loader: () => {
+                throw new Error("boom");
+              },
+            },
+          },
+        ],
+        errorRoute: route("/", /^\/?$/, ErrorRoute as unknown as OtokRoute["module"]["default"]),
+        exposeErrorDetails: true,
+      }),
+    );
+
+    const response = await app.request("/boom");
+    const html = await response.text();
+
+    expect(response.status).toBe(500);
     expect(html).toContain("Error: boom");
+  });
+
+  it("passes intentional fail messages to error routes", async () => {
+    const app = new Hono();
+    app.get(
+      "*",
+      createOtokHandler({
+        routes: [
+          {
+            ...route("/fail", /^\/fail\/?$/),
+            module: {
+              default: Page,
+              loader: () => {
+                fail("teapot", 418);
+              },
+            },
+          },
+        ],
+        errorRoute: route("/", /^\/?$/, ErrorRoute as unknown as OtokRoute["module"]["default"]),
+      }),
+    );
+
+    const response = await app.request("/fail");
+    const html = await response.text();
+
+    expect(response.status).toBe(418);
+    expect(html).toContain("Error: teapot");
   });
 });
