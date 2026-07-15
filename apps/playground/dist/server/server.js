@@ -760,7 +760,15 @@ function createOtokApp(options) {
 		};
 		app.get("/api/health", (c) => c.json(payload));
 	}
-	if (options.staticDir) app.use(`${options.assetsPath ?? "/assets"}/*`, serveStatic({ root: options.staticDir }));
+	if (options.staticDir) {
+		const assetsPath = options.assetsPath ?? "/assets";
+		const cacheControl = options.assetCacheControl ?? "public, max-age=31536000, immutable";
+		app.use(`${assetsPath}/*`, async (c, next) => {
+			await next();
+			if (c.res.status < 400 && !c.res.headers.has("cache-control")) c.header("cache-control", cacheControl);
+		});
+		app.use(`${assetsPath}/*`, serveStatic({ root: options.staticDir }));
+	}
 	app.all("*", createOtokHandler(options));
 	return app;
 }
@@ -2177,9 +2185,28 @@ var app = createOtokApp({
 	},
 	theme: true
 });
-serve({
-	fetch: app.fetch,
-	port: Number(process.env.PORT ?? 3e3)
-});
+{
+	const port = Number(process.env.PORT ?? 3e3);
+	const hostname = process.env.HOST || void 0;
+	const server = serve({
+		fetch: app.fetch,
+		port,
+		hostname
+	}, (info) => {
+		console.info(`Otok server listening on http://${info.address}:${info.port}`);
+	});
+	const shutdown = (signal) => {
+		console.info(`Received ${signal}; shutting down Otok server...`);
+		server.close((error) => {
+			if (error) {
+				console.error(error);
+				process.exit(1);
+			}
+			process.exit(0);
+		});
+	};
+	process.once("SIGTERM", shutdown);
+	process.once("SIGINT", shutdown);
+}
 //#endregion
 export { app as default };

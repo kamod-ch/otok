@@ -215,7 +215,14 @@ export function createOtokApp(options) {
         app.get("/api/health", (c) => c.json(payload));
     }
     if (options.staticDir) {
-        app.use(`${options.assetsPath ?? "/assets"}/*`, serveStatic({ root: options.staticDir }));
+        const assetsPath = options.assetsPath ?? "/assets";
+        const cacheControl = options.assetCacheControl ?? "public, max-age=31536000, immutable";
+        app.use(`${assetsPath}/*`, async (c, next) => {
+            await next();
+            if (c.res.status < 400 && !c.res.headers.has("cache-control"))
+                c.header("cache-control", cacheControl);
+        });
+        app.use(`${assetsPath}/*`, serveStatic({ root: options.staticDir }));
     }
     app.all("*", createOtokHandler(options));
     return app;

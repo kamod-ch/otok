@@ -15,6 +15,7 @@
     "pack:check": "pnpm -r --filter './packages/*' build && pnpm -r --filter './packages/*' exec npm pack --dry-run",
     "preview": "pnpm --filter playground preview",
     "release": "pnpm check && pnpm dlx @changesets/cli publish",
+    "smoke:node": "node ./scripts/production-smoke.mjs",
     "sync:scaffold": "node ./scripts/sync-scaffold.mjs",
     "typecheck": "pnpm -r typecheck",
     "test": "pnpm -r test",

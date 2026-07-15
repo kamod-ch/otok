@@ -43,6 +43,8 @@ export interface CreateOtokHandlerOptions {
 export interface CreateOtokAppOptions extends CreateOtokHandlerOptions {
   staticDir?: string;
   assetsPath?: string;
+  /** Cache-Control for static assets served from staticDir. Defaults to immutable hashed-asset caching. */
+  assetCacheControl?: string;
   health?: boolean | Record<string, unknown>;
   /** Register API routes, middleware, or other Hono handlers before SSR. */
   configure?: (app: Hono) => void;
@@ -304,7 +306,13 @@ export function createOtokApp(options: CreateOtokAppOptions): Hono {
   }
 
   if (options.staticDir) {
-    app.use(`${options.assetsPath ?? "/assets"}/*`, serveStatic({ root: options.staticDir }));
+    const assetsPath = options.assetsPath ?? "/assets";
+    const cacheControl = options.assetCacheControl ?? "public, max-age=31536000, immutable";
+    app.use(`${assetsPath}/*`, async (c, next) => {
+      await next();
+      if (c.res.status < 400 && !c.res.headers.has("cache-control")) c.header("cache-control", cacheControl);
+    });
+    app.use(`${assetsPath}/*`, serveStatic({ root: options.staticDir }));
   }
 
   app.all("*", createOtokHandler(options));

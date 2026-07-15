@@ -303,6 +303,8 @@ pnpm start
 
 The client build writes a Vite manifest. Use `readOtokManifest(import.meta.url)` in production so Otok can link the hashed client entry and CSS assets.
 
+Node is the Phase 1 reference runtime. The default server entry supports `PORT`, `HOST`, and graceful shutdown on `SIGTERM` / `SIGINT`. See `docs/deployment/node.md` and `examples/deployment/node/` for a production smoke test, Docker example, reverse-proxy notes, health checks, and asset caching guidance.
+
 ## Learn More
 
 See `docs/conventions.md` for the complete route, layout, island, head, security, and error-handling conventions.

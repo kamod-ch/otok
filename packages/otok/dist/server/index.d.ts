@@ -21,6 +21,8 @@ export interface CreateOtokHandlerOptions {
 export interface CreateOtokAppOptions extends CreateOtokHandlerOptions {
     staticDir?: string;
     assetsPath?: string;
+    /** Cache-Control for static assets served from staticDir. Defaults to immutable hashed-asset caching. */
+    assetCacheControl?: string;
     health?: boolean | Record<string, unknown>;
     /** Register API routes, middleware, or other Hono handlers before SSR. */
     configure?: (app: Hono) => void;

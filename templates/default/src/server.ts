@@ -19,5 +19,23 @@ const app = createOtokApp({
 export default app;
 
 if (import.meta.env.PROD) {
-  serve({ fetch: app.fetch, port: Number(process.env.PORT ?? 3000) });
+  const port = Number(process.env.PORT ?? 3000);
+  const hostname = process.env.HOST || undefined;
+  const server = serve({ fetch: app.fetch, port, hostname }, (info) => {
+    console.info(`Otok server listening on http://${info.address}:${info.port}`);
+  });
+
+  const shutdown = (signal: NodeJS.Signals) => {
+    console.info(`Received ${signal}; shutting down Otok server...`);
+    server.close((error) => {
+      if (error) {
+        console.error(error);
+        process.exit(1);
+      }
+      process.exit(0);
+    });
+  };
+
+  process.once("SIGTERM", shutdown);
+  process.once("SIGINT", shutdown);
 }
