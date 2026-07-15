@@ -18,9 +18,9 @@ The playground is the current in-repository reference application. It demonstrat
 - soft navigation
 - Node production build
 
-Planned reference applications:
+In-repository reference applications:
 
-- Kamod AI Audit
-- Kamod Flat CMS
+- `examples/reference-ai-audit` — route actions, progressive forms, API routes, expected errors, and island-based finding triage.
+- `examples/reference-flat-cms` — public content, admin middleware, CRUD actions, method override, and live-preview islands.
 
 These projects should validate Otok outside the playground before being presented as production showcases.

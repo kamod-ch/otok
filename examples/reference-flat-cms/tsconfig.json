@@ -1,0 +1,10 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "jsx": "react-jsx",
+    "jsxImportSource": "preact",
+    "types": ["vite/client", "@otok/vite-plugin/client", "node"],
+    "noEmit": true
+  },
+  "include": ["src", "vite.config.ts"]
+}

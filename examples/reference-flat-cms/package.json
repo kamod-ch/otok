@@ -1,0 +1,26 @@
+{
+  "name": "otok-reference-flat-cms",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "description": "Reference Otok app for a flat-file content management workflow.",
+  "scripts": {
+    "dev": "vite --host 0.0.0.0",
+    "build": "vite build --mode client && vite build",
+    "preview": "NODE_ENV=production node ./dist/server/server.js",
+    "typecheck": "tsc -p tsconfig.json --noEmit"
+  },
+  "dependencies": {
+    "@hono/node-server": "^2.0.1",
+    "@otok/vite-plugin": "^0.2.0",
+    "@preact/preset-vite": "^2.10.2",
+    "hono": "^4.12.25",
+    "otok": "^0.2.0",
+    "preact": "^10.28.2",
+    "vite": "^8.0.10"
+  },
+  "devDependencies": {
+    "@types/node": "^24.12.2",
+    "typescript": "~6.0.2"
+  }
+}
