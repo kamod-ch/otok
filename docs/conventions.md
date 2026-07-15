@@ -287,7 +287,26 @@ Apps should reference the plugin types once:
 /// <reference types="@otok/vite-plugin/client" />
 ```
 
-This declares `virtual:otok-routes`, `virtual:otok-islands`, and exports `routePaths` / `OtokRoutePath`. The ambient `OtokRoutePath` type is a broad fallback today; a fully typed route builder is planned separately.
+This declares `virtual:otok-routes`, `virtual:otok-islands`, and exports `routePaths`, `routeFilePatterns`, `OtokRoutePath`, and the typed `route()` URL builder.
+
+## Typed Route Builder
+
+Use `route()` from `virtual:otok-routes` to build URLs from file-route patterns:
+
+```ts
+import { route } from "virtual:otok-routes";
+
+route("/users/[id]", { params: { id: "alice" } });
+route("/docs/[...slug]", { params: { slug: ["routing", "catch-all"] } });
+route("/[[lang]]/about", {
+  params: { lang: "de" },
+  query: { ref: "docs", tag: ["routing", "api"], empty: undefined },
+});
+```
+
+Dynamic params such as `[id]` are required. Catch-all params such as `[...slug]` accept a scalar value or an array. Optional params such as `[[lang]]` may be omitted. Query values support strings, numbers, booleans, `null`, `undefined`, and arrays; `null` and `undefined` are omitted. Route groups such as `(marketing)` are ignored in the final URL.
+
+The runtime builder validates missing params and URL-encodes every segment with Web APIs, so it works on both server and client.
 
 ## Route Chrome
 

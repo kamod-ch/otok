@@ -18,6 +18,7 @@ interface RouteEntry {
   id: string;
   file: string;
   routePath: string;
+  routePattern: string;
   pattern: string;
   params: string[];
   score: number;
@@ -150,6 +151,13 @@ function segmentToVariants(segment: string, variants: RouteVariant[]): RouteVari
   );
 }
 
+function publicRoutePattern(relative: string): string {
+  const segments = relative
+    .split("/")
+    .filter((segment) => segment !== "index" && !/^\(.+\)$/.test(segment));
+  return `/${segments.join("/")}`.replace(/\/$/, "") || "/";
+}
+
 function routeFileToEntries(
   file: string,
   routesDir: string,
@@ -157,6 +165,7 @@ function routeFileToEntries(
   middlewareMap: Map<string, string>,
 ): RouteEntry[] {
   const relative = normalizePath(path.relative(routesDir, stripExtension(file)));
+  const routePattern = publicRoutePattern(relative);
   const segments = relative.split("/");
   const variants = segments.reduce(
     (current, segment) => segmentToVariants(segment, current),
@@ -175,6 +184,7 @@ function routeFileToEntries(
       id: `${relative.replaceAll("/", ".")}${variants.length > 1 ? `.${index}` : ""}`,
       file,
       routePath,
+      routePattern,
       pattern,
       params: variant.params,
       score: variant.staticCount * 100 - variant.dynamicCount * 10 - variant.catchAllCount * 1000,
@@ -273,6 +283,73 @@ function modulePath(file: string): string {
   return normalizePath(file);
 }
 
+export interface RouteBuildOptions {
+  params?: Record<string, string | number | boolean | Array<string | number | boolean> | null | undefined>;
+  query?: Record<string, string | number | boolean | Array<string | number | boolean | null | undefined> | null | undefined>;
+  hash?: string;
+}
+
+function appendQuery(url: string, query: RouteBuildOptions["query"]): string {
+  if (!query) return url;
+  const params = new URLSearchParams();
+  for (const [key, value] of Object.entries(query)) {
+    if (value === undefined || value === null) continue;
+    const values = Array.isArray(value) ? value : [value];
+    for (const item of values) {
+      if (item === undefined || item === null) continue;
+      params.append(key, String(item));
+    }
+  }
+  const queryString = params.toString();
+  return queryString ? `${url}?${queryString}` : url;
+}
+
+function appendHash(url: string, hash: string | undefined): string {
+  if (!hash) return url;
+  return `${url}#${encodeURIComponent(hash.replace(/^#/, ""))}`;
+}
+
+export function buildRoutePath(pattern: string, options: RouteBuildOptions = {}): string {
+  const params = options.params ?? {};
+  const segments = pattern.split("/").filter(Boolean);
+  const output: string[] = [];
+
+  for (const segment of segments) {
+    if (/^\(.+\)$/.test(segment)) continue;
+    const optional = /^\[\[([^\]]+)\]\]$/.exec(segment);
+    if (optional) {
+      const value = params[optional[1]];
+      if (value !== undefined && value !== null && value !== "") output.push(encodeURIComponent(String(value)));
+      continue;
+    }
+
+    const catchAll = /^\[\.\.\.([^\]]+)\]$/.exec(segment);
+    if (catchAll) {
+      const value = params[catchAll[1]];
+      if (value === undefined || value === null || value === "") {
+        throw new Error(`otok: Missing route param "${catchAll[1]}" for ${pattern}.`);
+      }
+      const values = Array.isArray(value) ? value : String(value).split("/");
+      output.push(...values.map((part) => encodeURIComponent(String(part))));
+      continue;
+    }
+
+    const dynamic = /^\[([^\]]+)\]$/.exec(segment);
+    if (dynamic) {
+      const value = params[dynamic[1]];
+      if (value === undefined || value === null || value === "") {
+        throw new Error(`otok: Missing route param "${dynamic[1]}" for ${pattern}.`);
+      }
+      output.push(encodeURIComponent(String(value)));
+      continue;
+    }
+
+    output.push(encodeURIComponent(segment));
+  }
+
+  return appendHash(appendQuery(`/${output.join("/")}`.replace(/\/$/, "") || "/", options.query), options.hash);
+}
+
 function routeToModuleEntry(
   route: RouteEntry,
   moduleName: string,
@@ -288,6 +365,10 @@ function routeToModuleEntry(
     layouts: [${layoutNames.join(", ")}],
     middleware: [${middlewareNames.join(", ")}]
   }`;
+}
+
+function routePatternsForScan(scan: RoutesScanResult): string[] {
+  return [...new Set(scan.routes.map((route) => route.routePattern))];
 }
 
 function generateRoutesModule(scan: RoutesScanResult): string {
@@ -332,7 +413,74 @@ function generateRoutesModule(scan: RoutesScanResult): string {
 
   return `${[...routeImports, ...specialImports, ...layoutImports, ...middlewareImports].join("\n")}
 
+const routePatterns = ${JSON.stringify(routePatternsForScan(scan))};
+
+function appendQuery(url, query) {
+  if (!query) return url;
+  const params = new URLSearchParams();
+  for (const [key, value] of Object.entries(query)) {
+    if (value === undefined || value === null) continue;
+    const values = Array.isArray(value) ? value : [value];
+    for (const item of values) {
+      if (item === undefined || item === null) continue;
+      params.append(key, String(item));
+    }
+  }
+  const queryString = params.toString();
+  return queryString ? url + "?" + queryString : url;
+}
+
+function appendHash(url, hash) {
+  if (!hash) return url;
+  return url + "#" + encodeURIComponent(hash.replace(/^#/, ""));
+}
+
+function buildRoutePath(pattern, options = {}) {
+  const params = options.params ?? {};
+  const segments = pattern.split("/").filter(Boolean);
+  const output = [];
+
+  for (const segment of segments) {
+    if (/^\\(.+\\)$/.test(segment)) continue;
+    const optional = /^\\[\\[([^\\]]+)\\]\\]$/.exec(segment);
+    if (optional) {
+      const value = params[optional[1]];
+      if (value !== undefined && value !== null && value !== "") output.push(encodeURIComponent(String(value)));
+      continue;
+    }
+
+    const catchAll = /^\\[\\.\\.\\.([^\\]]+)\\]$/.exec(segment);
+    if (catchAll) {
+      const value = params[catchAll[1]];
+      if (value === undefined || value === null || value === "") throw new Error("otok: Missing route param \\\"" + catchAll[1] + "\\\" for " + pattern + ".");
+      const values = Array.isArray(value) ? value : String(value).split("/");
+      output.push(...values.map((part) => encodeURIComponent(String(part))));
+      continue;
+    }
+
+    const dynamic = /^\\[([^\\]]+)\\]$/.exec(segment);
+    if (dynamic) {
+      const value = params[dynamic[1]];
+      if (value === undefined || value === null || value === "") throw new Error("otok: Missing route param \\\"" + dynamic[1] + "\\\" for " + pattern + ".");
+      output.push(encodeURIComponent(String(value)));
+      continue;
+    }
+
+    output.push(encodeURIComponent(segment));
+  }
+
+  return appendHash(appendQuery(("/" + output.join("/")).replace(/\\/$/, "") || "/", options.query), options.hash);
+}
+
+export function route(pattern, options = {}) {
+  if (!routePatterns.includes(pattern) && import.meta.env?.DEV) {
+    console.warn("[otok] Unknown route pattern \\\"" + pattern + "\\\".");
+  }
+  return buildRoutePath(pattern, options);
+}
+
 export const routePaths = ${JSON.stringify([...new Set(scan.routes.map((route) => route.routePath))])};
+export const routeFilePatterns = routePatterns;
 
 export const routes = [
   ${routeEntries.join(",\n  ")}
@@ -467,6 +615,7 @@ export default function otok(options: OtokPluginOptions = {}): Plugin {
 
 export { otok };
 export const __testing = {
+  buildRoutePath,
   generateRoutesModule,
   injectIslandId,
   scanRoutes,

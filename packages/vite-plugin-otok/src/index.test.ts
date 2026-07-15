@@ -77,8 +77,22 @@ describe("otok vite plugin", () => {
         expect(code).toContain("export const errorRoute");
         expect(code).toContain("import * as middleware0");
         expect(code).toContain("middleware: [middleware0]");
+        expect(code).toContain("export function route");
+        expect(code).toContain("export const routeFilePatterns = routePatterns");
       },
     );
+  });
+
+  it("builds typed route URLs from file route patterns", () => {
+    expect(__testing.buildRoutePath("/users/[id]", { params: { id: "a b" } })).toBe("/users/a%20b");
+    expect(__testing.buildRoutePath("/docs/[...slug]", { params: { slug: ["getting-started", "intro"] } })).toBe(
+      "/docs/getting-started/intro",
+    );
+    expect(
+      __testing.buildRoutePath("/[[lang]]/about", { params: { lang: "de" }, query: { ref: "docs", tags: ["a", "b"], skip: undefined } }),
+    ).toBe("/de/about?ref=docs&tags=a&tags=b");
+    expect(__testing.buildRoutePath("/(marketing)/about")).toBe("/about");
+    expect(() => __testing.buildRoutePath("/users/[id]")).toThrow('Missing route param "id"');
   });
 
   it("injects stable island ids into default function exports", () => {

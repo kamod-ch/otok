@@ -189,7 +189,17 @@ export default defineMiddleware(async (c, next) => {
 
 Middleware uses Hono's context and `next()` model. It may return a native `Response`, throw Otok helpers such as `redirect()` / `fail()`, or set values with `c.set()` for loaders and actions.
 
-The Vite plugin also exports `routePaths` and `OtokRoutePath` from `virtual:otok-routes`. The ambient type is a broad fallback today; a fully typed route builder is planned separately.
+The Vite plugin also exports `routePaths`, `routeFilePatterns`, and a typed `route()` URL builder from `virtual:otok-routes`:
+
+```ts
+import { route } from "virtual:otok-routes";
+
+route("/users/[id]", { params: { id: "alice" } }); // /users/alice
+route("/docs/[...slug]", { params: { slug: ["routing", "catch-all"] } });
+route("/[[lang]]/about", { params: { lang: "de" }, query: { ref: "docs" } });
+```
+
+The builder accepts file-route patterns, omits route groups from the final URL, URL-encodes params, repeats query arrays, and omits `null` / `undefined` query values.
 
 ## Islands
 
