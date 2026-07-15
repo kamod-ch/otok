@@ -3,13 +3,17 @@
   "version": "0.2.0",
   "description": "Hono + Preact Islands framework runtime.",
   "license": "MIT",
+  "homepage": "https://github.com/kamod-ch/otok/tree/main/packages/otok#readme",
+  "bugs": {
+    "url": "https://github.com/kamod-ch/otok/issues"
+  },
   "repository": {
     "type": "git",
-    "url": "https://github.com/kamod/otok",
+    "url": "git+https://github.com/kamod-ch/otok.git",
     "directory": "packages/otok"
   },
   "type": "module",
-  "files": ["dist"],
+  "files": ["dist", "README.md"],
   "exports": {
     "./client": {
       "types": "./dist/client/index.d.ts",
@@ -48,5 +52,11 @@
     "preact": "^10.28.2",
     "typescript": "~6.0.2",
     "vitest": "^4.1.2"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "publishConfig": {
+    "access": "public"
   }
 }
