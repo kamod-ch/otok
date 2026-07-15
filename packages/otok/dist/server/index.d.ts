@@ -7,12 +7,16 @@ export interface CreateOtokHandlerOptions {
     manifest?: ViteManifest;
     clientEntry?: string;
     devClientEntry?: string;
+    /** Stylesheet URLs to emit in dev before the client module loads. */
+    devStylesheets?: string[];
     base?: string;
     notFound?: OtokRoute;
     notFoundRoute?: OtokRoute;
     errorRoute?: OtokRoute;
     /** Include theme bootstrap script and SSR dark-mode class from cookie. Defaults to false. */
     theme?: boolean;
+    /** Expose unexpected Error.message values to the error route. Defaults to false. */
+    exposeErrorDetails?: boolean;
 }
 export interface CreateOtokAppOptions extends CreateOtokHandlerOptions {
     staticDir?: string;

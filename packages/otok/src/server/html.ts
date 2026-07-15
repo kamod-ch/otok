@@ -18,6 +18,8 @@ export interface PageHtmlOptions {
   manifest?: ViteManifest;
   clientEntry?: string;
   devClientEntry?: string;
+  /** Stylesheet URLs to emit in dev when no Vite manifest is available. */
+  devStylesheets?: string[];
   base?: string;
   /** When true, SSR emits `<html class="dark">` from the theme cookie. */
   darkMode?: boolean;
@@ -131,12 +133,13 @@ export function pageHtml({
   manifest,
   clientEntry = "src/client.ts",
   devClientEntry = "/src/client.ts",
+  devStylesheets = [],
   base = "/",
   darkMode = false,
   theme = false,
 }: PageHtmlOptions): string {
   const entry = findEntry(manifest, clientEntry);
-  const css = collectCss(manifest, entry);
+  const css = manifest ? collectCss(manifest, entry) : devStylesheets;
   const stylesheetLinks = css
     .map((href) => `<link rel="stylesheet" href="${escapeHtml(publicPath(href, base))}">`)
     .join("\n    ");

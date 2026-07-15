@@ -432,9 +432,9 @@ function renderHead(head) {
 		jsonLd
 	].filter(Boolean).join("\n    ");
 }
-function pageHtml({ body, head, islands, manifest, clientEntry = "src/client.ts", devClientEntry = "/src/client.ts", base = "/", darkMode = false, theme = false }) {
+function pageHtml({ body, head, islands, manifest, clientEntry = "src/client.ts", devClientEntry = "/src/client.ts", devStylesheets = [], base = "/", darkMode = false, theme = false }) {
 	const entry = findEntry(manifest, clientEntry);
-	const stylesheetLinks = collectCss(manifest, entry).map((href) => `<link rel="stylesheet" href="${escapeHtml(publicPath(href, base))}">`).join("\n    ");
+	const stylesheetLinks = (manifest ? collectCss(manifest, entry) : devStylesheets).map((href) => `<link rel="stylesheet" href="${escapeHtml(publicPath(href, base))}">`).join("\n    ");
 	const clientScript = islands.length > 0 || !manifest ? entry?.file ? `<script type="module" src="${escapeHtml(publicPath(entry.file, base))}"><\/script>` : `<script type="module" src="${escapeHtml(devClientEntry)}"><\/script>` : "";
 	return `<!doctype html>
 <html lang="${escapeHtml(head?.lang ?? "en")}"${darkMode ? ` class="dark"` : ""}>
@@ -590,6 +590,7 @@ async function renderRoute(c, route, params, options, status = 200, dataOverride
 		manifest: options.manifest,
 		clientEntry: options.clientEntry,
 		devClientEntry: options.devClientEntry,
+		devStylesheets: options.devStylesheets,
 		base: options.base,
 		theme: themeEnabled,
 		darkMode: themeEnabled ? resolveDarkModeFromCookie(c.req.header("cookie")) : false
@@ -619,7 +620,7 @@ async function handleRenderError(c, error, options) {
 		});
 	}
 	if (options.errorRoute) {
-		const message = error instanceof Error ? error.message : "Internal server error";
+		const message = options.exposeErrorDetails === true && error instanceof Error ? error.message : "Internal server error";
 		return renderFallbackRoute(c, options.errorRoute, options, 500, {
 			message,
 			status: 500
@@ -1814,6 +1815,7 @@ var app = createOtokApp({
 	manifest: readOtokManifest(import.meta.url),
 	clientEntry: "src/client.ts",
 	devClientEntry: "/src/client.ts",
+	devStylesheets: ["/src/style.css"],
 	staticDir: "./dist/client",
 	health: {
 		ok: true,

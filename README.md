@@ -12,6 +12,8 @@ pnpm install
 pnpm dev
 ```
 
+App names must be lowercase npm-compatible package names such as `my-app`.
+
 An Otok app has three main entry points:
 
 ```text
@@ -112,8 +114,9 @@ routes/_error.tsx        Convention-based error page
 ```
 
 Files in `routes` that start with `$` are treated as co-located islands and are not matched as pages.
+Unexpected errors render `_error.tsx` with a generic `Internal server error` message by default; set `exposeErrorDetails: true` only when raw server error messages should be shown.
 
-The Vite plugin also exports `routePaths` and `OtokRoutePath` from `virtual:otok-routes` for typed route paths.
+The Vite plugin also exports `routePaths` and `OtokRoutePath` from `virtual:otok-routes`. The generated virtual module emits `routePaths` as a literal tuple, so `OtokRoutePath` becomes a route-path union in app code.
 
 ## Islands
 

@@ -23,12 +23,16 @@ export interface CreateOtokHandlerOptions {
   manifest?: ViteManifest;
   clientEntry?: string;
   devClientEntry?: string;
+  /** Stylesheet URLs to emit in dev before the client module loads. */
+  devStylesheets?: string[];
   base?: string;
   notFound?: OtokRoute;
   notFoundRoute?: OtokRoute;
   errorRoute?: OtokRoute;
   /** Include theme bootstrap script and SSR dark-mode class from cookie. Defaults to false. */
   theme?: boolean;
+  /** Expose unexpected Error.message values to the error route. Defaults to false. */
+  exposeErrorDetails?: boolean;
 }
 
 export interface CreateOtokAppOptions extends CreateOtokHandlerOptions {
@@ -122,6 +126,7 @@ async function renderRoute(
     manifest: options.manifest,
     clientEntry: options.clientEntry,
     devClientEntry: options.devClientEntry,
+    devStylesheets: options.devStylesheets,
     base: options.base,
     theme: themeEnabled,
     darkMode: themeEnabled ? resolveDarkModeFromCookie(c.req.header("cookie")) : false,
@@ -162,7 +167,7 @@ async function handleRenderError(
   }
 
   if (options.errorRoute) {
-    const message = error instanceof Error ? error.message : "Internal server error";
+    const message = options.exposeErrorDetails === true && error instanceof Error ? error.message : "Internal server error";
     return renderFallbackRoute(c, options.errorRoute, options, 500, { message, status: 500 });
   }
 

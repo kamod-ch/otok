@@ -81,8 +81,14 @@ function removeEmptyDirs(dir) {
   }
 }
 
+function readPackageJson(relativePath) {
+  return JSON.parse(fs.readFileSync(path.join(repoRoot, relativePath, "package.json"), "utf8"));
+}
+
 function createTemplatePackageJson() {
   const pkg = JSON.parse(fs.readFileSync(path.join(sourceRoot, "package.json"), "utf8"));
+  const runtimePkg = readPackageJson("packages/otok");
+  const pluginPkg = readPackageJson("packages/vite-plugin-otok");
 
   pkg.name = "otok-app";
   delete pkg.scripts.test;
@@ -90,9 +96,9 @@ function createTemplatePackageJson() {
   pkg.scripts.check = "pnpm typecheck && pnpm build";
 
   pkg.dependencies["@kamod-ui/core"] = "^0.1.4";
-  pkg.dependencies.otok = "^0.1.0";
+  pkg.dependencies.otok = `^${runtimePkg.version}`;
 
-  pkg.devDependencies["@otok/vite-plugin"] = "^0.1.0";
+  pkg.devDependencies["@otok/vite-plugin"] = `^${pluginPkg.version}`;
   delete pkg.devDependencies["@playwright/test"];
   delete pkg.devDependencies.vitest;
 
