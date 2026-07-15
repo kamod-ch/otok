@@ -113,6 +113,66 @@ interface OtokFailure<T = JsonValue> {
 
 Controlled failures render `_error.tsx` when present and preserve the intended status code. Without an error route, Otok returns the failure as JSON. Unexpected exceptions still hide raw details by default.
 
+## Route Actions and Progressive Forms
+
+Route modules can export `action` for server-side mutations. Actions run for `POST`, `PUT`, `PATCH`, and `DELETE` requests that match the route.
+
+```tsx
+import { fail, redirect, type OtokActionContext, type OtokPageProps } from "otok/server";
+
+export async function action({ formData, method }: OtokActionContext) {
+  const name = String(formData?.get("name") ?? "").trim();
+
+  if (method === "DELETE") {
+    await deleteProject(String(formData?.get("id") ?? ""));
+    redirect("/projects", 303);
+  }
+
+  if (!name) {
+    fail(400, {
+      message: "Validation failed",
+      fieldErrors: { name: ["Name is required"] },
+    });
+  }
+
+  await saveProject({ name });
+  redirect("/projects", 303);
+}
+
+export default function ProjectForm({ actionData }: OtokPageProps) {
+  const result = actionData as { fieldErrors?: Record<string, string[]> } | undefined;
+  return (
+    <form method="post">
+      <input name="name" aria-invalid={Boolean(result?.fieldErrors?.name)} />
+      {result?.fieldErrors?.name?.map((error) => <p role="alert">{error}</p>)}
+      <button>Save</button>
+    </form>
+  );
+}
+```
+
+Native forms work without JavaScript. Validation failures re-render the same route with `actionData` and preserve the failure status code. Redirects, JSON responses, native `Response` objects, `notFound()`, and unexpected exceptions use the same response model as loaders.
+
+Browser forms only support `GET` and `POST`. For `PUT`, `PATCH`, and `DELETE`, use a hidden method override:
+
+```html
+<input type="hidden" name="_method" value="delete" />
+```
+
+Enable progressive form submissions explicitly:
+
+```ts
+createOtokClient({ registry: islandModules, softNav: { forms: true } });
+```
+
+Production pages without islands normally omit the client module. If a no-island form route should still be enhanced when loaded directly, export `client = true` from that route:
+
+```ts
+export const client = true;
+```
+
+Enhanced forms are limited to same-origin `GET` and `POST` forms, respect `data-otok-no-nav`, include submitter values, update head and swap regions, hydrate new islands, and fall back to native navigation when unsupported. Otok does not provide automatic CSRF protection; applications using cookie-based sessions should configure CSRF checks in Hono middleware or route middleware.
+
 ## Head Metadata
 
 `head()` can return title, description, language, meta tags, links, scripts, and JSON-LD.

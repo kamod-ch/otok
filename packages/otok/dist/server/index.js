@@ -37,6 +37,9 @@ export function createOtokHandler(options) {
                     return c.notFound();
                 return await renderRoute(c, notFoundRoute, {}, options, 404);
             }
+            if (isActionRequest(c.req.method)) {
+                return await handleAction(c, match.route, match.params, options);
+            }
             return await renderRoute(c, match.route, match.params, options);
         }
         catch (error) {
@@ -44,7 +47,61 @@ export function createOtokHandler(options) {
         }
     };
 }
-async function renderRoute(c, route, params, options, status = 200, dataOverride) {
+function isActionRequest(method) {
+    const normalized = method.toUpperCase();
+    return normalized === "POST" || normalized === "PUT" || normalized === "PATCH" || normalized === "DELETE";
+}
+function resolveActionMethod(method, formData) {
+    const override = formData?.get("_method");
+    const candidate = typeof override === "string" ? override.toUpperCase() : method.toUpperCase();
+    if (candidate === "PUT" || candidate === "PATCH" || candidate === "DELETE")
+        return candidate;
+    return "POST";
+}
+function isFormRequest(request) {
+    const contentType = request.headers.get("content-type") ?? "";
+    return contentType.includes("application/x-www-form-urlencoded") || contentType.includes("multipart/form-data");
+}
+async function resolveActionFormData(request) {
+    if (!isFormRequest(request))
+        return undefined;
+    return await request.clone().formData();
+}
+async function handleAction(c, route, params, options) {
+    if (!route.module.action) {
+        return new Response("Method Not Allowed", { status: 405, headers: { allow: "GET, HEAD" } });
+    }
+    const formData = await resolveActionFormData(c.req.raw);
+    const context = {
+        hono: c,
+        request: c.req.raw,
+        params,
+        route: route.path,
+        method: resolveActionMethod(c.req.method, formData),
+        formData,
+    };
+    try {
+        const result = await route.module.action(context);
+        if (result instanceof Response)
+            return result;
+        return await renderRoute(c, route, params, options, statusForActionResult(result), undefined, result);
+    }
+    catch (error) {
+        if (isOtokHttpError(error) && error.headers.has("location")) {
+            return new Response(null, { status: error.status, headers: error.headers });
+        }
+        if (isOtokHttpError(error) && error.failure && error.status !== 404) {
+            return await renderRoute(c, route, params, options, error.status, undefined, error.failure);
+        }
+        throw error;
+    }
+}
+function statusForActionResult(result) {
+    return typeof result === "object" && result !== null && "status" in result && typeof result.status === "number"
+        ? result.status
+        : 200;
+}
+async function renderRoute(c, route, params, options, status = 200, dataOverride, actionData) {
     const context = {
         hono: c,
         request: c.req.raw,
@@ -57,7 +114,7 @@ async function renderRoute(c, route, params, options, status = 200, dataOverride
     const head = await resolveHead(route, data, params);
     const chrome = await resolveChrome(route, data, params);
     const Page = route.module.default;
-    const props = { data, params, route: route.path, chrome };
+    const props = { data, actionData, params, route: route.path, chrome };
     const islandContext = { islands: new Set(), nextIslandId: 0 };
     const body = withIslandRenderContext(islandContext, () => {
         let tree = h("div", { [OTOK_PAGE_ATTR]: "" }, h(Page, props));
@@ -79,6 +136,7 @@ async function renderRoute(c, route, params, options, status = 200, dataOverride
         devClientEntry: options.devClientEntry,
         devStylesheets: options.devStylesheets,
         base: options.base,
+        client: route.module.client === true,
         theme: themeEnabled,
         darkMode: themeEnabled ? resolveDarkModeFromCookie(c.req.header("cookie")) : false,
     });
@@ -134,7 +192,7 @@ export function createOtokApp(options) {
     if (options.staticDir) {
         app.use(`${options.assetsPath ?? "/assets"}/*`, serveStatic({ root: options.staticDir }));
     }
-    app.get("*", createOtokHandler(options));
+    app.all("*", createOtokHandler(options));
     return app;
 }
 export { pageHtml } from "./html.js";

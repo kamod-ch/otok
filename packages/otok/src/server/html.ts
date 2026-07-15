@@ -21,6 +21,8 @@ export interface PageHtmlOptions {
   /** Stylesheet URLs to emit in dev when no Vite manifest is available. */
   devStylesheets?: string[];
   base?: string;
+  /** Include the client module even when the route rendered no islands. */
+  client?: boolean;
   /** When true, SSR emits `<html class="dark">` from the theme cookie. */
   darkMode?: boolean;
   /** Include theme bootstrap script and color-scheme styles. Defaults to false. */
@@ -135,6 +137,7 @@ export function pageHtml({
   devClientEntry = "/src/client.ts",
   devStylesheets = [],
   base = "/",
+  client = false,
   darkMode = false,
   theme = false,
 }: PageHtmlOptions): string {
@@ -143,9 +146,9 @@ export function pageHtml({
   const stylesheetLinks = css
     .map((href) => `<link rel="stylesheet" href="${escapeHtml(publicPath(href, base))}">`)
     .join("\n    ");
-  const hasIslands = islands.length > 0;
+  const needsClient = client || islands.length > 0;
   const needsDevClientEntry = !manifest;
-  const clientScript = hasIslands || needsDevClientEntry
+  const clientScript = needsClient || needsDevClientEntry
     ? entry?.file
       ? `<script type="module" src="${escapeHtml(publicPath(entry.file, base))}"></script>`
       : `<script type="module" src="${escapeHtml(devClientEntry)}"></script>`

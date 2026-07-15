@@ -45,5 +45,5 @@ export function createOtokClient(options = {}) {
     }
 }
 export { cancelPendingHydration, hydrateIslands } from "./hydration.js";
-export { isSoftNavLink, prefetchSoftNavUrl, setupSoftNavigation, softNavigate } from "./soft-nav.js";
+export { isSoftNavForm, isSoftNavLink, prefetchSoftNavUrl, setupSoftNavigation, softNavigate } from "./soft-nav.js";
 //# sourceMappingURL=index.js.map

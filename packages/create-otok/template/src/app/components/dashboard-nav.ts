@@ -19,6 +19,7 @@ export const dashboardNavGroups: NavGroup[] = [
     items: [
       { label: "Zero-JS route", href: "/about" },
       { label: "kamod-ui islands", href: "/demo" },
+      { label: "Progressive forms", href: "/projects" },
       {
         label: "Catch-all docs",
         href: "/docs/routing/catch-all",

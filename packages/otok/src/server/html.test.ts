@@ -62,6 +62,14 @@ describe("pageHtml stylesheets", () => {
   });
 });
 
+describe("pageHtml client entry", () => {
+  it("can force the client entry for routes without islands", () => {
+    const html = pageHtml({ body: "<main>Hi</main>", islands: [], manifest: {}, client: true });
+
+    expect(html).toContain('<script type="module" src="/src/client.ts"></script>');
+  });
+});
+
 describe("pageHtml soft-nav head markers", () => {
   it("marks description, meta, canonical, and json-ld for head sync", () => {
     const html = pageHtml({

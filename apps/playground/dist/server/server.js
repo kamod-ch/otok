@@ -432,10 +432,10 @@ function renderHead(head) {
 		jsonLd
 	].filter(Boolean).join("\n    ");
 }
-function pageHtml({ body, head, islands, manifest, clientEntry = "src/client.ts", devClientEntry = "/src/client.ts", devStylesheets = [], base = "/", darkMode = false, theme = false }) {
+function pageHtml({ body, head, islands, manifest, clientEntry = "src/client.ts", devClientEntry = "/src/client.ts", devStylesheets = [], base = "/", client = false, darkMode = false, theme = false }) {
 	const entry = findEntry(manifest, clientEntry);
 	const stylesheetLinks = (manifest ? collectCss(manifest, entry) : devStylesheets).map((href) => `<link rel="stylesheet" href="${escapeHtml(publicPath(href, base))}">`).join("\n    ");
-	const clientScript = islands.length > 0 || !manifest ? entry?.file ? `<script type="module" src="${escapeHtml(publicPath(entry.file, base))}"><\/script>` : `<script type="module" src="${escapeHtml(devClientEntry)}"><\/script>` : "";
+	const clientScript = client || islands.length > 0 || !manifest ? entry?.file ? `<script type="module" src="${escapeHtml(publicPath(entry.file, base))}"><\/script>` : `<script type="module" src="${escapeHtml(devClientEntry)}"><\/script>` : "";
 	return `<!doctype html>
 <html lang="${escapeHtml(head?.lang ?? "en")}"${darkMode ? ` class="dark"` : ""}>
   <head>
@@ -507,6 +507,11 @@ function json(data, init) {
 		headers
 	});
 }
+function redirect(location, status = 302) {
+	if (!location) throw new TypeError("otok: redirect() requires a Location value.");
+	if (status < 300 || status > 399) throw new RangeError("otok: redirect() status must be a 3xx status code.");
+	throw new OtokHttpError(status, "Redirect", { location });
+}
 function fail(first = "Internal server error", second = 500) {
 	if (typeof first === "number") {
 		const failure = normalizeFailure(first, second && typeof second === "object" ? second : {});
@@ -577,13 +582,62 @@ function createOtokHandler(options) {
 				if (!notFoundRoute) return c.notFound();
 				return await renderRoute(c, notFoundRoute, {}, options, 404);
 			}
+			if (isActionRequest(c.req.method)) return await handleAction(c, match.route, match.params, options);
 			return await renderRoute(c, match.route, match.params, options);
 		} catch (error) {
 			return handleRenderError(c, error, options);
 		}
 	};
 }
-async function renderRoute(c, route, params, options, status = 200, dataOverride) {
+function isActionRequest(method) {
+	const normalized = method.toUpperCase();
+	return normalized === "POST" || normalized === "PUT" || normalized === "PATCH" || normalized === "DELETE";
+}
+function resolveActionMethod(method, formData) {
+	const override = formData?.get("_method");
+	const candidate = typeof override === "string" ? override.toUpperCase() : method.toUpperCase();
+	if (candidate === "PUT" || candidate === "PATCH" || candidate === "DELETE") return candidate;
+	return "POST";
+}
+function isFormRequest(request) {
+	const contentType = request.headers.get("content-type") ?? "";
+	return contentType.includes("application/x-www-form-urlencoded") || contentType.includes("multipart/form-data");
+}
+async function resolveActionFormData(request) {
+	if (!isFormRequest(request)) return void 0;
+	return await request.clone().formData();
+}
+async function handleAction(c, route, params, options) {
+	if (!route.module.action) return new Response("Method Not Allowed", {
+		status: 405,
+		headers: { allow: "GET, HEAD" }
+	});
+	const formData = await resolveActionFormData(c.req.raw);
+	const context = {
+		hono: c,
+		request: c.req.raw,
+		params,
+		route: route.path,
+		method: resolveActionMethod(c.req.method, formData),
+		formData
+	};
+	try {
+		const result = await route.module.action(context);
+		if (result instanceof Response) return result;
+		return await renderRoute(c, route, params, options, statusForActionResult(result), void 0, result);
+	} catch (error) {
+		if (isOtokHttpError(error) && error.headers.has("location")) return new Response(null, {
+			status: error.status,
+			headers: error.headers
+		});
+		if (isOtokHttpError(error) && error.failure && error.status !== 404) return await renderRoute(c, route, params, options, error.status, void 0, error.failure);
+		throw error;
+	}
+}
+function statusForActionResult(result) {
+	return typeof result === "object" && result !== null && "status" in result && typeof result.status === "number" ? result.status : 200;
+}
+async function renderRoute(c, route, params, options, status = 200, dataOverride, actionData) {
 	const context = {
 		hono: c,
 		request: c.req.raw,
@@ -597,6 +651,7 @@ async function renderRoute(c, route, params, options, status = 200, dataOverride
 	const Page = route.module.default;
 	const props = {
 		data,
+		actionData,
 		params,
 		route: route.path,
 		chrome
@@ -623,6 +678,7 @@ async function renderRoute(c, route, params, options, status = 200, dataOverride
 		devClientEntry: options.devClientEntry,
 		devStylesheets: options.devStylesheets,
 		base: options.base,
+		client: route.module.client === true,
 		theme: themeEnabled,
 		darkMode: themeEnabled ? resolveDarkModeFromCookie(c.req.header("cookie")) : false
 	});
@@ -681,21 +737,21 @@ function createOtokApp(options) {
 		app.get("/api/health", (c) => c.json(payload));
 	}
 	if (options.staticDir) app.use(`${options.assetsPath ?? "/assets"}/*`, serveStatic({ root: options.staticDir }));
-	app.get("*", createOtokHandler(options));
+	app.all("*", createOtokHandler(options));
 	return app;
 }
 //#endregion
 //#region src/app/routes/about.tsx
 var about_exports = /* @__PURE__ */ __exportAll({
-	chrome: () => chrome$4,
+	chrome: () => chrome$5,
 	default: () => About,
-	head: () => head$6
+	head: () => head$7
 });
-var head$6 = () => ({
+var head$7 = () => ({
 	title: "About | Otok Playground",
 	description: "A static Otok route that ships no client JavaScript."
 });
-var chrome$4 = () => ({
+var chrome$5 = () => ({
 	title: "Zero-JS route",
 	description: "This route has no islands."
 });
@@ -721,9 +777,9 @@ function About() {
 //#region src/app/routes/boom.tsx
 var boom_exports = /* @__PURE__ */ __exportAll({
 	default: () => Boom,
-	loader: () => loader$3
+	loader: () => loader$4
 });
-var loader$3 = () => {
+var loader$4 = () => {
 	fail("Boom from loader");
 };
 function Boom() {
@@ -877,15 +933,15 @@ ThemeIsland.__otokIslandId = "ThemeIsland";
 //#endregion
 //#region src/app/routes/demo.tsx
 var demo_exports = /* @__PURE__ */ __exportAll({
-	chrome: () => chrome$3,
+	chrome: () => chrome$4,
 	default: () => Demo,
-	head: () => head$5
+	head: () => head$6
 });
-var head$5 = () => ({
+var head$6 = () => ({
 	title: "kamod-ui islands | Otok Playground",
 	description: "Interactive kamod-ui components hydrated as islands."
 });
-var chrome$3 = () => ({
+var chrome$4 = () => ({
 	title: "kamod-ui islands",
 	description: "Dialog and theme interactions are isolated islands.",
 	toolbar: /* @__PURE__ */ jsx(Island, {
@@ -906,6 +962,167 @@ function Demo() {
 			props: {},
 			strategy: "idle"
 		}) })] })]
+	});
+}
+//#endregion
+//#region src/app/routes/projects.tsx
+var projects_exports = /* @__PURE__ */ __exportAll({
+	action: () => action,
+	chrome: () => chrome$3,
+	client: () => true,
+	default: () => ProjectsPage,
+	head: () => head$5,
+	loader: () => loader$3
+});
+var projects = [{
+	id: "otok",
+	name: "Otok",
+	featured: true
+}];
+var chrome$3 = () => ({
+	title: "Projects",
+	description: "Progressive route actions and HTML forms."
+});
+var head$5 = () => ({
+	title: "Projects | Otok Playground",
+	description: "Progressive forms powered by Otok route actions."
+});
+var loader$3 = () => ({ projects });
+async function action({ formData, method }) {
+	const name = String(formData?.get("name") ?? "").trim();
+	const intent = String(formData?.get("intent") ?? "create");
+	if (method === "DELETE" || intent === "delete") {
+		const id = String(formData?.get("id") ?? "");
+		const index = projects.findIndex((project) => project.id === id);
+		if (index >= 0) projects.splice(index, 1);
+		redirect("/projects?deleted=1", 303);
+	}
+	if (!name) fail(400, {
+		message: "Validation failed",
+		fieldErrors: { name: ["Name is required"] },
+		formErrors: ["Please enter a project name."]
+	});
+	const id = name.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "") || "project";
+	projects.unshift({
+		id: `${id}-${projects.length + 1}`,
+		name,
+		featured: formData?.get("featured") === "on"
+	});
+	redirect("/projects?created=1", 303);
+}
+function ProjectsPage({ data, actionData }) {
+	const result = actionData;
+	return /* @__PURE__ */ jsxs("section", {
+		class: "space-y-8",
+		children: [
+			/* @__PURE__ */ jsxs("div", { children: [
+				/* @__PURE__ */ jsx("p", {
+					class: "text-sm font-medium text-sky-600 dark:text-sky-300",
+					children: "Route actions"
+				}),
+				/* @__PURE__ */ jsx("h2", {
+					class: "mt-2 text-3xl font-semibold tracking-tight text-slate-950 dark:text-white",
+					children: "Projects"
+				}),
+				/* @__PURE__ */ jsx("p", {
+					class: "mt-2 max-w-2xl text-sm text-slate-600 dark:text-slate-300",
+					children: "This form works without JavaScript and is progressively enhanced by soft navigation when the client is loaded."
+				})
+			] }),
+			result?.formErrors?.map((error) => /* @__PURE__ */ jsx("p", {
+				class: "rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700",
+				role: "alert",
+				tabIndex: -1,
+				children: error
+			})),
+			/* @__PURE__ */ jsxs("form", {
+				method: "post",
+				class: "rounded-3xl border border-slate-200 bg-white p-6 shadow-sm dark:border-slate-800 dark:bg-slate-950",
+				children: [
+					/* @__PURE__ */ jsx("label", {
+						class: "block text-sm font-medium text-slate-700 dark:text-slate-200",
+						for: "project-name",
+						children: "Project name"
+					}),
+					/* @__PURE__ */ jsx("input", {
+						id: "project-name",
+						name: "name",
+						"aria-invalid": Boolean(result?.fieldErrors?.name),
+						"aria-describedby": result?.fieldErrors?.name ? "project-name-error" : void 0,
+						class: "mt-2 w-full rounded-xl border border-slate-300 bg-white px-3 py-2 text-slate-950 dark:border-slate-700 dark:bg-slate-900 dark:text-white"
+					}),
+					result?.fieldErrors?.name?.map((error) => /* @__PURE__ */ jsx("p", {
+						id: "project-name-error",
+						class: "mt-2 text-sm text-red-600",
+						role: "alert",
+						tabIndex: -1,
+						children: error
+					})),
+					/* @__PURE__ */ jsxs("label", {
+						class: "mt-4 flex items-center gap-2 text-sm text-slate-700 dark:text-slate-200",
+						children: [/* @__PURE__ */ jsx("input", {
+							name: "featured",
+							type: "checkbox"
+						}), " Featured"]
+					}),
+					/* @__PURE__ */ jsx("button", {
+						class: "mt-4 rounded-xl bg-slate-950 px-4 py-2 text-sm font-medium text-white dark:bg-white dark:text-slate-950",
+						name: "intent",
+						value: "create",
+						children: "Save project"
+					})
+				]
+			}),
+			/* @__PURE__ */ jsx("ul", {
+				class: "grid gap-3",
+				"aria-label": "Projects",
+				children: data.projects.map((project) => /* @__PURE__ */ jsxs("li", {
+					class: "flex items-center justify-between rounded-2xl border border-slate-200 bg-white px-4 py-3 dark:border-slate-800 dark:bg-slate-950",
+					children: [/* @__PURE__ */ jsxs("span", { children: [
+						project.name,
+						" ",
+						project.featured ? /* @__PURE__ */ jsx("span", {
+							class: "text-xs text-sky-600",
+							children: "Featured"
+						}) : null
+					] }), /* @__PURE__ */ jsxs("form", {
+						method: "post",
+						children: [
+							/* @__PURE__ */ jsx("input", {
+								type: "hidden",
+								name: "_method",
+								value: "delete"
+							}),
+							/* @__PURE__ */ jsx("input", {
+								type: "hidden",
+								name: "id",
+								value: project.id
+							}),
+							/* @__PURE__ */ jsx("button", {
+								class: "text-sm text-red-600",
+								name: "intent",
+								value: "delete",
+								children: "Delete"
+							})
+						]
+					})]
+				}, project.id))
+			}),
+			/* @__PURE__ */ jsxs("form", {
+				method: "post",
+				"data-otok-no-nav": "",
+				class: "text-sm text-slate-500",
+				children: [/* @__PURE__ */ jsx("input", {
+					type: "hidden",
+					name: "name",
+					value: "Opt out project"
+				}), /* @__PURE__ */ jsx("button", {
+					name: "intent",
+					value: "create",
+					children: "Native opt-out submit"
+				})]
+			})
+		]
 	});
 }
 //#endregion
@@ -1624,6 +1841,10 @@ var dashboardNavGroups = [{
 			href: "/demo"
 		},
 		{
+			label: "Progressive forms",
+			href: "/projects"
+		},
+		{
 			label: "Catch-all docs",
 			href: "/docs/routing/catch-all",
 			match: (route) => route.startsWith("/docs/") || route === "/docs/:slug*"
@@ -1804,6 +2025,14 @@ var app = createOtokApp({
 			pattern: /* @__PURE__ */ new RegExp("^/demo/?$"),
 			params: [],
 			module: demo_exports,
+			layouts: [_layout_exports]
+		},
+		{
+			id: "projects",
+			path: "/projects",
+			pattern: /* @__PURE__ */ new RegExp("^/projects/?$"),
+			params: [],
+			module: projects_exports,
 			layouts: [_layout_exports]
 		},
 		{

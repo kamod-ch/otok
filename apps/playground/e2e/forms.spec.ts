@@ -1,0 +1,58 @@
+import { expect, test } from "@playwright/test";
+
+test("native form submission renders validation without JavaScript", async ({ browser }) => {
+  const context = await browser.newContext({ javaScriptEnabled: false });
+  const page = await context.newPage();
+  await page.goto("/projects");
+
+  await page.getByRole("button", { name: "Save project" }).click();
+
+  await expect(page).toHaveURL("/projects");
+  await expect(page.getByRole("alert").filter({ hasText: "Name is required" })).toBeVisible();
+  await expect(page.locator("#project-name")).toHaveAttribute("aria-invalid", "true");
+  await context.close();
+});
+
+test("native form submission redirects after successful action", async ({ browser }) => {
+  const context = await browser.newContext({ javaScriptEnabled: false });
+  const page = await context.newPage();
+  await page.goto("/projects");
+
+  await page.locator("#project-name").fill("No JS Project");
+  await page.getByRole("button", { name: "Save project" }).click();
+
+  await expect(page).toHaveURL(/\/projects\?created=1$/);
+  await expect(page.getByText("No JS Project")).toBeVisible();
+  await context.close();
+});
+
+test("progressive form submission updates the page without full navigation", async ({ page }) => {
+  await page.goto("/");
+  await page.getByRole("link", { name: "Progressive forms" }).first().click();
+  await expect(page).toHaveURL("/projects");
+
+  await page.getByRole("button", { name: "Save project" }).click();
+  await expect(page).toHaveURL("/projects");
+  await expect(page.getByRole("alert").filter({ hasText: "Name is required" })).toBeVisible();
+
+  await page.locator("#project-name").fill("Enhanced Project");
+  await page.getByLabel("Featured").check();
+  await page.getByRole("button", { name: "Save project" }).click();
+
+  await expect(page).toHaveURL(/\/projects\?created=1$/);
+  await expect(page.getByText("Enhanced Project")).toBeVisible();
+  await expect(page.getByText("Featured").first()).toBeVisible();
+});
+
+test("method override deletes projects through actions", async ({ page }) => {
+  await page.goto("/projects");
+  await page.locator("#project-name").fill("Delete Me");
+  await page.getByRole("button", { name: "Save project" }).click();
+  await expect(page.getByText("Delete Me")).toBeVisible();
+
+  const item = page.getByRole("listitem").filter({ hasText: "Delete Me" });
+  await item.getByRole("button", { name: "Delete" }).click();
+
+  await expect(page).toHaveURL(/\/projects\?deleted=1$/);
+  await expect(page.getByText("Delete Me")).toHaveCount(0);
+});

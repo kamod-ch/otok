@@ -11,6 +11,10 @@ import type { IslandRegistry } from "../shared/islands.js";
 import { cancelPendingHydration, hydrateIslands } from "./hydration.js";
 
 export interface SoftNavOptions {
+  /** Enable link interception. Defaults to true for backwards compatibility. */
+  links?: boolean;
+  /** Enable same-origin form submission enhancement. Defaults to false. */
+  forms?: boolean;
   scroll?: boolean | ScrollBehavior;
   prefetch?: boolean;
   onNavigate?: (detail: { url: string }) => void;
@@ -103,14 +107,19 @@ export function applySoftNavigationDocument(nextDoc: Document, currentDoc: Docum
   return true;
 }
 
+interface NavigationDocumentResult {
+  document: Document;
+  url: string;
+}
+
 async function fetchNavigationDocument(
   url: string,
   signal: AbortSignal,
-): Promise<Document | null> {
+): Promise<NavigationDocumentResult | null> {
   const cached = prefetchCache.get(url);
   if (cached) {
     prefetchCache.delete(url);
-    return cached;
+    return { document: cached, url };
   }
 
   const response = await fetch(url, {
@@ -130,7 +139,7 @@ async function fetchNavigationDocument(
   }
 
   const html = await response.text();
-  return new DOMParser().parseFromString(html, "text/html");
+  return { document: new DOMParser().parseFromString(html, "text/html"), url: response.url || url };
 }
 
 export function prefetchSoftNavUrl(url: string): void {
@@ -165,13 +174,13 @@ export async function softNavigate(
   activeNavigation = controller;
 
   try {
-    const nextDoc = await fetchNavigationDocument(url, controller.signal);
-    if (!nextDoc) {
+    const result = await fetchNavigationDocument(url, controller.signal);
+    if (!result) {
       window.location.assign(url);
       return false;
     }
 
-    const applied = applySoftNavigationDocument(nextDoc);
+    const applied = applySoftNavigationDocument(result.document);
     if (!applied) {
       window.location.assign(url);
       return false;
@@ -205,8 +214,119 @@ export async function softNavigate(
   }
 }
 
+export function isSoftNavForm(form: HTMLFormElement, submitter?: HTMLElement, location: Location = window.location): boolean {
+  if (form.hasAttribute(OTOK_NO_NAV_ATTR) || submitter?.hasAttribute(OTOK_NO_NAV_ATTR)) return false;
+  if (form.target && form.target !== "_self") return false;
+
+  const method = ((submitter instanceof HTMLButtonElement || submitter instanceof HTMLInputElement ? submitter.formMethod : "") || form.method || "get").toLowerCase();
+  if (method !== "get" && method !== "post") return false;
+
+  const action = (submitter instanceof HTMLButtonElement || submitter instanceof HTMLInputElement ? submitter.formAction : "") || form.action || location.href;
+  let url: URL;
+  try {
+    url = new URL(action, location.href);
+  } catch {
+    return false;
+  }
+
+  if (url.origin !== location.origin) return false;
+  if (url.protocol !== "http:" && url.protocol !== "https:") return false;
+  if (url.pathname.startsWith("/api/")) return false;
+
+  return true;
+}
+
+function formDataWithSubmitter(form: HTMLFormElement, submitter?: HTMLElement): FormData {
+  try {
+    return new FormData(form, submitter instanceof HTMLElement ? submitter : undefined);
+  } catch {
+    const data = new FormData(form);
+    if (
+      (submitter instanceof HTMLButtonElement || submitter instanceof HTMLInputElement) &&
+      submitter.name &&
+      !submitter.disabled
+    ) {
+      data.append(submitter.name, submitter.value);
+    }
+    return data;
+  }
+}
+
+async function submitSoftNavigationForm(
+  form: HTMLFormElement,
+  submitter: HTMLElement | undefined,
+  registry: IslandRegistry,
+  options: Pick<SoftNavOptions, "onError" | "scroll"> = {},
+): Promise<boolean> {
+  activeNavigation?.abort();
+  const controller = new AbortController();
+  activeNavigation = controller;
+
+  const submitControl = submitter instanceof HTMLButtonElement || submitter instanceof HTMLInputElement ? submitter : undefined;
+  const method = (submitControl?.formMethod || form.method || "get").toUpperCase();
+  const action = submitControl?.formAction || form.action || window.location.href;
+  const url = new URL(action, window.location.href);
+  const body = formDataWithSubmitter(form, submitter);
+
+  const fetchUrl = new URL(url.href);
+  const init: RequestInit = {
+    signal: controller.signal,
+    headers: { Accept: "text/html" },
+    credentials: "same-origin",
+    redirect: "follow",
+  };
+
+  if (method === "GET") {
+    const search = new URLSearchParams();
+    for (const [key, value] of body) search.append(key, typeof value === "string" ? value : value.name);
+    fetchUrl.search = search.toString();
+  } else {
+    init.method = "POST";
+    init.body = body;
+  }
+
+  try {
+    const response = await fetch(fetchUrl.href, init);
+    if (!response.ok) return false;
+    const finalUrl = response.url || fetchUrl.href;
+    const final = new URL(finalUrl, window.location.href);
+    if (final.origin !== window.location.origin) return false;
+
+    const html = await response.text();
+    const nextDoc = new DOMParser().parseFromString(html, "text/html");
+    const applied = applySoftNavigationDocument(nextDoc);
+    if (!applied) return false;
+
+    await hydrateIslands(document, registry, (error) => options.onError?.(error));
+
+    const historyPath = `${final.pathname}${final.search}${final.hash}`;
+    const currentPath = `${window.location.pathname}${window.location.search}${window.location.hash}`;
+    if (historyPath !== currentPath) {
+      history.pushState({ [OTOK_HISTORY_STATE_KEY]: true, url: historyPath }, "", historyPath);
+    }
+
+    const invalid = document.querySelector('[aria-invalid="true"], [role="alert"]');
+    if (invalid instanceof HTMLElement) invalid.focus?.();
+
+    const scrollBehavior = options.scroll ?? true;
+    if (scrollBehavior !== false) {
+      window.scrollTo({ top: 0, behavior: scrollBehavior === true ? "auto" : scrollBehavior });
+    }
+
+    return true;
+  } catch (error) {
+    if (error instanceof DOMException && error.name === "AbortError") return false;
+    options.onError?.(error);
+    return false;
+  } finally {
+    if (activeNavigation === controller) activeNavigation = null;
+  }
+}
+
 export function setupSoftNavigation(registry: IslandRegistry, options: SoftNavOptions = {}): () => void {
-  const prefetchEnabled = options.prefetch !== false;
+  const linksEnabled = options.links !== false;
+  const formsEnabled = options.forms === true;
+  const prefetchEnabled = linksEnabled && options.prefetch !== false;
 
   const onClick = (event: MouseEvent) => {
     if (event.defaultPrevented) return;
@@ -218,7 +338,7 @@ export function setupSoftNavigation(registry: IslandRegistry, options: SoftNavOp
 
     const anchor = target.closest("a");
     if (!(anchor instanceof HTMLAnchorElement)) return;
-    if (!isSoftNavLink(anchor)) return;
+    if (!linksEnabled || !isSoftNavLink(anchor)) return;
 
     event.preventDefault();
     const url = anchor.href;
@@ -240,6 +360,23 @@ export function setupSoftNavigation(registry: IslandRegistry, options: SoftNavOp
     prefetchSoftNavUrl(anchor.href);
   };
 
+  const onSubmit = (event: SubmitEvent) => {
+    if (!formsEnabled || event.defaultPrevented) return;
+    const form = event.target;
+    if (!(form instanceof HTMLFormElement)) return;
+    const submitter = event.submitter instanceof HTMLElement ? event.submitter : undefined;
+    if (!isSoftNavForm(form, submitter)) return;
+
+    event.preventDefault();
+    void submitSoftNavigationForm(form, submitter, registry, {
+      onError: options.onError,
+      scroll: options.scroll,
+    }).then((applied) => {
+      if (applied) options.onNavigate?.({ url: form.action || window.location.href });
+      else form.submit();
+    });
+  };
+
   const onPopState = () => {
     const path = `${window.location.pathname}${window.location.search}${window.location.hash}`;
     void softNavigate(path, registry, {
@@ -251,11 +388,13 @@ export function setupSoftNavigation(registry: IslandRegistry, options: SoftNavOp
 
   document.addEventListener("click", onClick, true);
   document.addEventListener("mouseover", onPointerOver, true);
+  document.addEventListener("submit", onSubmit, true);
   window.addEventListener("popstate", onPopState);
 
   return () => {
     document.removeEventListener("click", onClick, true);
     document.removeEventListener("mouseover", onPointerOver, true);
+    document.removeEventListener("submit", onSubmit, true);
     window.removeEventListener("popstate", onPopState);
     activeNavigation?.abort();
     activeNavigation = null;

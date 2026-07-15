@@ -116,4 +116,4 @@ export type { InferIslandProps, OtokChrome } from "../shared/routes.js";
 export type { IslandHydrationStrategy, IslandProps, IslandRegistry } from "../shared/islands.js";
 export type { SoftNavOptions } from "./soft-nav.js";
 export { cancelPendingHydration, hydrateIslands } from "./hydration.js";
-export { isSoftNavLink, prefetchSoftNavUrl, setupSoftNavigation, softNavigate } from "./soft-nav.js";
+export { isSoftNavForm, isSoftNavLink, prefetchSoftNavUrl, setupSoftNavigation, softNavigate } from "./soft-nav.js";

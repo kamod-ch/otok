@@ -2,7 +2,7 @@
 
 import { describe, expect, it } from "vitest";
 import { OTOK_HEAD_ATTR, OTOK_PAGE_ATTR, OTOK_SWAP_ATTR } from "../shared/navigation.js";
-import { applySoftNavigationDocument, isSoftNavLink, syncSoftNavigationHead } from "./soft-nav.js";
+import { applySoftNavigationDocument, isSoftNavForm, isSoftNavLink, syncSoftNavigationHead } from "./soft-nav.js";
 
 function renderDoc(body: string, title = "Page", headExtra = ""): Document {
   const html = `<!doctype html><html><head><title ${OTOK_HEAD_ATTR}="title">${title}</title>${headExtra}</head><body>${body}</body></html>`;
@@ -34,6 +34,37 @@ describe("isSoftNavLink", () => {
     const api = document.createElement("a");
     api.href = "http://localhost/api/documents/1/download";
     expect(isSoftNavLink(api, new URL("http://localhost/") as unknown as Location)).toBe(false);
+  });
+});
+
+describe("isSoftNavForm", () => {
+  it("accepts same-origin get and post forms", () => {
+    const form = document.createElement("form");
+    form.action = "http://localhost/projects";
+    form.method = "post";
+    expect(isSoftNavForm(form, undefined, new URL("http://localhost/") as unknown as Location)).toBe(true);
+  });
+
+  it("rejects opt-out, external, api, and unsupported method forms", () => {
+    const location = new URL("http://localhost/") as unknown as Location;
+
+    const optOut = document.createElement("form");
+    optOut.action = "http://localhost/projects";
+    optOut.setAttribute("data-otok-no-nav", "");
+    expect(isSoftNavForm(optOut, undefined, location)).toBe(false);
+
+    const external = document.createElement("form");
+    external.action = "https://example.com/projects";
+    expect(isSoftNavForm(external, undefined, location)).toBe(false);
+
+    const api = document.createElement("form");
+    api.action = "http://localhost/api/projects";
+    expect(isSoftNavForm(api, undefined, location)).toBe(false);
+
+    const dialog = document.createElement("form");
+    dialog.action = "http://localhost/projects";
+    dialog.method = "dialog";
+    expect(isSoftNavForm(dialog, undefined, location)).toBe(false);
   });
 });
 

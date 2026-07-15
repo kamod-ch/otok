@@ -1,7 +1,10 @@
 export type {
+  ActionResult,
   InferIslandProps,
   InferLoaderData,
   LoaderResult,
+  OtokAction,
+  OtokActionContext,
   OtokFailure,
   OtokResponse,
   OtokChrome,

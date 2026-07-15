@@ -13,6 +13,12 @@ export interface OtokContext<Env = unknown> {
     params: RouteParams;
     route: string;
 }
+export interface OtokActionContext<Env = unknown> extends OtokContext<Env> {
+    /** Effective action method after applying supported method override conventions. */
+    method: "POST" | "PUT" | "PATCH" | "DELETE";
+    /** Parsed form data for form submissions. Undefined for non-form requests. */
+    formData?: FormData;
+}
 export type LoaderResult = JsonValue | Record<string, JsonValue> | OtokFailure | Response | void;
 export interface OtokFailure<T = unknown> {
     status: number;
@@ -23,8 +29,11 @@ export interface OtokFailure<T = unknown> {
 }
 export type OtokResponse = Response | OtokHttpError;
 export type OtokLoader<Data extends LoaderResult = LoaderResult> = (context: OtokContext) => Data | Promise<Data>;
+export type ActionResult = JsonValue | Record<string, JsonValue> | OtokFailure | Response | void;
+export type OtokAction<Result extends ActionResult = ActionResult> = (context: OtokActionContext) => Result | Promise<Result>;
 export interface OtokPageProps<Data extends LoaderResult = LoaderResult> {
     data: Data;
+    actionData?: ActionResult;
     params: RouteParams;
     route: string;
 }
@@ -35,6 +44,9 @@ export interface OtokLayoutProps<Data extends LoaderResult = LoaderResult> exten
 export interface RouteModule<Data extends LoaderResult = LoaderResult> {
     default: ComponentType<OtokPageProps<Data>>;
     loader?: OtokLoader<Data>;
+    action?: OtokAction;
+    /** Force the client entry to load even when the route renders no islands. Useful for progressive form enhancement. */
+    client?: boolean;
     head?: (props: OtokPageProps<Data>) => OtokHead | Promise<OtokHead>;
     chrome?: (props: OtokPageProps<Data>) => OtokChrome | Promise<OtokChrome>;
 }

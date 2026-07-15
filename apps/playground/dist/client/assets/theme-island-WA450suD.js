@@ -1,0 +1,1 @@
+import{t as e}from"./client-9tqMX-if.js";import{t}from"./chunk-GKH7GU3F-h6uYWiCy.js";function n(){return e(`div`,{class:`flex items-center gap-3`,children:[e(t,{}),e(`span`,{class:`text-sm text-muted-foreground`,children:`Toggle dark mode`})]})}n.__otokIslandId=`ThemeIsland`;export{n as default};

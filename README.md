@@ -52,6 +52,9 @@ Enable partial page updates so persistent layout chrome (sidebars, shells) does 
 
 ```ts
 createOtokClient({ registry: islandModules, softNav: true });
+
+// Opt into progressive form submissions too:
+createOtokClient({ registry: islandModules, softNav: { forms: true } });
 ```
 
 Otok wraps each page in `data-otok-page`. Mark layout regions that change with the route using `data-otok-swap`:
@@ -136,6 +139,39 @@ export const loader = ({ params }) => {
 ```
 
 `fail(status, failure)` uses a serializable failure shape with `status`, optional `message`, `fieldErrors`, `formErrors`, and `data`. It does not depend on a validation library.
+
+## Route Actions and Forms
+
+Route modules can export `action` for server-side mutations. Native HTML forms work without JavaScript; with `softNav: { forms: true }`, same-origin forms are progressively enhanced through the existing page swap runtime.
+
+```tsx
+import { fail, redirect, type OtokActionContext, type OtokPageProps } from "otok/server";
+
+export async function action({ formData }: OtokActionContext) {
+  const name = String(formData?.get("name") ?? "").trim();
+  if (!name) {
+    fail(400, {
+      message: "Validation failed",
+      fieldErrors: { name: ["Name is required"] },
+    });
+  }
+  await saveProject(name);
+  redirect("/projects", 303);
+}
+
+export default function ProjectForm({ actionData }: OtokPageProps) {
+  const result = actionData as { fieldErrors?: Record<string, string[]> } | undefined;
+  return (
+    <form method="post">
+      <input name="name" aria-invalid={Boolean(result?.fieldErrors?.name)} />
+      {result?.fieldErrors?.name?.map((error) => <p role="alert">{error}</p>)}
+      <button>Save</button>
+    </form>
+  );
+}
+```
+
+For browser forms that need `PUT`, `PATCH`, or `DELETE`, use a hidden `_method` field. Otok exposes the effective method as `context.method` in the action. Production pages without islands normally omit the client module; export `client = true` from a no-island route when direct visits should still get progressive form enhancement. Otok does not provide automatic CSRF protection; configure CSRF checks for cookie-authenticated applications.
 
 The Vite plugin also exports `routePaths` and `OtokRoutePath` from `virtual:otok-routes`. The ambient type is a broad fallback today; a fully typed route builder is planned separately.
 

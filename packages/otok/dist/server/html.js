@@ -92,15 +92,15 @@ function renderHead(head) {
         .filter(Boolean)
         .join("\n    ");
 }
-export function pageHtml({ body, head, islands, manifest, clientEntry = "src/client.ts", devClientEntry = "/src/client.ts", devStylesheets = [], base = "/", darkMode = false, theme = false, }) {
+export function pageHtml({ body, head, islands, manifest, clientEntry = "src/client.ts", devClientEntry = "/src/client.ts", devStylesheets = [], base = "/", client = false, darkMode = false, theme = false, }) {
     const entry = findEntry(manifest, clientEntry);
     const css = manifest ? collectCss(manifest, entry) : devStylesheets;
     const stylesheetLinks = css
         .map((href) => `<link rel="stylesheet" href="${escapeHtml(publicPath(href, base))}">`)
         .join("\n    ");
-    const hasIslands = islands.length > 0;
+    const needsClient = client || islands.length > 0;
     const needsDevClientEntry = !manifest;
-    const clientScript = hasIslands || needsDevClientEntry
+    const clientScript = needsClient || needsDevClientEntry
         ? entry?.file
             ? `<script type="module" src="${escapeHtml(publicPath(entry.file, base))}"></script>`
             : `<script type="module" src="${escapeHtml(devClientEntry)}"></script>`
