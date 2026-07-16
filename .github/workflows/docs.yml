@@ -38,14 +38,16 @@ jobs:
       - name: Build docs
         run: pnpm --filter docs build
 
-      - name: Configure Pages
+      - name: Check Pages configuration
+        id: pages
         if: github.event_name != 'pull_request'
-        uses: actions/configure-pages@v5
-        with:
-          enablement: true
+        continue-on-error: true
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh api repos/${{ github.repository }}/pages --silent
 
       - name: Upload artifact
-        if: github.event_name != 'pull_request'
+        if: github.event_name != 'pull_request' && steps.pages.outcome == 'success'
         uses: actions/upload-pages-artifact@v3
         with:
           path: apps/docs/dist
@@ -58,6 +60,18 @@ jobs:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
+      - name: Check Pages configuration
+        id: pages
+        continue-on-error: true
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh api repos/${{ github.repository }}/pages --silent
+
       - name: Deploy to GitHub Pages
+        if: steps.pages.outcome == 'success'
         id: deployment
         uses: actions/deploy-pages@v5
+
+      - name: Skip deployment notice
+        if: steps.pages.outcome != 'success'
+        run: echo "GitHub Pages is not enabled for this repository. Enable Pages with Source set to GitHub Actions in repository settings to deploy docs."
