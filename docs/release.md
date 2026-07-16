@@ -13,6 +13,7 @@ Publishable packages live under `packages/`:
 - `@kamod-ch/otok-auth`
 - `@kamod-ch/otok-validate`
 - `@kamod-ch/otok-flash`
+- `@kamod-ch/otok-stripe`
 
 Apps, docs, examples, and templates are not published directly, but they are validated before releases.
 

@@ -1,0 +1,60 @@
+{
+  "name": "@kamod-ch/otok-stripe",
+  "version": "1.0.0",
+  "description": "Stripe Checkout and webhook helpers for Otok apps.",
+  "license": "MIT",
+  "homepage": "https://github.com/kamod-ch/otok/tree/main/packages/otok-stripe#readme",
+  "bugs": {
+    "url": "https://github.com/kamod-ch/otok/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kamod-ch/otok.git",
+    "directory": "packages/otok-stripe"
+  },
+  "type": "module",
+  "files": [
+    "dist",
+    "README.md"
+  ],
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    },
+    "./adapter": {
+      "types": "./dist/adapter/index.d.ts",
+      "default": "./dist/adapter/index.js"
+    },
+    "./webhook": {
+      "types": "./dist/webhook/index.d.ts",
+      "default": "./dist/webhook/index.js"
+    }
+  },
+  "scripts": {
+    "build": "rm -rf dist && tsc -p tsconfig.build.json",
+    "prepare": "npm run build",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "test": "vitest run"
+  },
+  "peerDependencies": {
+    "hono": ">=4",
+    "otok": ">=0.3.0",
+    "stripe": ">=17"
+  },
+  "devDependencies": {
+    "@otok/test": "workspace:*",
+    "@types/node": "^24.12.2",
+    "hono": "^4.12.25",
+    "otok": "workspace:*",
+    "stripe": "^18.5.0",
+    "typescript": "~6.0.2",
+    "vitest": "^4.1.2"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}

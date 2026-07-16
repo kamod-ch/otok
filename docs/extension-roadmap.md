@@ -42,9 +42,12 @@ In `otok-auth/middleware`:
 
 Signed one-time flash cookies for PRG redirects. devjobs logout → login flow uses it.
 
+## Shipped: `@kamod-ch/otok-stripe`
+
+Checkout Sessions, webhook signature verification, and a `BillingAdapter` for plan sync. Apps own persistence; Otok core stays free of Stripe.
+
 ## Deferred
 
-- `@kamod-ch/otok-stripe` — only when devjobs billing goes live
 - OAuth providers — wait for a concrete flow
 - General plugin system — explicitly out of scope for Otok core
 
@@ -55,3 +58,4 @@ Signed one-time flash cookies for PRG redirects. devjobs logout → login flow u
 3. `otok-auth/adapters/kysely` ✅
 4. RBAC/tenant middleware in `otok-auth` ✅
 5. `otok-flash` ✅
+6. `otok-stripe` ✅
