@@ -22,7 +22,7 @@ test("native form submission redirects after successful action", async ({ browse
   await page.getByRole("button", { name: "Save project" }).click();
 
   await expect(page).toHaveURL(/\/projects\?created=1$/);
-  await expect(page.getByText("No JS Project")).toBeVisible();
+  await expect(page.getByRole("listitem").filter({ hasText: "No JS Project" }).first()).toBeVisible();
   await context.close();
 });
 
@@ -41,8 +41,9 @@ test("progressive form submission updates the page without full navigation", asy
   await page.getByRole("button", { name: "Save project" }).click();
 
   await expect(page).toHaveURL(/\/projects\?created=1$/);
-  await expect(page.getByText("Enhanced Project")).toBeVisible();
-  await expect(page.getByText("Featured").first()).toBeVisible();
+  const enhancedProject = page.getByRole("listitem").filter({ hasText: "Enhanced Project" }).first();
+  await expect(enhancedProject).toBeVisible();
+  await expect(enhancedProject.getByText("Featured")).toBeVisible();
 });
 
 test("keyboard submission, submitter values, checkbox values, and back navigation work", async ({ page }) => {
@@ -52,8 +53,9 @@ test("keyboard submission, submitter values, checkbox values, and back navigatio
   await page.locator("#project-name").press("Enter");
 
   await expect(page).toHaveURL(/\/projects\?created=1$/);
-  await expect(page.getByText("Keyboard Project")).toBeVisible();
-  await expect(page.getByRole("listitem").filter({ hasText: "Keyboard Project" }).getByText("Featured")).toBeVisible();
+  const keyboardProject = page.getByRole("listitem").filter({ hasText: "Keyboard Project" }).first();
+  await expect(keyboardProject).toBeVisible();
+  await expect(keyboardProject.getByText("Featured")).toBeVisible();
 
   await page.goBack();
   await expect(page).toHaveURL("/projects");
@@ -63,16 +65,16 @@ test("opt-out form uses native submission", async ({ page }) => {
   await page.goto("/projects");
   await page.getByRole("button", { name: "Native opt-out submit" }).click();
   await expect(page).toHaveURL(/\/projects\?created=1$/);
-  await expect(page.getByText("Opt out project")).toBeVisible();
+  await expect(page.getByRole("listitem").filter({ hasText: "Opt out project" }).first()).toBeVisible();
 });
 
 test("method override deletes projects through actions", async ({ page }) => {
   await page.goto("/projects");
   await page.locator("#project-name").fill("Delete Me");
   await page.getByRole("button", { name: "Save project" }).click();
-  await expect(page.getByText("Delete Me")).toBeVisible();
+  await expect(page.getByRole("listitem").filter({ hasText: "Delete Me" }).first()).toBeVisible();
 
-  const item = page.getByRole("listitem").filter({ hasText: "Delete Me" });
+  const item = page.getByRole("listitem").filter({ hasText: "Delete Me" }).first();
   await item.getByRole("button", { name: "Delete" }).click();
 
   await expect(page).toHaveURL(/\/projects\?deleted=1$/);

@@ -24,6 +24,7 @@ export interface SoftNavOptions {
 export interface SoftNavigateOptions {
   replace?: boolean;
   scroll?: boolean | ScrollBehavior;
+  history?: boolean;
 }
 
 let activeNavigation: AbortController | null = null;
@@ -180,6 +181,18 @@ export async function softNavigate(
       return false;
     }
 
+    if (options.history !== false) {
+      const historyUrl = new URL(result.url || url, window.location.href);
+      const historyPath = `${historyUrl.pathname}${historyUrl.search}${historyUrl.hash}`;
+      const state = { [OTOK_HISTORY_STATE_KEY]: true, url: historyPath };
+
+      if (options.replace) {
+        history.replaceState(state, "", historyPath);
+      } else {
+        history.pushState(state, "", historyPath);
+      }
+    }
+
     const applied = applySoftNavigationDocument(result.document);
     if (!applied) {
       window.location.assign(url);
@@ -187,16 +200,6 @@ export async function softNavigate(
     }
 
     await hydrateIslands(document, registry, (error) => options.onError?.(error));
-
-    const historyUrl = new URL(url, window.location.href);
-    const historyPath = `${historyUrl.pathname}${historyUrl.search}${historyUrl.hash}`;
-    const state = { [OTOK_HISTORY_STATE_KEY]: true, url: historyPath };
-
-    if (options.replace) {
-      history.replaceState(state, "", historyPath);
-    } else {
-      history.pushState(state, "", historyPath);
-    }
 
     const scrollBehavior = options.scroll ?? true;
     if (scrollBehavior !== false) {
@@ -327,6 +330,10 @@ export function setupSoftNavigation(registry: IslandRegistry, options: SoftNavOp
   const linksEnabled = options.links !== false;
   const formsEnabled = options.forms === true;
   const prefetchEnabled = linksEnabled && options.prefetch !== false;
+  const initialPath = `${window.location.pathname}${window.location.search}${window.location.hash}`;
+  if (!history.state?.[OTOK_HISTORY_STATE_KEY]) {
+    history.replaceState({ [OTOK_HISTORY_STATE_KEY]: true, url: initialPath }, "", initialPath);
+  }
 
   const onClick = (event: MouseEvent) => {
     if (event.defaultPrevented) return;
@@ -377,12 +384,19 @@ export function setupSoftNavigation(registry: IslandRegistry, options: SoftNavOp
     });
   };
 
-  const onPopState = () => {
-    const path = `${window.location.pathname}${window.location.search}${window.location.hash}`;
+  const onPopState = (event: PopStateEvent) => {
+    const stateUrl = typeof event.state?.url === "string" ? event.state.url : undefined;
+    const path = stateUrl ?? `${window.location.pathname}${window.location.search}${window.location.hash}`;
     void softNavigate(path, registry, {
-      replace: true,
+      history: false,
       onError: options.onError,
       scroll: false,
+    }).then((applied) => {
+      if (!applied || !stateUrl) return;
+      const currentPath = `${window.location.pathname}${window.location.search}${window.location.hash}`;
+      if (currentPath !== stateUrl) {
+        history.replaceState({ [OTOK_HISTORY_STATE_KEY]: true, url: stateUrl }, "", stateUrl);
+      }
     });
   };
 

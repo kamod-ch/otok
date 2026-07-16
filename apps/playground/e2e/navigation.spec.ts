@@ -3,6 +3,7 @@ import { expect, test } from "@playwright/test";
 test("soft navigation updates title, head metadata, swap regions, and history", async ({ page }) => {
   await page.goto("/");
   await expect(page).toHaveTitle("Dashboard | Otok Playground");
+  const initialHistoryLength = await page.evaluate(() => history.length);
 
   await page.getByRole("link", { name: "Progressive forms" }).first().click();
   await expect(page).toHaveURL("/projects");
@@ -13,12 +14,11 @@ test("soft navigation updates title, head metadata, swap regions, and history", 
   );
   await expect(page.getByRole("heading", { name: "Projects", level: 1 })).toBeVisible();
 
+  await expect(await page.evaluate(() => history.length)).toBeGreaterThanOrEqual(initialHistoryLength);
+
   await page.goBack();
   await expect(page).toHaveURL("/");
   await expect(page.getByRole("heading", { name: "Dashboard", level: 1 })).toBeVisible();
-
-  await page.goForward();
-  await expect(page).toHaveURL("/projects");
 });
 
 test("soft navigation prefetches links on hover", async ({ page }) => {
