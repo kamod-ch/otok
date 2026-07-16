@@ -9,6 +9,31 @@ order: 32
 
 Use Hono middleware or route `_middleware.ts` files. Store request-scoped values with `c.set()` and read them in loaders or actions with `c.get()`.
 
+## CSRF for cookie sessions
+
+Otok does not ship automatic CSRF protection. For cookie-authenticated apps, use a double-submit cookie:
+
+1. Set a readable CSRF cookie on GET requests.
+2. Include a matching hidden `_csrf` field in forms.
+3. Reject mutating form posts when cookie and field do not match.
+
+The minimal template includes a copy-paste recipe at:
+
+- `src/lib/csrf.ts`
+- `src/app/recipes/csrf-middleware.ts`
+
+Wire it as `src/app/routes/_middleware.ts` when you enable cookie sessions:
+
+```ts
+export { default } from "../recipes/csrf-middleware";
+```
+
+In forms:
+
+```tsx
+<input type="hidden" name="_csrf" value={csrfToken} />
+```
+
 ## CRUD Application
 
 Use loaders for reads and actions for create, update, and delete. Browser forms only support GET and POST, so use `_method` for PUT, PATCH, or DELETE.

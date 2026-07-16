@@ -1,1 +1,0 @@
-{"version":3,"file":"island-context.d.ts","sourceRoot":"","sources":["../../src/shared/island-context.ts"],"names":[],"mappings":"AAAA,MAAM,WAAW,mBAAmB;IAClC,OAAO,EAAE,GAAG,CAAC,MAAM,CAAC,CAAC;IACrB,YAAY,EAAE,MAAM,CAAC;CACtB;AAID,wBAAgB,uBAAuB,CAAC,CAAC,EAAE,OAAO,EAAE,mBAAmB,EAAE,MAAM,EAAE,MAAM,CAAC,GAAG,CAAC,CAQ3F;AAED,wBAAgB,sBAAsB,CAAC,EAAE,EAAE,MAAM,GAAG,MAAM,CAOzD"}

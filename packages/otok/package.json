@@ -1,6 +1,6 @@
 {
   "name": "otok",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "Hono + Preact Islands framework runtime.",
   "license": "MIT",
   "homepage": "https://github.com/kamod-ch/otok/tree/main/packages/otok#readme",
@@ -13,7 +13,10 @@
     "directory": "packages/otok"
   },
   "type": "module",
-  "files": ["dist", "README.md"],
+  "files": [
+    "dist",
+    "README.md"
+  ],
   "exports": {
     "./client": {
       "types": "./dist/client/index.d.ts",

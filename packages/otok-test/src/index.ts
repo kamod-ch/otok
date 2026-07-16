@@ -12,6 +12,9 @@ import {
   type OtokRoute,
   type RouteModule,
 } from "otok/server";
+import { parseHtml, type ParsedHtml } from "./html.js";
+
+export { parseHtml, type ParsedElement, type ParsedHtml } from "./html.js";
 
 export interface TestRouteInput<Data extends LoaderResult = LoaderResult> {
   /** Route manifest path, e.g. "/", "/users/:id", or "/docs/:slug*". */
@@ -113,6 +116,16 @@ export async function renderRoute(
 ): Promise<RenderRouteResult> {
   const response = await requestRoute(appOrOptions, path, init);
   return { response, html: await response.text() };
+}
+
+/** Render a route and return a parsed HTML document for assertions. */
+export async function renderParsedRoute(
+  appOrOptions: Hono | CreateTestAppOptions,
+  path: string,
+  init?: RequestInit,
+): Promise<RenderRouteResult & { document: ParsedHtml }> {
+  const result = await renderRoute(appOrOptions, path, init);
+  return { ...result, document: parseHtml(result.html) };
 }
 
 export type { OtokRoute } from "otok/server";

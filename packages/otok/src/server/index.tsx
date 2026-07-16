@@ -1,10 +1,10 @@
-import { serveStatic } from "@hono/node-server/serve-static";
 import type { Context, Handler } from "hono";
 import { Hono } from "hono";
+import { createRequire } from "node:module";
 import { h } from "preact";
 import type { ComponentType, VNode } from "preact";
 import renderToString from "preact-render-to-string";
-import { pageHtml, type ViteManifest } from "./html.js";
+import { composeHtmlStream, pageHtml, type ViteManifest } from "./html.js";
 import { matchRoute } from "./router.js";
 import { withIslandRenderContext } from "../shared/island-context.js";
 import {
@@ -38,6 +38,11 @@ export interface CreateOtokHandlerOptions {
   theme?: boolean;
   /** Expose unexpected Error.message values to the error route. Defaults to false. */
   exposeErrorDetails?: boolean;
+  /**
+   * Stream HTML with a buffered shell and streamed body.
+   * Defaults to false for maximum compatibility.
+   */
+  streaming?: boolean;
 }
 
 export interface CreateOtokAppOptions extends CreateOtokHandlerOptions {
@@ -72,6 +77,32 @@ async function resolveChrome(
   });
 }
 
+/**
+ * Otok handlers often return `new Response(...)`. Cookies and other headers set
+ * via Hono helpers (`setCookie`, `c.header`) live on `c.res` and would otherwise
+ * be dropped. Merge them onto the final response.
+ */
+function mergeContextHeaders(c: Context, response: Response): Response {
+  if (response === c.res) return response;
+
+  const pending = c.res.headers;
+  if ([...pending.keys()].length === 0) return response;
+
+  const headers = new Headers(response.headers);
+  for (const cookie of pending.getSetCookie()) {
+    headers.append("set-cookie", cookie);
+  }
+  for (const [key, value] of pending.entries()) {
+    if (key.toLowerCase() === "set-cookie") continue;
+    if (!headers.has(key)) headers.set(key, value);
+  }
+  return new Response(response.body, {
+    status: response.status,
+    statusText: response.statusText,
+    headers,
+  });
+}
+
 export function createOtokHandler(options: CreateOtokHandlerOptions): Handler {
   return async (c: Context) => {
     const url = new URL(c.req.url);
@@ -80,17 +111,23 @@ export function createOtokHandler(options: CreateOtokHandlerOptions): Handler {
     try {
       if (!match) {
         const notFoundRoute = options.notFoundRoute ?? options.notFound;
-        if (!notFoundRoute) return c.notFound();
-        return await renderRoute(c, notFoundRoute, {}, options, 404);
+        if (!notFoundRoute) return mergeContextHeaders(c, await c.notFound());
+        return mergeContextHeaders(c, await renderRoute(c, notFoundRoute, {}, options, 404));
       }
 
       if (isActionRequest(c.req.method)) {
-        return await runRouteMiddleware(c, match.route, () => handleAction(c, match.route, match.params, options));
+        return mergeContextHeaders(
+          c,
+          await runRouteMiddleware(c, match.route, () => handleAction(c, match.route, match.params, options)),
+        );
       }
 
-      return await runRouteMiddleware(c, match.route, () => renderRoute(c, match.route, match.params, options));
+      return mergeContextHeaders(
+        c,
+        await runRouteMiddleware(c, match.route, () => renderRoute(c, match.route, match.params, options)),
+      );
     } catch (error) {
-      return handleRenderError(c, error, options);
+      return mergeContextHeaders(c, await handleRenderError(c, error, options));
     }
   };
 }
@@ -209,25 +246,9 @@ async function renderRoute(
   const Page = route.module.default;
   const props = { data, actionData, params, route: route.path, chrome };
   const islandContext = { islands: new Set<string>(), nextIslandId: 0 };
-  const body = withIslandRenderContext(islandContext, () => {
-    let tree: VNode<any> = h(
-      "div",
-      { [OTOK_PAGE_ATTR]: "" },
-      h(Page as ComponentType<typeof props>, props),
-    );
-    for (const layout of [...(route.layouts ?? [])].reverse()) {
-      tree = h(layout.default as ComponentType<typeof props & { children: VNode<any> }>, {
-        ...props,
-        children: tree,
-      });
-    }
-    return renderToString(tree);
-  });
   const themeEnabled = options.theme ?? false;
-  const html = pageHtml({
-    body,
+  const htmlOptions = {
     head,
-    islands: [...islandContext.islands],
     manifest: options.manifest,
     clientEntry: options.clientEntry,
     devClientEntry: options.devClientEntry,
@@ -236,6 +257,46 @@ async function renderRoute(
     client: route.module.client === true,
     theme: themeEnabled,
     darkMode: themeEnabled ? resolveDarkModeFromCookie(c.req.header("cookie")) : false,
+  };
+
+  let tree: VNode<any> = h(
+    "div",
+    { [OTOK_PAGE_ATTR]: "" },
+    h(Page as ComponentType<typeof props>, props),
+  );
+  for (const layout of [...(route.layouts ?? [])].reverse()) {
+    tree = h(layout.default as ComponentType<typeof props & { children: VNode<any> }>, {
+      ...props,
+      children: tree,
+    });
+  }
+
+  const body = withIslandRenderContext(islandContext, () => renderToString(tree));
+
+  if (options.streaming) {
+    const encoder = new TextEncoder();
+    const stream = composeHtmlStream({
+      ...htmlOptions,
+      bodyStream: new ReadableStream({
+        start(controller) {
+          controller.enqueue(encoder.encode(body));
+          controller.close();
+        },
+      }),
+      getIslands: () => [...islandContext.islands],
+    });
+    return new Response(stream, {
+      status,
+      headers: {
+        "content-type": "text/html; charset=utf-8",
+      },
+    });
+  }
+
+  const html = pageHtml({
+    ...htmlOptions,
+    body,
+    islands: [...islandContext.islands],
   });
 
   return new Response(html, {
@@ -308,6 +369,7 @@ export function createOtokApp(options: CreateOtokAppOptions): Hono {
   if (options.staticDir) {
     const assetsPath = options.assetsPath ?? "/assets";
     const cacheControl = options.assetCacheControl ?? "public, max-age=31536000, immutable";
+    const serveStatic = loadServeStatic();
     app.use(`${assetsPath}/*`, async (c, next) => {
       await next();
       if (c.res.status < 400 && !c.res.headers.has("cache-control")) c.header("cache-control", cacheControl);
@@ -319,10 +381,41 @@ export function createOtokApp(options: CreateOtokAppOptions): Hono {
   return app;
 }
 
-export { pageHtml, type ViteManifest, type ViteManifestEntry } from "./html.js";
+function loadServeStatic() {
+  try {
+    const require = createRequire(import.meta.url);
+    return require("@hono/node-server/serve-static").serveStatic as (typeof import("@hono/node-server/serve-static"))["serveStatic"];
+  } catch {
+    throw new Error(
+      "otok: createOtokApp({ staticDir }) requires optional peer dependency @hono/node-server. Omit staticDir on Edge runtimes or serve assets from a CDN.",
+    );
+  }
+}
+
+/** Edge-safe app factory without Node static file serving. Serve assets from a CDN/KV/R2. */
+export function createOtokWorkerApp(
+  options: Omit<CreateOtokAppOptions, "staticDir" | "assetsPath" | "assetCacheControl">,
+): Hono {
+  return createOtokApp({
+    ...options,
+    staticDir: undefined,
+  });
+}
+
+export { pageHtml, composeHtmlStream, type ViteManifest, type ViteManifestEntry } from "./html.js";
 export { readOtokManifest, type ReadOtokManifestOptions } from "./manifest.js";
 export { matchRoute, type RouteMatch } from "./router.js";
-export { defineMiddleware, fail, isOtokHttpError, isOtokResponse, json, notFound, OtokHttpError, redirect } from "../shared/routes.js";
+export {
+  defineMiddleware,
+  fail,
+  isOtokHttpError,
+  isOtokResponse,
+  json,
+  notFound,
+  OtokHttpError,
+  redirect,
+  validationError,
+} from "../shared/routes.js";
 export type {
   ActionResult,
   InferLoaderData,
@@ -345,4 +438,5 @@ export type {
   OtokRoute,
   RouteModule,
   RouteParams,
+  ValidationErrorInput,
 } from "../shared/routes.js";

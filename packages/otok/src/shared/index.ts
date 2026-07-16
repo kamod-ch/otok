@@ -21,8 +21,19 @@ export type {
   MiddlewareModule,
   RouteModule,
   RouteParams,
+  ValidationErrorInput,
 } from "./routes.js";
-export { defineMiddleware, fail, isOtokHttpError, isOtokResponse, json, notFound, OtokHttpError, redirect } from "./routes.js";
+export {
+  defineMiddleware,
+  fail,
+  isOtokHttpError,
+  isOtokResponse,
+  json,
+  notFound,
+  OtokHttpError,
+  redirect,
+  validationError,
+} from "./routes.js";
 export {
   decodeIslandProps,
   DEFAULT_LARGE_PROPS_THRESHOLD,

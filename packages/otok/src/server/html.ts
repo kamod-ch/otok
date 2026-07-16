@@ -141,18 +141,101 @@ export function pageHtml({
   darkMode = false,
   theme = false,
 }: PageHtmlOptions): string {
+  const shell = pageShell({
+    head,
+    manifest,
+    clientEntry,
+    devStylesheets,
+    base,
+    darkMode,
+    theme,
+  });
+  const footer = pageFooter({
+    islands,
+    manifest,
+    clientEntry,
+    devClientEntry,
+    base,
+    client,
+  });
+  return `${shell}${body}${footer}`;
+}
+
+export interface PageHtmlStreamOptions
+  extends Pick<
+    PageHtmlOptions,
+    | "head"
+    | "manifest"
+    | "clientEntry"
+    | "devClientEntry"
+    | "devStylesheets"
+    | "base"
+    | "client"
+    | "darkMode"
+    | "theme"
+  > {
+  bodyStream: ReadableStream<Uint8Array>;
+  /** Invoked after the body stream completes so island discovery can finish. */
+  getIslands: () => string[];
+}
+
+/** Shell-first HTML stream: head emits immediately, body streams, client script follows after body. */
+export function composeHtmlStream(options: PageHtmlStreamOptions): ReadableStream<Uint8Array> {
+  const encoder = new TextEncoder();
+  const shell = pageShell(options);
+  const reader = options.bodyStream.getReader();
+  let bodyDone = false;
+
+  return new ReadableStream<Uint8Array>({
+    start(controller) {
+      controller.enqueue(encoder.encode(shell));
+    },
+    async pull(controller) {
+      if (!bodyDone) {
+        const { done, value } = await reader.read();
+        if (!done && value) {
+          controller.enqueue(value);
+          return;
+        }
+        bodyDone = true;
+      }
+      controller.enqueue(
+        encoder.encode(
+          pageFooter({
+            islands: options.getIslands(),
+            manifest: options.manifest,
+            clientEntry: options.clientEntry,
+            devClientEntry: options.devClientEntry,
+            base: options.base,
+            client: options.client,
+          }),
+        ),
+      );
+      controller.close();
+    },
+    cancel(reason) {
+      return reader.cancel(reason);
+    },
+  });
+}
+
+function pageShell({
+  head,
+  manifest,
+  clientEntry = "src/client.ts",
+  devStylesheets = [],
+  base = "/",
+  darkMode = false,
+  theme = false,
+}: Pick<
+  PageHtmlOptions,
+  "head" | "manifest" | "clientEntry" | "devStylesheets" | "base" | "darkMode" | "theme"
+>): string {
   const entry = findEntry(manifest, clientEntry);
   const css = manifest ? collectCss(manifest, entry) : devStylesheets;
   const stylesheetLinks = css
     .map((href) => `<link rel="stylesheet" href="${escapeHtml(publicPath(href, base))}">`)
     .join("\n    ");
-  const needsClient = client || islands.length > 0;
-  const needsDevClientEntry = !manifest;
-  const clientScript = needsClient || needsDevClientEntry
-    ? entry?.file
-      ? `<script type="module" src="${escapeHtml(publicPath(entry.file, base))}"></script>`
-      : `<script type="module" src="${escapeHtml(devClientEntry)}"></script>`
-    : "";
   const lang = escapeHtml(head?.lang ?? "en");
   const htmlClass = darkMode ? ` class="dark"` : "";
   const themeHead = theme ? `${themeBootstrapScript}\n    ${themeColorSchemeStyle}` : "";
@@ -165,7 +248,30 @@ export function pageHtml({
     ${stylesheetLinks}
   </head>
   <body>
-    ${body}
+    `;
+}
+
+function pageFooter({
+  islands,
+  manifest,
+  clientEntry = "src/client.ts",
+  devClientEntry = "/src/client.ts",
+  base = "/",
+  client = false,
+}: Pick<
+  PageHtmlOptions,
+  "islands" | "manifest" | "clientEntry" | "devClientEntry" | "base" | "client"
+>): string {
+  const entry = findEntry(manifest, clientEntry);
+  const needsClient = client || islands.length > 0;
+  const needsDevClientEntry = !manifest;
+  const clientScript = needsClient || needsDevClientEntry
+    ? entry?.file
+      ? `<script type="module" src="${escapeHtml(publicPath(entry.file, base))}"></script>`
+      : `<script type="module" src="${escapeHtml(devClientEntry)}"></script>`
+    : "";
+
+  return `
     ${clientScript}
   </body>
 </html>`;

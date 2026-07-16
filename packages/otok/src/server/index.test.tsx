@@ -1,8 +1,9 @@
 import { Hono } from "hono";
+import { setCookie } from "hono/cookie";
 import { describe, expect, it } from "vitest";
 import { createOtokHandler } from "./index.js";
 import type { OtokRoute } from "../shared/routes.js";
-import { fail, isOtokResponse, json, notFound, redirect } from "../shared/routes.js";
+import { fail, isOtokResponse, json, notFound, redirect, validationError } from "../shared/routes.js";
 
 const Page = () => <p>OK</p>;
 const NotFound = () => <p>Custom 404</p>;
@@ -23,6 +24,80 @@ function route(
 }
 
 describe("createOtokHandler", () => {
+  it("preserves Set-Cookie headers from middleware on SSR responses", async () => {
+    const app = new Hono();
+    app.get(
+      "*",
+      createOtokHandler({
+        routes: [
+          {
+            ...route("/", /^\/?$/),
+            middleware: [
+              {
+                default: async (c, next) => {
+                  setCookie(c, "csrf", "token-1", { path: "/" });
+                  await next();
+                },
+              },
+            ],
+          },
+        ],
+      }),
+    );
+
+    const response = await app.request("/");
+    expect(response.status).toBe(200);
+    expect(response.headers.getSetCookie().some((value) => value.startsWith("csrf=token-1"))).toBe(true);
+  });
+
+  it("preserves Set-Cookie headers when an action sets a cookie then redirects", async () => {
+    const app = new Hono();
+    app.all(
+      "*",
+      createOtokHandler({
+        routes: [
+          {
+            ...route("/login", /^\/login\/?$/),
+            module: {
+              default: Page as OtokRoute["module"]["default"],
+              action: async ({ hono }) => {
+                setCookie(hono, "sid", "session-token", { path: "/", httpOnly: true });
+                redirect("/", 303);
+              },
+            },
+          },
+        ],
+      }),
+    );
+
+    const response = await app.request("/login", {
+      method: "POST",
+      body: new URLSearchParams(),
+      redirect: "manual",
+    });
+    expect(response.status).toBe(303);
+    expect(response.headers.get("location")).toBe("/");
+    expect(response.headers.getSetCookie().some((value) => value.startsWith("sid=session-token"))).toBe(true);
+  });
+
+  it("streams HTML when streaming is enabled", async () => {
+    const app = new Hono();
+    app.get(
+      "*",
+      createOtokHandler({
+        routes: [route("/", /^\/?$/)],
+        streaming: true,
+      }),
+    );
+
+    const response = await app.request("/");
+    expect(response.headers.get("content-type")).toMatch(/text\/html/);
+    expect(response.body).toBeTruthy();
+    const html = await response.text();
+    expect(html).toContain("<!doctype html>");
+    expect(html).toContain("OK");
+  });
+
   it("renders convention-based not found routes", async () => {
     const app = new Hono();
     app.get(
@@ -610,5 +685,95 @@ describe("createOtokHandler", () => {
 
     expect(response.status).toBe(418);
     expect(html).toContain("Error: teapot");
+  });
+
+  it("normalizes validationError field strings and re-renders action data with values", async () => {
+    const FormPage = ({
+      actionData,
+    }: {
+      actionData?: {
+        message?: string;
+        fieldErrors?: Record<string, string[]>;
+        values?: Record<string, string>;
+      };
+    }) => (
+      <form>
+        <input name="email" defaultValue={actionData?.values?.email} aria-invalid={Boolean(actionData?.fieldErrors?.email)} />
+        {actionData?.fieldErrors?.email?.map((error) => <p role="alert">{error}</p>)}
+        <p>{actionData?.message}</p>
+      </form>
+    );
+
+    const app = new Hono();
+    app.all(
+      "*",
+      createOtokHandler({
+        routes: [
+          {
+            ...route("/signup", /^\/signup\/?$/, FormPage as unknown as OtokRoute["module"]["default"]),
+            module: {
+              default: FormPage as unknown as OtokRoute["module"]["default"],
+              action: ({ formData }) => {
+                validationError({
+                  message: "Validation failed",
+                  fieldErrors: { email: "Enter a valid email address" },
+                  values: { email: String(formData?.get("email") ?? "") },
+                });
+              },
+            },
+          },
+        ],
+      }),
+    );
+
+    const response = await app.request("/signup", {
+      method: "POST",
+      body: new URLSearchParams({ email: "bad" }),
+    });
+    const html = await response.text();
+
+    expect(response.status).toBe(400);
+    expect(html).toContain('aria-invalid="true"');
+    expect(html).toContain("Enter a valid email address");
+    expect(html).toContain('value="bad"');
+  });
+
+  it("supports validationError with status 422 and JSON responses", async () => {
+    const app = new Hono();
+    app.get(
+      "*",
+      createOtokHandler({
+        routes: [
+          {
+            ...route("/invalid", /^\/invalid\/?$/),
+            module: {
+              default: Page,
+              loader: () => {
+                validationError(
+                  {
+                    message: "Unprocessable",
+                    fieldErrors: { name: ["Required"], email: "Invalid" },
+                    formErrors: ["Fix the form"],
+                    values: { name: "" },
+                  },
+                  422,
+                );
+              },
+            },
+          },
+        ],
+      }),
+    );
+
+    const response = await app.request("/invalid");
+
+    expect(response.status).toBe(422);
+    expect(await response.json()).toEqual({
+      status: 422,
+      message: "Unprocessable",
+      fieldErrors: { name: ["Required"], email: ["Invalid"] },
+      formErrors: ["Fix the form"],
+      values: { name: "" },
+    });
   });
 });

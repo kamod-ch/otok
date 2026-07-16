@@ -1,3 +1,0 @@
-User-agent: *
-Allow: /
-Sitemap: https://kamod-ch.github.io/otok/sitemap.xml

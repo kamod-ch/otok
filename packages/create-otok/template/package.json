@@ -1,7 +1,7 @@
 {
   "name": "otok-app",
   "private": true,
-  "version": "0.1.0",
+  "version": "0.1.1",
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -15,15 +15,15 @@
   },
   "dependencies": {
     "@hono/node-server": "^2.0.1",
-    "@kamod-ui/core": "^0.1.4",
+    "@kamod-ui/core": "^0.1.5",
     "@preact/signals": "^2.0.0",
     "hono": "^4.12.25",
-    "otok": "^0.2.0",
+    "otok": "^0.3.0",
     "preact": "^10.28.2"
   },
   "devDependencies": {
     "@hono/vite-dev-server": "^0.21.0",
-    "@otok/vite-plugin": "^0.2.0",
+    "@otok/vite-plugin": "^0.3.0",
     "@preact/preset-vite": "^2.10.5",
     "@tailwindcss/vite": "^4.2.4",
     "@types/node": "^24.12.2",

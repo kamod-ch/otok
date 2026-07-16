@@ -2,7 +2,7 @@
 
 ## Status
 
-Proposed for Phase 1.
+Accepted.
 
 ## Kontext
 

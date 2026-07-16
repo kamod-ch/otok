@@ -7,16 +7,16 @@ import FindingFilter from "../../islands/finding-filter";
 export const loader = ({ params }: { params: Record<string, string> }) => {
   const audit = audits.get(params.id);
   if (!audit) notFound();
-  return { audit };
+  return { audit: audit as unknown as Record<string, unknown> };
 };
 
 export const head = ({ data }: { data: { audit: Audit } }) => ({
   title: `Audit: ${data.audit.repo}`,
-  meta: [{ name: "description", content: data.audit.summary }],
+  description: data.audit.summary,
 });
 
-export default function AuditDetail({ data }: OtokPageProps<{ audit: Audit }>) {
-  const { audit } = data;
+export default function AuditDetail({ data }: OtokPageProps) {
+  const audit = (data as unknown as { audit: Audit }).audit;
   return (
     <>
       <section class="hero compact">
@@ -44,7 +44,11 @@ export default function AuditDetail({ data }: OtokPageProps<{ audit: Audit }>) {
         </ul>
       </section>
 
-      <Island component={FindingFilter} props={{ findings: audit.findings }} strategy="visible" />
+      <Island
+        component={FindingFilter as any}
+        props={{ findings: audit.findings as any }}
+        strategy="visible"
+      />
     </>
   );
 }

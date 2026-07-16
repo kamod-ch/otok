@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { h } from "preact";
 import { fail, redirect, type OtokPageProps } from "otok/server";
-import { createTestApp, createTestRoute, renderRoute, requestRoute } from "./index.js";
+import { createTestApp, createTestRoute, parseHtml, renderParsedRoute, renderRoute, requestRoute } from "./index.js";
 
 const Page = ({ data, params, actionData }: OtokPageProps<any>) =>
   h(
@@ -143,5 +143,58 @@ describe("@otok/test", () => {
     expect(route.path).toBe("/docs/:slug*");
     expect(route.params).toEqual(["slug"]);
     expect(route.pattern.test("/docs/a/b")).toBe(true);
+  });
+
+  it("parses SSR HTML with selectors, meta, and title helpers", async () => {
+    const app = createTestApp({
+      routes: [
+        {
+          path: "/",
+          module: {
+            default: () =>
+              h(
+                "main",
+                null,
+                h("h1", { id: "title", class: "hero" }, "Hello"),
+                h("input", { name: "email", "aria-invalid": "true", value: "bad" }),
+                h("p", { role: "alert" }, "Required"),
+              ),
+            head: () => ({
+              title: "Parsed Page",
+              description: "SSR assertion helper",
+              meta: { robots: "noindex" },
+            }),
+          },
+        },
+      ],
+    });
+
+    const { document, response } = await renderParsedRoute(app, "/");
+
+    expect(response.status).toBe(200);
+    expect(document.getTitle()).toBe("Parsed Page");
+    expect(document.getMeta("description")).toBe("SSR assertion helper");
+    expect(document.getMeta("robots")).toBe("noindex");
+    expect(document.querySelector("#title")?.textContent).toBe("Hello");
+    expect(document.getAttribute("input[name=email]", "aria-invalid")).toBe("true");
+    expect(document.getText("p[role=alert]")).toBe("Required");
+    expect(document.contains("Hello")).toBe(true);
+  });
+});
+
+describe("parseHtml", () => {
+  it("supports tag, id, class, and attribute selectors", () => {
+    const document = parseHtml(
+      `<div class="wrap"><p id="msg" class="alert error" data-ok="1">Hi &amp; bye</p><input name="q" /></div>`,
+    );
+
+    expect(document.querySelector("p#msg.alert")?.textContent).toBe("Hi & bye");
+    expect(document.querySelector("[data-ok]")?.getAttribute("data-ok")).toBe("1");
+    expect(document.querySelectorAll("input[name=q]")).toHaveLength(1);
+    expect(document.getText(".error")).toBe("Hi & bye");
+  });
+
+  it("rejects unsupported selectors", () => {
+    expect(() => parseHtml("<p/>").querySelector("div > p")).toThrow(/unsupported selector/);
   });
 });

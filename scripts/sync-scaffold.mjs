@@ -95,7 +95,7 @@ function createTemplatePackageJson() {
   delete pkg.scripts["test:e2e"];
   pkg.scripts.check = "pnpm typecheck && pnpm build";
 
-  pkg.dependencies["@kamod-ui/core"] = "^0.1.4";
+  pkg.dependencies["@kamod-ui/core"] = "^0.1.5";
   pkg.dependencies.otok = `^${runtimePkg.version}`;
 
   pkg.devDependencies["@otok/vite-plugin"] = `^${pluginPkg.version}`;

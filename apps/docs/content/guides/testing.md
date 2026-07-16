@@ -8,13 +8,15 @@ order: 30
 Use `@otok/test` for server-side tests and Playwright for browser behavior.
 
 ```ts
-import { createTestApp, renderRoute } from "@otok/test";
+import { createTestApp, renderParsedRoute, renderRoute } from "@otok/test";
 
 const app = createTestApp({
   routes: [{ path: "/users/:id", component: ({ params }) => <p>User {params.id}</p> }],
 });
 
 const { response, html } = await renderRoute(app, "/users/123");
+const { document } = await renderParsedRoute(app, "/users/123");
+expect(document.getText("p")).toContain("User 123");
 ```
 
 Use Playwright for hydration, soft navigation, progressive forms, focus, and history.

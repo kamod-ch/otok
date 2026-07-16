@@ -10,6 +10,9 @@ Publishable packages live under `packages/`:
 - `@otok/vite-plugin`
 - `create-otok`
 - `@otok/test`
+- `@kamod-ch/otok-auth`
+- `@kamod-ch/otok-validate`
+- `@kamod-ch/otok-flash`
 
 Apps, docs, examples, and templates are not published directly, but they are validated before releases.
 
@@ -45,7 +48,7 @@ After the version PR is merged, the same workflow publishes packages to npm and 
 
 Required repository secrets:
 
-- `NPM_TOKEN` with publish access for the `otok`, `@otok/*`, and `create-otok` packages
+- `NPM_TOKEN` with publish access for the `otok`, `@otok/*`, `@kamod-ch/*`, and `create-otok` packages
 - the default `GITHUB_TOKEN` is used for version PRs and GitHub releases
 
 The workflow enables npm provenance with `npm_config_provenance=true`, so packages are published from GitHub Actions with supply-chain metadata.

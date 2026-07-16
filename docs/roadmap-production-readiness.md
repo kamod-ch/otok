@@ -1,57 +1,37 @@
 # Otok Phase 1 Production-Readiness Roadmap
 
-## Aktueller Stand
+## Aktueller Stand (0.2.0+)
+
+Phase 1 APIs are implemented and covered by unit/E2E tests. Remaining work is hardening (0.3.x/0.4.x): `validationError` / `parseHtml` polish, docs sync, examples CI, multi-browser E2E, and Kamod decoupling.
 
 ### Architektur und Package-Verantwortung
 
-Otok ist ein pnpm-Monorepo mit drei publishbaren Packages und einer Referenz-App:
+Otok is a pnpm monorepo with four publishable packages and reference apps:
 
-- `packages/otok`: Framework-Runtime. Enthält Server-Rendering mit Hono, Preact-SSR, HTML-Ausgabe, Manifest-Auswertung, Routing, Error-Handling, Islands, Hydration, Soft Navigation und Shared Types.
-- `packages/vite-plugin-otok`: Vite-Integration. Scannt `src/app/routes` und `src/app/islands`, erzeugt `virtual:otok-routes` und `virtual:otok-islands`, injiziert stabile Island-IDs und invalidiert virtuelle Module im Dev-Server.
-- `packages/create-otok`: CLI und Templates für neue Apps. Das Minimal-Template ist eigenständig; das Full-Template wird über `scripts/sync-scaffold.mjs` aus `apps/playground` und `templates/default` synchronisiert.
-- `apps/playground`: Node/Vite/Hono-Referenz-App mit Kamod UI, Tailwind, Islands, Soft Navigation, Error- und Not-found-Routen sowie Playwright-E2E-Tests.
-- `docs`: Konventionen und Release-Flow. Es gibt noch keine vollständige Produktdokumentation und keine ADRs außer dieser Phase-1-Ergänzung.
+- `packages/otok`: Framework runtime — Hono SSR, Preact, routing, actions, middleware, islands, soft navigation.
+- `packages/vite-plugin-otok`: File scanner, `virtual:otok-routes` / `virtual:otok-islands`, typed `route()` builder.
+- `packages/create-otok`: CLI and templates (minimal + full synced from playground).
+- `packages/otok-test`: Server-side test helpers including `parseHtml`.
+- `apps/playground`: Node/Vite reference app with Playwright E2E.
+- `apps/docs`: Product documentation site.
+- `examples/`: Reference apps and Node deployment sample.
 
-Workspace- und Check-Konventionen:
-
-- Package Manager: `pnpm@10.12.4`, Node `>=20`.
-- Root-Checks: `pnpm check` führt Scaffold-Check, Lint, Format-Check, Typecheck, Unit-Tests und Builds aus.
-- E2E: `pnpm test:e2e` baut und startet `apps/playground` über Playwright.
-- Release: Changesets sind vorgesehen, aber GitHub Release Automation ist noch nicht vorhanden.
+Workspace checks: `pnpm check`, `pnpm test:e2e`, Changesets release workflow on `main`.
 
 ### Laufzeitmodell
 
-- Routen sind Dateien unter `src/app/routes`.
-- Route-Module exportieren aktuell `default`, optional `loader`, `head` und `chrome`.
-- `_layout.tsx`, `_not-found.tsx` und `_error.tsx` sind Konventionen.
-- `createOtokHandler()` matcht eine Route, ruft den Loader, rendert Seite und Layouts, erzeugt HTML und gibt eine `Response` zurück.
-- `createOtokApp()` baut eine Hono-App mit optionaler `configure`-Hook, Health-Route, statischen Assets und SSR-Fallback.
-- `redirect`, `notFound` und `fail` werfen `OtokHttpError`. Unerwartete Fehler werden standardmäßig nicht an Clients geleakt.
-- Islands sind opt-in. Der Server rendert Island-Markup nur bei `<Island>`. Production-HTML lädt den Client-Einstieg nur, wenn Islands vorhanden sind; Dev lädt ihn zusätzlich, solange kein Manifest vorhanden ist.
-- Soft Navigation interceptet same-origin Links, nicht Forms. Sie ersetzt `[data-otok-page]`, synchronisiert `[data-otok-swap]` und managed Head-Elemente, hydratisiert neue Islands und fällt bei nicht unterstützten Dokumenten auf volle Navigation zurück.
+- Route modules export `default`, optional `loader`, `action`, `head`, `chrome`, and `client`.
+- Special files: `_layout.tsx`, `_not-found.tsx`, `_error.tsx`, `_middleware.ts`.
+- Helpers: `redirect`, `notFound`, `fail`, `validationError`, `json`.
+- Soft navigation supports links and opt-in progressive forms.
 
 ### Tests und Qualität
 
-Vorhanden sind Unit-Tests für:
+Unit coverage includes handlers, actions, middleware, validation, HTML, hydration, soft nav, Vite plugin, create-otok, and `@otok/test`.
 
-- Server-Handler, Redirects, Error-Routes, 404, Theme, Chrome und Page-Wrapping.
-- Router-Matching.
-- HTML-Ausgabe, Head-Sync und Dev-Stylesheets.
-- Island-Props, Hydration und Soft Navigation.
-- Vite-Plugin-Scanner, virtuelle Module und Island-ID-Injektion.
-- create-otok CLI.
+Playground E2E covers zero-JS routes, islands, soft nav, forms (with JS disabled), middleware, errors, and production health/assets.
 
-Vorhandene E2E-Tests decken ab:
-
-- zero-JS Route ohne Modulscript,
-- Island-Hydration,
-- dynamische Params,
-- Soft Navigation per Link,
-- Catch-all-Routen,
-- Not-found- und Error-Routen,
-- visible Hydration.
-
-Noch nicht abgedeckt sind progressive Forms, Route Actions, Form-Soft-Navigation, Middleware-Reihenfolge, Typed-Route-Typechecks, Node-Deployment-Smoke-Tests und Release-Automatisierung.
+Reference examples exist under `examples/` and should also run in CI (`pnpm check:examples`).
 
 ## Definition von Production Ready für Phase 1
 
@@ -86,6 +66,34 @@ apps/
 Nicht in den Core gehören feste Abhängigkeiten auf Kamod UI, Tailwind, eine Validation-Library, Datenbank, Auth-System, Icons, Signals oder Hooks.
 
 ## Priorisierte Arbeitspakete
+
+> Status legend: **done** = shipped in 0.2.0+, **hardening** = remaining polish for 0.3.x/0.4.x, **phase2** = deferred to 1.x.
+
+### P0. Response-, Error- und Validation-Semantik vereinheitlichen — **done** (+ `validationError` hardening)
+
+Helpers `redirect`, `notFound`, `fail`, and `validationError` share one failure model. Unexpected errors stay hidden unless `exposeErrorDetails` is enabled.
+
+### P1. Route Actions — **done**
+
+### P2. Progressive Forms — **done**
+
+### P3. Route-Level Middleware — **done**
+
+### P4. Typed Route Builder — **done** (add dedicated package type-tests as hardening)
+
+### P5. Testing Utilities — **done** (`@otok/test` + `parseHtml`)
+
+### P6. E2E-Ausbau für Forms, Soft Navigation und Islands — **done** (multi-browser is hardening)
+
+### P7. Node Production Deployment — **done**
+
+### P8. Dokumentation — **done** (`apps/docs`; keep ADRs/roadmap synced)
+
+### P9. GitHub Releases und Release-Automatisierung — **done**
+
+### P10. Zwei reale Otok-Referenzprojekte — **done** under `examples/` (wire into CI as hardening)
+
+## Frühere Detailpläne
 
 ### P0. Response-, Error- und Validation-Semantik vereinheitlichen
 

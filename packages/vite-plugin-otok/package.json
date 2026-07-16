@@ -1,6 +1,6 @@
 {
   "name": "@otok/vite-plugin",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "Vite plugin for Otok file routes and Preact islands.",
   "license": "MIT",
   "homepage": "https://github.com/kamod-ch/otok/tree/main/packages/vite-plugin-otok#readme",
@@ -13,7 +13,11 @@
     "directory": "packages/vite-plugin-otok"
   },
   "type": "module",
-  "files": ["dist", "client.d.ts", "README.md"],
+  "files": [
+    "dist",
+    "client.d.ts",
+    "README.md"
+  ],
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
@@ -25,7 +29,8 @@
   },
   "scripts": {
     "build": "rm -rf dist && tsc -p tsconfig.build.json",
-    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "typecheck": "tsc -p tsconfig.json --noEmit && pnpm typecheck:typed-routes",
+    "typecheck:typed-routes": "tsc -p fixtures/tsconfig.json --noEmit",
     "test": "vitest run"
   },
   "dependencies": {

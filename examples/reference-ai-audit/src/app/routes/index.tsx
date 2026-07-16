@@ -1,14 +1,9 @@
 import { fail, redirect, type OtokActionContext, type OtokPageProps } from "otok/server";
 import { audits, type Audit } from "../data/audits";
 
-interface ActionFailure {
-  message: string;
-  fieldErrors?: Record<string, string[]>;
-}
-
 export const head = () => ({ title: "AI Audit Dashboard" });
 
-export const loader = () => ({ audits: audits.list() });
+export const loader = () => ({ audits: audits.list() as Audit[] });
 
 export async function action({ formData }: OtokActionContext) {
   const repo = String(formData?.get("repo") ?? "").trim();
@@ -28,8 +23,9 @@ export async function action({ formData }: OtokActionContext) {
   redirect(`/audits/${audit.id}`, 303);
 }
 
-export default function Dashboard({ data, actionData }: OtokPageProps<{ audits: Audit[] }, ActionFailure>) {
-  const error = actionData?.fieldErrors?.repo?.[0];
+export default function Dashboard({ data, actionData }: OtokPageProps) {
+  const auditsList = (data as unknown as { audits: Audit[] }).audits;
+  const error = (actionData as { fieldErrors?: Record<string, string[]> } | undefined)?.fieldErrors?.repo?.[0];
   return (
     <>
       <section class="hero">
@@ -59,7 +55,7 @@ export default function Dashboard({ data, actionData }: OtokPageProps<{ audits: 
         <section class="card">
           <h2>Recent audits</h2>
           <ul class="audits">
-            {data.audits.map((audit) => (
+            {auditsList.map((audit) => (
               <li key={audit.id}>
                 <a href={`/audits/${audit.id}`}>{audit.repo}</a>
                 <span>{audit.findings.length} findings</span>

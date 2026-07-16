@@ -6,7 +6,8 @@ export const head = () => ({ title: "Flat CMS" });
 
 export const loader = () => ({ posts: posts.list() });
 
-export default function Index({ data }: OtokPageProps<{ posts: Post[] }>) {
+export default function Index({ data }: OtokPageProps) {
+  const list = (data as unknown as { posts: Post[] }).posts;
   return (
     <>
       <section class="hero">
@@ -15,7 +16,7 @@ export default function Index({ data }: OtokPageProps<{ posts: Post[] }>) {
         <p>Public pages render without client JavaScript. Editing screens opt into islands only for live preview.</p>
       </section>
       <section class="post-grid">
-        {data.posts.map((post) => <PostCard key={post.slug} post={post} />)}
+        {list.map((post) => <PostCard key={post.slug} post={post} />)}
       </section>
     </>
   );

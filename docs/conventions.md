@@ -107,8 +107,22 @@ interface OtokFailure<T = JsonValue> {
   message?: string;
   fieldErrors?: Record<string, string[]>;
   formErrors?: string[];
+  values?: Record<string, JsonValue>;
   data?: T;
 }
+```
+
+For form validation prefer `validationError()`, which defaults to HTTP 400, accepts `string | string[]` field errors, and supports optional redisplays via `values`:
+
+```ts
+import { validationError } from "otok/server";
+
+validationError({
+  fieldErrors: { email: "Enter a valid email address" },
+  values: { email: "bad" },
+});
+
+validationError({ message: "Unprocessable", fieldErrors: { name: ["Required"] } }, 422);
 ```
 
 Controlled failures render `_error.tsx` when present and preserve the intended status code. Without an error route, Otok returns the failure as JSON. Unexpected exceptions still hide raw details by default.
@@ -172,6 +186,10 @@ export const client = true;
 ```
 
 Enhanced forms are limited to same-origin `GET` and `POST` forms, respect `data-otok-no-nav`, include submitter values, update head and swap regions, hydrate new islands, and fall back to native navigation when unsupported. Otok does not provide automatic CSRF protection; applications using cookie-based sessions should configure CSRF checks in Hono middleware or route middleware.
+
+### CSRF recipe (app layer)
+
+The minimal `create-otok` template ships a double-submit cookie helper under `src/lib/csrf.ts` and an optional middleware recipe at `src/app/recipes/csrf-middleware.ts`. Copy or enable that middleware when forms use cookie-authenticated sessions, and include a hidden `_csrf` field in every mutating form.
 
 ## Route Middleware
 

@@ -119,26 +119,27 @@ routes/_error.tsx        Convention-based error page
 Files in `routes` that start with `$` are treated as co-located islands and are not matched as pages.
 Unexpected errors render `_error.tsx` with a generic `Internal server error` message by default; set `exposeErrorDetails: true` only when raw server error messages should be shown.
 
-Loaders can return normal serializable data or a native `Response`. Otok also exports small response helpers that share one model for loaders, future actions, and middleware:
+Loaders can return normal serializable data or a native `Response`. Otok also exports small response helpers that share one model for loaders, actions, and middleware:
 
 ```ts
-import { fail, json, notFound, redirect } from "otok/server";
+import { fail, json, notFound, redirect, validationError } from "otok/server";
 
 export const loader = ({ params }) => {
   if (!params.id) notFound();
   if (params.id === "latest") redirect("/users/alice");
   if (params.id === "api") return json({ userId: "alice" });
   if (params.id === "invalid") {
-    fail(400, {
+    validationError({
       message: "Validation failed",
-      fieldErrors: { email: ["Enter a valid email address"] },
+      fieldErrors: { email: "Enter a valid email address" },
+      values: { email: "" },
     });
   }
   return { userId: params.id };
 };
 ```
 
-`fail(status, failure)` uses a serializable failure shape with `status`, optional `message`, `fieldErrors`, `formErrors`, and `data`. It does not depend on a validation library.
+`validationError()` defaults to HTTP 400 (or pass `422`) and normalizes `string | string[]` field errors. `fail(status, failure)` remains available for non-validation failures.
 
 ## Route Actions and Forms
 

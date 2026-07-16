@@ -1,0 +1,87 @@
+{
+  "name": "@kamod-ch/otok-auth",
+  "version": "1.0.0",
+  "description": "Cookie sessions, CSRF, and route middleware helpers for Otok apps.",
+  "license": "MIT",
+  "homepage": "https://github.com/kamod-ch/otok/tree/main/packages/otok-auth#readme",
+  "bugs": {
+    "url": "https://github.com/kamod-ch/otok/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kamod-ch/otok.git",
+    "directory": "packages/otok-auth"
+  },
+  "type": "module",
+  "files": [
+    "dist",
+    "README.md"
+  ],
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    },
+    "./session": {
+      "types": "./dist/session/index.d.ts",
+      "default": "./dist/session/index.js"
+    },
+    "./middleware": {
+      "types": "./dist/middleware/index.d.ts",
+      "default": "./dist/middleware/index.js"
+    },
+    "./csrf": {
+      "types": "./dist/csrf.d.ts",
+      "default": "./dist/csrf.js"
+    },
+    "./password": {
+      "types": "./dist/password.d.ts",
+      "default": "./dist/password.js"
+    },
+    "./adapters/memory": {
+      "types": "./dist/adapters/index.d.ts",
+      "default": "./dist/adapters/index.js"
+    },
+    "./adapters/kysely": {
+      "types": "./dist/adapters/kysely.d.ts",
+      "default": "./dist/adapters/kysely.js"
+    }
+  },
+  "scripts": {
+    "build": "rm -rf dist && tsc -p tsconfig.build.json",
+    "prepare": "npm run build",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "test": "vitest run"
+  },
+  "peerDependencies": {
+    "@node-rs/argon2": ">=2.0.0",
+    "hono": ">=4",
+    "kysely": ">=0.27.0",
+    "otok": ">=0.3.0"
+  },
+  "peerDependenciesMeta": {
+    "@node-rs/argon2": {
+      "optional": true
+    },
+    "kysely": {
+      "optional": true
+    }
+  },
+  "devDependencies": {
+    "@node-rs/argon2": "^2.0.2",
+    "@otok/test": "workspace:*",
+    "@types/node": "^24.12.2",
+    "hono": "^4.12.25",
+    "kysely": "^0.29.2",
+    "otok": "workspace:*",
+    "preact": "^10.28.2",
+    "typescript": "~6.0.2",
+    "vitest": "^4.1.2"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}

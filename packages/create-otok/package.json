@@ -1,6 +1,6 @@
 {
   "name": "create-otok",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "Scaffold a new Otok app.",
   "license": "MIT",
   "homepage": "https://github.com/kamod-ch/otok/tree/main/packages/create-otok#readme",
@@ -16,7 +16,12 @@
   "bin": {
     "create-otok": "./bin/create-otok.mjs"
   },
-  "files": ["bin", "template", "template-minimal", "README.md"],
+  "files": [
+    "bin",
+    "template",
+    "template-minimal",
+    "README.md"
+  ],
   "scripts": {
     "build": "npm pack --dry-run >/dev/null",
     "typecheck": "node --check ./bin/create-otok.mjs && node --check ./test/create-otok.test.mjs",

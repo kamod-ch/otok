@@ -31,8 +31,19 @@ export interface OtokFailure<T = unknown> {
   message?: string;
   fieldErrors?: Record<string, string[]>;
   formErrors?: string[];
+  /** Serializable form values for safe redisplay after validation failure. */
+  values?: Record<string, JsonValue>;
   data?: T;
 }
+
+export type ValidationErrorInput = {
+  message?: string;
+  fieldErrors?: Record<string, string | string[]>;
+  formErrors?: string[];
+  values?: Record<string, JsonValue>;
+  data?: JsonValue;
+  status?: 400 | 422;
+};
 
 export type OtokResponse = Response | OtokHttpError;
 
@@ -160,6 +171,25 @@ export function fail(first: number | string = "Internal server error", second: O
   throw new OtokHttpError(status, first, undefined, { status, message: first });
 }
 
+/**
+ * Throw a serializable validation failure (default HTTP 400).
+ * Accepts `string | string[]` field errors and optional form `values` for redisplay.
+ */
+export function validationError(input: ValidationErrorInput = {}, status?: 400 | 422): never {
+  const resolvedStatus = status ?? input.status ?? 400;
+  if (resolvedStatus !== 400 && resolvedStatus !== 422) {
+    throw new RangeError("otok: validationError() status must be 400 or 422.");
+  }
+  const failure = normalizeFailure(resolvedStatus, {
+    message: input.message ?? "Validation failed",
+    fieldErrors: normalizeFlexibleFieldErrors(input.fieldErrors),
+    formErrors: input.formErrors ? [...input.formErrors] : undefined,
+    values: input.values,
+    data: input.data,
+  });
+  throw new OtokHttpError(failure.status, failure.message ?? "Validation failed", undefined, failure);
+}
+
 function normalizeFailure(status: number, failure: Omit<OtokFailure, "status">): OtokFailure {
   return {
     status,
@@ -173,6 +203,15 @@ function normalizeFieldErrors(
 ): Record<string, string[]> | undefined {
   if (!fieldErrors) return undefined;
   return Object.fromEntries(Object.entries(fieldErrors).map(([field, errors]) => [field, [...errors]]));
+}
+
+function normalizeFlexibleFieldErrors(
+  fieldErrors: Record<string, string | string[]> | undefined,
+): Record<string, string[]> | undefined {
+  if (!fieldErrors) return undefined;
+  return Object.fromEntries(
+    Object.entries(fieldErrors).map(([field, errors]) => [field, Array.isArray(errors) ? [...errors] : [errors]]),
+  );
 }
 
 export function isOtokHttpError(error: unknown): error is OtokHttpError {

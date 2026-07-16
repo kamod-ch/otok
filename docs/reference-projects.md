@@ -56,3 +56,7 @@ pnpm dev
 ## Promotion criteria
 
 A project should only be moved from reference to showcase after it has been used outside the playground and validates Otok APIs in a real workflow.
+
+## External case study
+
+`kamod-ai-audit` (sibling Kamod workspace project) exercises audit-style dashboards that inspired `examples/reference-ai-audit`. Prefer the in-repo example for CI-safe demos; keep the external app for product-specific integrations.

@@ -64,6 +64,25 @@ Calls `requestRoute()` and returns:
 }
 ```
 
+### `parseHtml(html)` / `renderParsedRoute(...)`
+
+`parseHtml` provides lightweight SSR assertions without a DOM library:
+
+```ts
+import { parseHtml, renderParsedRoute } from "@otok/test";
+
+const { document } = await renderParsedRoute(app, "/signup", {
+  method: "POST",
+  body: new URLSearchParams({ email: "bad" }),
+});
+
+expect(document.getTitle()).toBe("Signup");
+expect(document.getAttribute("input[name=email]", "aria-invalid")).toBe("true");
+expect(document.getText("p[role=alert]")).toContain("required");
+```
+
+Supported selectors: `tag`, `#id`, `.class`, `[attr]`, `[attr=value]`, and combinations such as `input[name=email]`.
+
 ## Scope
 
 Use `@otok/test` for server-side tests of:

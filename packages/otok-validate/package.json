@@ -1,0 +1,59 @@
+{
+  "name": "@kamod-ch/otok-validate",
+  "version": "1.0.0",
+  "description": "Zod validation helpers for Otok route actions and API handlers.",
+  "license": "MIT",
+  "homepage": "https://github.com/kamod-ch/otok/tree/main/packages/otok-validate#readme",
+  "bugs": {
+    "url": "https://github.com/kamod-ch/otok/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kamod-ch/otok.git",
+    "directory": "packages/otok-validate"
+  },
+  "type": "module",
+  "files": [
+    "dist",
+    "README.md"
+  ],
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    },
+    "./form": {
+      "types": "./dist/form-data.d.ts",
+      "default": "./dist/form-data.js"
+    },
+    "./json": {
+      "types": "./dist/json.d.ts",
+      "default": "./dist/json.js"
+    }
+  },
+  "scripts": {
+    "build": "rm -rf dist && tsc -p tsconfig.build.json",
+    "prepare": "npm run build",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "test": "vitest run"
+  },
+  "peerDependencies": {
+    "otok": ">=0.3.0",
+    "zod": ">=3.22.0"
+  },
+  "devDependencies": {
+    "@otok/test": "workspace:*",
+    "@types/node": "^24.12.2",
+    "otok": "workspace:*",
+    "preact": "^10.28.2",
+    "typescript": "~6.0.2",
+    "vitest": "^4.1.2",
+    "zod": "^4.0.0"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}

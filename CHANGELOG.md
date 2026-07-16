@@ -1,5 +1,26 @@
 # Changelog
 
+## Unreleased
+
+### Added
+
+- `validationError()` helper with flexible field errors and optional form `values`.
+- `parseHtml` / `renderParsedRoute` in `@otok/test` for SSR HTML assertions.
+- Opt-in `streaming: true` on handlers for shell-first HTML responses.
+- `createOtokWorkerApp()` Edge-safe app factory without Node static serving.
+- CSRF double-submit recipe in the minimal template and Flat CMS example.
+- Typed-route compile fixtures for `@otok/vite-plugin`.
+- Reference examples CI via `pnpm check:examples`.
+- Multi-browser Playwright projects (Chromium, Firefox, WebKit).
+- Migration guides (Fresh, Remix, plain Hono) and i18n pattern guide.
+- Cloudflare Workers deployment sketch under `examples/deployment/cloudflare/`.
+
+### Changed
+
+- Playground depends on published `@kamod-ui/core` instead of a local `file:` path.
+- `.gitignore` ignores all `**/dist/`, Playwright reports, and test-results.
+- Phase 1 ADRs marked Accepted; roadmap docs synchronized with shipped APIs.
+
 ## 0.2.0
 
 ### Added

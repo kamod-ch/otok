@@ -27,6 +27,16 @@ expect(response.status).toBe(200);
 expect(html).toContain("User 123");
 ```
 
+Use `parseHtml` or `renderParsedRoute` for structured HTML assertions:
+
+```ts
+import { renderParsedRoute } from "@otok/test";
+
+const { document } = await renderParsedRoute(app, "/users/123");
+expect(document.getText("p")).toContain("User 123");
+expect(document.getTitle()).toBeTruthy();
+```
+
 Good fits for `@otok/test`:
 
 - loaders;

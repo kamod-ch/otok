@@ -1,4 +1,7 @@
 node_modules/
-/dist
+**/dist/
+**/test-results/
+**/playwright-report/
 /tmp
 /plans
+*.tsbuildinfo
