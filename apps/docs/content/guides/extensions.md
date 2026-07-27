@@ -5,17 +5,19 @@ order: 33
 ---
 # Composition Packages
 
-Optional packages around Otok core. They are **composition**, not a plugin system. Core stays free of auth, validation, database, billing, and OAuth dependencies.
+Optional packages around Otok core. Use them directly (**composition**) or through **`otok.config.ts` plugins** where a package exposes a plugin entry point. Core stays free of auth, validation, database, billing, and OAuth dependencies.
 
 | Package | Purpose |
 |---------|---------|
+| `@otok/config` | Typed plugin API (`defineConfig`, `definePlugin`) |
+| `@otok/plugin-hello` | Minimal example plugin |
 | [`@kamod-ch/otok-auth`](https://github.com/kamod-ch/otok/tree/main/packages/otok-auth) | Cookie sessions, CSRF, password hashing, route/API middleware, memory/Kysely session adapters |
 | [`@kamod-ch/otok-validate`](https://github.com/kamod-ch/otok/tree/main/packages/otok-validate) | Zod → `validationError()` for actions and JSON APIs |
 | [`@kamod-ch/otok-flash`](https://github.com/kamod-ch/otok/tree/main/packages/otok-flash) | Signed one-time flash cookies for PRG redirects and SSR toasts |
 | [`@kamod-ch/otok-stripe`](https://github.com/kamod-ch/otok/tree/main/packages/otok-stripe) | Checkout, Customer Portal, webhooks, `BillingAdapter` |
 | [`@kamod-ch/otok-oauth`](https://github.com/kamod-ch/otok/tree/main/packages/otok-oauth) | GitHub/Google OAuth login with signed state/PKCE cookies and `OAuthAdapter` |
 
-See also [`docs/extension-roadmap.md`](https://github.com/kamod-ch/otok/blob/main/docs/extension-roadmap.md) in the repository.
+See also [Plugins](./plugins.md), [`docs/extension-roadmap.md`](https://github.com/kamod-ch/otok/blob/main/docs/extension-roadmap.md) in the repository, and [`docs/adr/0006-plugin-system.md`](https://github.com/kamod-ch/otok/blob/main/docs/adr/0006-plugin-system.md).
 
 ## Typical wiring
 

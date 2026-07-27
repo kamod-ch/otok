@@ -18,4 +18,8 @@ test("production build serves health, assets, cache headers, and 404", async ({ 
 
   const missing = await request.get("/missing-production-test-route");
   expect(missing.status()).toBe(404);
+
+  const pluginHello = await request.get("/api/plugin/hello");
+  expect(pluginHello.ok()).toBe(true);
+  expect(await pluginHello.json()).toMatchObject({ ok: true, message: "hello from otok-plugin-hello" });
 });

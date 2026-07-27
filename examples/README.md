@@ -11,6 +11,7 @@ This directory contains deployment samples and reference applications.
 
 - `reference-ai-audit` — AI-assisted repository audit workflow with route actions, progressive forms, API routes, not-found handling, and an island for finding triage.
 - `reference-flat-cms` — flat-file style CMS with public pages, admin middleware, create/update/delete actions, method override, and a live-preview island.
+- `i18n-trilingual` — DE / EN / FR demo with `@kamod-ch/otok-i18n` plugin, islands, locale switcher, hreflang, and sitemap.
 
 The reference and deployment apps are intentionally kept outside `pnpm-workspace.yaml` so they remain copyable starter projects and do not add app dependencies to Otok core.
 

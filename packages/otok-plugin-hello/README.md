@@ -1,0 +1,14 @@
+# @otok/plugin-hello
+
+Minimal Otok plugin that registers `GET /api/plugin/hello`.
+
+```ts
+import { defineConfig } from "otok";
+import hello from "@otok/plugin-hello";
+
+export default defineConfig({
+  plugins: [hello()],
+});
+```
+
+See [`apps/docs/content/guides/create-your-first-plugin.md`](../../apps/docs/content/guides/create-your-first-plugin.md).

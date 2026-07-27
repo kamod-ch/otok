@@ -1,6 +1,9 @@
-/** Only same-origin relative paths (open-redirect safe). */
-export function safeNextPath(raw: string | null | undefined): string | null {
-  if (!raw) return null;
-  if (!raw.startsWith("/") || raw.startsWith("//")) return null;
-  return raw;
+import { safeRedirectPath } from "@kamod-ch/otok-auth/redirect";
+
+/** Only same-origin relative paths within an optional allowlist. */
+export function safeNextPath(
+  raw: string | null | undefined,
+  allowlist?: readonly string[],
+): string | null {
+  return safeRedirectPath(raw, allowlist ?? ["/"]);
 }

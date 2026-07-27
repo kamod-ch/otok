@@ -1,6 +1,19 @@
 # Otok extension roadmap
 
-Optional composition packages around Otok core. Core stays free of auth, validation, database, and UI dependencies.
+Optional packages around Otok core. Core stays free of auth, validation, database, and UI dependencies.
+
+## Plugin system — shipped
+
+Typed plugin API via `@otok/config`, integrated by `@otok/vite-plugin`:
+
+- `defineConfig` / `definePlugin` from `otok`
+- `otok.config.ts` with deterministic hook order
+- `virtual:otok-config` runtime bridge
+- Example: `@otok/plugin-hello`
+
+See `apps/docs/content/guides/plugins.md` and `docs/adr/0006-plugin-system.md`.
+
+Composition packages (`@kamod-ch/otok-*`) remain valid without plugin wrappers.
 
 ## Shipped
 
@@ -52,14 +65,13 @@ GitHub and Google authorization-code login with signed state/PKCE cookies and an
 
 ## Shipped: `@kamod-ch/otok-i18n`
 
-Locale resolution (URL segment → cookie → `Accept-Language` → default), flat message catalogs, `t()`, route helpers, and an optional Preact client provider. Apps own catalogs; Otok core stays free of i18n.
+Locale resolution (URL/domain → cookie → `Accept-Language` → default), lazy message catalogs, pluralization, `Intl` formatters, Otok plugin API, SSR/hydration payload, hreflang metadata, and localized sitemap helpers. Apps own catalogs; Otok core stays free of i18n.
 
 ## Deferred
 
 - Additional OAuth providers / generic OIDC — wait for a concrete flow
 - Account linking (OAuth + password) — wait for a concrete flow
-- General plugin system — explicitly out of scope for Otok core
-- ICU / pluralization in `otok-i18n` — wait for a concrete flow
+- Plugin render hooks and programmatic route registration — follow-up after v1 plugin API
 
 ## Extraction order
 

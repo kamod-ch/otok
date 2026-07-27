@@ -1,0 +1,8 @@
+{
+  "dashboard.welcome": "Welcome",
+  "dashboard.price": "Price",
+  "nav.home": "Home",
+  "nav.products": "Products",
+  "items.one": "1 item",
+  "items.other": "{count} items"
+}

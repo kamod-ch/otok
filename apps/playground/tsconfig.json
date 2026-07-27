@@ -10,5 +10,5 @@
       "@otok/vite-plugin": ["../../packages/vite-plugin-otok/src/index.ts"]
     }
   },
-  "include": ["src", "tests", "vite.config.ts", "playwright.config.ts"]
+  "include": ["src", "tests", "vite.config.ts", "otok.config.ts", "playwright.config.ts"]
 }

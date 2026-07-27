@@ -2,17 +2,55 @@
 
 Cookie sessions, CSRF, and route middleware helpers for [Otok](https://github.com/kamod-ch/otok) apps.
 
-This package is **composition, not a plugin system**. Database schema and user lookup stay in your app via a `SessionAdapter`. Otok core stays free of auth dependencies.
+Ships as an **Otok plugin** (`auth()`) and as **composition helpers** for manual wiring.
 
 ## Install
 
 ```bash
 pnpm add @kamod-ch/otok-auth hono otok
-# optional, for password hashing:
-pnpm add @node-rs/argon2
 ```
 
-## Session manager
+## Plugin (recommended)
+
+```ts
+import { defineConfig } from "otok";
+import auth from "@kamod-ch/otok-auth";
+import { createMemorySessionAdapter } from "@kamod-ch/otok-auth/adapters/memory";
+
+export default defineConfig({
+  plugins: [
+    auth({
+      secret: process.env.AUTH_SECRET!,
+      session: { cookieName: "otok_session" },
+      adapter: createMemorySessionAdapter({ resolveUser: ({ session }) => users.get(session.userId) ?? null }),
+      redirectAllowlist: ["/", "/dashboard"],
+      getRole: (user) => user.role,
+    }),
+  ],
+});
+```
+
+## Loaders
+
+```ts
+import { defineLoader } from "@kamod-ch/otok-auth/loader";
+
+export const loader = defineLoader(async ({ auth }) => {
+  const user = await auth.requireUser();
+  return { user };
+});
+```
+
+## Server APIs
+
+```ts
+import { getSession, requireUser, requireRole } from "@kamod-ch/otok-auth/registry";
+```
+
+## Composition (manual wiring)
+
+This package remains **composition-friendly**. Database schema and user lookup stay in your app via a `SessionAdapter`.
+
 
 ```ts
 import { createSessionManager, type SessionAdapter } from "@kamod-ch/otok-auth/session";

@@ -1,6 +1,12 @@
-import { matchLocale, normalizeLocale } from "./locale.js";
+import { matchLocale, normalizeLocale } from "./locale-core.js";
+import type { LocalizedRouteNames, RoutingMode } from "./types.js";
 
-const DEFAULT_PARAM_KEY = "lang";
+export const DEFAULT_PARAM_KEY = "lang";
+
+export interface LocalizePathOptions {
+  defaultLocale?: string;
+  routing?: RoutingMode;
+}
 
 export function withLocaleParam(
   params: Record<string, string | undefined>,
@@ -10,9 +16,6 @@ export function withLocaleParam(
   return { ...params, [paramKey]: locale };
 }
 
-/**
- * If the first path segment is a supported locale, strip it and return the remainder.
- */
 export function stripLocaleParam(
   pathname: string,
   locales: readonly string[],
@@ -24,7 +27,7 @@ export function stripLocaleParam(
   const segments = normalized.split("/").filter(Boolean);
   if (segments.length === 0) return { pathname: "/" };
 
-  const first = segments[0];
+  const first = segments[0] ?? "";
   const matched = matchLocale(first, locales);
   if (!matched) return { pathname: normalized };
 
@@ -35,32 +38,71 @@ export function stripLocaleParam(
   };
 }
 
-export interface LocalizePathOptions {
-  /** When `locale` equals this value and `prefixDefault` is false, omit the prefix. */
-  defaultLocale?: string;
-  /** Prefix the default locale as well. Default: false. */
-  prefixDefault?: boolean;
-}
-
 /**
- * Prefix a pathname with a locale segment.
- * `localizePath("/about", "de")` → `"/de/about"`
- * `localizePath("/about", "en", { defaultLocale: "en" })` → `"/about"`
+ * Build a localized pathname according to the routing mode.
  */
 export function localizePath(
   pathname: string,
   locale: string,
   options: LocalizePathOptions = {},
 ): string {
-  const { defaultLocale, prefixDefault = false } = options;
+  const { defaultLocale, routing = "prefix-except-default" } = options;
   const normalized = pathname.startsWith("/") ? pathname : `/${pathname}`;
   const localeNorm = normalizeLocale(locale) ?? locale;
 
-  if (defaultLocale != null && !prefixDefault) {
+  if (routing === "none" || routing === "domain") {
+    return normalized === "" ? "/" : normalized;
+  }
+
+  if (routing === "prefix-except-default" && defaultLocale != null) {
     const defaultNorm = normalizeLocale(defaultLocale) ?? defaultLocale;
     if (localeNorm === defaultNorm) return normalized === "" ? "/" : normalized;
   }
 
   if (normalized === "/") return `/${localeNorm}`;
   return `/${localeNorm}${normalized}`;
+}
+
+/**
+ * Switch locale while preserving the current canonical path.
+ */
+export function switchLocalePath(
+  currentPathname: string,
+  targetLocale: string,
+  locales: readonly string[],
+  options: LocalizePathOptions = {},
+): string {
+  const { pathname } = stripLocaleParam(currentPathname, locales);
+  return localizePath(pathname, targetLocale, options);
+}
+
+export function localizeRouteSegment(
+  routeKey: string,
+  locale: string,
+  routeNames: LocalizedRouteNames,
+  fallbackLocale: string,
+): string {
+  const names = routeNames[routeKey];
+  if (!names) return routeKey;
+  return names[locale] ?? names[fallbackLocale] ?? routeKey;
+}
+
+export function createLinkHelper(
+  locales: readonly string[],
+  defaultLocale: string,
+  routing: RoutingMode,
+  routeNames: LocalizedRouteNames = {},
+) {
+  return {
+    href(pathname: string, locale: string): string {
+      return localizePath(pathname, locale, { defaultLocale, routing });
+    },
+    switchLocale(currentPathname: string, targetLocale: string): string {
+      return switchLocalePath(currentPathname, targetLocale, locales, { defaultLocale, routing });
+    },
+    route(routeKey: string, locale: string): string {
+      const segment = localizeRouteSegment(routeKey, locale, routeNames, defaultLocale);
+      return localizePath(`/${segment}`, locale, { defaultLocale, routing });
+    },
+  };
 }

@@ -1,0 +1,8 @@
+{
+  "dashboard.welcome": "Willkommen",
+  "dashboard.price": "Preis",
+  "nav.home": "Start",
+  "nav.products": "Produkte",
+  "items.one": "1 Artikel",
+  "items.other": "{count} Artikel"
+}

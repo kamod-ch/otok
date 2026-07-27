@@ -92,6 +92,7 @@ function renderHead(head: OtokHead | undefined): string {
         `${OTOK_HEAD_ATTR}="${escapeHtml(headKey)}"`,
         `rel="${escapeHtml(link.rel)}"`,
         `href="${escapeHtml(link.href)}"`,
+        link.hreflang ? `hreflang="${escapeHtml(link.hreflang)}"` : "",
         link.crossorigin ? `crossorigin="${escapeHtml(link.crossorigin)}"` : "",
         link.as ? `as="${escapeHtml(link.as)}"` : "",
         link.type ? `type="${escapeHtml(link.type)}"` : "",

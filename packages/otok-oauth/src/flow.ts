@@ -2,7 +2,8 @@ import { generateCodeVerifier, generateState } from "arctic";
 import type { Context } from "hono";
 import type { Hono } from "hono";
 import { deleteCookie, getCookie, setCookie } from "hono/cookie";
-import type { OAuthAdapter, OAuthProviderId } from "./adapter/types.js";
+import { tryGetAuthRuntime } from "@kamod-ch/otok-auth/registry";
+import type { OAuthAdapter, OAuthProviderId, OAuthTokenRefreshHandler } from "./adapter/types.js";
 import { OAuthFlowError, type OAuthErrorCode } from "./errors.js";
 import { fetchGitHubProfile } from "./profile/github.js";
 import { fetchGoogleProfile } from "./profile/google.js";
@@ -26,14 +27,13 @@ export type OAuthFlowOptions<TUser> = {
   secret: string;
   adapter: OAuthAdapter<TUser>;
   createSession: (c: Context, userId: string) => Promise<void>;
-  providers: {
-    github?: OAuthProviderConfig;
-    google?: OAuthProviderConfig;
-  };
+  providers: Partial<Record<OAuthProviderId, OAuthProviderConfig>>;
   basePath?: string;
   stateCookie?: string;
   secure?: boolean | ((c: Context) => boolean);
   loginPath?: string;
+  redirectAllowlist?: readonly string[];
+  tokenRefresh?: OAuthTokenRefreshHandler;
   /** Called after a successful login, before redirect. */
   onSuccess?: (c: Context, user: TUser) => void | Promise<void>;
   /** Override default error redirect. */
@@ -68,6 +68,10 @@ function errorRedirect(loginPath: string, code: OAuthErrorCode): Response {
   });
 }
 
+function resolveAllowlist(options: OAuthFlowOptions<unknown>): readonly string[] {
+  return options.redirectAllowlist ?? tryGetAuthRuntime()?.redirectAllowlist ?? ["/"];
+}
+
 export function createOAuthFlow<TUser>(options: OAuthFlowOptions<TUser>): OAuthFlow<TUser> {
   if (!options.secret) {
     throw new Error("createOAuthFlow requires a non-empty secret");
@@ -76,6 +80,7 @@ export function createOAuthFlow<TUser>(options: OAuthFlowOptions<TUser>): OAuthF
   const basePath = options.basePath ?? DEFAULT_BASE_PATH;
   const stateCookie = options.stateCookie ?? DEFAULT_STATE_COOKIE;
   const loginPath = options.loginPath ?? DEFAULT_LOGIN_PATH;
+  const allowlist = resolveAllowlist(options as OAuthFlowOptions<unknown>);
 
   async function fail(c: Context, code: OAuthErrorCode): Promise<Response> {
     if (options.onError) return options.onError(c, code);
@@ -87,16 +92,20 @@ export function createOAuthFlow<TUser>(options: OAuthFlowOptions<TUser>): OAuthF
       const config = options.providers[provider];
       if (!config) return fail(c, "provider_unavailable");
 
+      const providerError = c.req.query("error");
+      if (providerError) return fail(c, "provider_error");
+
       try {
         const state = generateState();
-        const next = safeNextPath(c.req.query("next"));
+        const next = safeNextPath(c.req.query("next"), allowlist);
+        const link = c.req.query("link") === "1";
         let codeVerifier: string | null = null;
         let authorizationURL: URL;
 
         if (provider === "github") {
           const client = createGitHubClient(config);
           authorizationURL = client.createAuthorizationURL(state, githubScopes(config));
-        } else {
+        } else if (provider === "google") {
           const client = createGoogleClient(config);
           codeVerifier = generateCodeVerifier();
           authorizationURL = client.createAuthorizationURL(
@@ -104,6 +113,8 @@ export function createOAuthFlow<TUser>(options: OAuthFlowOptions<TUser>): OAuthF
             codeVerifier,
             googleScopes(config),
           );
+        } else {
+          return fail(c, "provider_unavailable");
         }
 
         const payload: OAuthStatePayload = {
@@ -111,6 +122,7 @@ export function createOAuthFlow<TUser>(options: OAuthFlowOptions<TUser>): OAuthF
           state,
           codeVerifier,
           next,
+          link,
           issuedAt: Date.now(),
         };
 
@@ -134,6 +146,9 @@ export function createOAuthFlow<TUser>(options: OAuthFlowOptions<TUser>): OAuthF
       const config = options.providers[provider];
       if (!config) return fail(c, "provider_unavailable");
 
+      const providerError = c.req.query("error");
+      if (providerError) return fail(c, "provider_error");
+
       const code = c.req.query("code");
       const returnedState = c.req.query("state");
       if (!code) return fail(c, "missing_code");
@@ -151,16 +166,25 @@ export function createOAuthFlow<TUser>(options: OAuthFlowOptions<TUser>): OAuthF
 
       try {
         let accessToken: string;
+        let refreshToken: string | null = null;
 
         if (provider === "github") {
           const client = createGitHubClient(config);
           const tokens = await client.validateAuthorizationCode(code);
           accessToken = tokens.accessToken();
-        } else {
-          if (!payload.codeVerifier) return fail(c, "invalid_state");
+          refreshToken = tokens.hasRefreshToken() ? tokens.refreshToken() : null;
+        } else if (provider === "google") {
+          if (!payload.codeVerifier) return fail(c, "pkce_error");
           const client = createGoogleClient(config);
           const tokens = await client.validateAuthorizationCode(code, payload.codeVerifier);
           accessToken = tokens.accessToken();
+          refreshToken = tokens.hasRefreshToken() ? tokens.refreshToken() : null;
+        } else {
+          return fail(c, "provider_unavailable");
+        }
+
+        if (refreshToken && options.tokenRefresh) {
+          await options.tokenRefresh.refresh(provider, refreshToken);
         }
 
         let profile;
@@ -176,13 +200,24 @@ export function createOAuthFlow<TUser>(options: OAuthFlowOptions<TUser>): OAuthF
 
         let user: TUser;
         try {
-          user = await options.adapter.findOrCreateUser(profile);
+          if (payload.link) {
+            const runtime = tryGetAuthRuntime();
+            const current = runtime ? await runtime.helpers.getSession(c) : null;
+            if (!current || !options.adapter.linkAccount) {
+              return fail(c, "link_verification_failed");
+            }
+            user = await options.adapter.linkAccount({ user: current as TUser, profile });
+          } else {
+            user = await options.adapter.findOrCreateUser(profile);
+          }
         } catch {
           return fail(c, "adapter_error");
         }
 
         const userId = options.adapter.getUserId(user);
-        await options.createSession(c, userId);
+        if (!payload.link) {
+          await options.createSession(c, userId);
+        }
         await options.onSuccess?.(c, user);
 
         const destination = payload.next ?? "/";
@@ -195,13 +230,10 @@ export function createOAuthFlow<TUser>(options: OAuthFlowOptions<TUser>): OAuthF
   }
 
   function mount(app: Hono): void {
-    if (options.providers.github) {
-      app.get(joinPath(basePath, "github"), authorize("github"));
-      app.get(joinPath(basePath, "github", "callback"), callback("github"));
-    }
-    if (options.providers.google) {
-      app.get(joinPath(basePath, "google"), authorize("google"));
-      app.get(joinPath(basePath, "google", "callback"), callback("google"));
+    for (const provider of Object.keys(options.providers) as OAuthProviderId[]) {
+      if (!options.providers[provider]) continue;
+      app.get(joinPath(basePath, provider), authorize(provider));
+      app.get(joinPath(basePath, provider, "callback"), callback(provider));
     }
   }
 

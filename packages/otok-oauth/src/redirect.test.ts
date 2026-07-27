@@ -15,4 +15,9 @@ describe("safeNextPath", () => {
     expect(safeNextPath(null)).toBeNull();
     expect(safeNextPath(undefined)).toBeNull();
   });
+
+  it("rejects paths outside allowlist", () => {
+    expect(safeNextPath("/admin", ["/dashboard"])).toBeNull();
+    expect(safeNextPath("/dashboard", ["/dashboard"])).toBe("/dashboard");
+  });
 });

@@ -1,18 +1,43 @@
 # @kamod-ch/otok-oauth
 
-OAuth login helpers (GitHub and Google) for [Otok](https://github.com/kamod-ch/otok) apps.
+OAuth login helpers (GitHub, Google) for [Otok](https://github.com/kamod-ch/otok) apps.
 
-This package is **composition, not a plugin**. User persistence stays in your app via an `OAuthAdapter`. Session cookies stay in `@kamod-ch/otok-auth` via an injected `createSession`. Otok core stays free of OAuth dependencies.
+Ships as an **Otok plugin** (`oauth()`) and as **`createOAuthFlow`** for manual wiring. Sessions come from `@kamod-ch/otok-auth`.
+
+See [MIGRATION.md](./MIGRATION.md) when upgrading from 1.0.
 
 ## Install
 
 ```bash
-pnpm add @kamod-ch/otok-oauth arctic hono
-# recommended for sessions:
-pnpm add @kamod-ch/otok-auth
+pnpm add @kamod-ch/otok-oauth @kamod-ch/otok-auth arctic hono otok
 ```
 
-## Quick start
+## Plugin (recommended)
+
+Register **after** `auth()`:
+
+```ts
+import auth from "@kamod-ch/otok-auth";
+import oauth from "@kamod-ch/otok-oauth";
+
+export default defineConfig({
+  plugins: [
+    auth({ /* … */ }),
+    oauth({
+      providers: {
+        github: {
+          clientId: env.GITHUB_CLIENT_ID,
+          clientSecret: env.GITHUB_CLIENT_SECRET,
+          redirectUri: `${env.APP_URL}/auth/github/callback`,
+        },
+      },
+      adapter: oauthAdapter,
+    }),
+  ],
+});
+```
+
+## Composition (1.0 API, still supported)
 
 ```ts
 import { Hono } from "hono";

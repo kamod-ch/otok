@@ -28,6 +28,9 @@ importers:
       '@kamod-ui/core':
         specifier: ^0.1.5
         version: 0.1.5(@preact/signals@2.9.1(preact@10.29.2))(preact@10.29.2)(tailwindcss@4.3.0)
+      '@otok/plugin-hello':
+        specifier: workspace:*
+        version: link:../../packages/otok-plugin-hello
       '@preact/signals':
         specifier: ^2.0.0
         version: 2.9.1(preact@10.29.2)
@@ -76,6 +79,9 @@ importers:
 
   packages/otok:
     dependencies:
+      '@otok/config':
+        specifier: workspace:*
+        version: link:../otok-config
       hono:
         specifier: ^4.12.25
         version: 4.12.25
@@ -126,6 +132,40 @@ importers:
         specifier: ^4.1.2
         version: 4.1.8(@types/node@24.13.1)(jsdom@29.1.1)(vite@8.0.16(@types/node@24.13.1)(esbuild@0.28.1)(jiti@2.7.0))
 
+  packages/otok-cli:
+    dependencies:
+      '@otok/config':
+        specifier: workspace:*
+        version: link:../otok-config
+      typescript:
+        specifier: ~6.0.2
+        version: 6.0.3
+    devDependencies:
+      '@types/node':
+        specifier: ^24.12.2
+        version: 24.13.1
+      vitest:
+        specifier: ^4.1.2
+        version: 4.1.8(@types/node@24.13.1)(jsdom@29.1.1)(vite@8.0.16(@types/node@24.13.1)(esbuild@0.28.1)(jiti@2.7.0))
+
+  packages/otok-config:
+    devDependencies:
+      '@types/node':
+        specifier: ^24.12.2
+        version: 24.13.1
+      hono:
+        specifier: ^4.12.25
+        version: 4.12.25
+      typescript:
+        specifier: ~6.0.2
+        version: 6.0.3
+      vite:
+        specifier: ^8.0.10
+        version: 8.0.16(@types/node@24.13.1)(esbuild@0.28.1)(jiti@2.7.0)
+      vitest:
+        specifier: ^4.1.2
+        version: 4.1.8(@types/node@24.13.1)(jsdom@29.1.1)(vite@8.0.16(@types/node@24.13.1)(esbuild@0.28.1)(jiti@2.7.0))
+
   packages/otok-flash:
     devDependencies:
       '@otok/test':
@@ -167,6 +207,9 @@ importers:
       preact:
         specifier: ^10.28.2
         version: 10.29.2
+      preact-render-to-string:
+        specifier: ^6.7.0
+        version: 6.7.0(preact@10.29.2)
       typescript:
         specifier: ~6.0.2
         version: 6.0.3
@@ -176,12 +219,57 @@ importers:
 
   packages/otok-oauth:
     devDependencies:
+      '@kamod-ch/otok-auth':
+        specifier: workspace:*
+        version: link:../otok-auth
       '@types/node':
         specifier: ^24.12.2
         version: 24.13.1
       arctic:
         specifier: ^3.7.0
         version: 3.7.0
+      hono:
+        specifier: ^4.12.25
+        version: 4.12.25
+      otok:
+        specifier: workspace:*
+        version: link:../otok
+      typescript:
+        specifier: ~6.0.2
+        version: 6.0.3
+      vitest:
+        specifier: ^4.1.2
+        version: 4.1.8(@types/node@24.13.1)(jsdom@29.1.1)(vite@8.0.16(@types/node@24.13.1)(esbuild@0.28.1)(jiti@2.7.0))
+
+  packages/otok-plugin-fixture:
+    devDependencies:
+      '@types/node':
+        specifier: ^24.12.2
+        version: 24.13.1
+      hono:
+        specifier: ^4.12.25
+        version: 4.12.25
+      otok:
+        specifier: workspace:*
+        version: link:../otok
+      typescript:
+        specifier: ~6.0.2
+        version: 6.0.3
+      vite:
+        specifier: ^8.0.10
+        version: 8.0.16(@types/node@24.13.1)(esbuild@0.28.1)(jiti@2.7.0)
+      vitest:
+        specifier: ^4.1.2
+        version: 4.1.8(@types/node@24.13.1)(jsdom@29.1.1)(vite@8.0.16(@types/node@24.13.1)(esbuild@0.28.1)(jiti@2.7.0))
+
+  packages/otok-plugin-hello:
+    devDependencies:
+      '@otok/test':
+        specifier: workspace:*
+        version: link:../otok-test
+      '@types/node':
+        specifier: ^24.12.2
+        version: 24.13.1
       hono:
         specifier: ^4.12.25
         version: 4.12.25
@@ -267,6 +355,12 @@ importers:
 
   packages/vite-plugin-otok:
     dependencies:
+      '@otok/config':
+        specifier: workspace:*
+        version: link:../otok-config
+      esbuild:
+        specifier: ^0.28.1
+        version: 0.28.1
       vite:
         specifier: ^8.0.10
         version: 8.0.16(@types/node@24.13.1)(esbuild@0.28.1)(jiti@2.7.0)
@@ -274,6 +368,9 @@ importers:
       '@types/node':
         specifier: ^24.12.2
         version: 24.13.1
+      otok:
+        specifier: workspace:*
+        version: link:../otok
       typescript:
         specifier: ~6.0.2
         version: 6.0.3
@@ -3039,7 +3136,6 @@ snapshots:
       '@esbuild/win32-arm64': 0.28.1
       '@esbuild/win32-ia32': 0.28.1
       '@esbuild/win32-x64': 0.28.1
-    optional: true
 
   escalade@3.2.0: {}
 

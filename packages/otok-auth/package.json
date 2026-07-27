@@ -1,6 +1,6 @@
 {
   "name": "@kamod-ch/otok-auth",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Cookie sessions, CSRF, and route middleware helpers for Otok apps.",
   "license": "MIT",
   "homepage": "https://github.com/kamod-ch/otok/tree/main/packages/otok-auth#readme",
@@ -45,6 +45,26 @@
     "./adapters/kysely": {
       "types": "./dist/adapters/kysely.d.ts",
       "default": "./dist/adapters/kysely.js"
+    },
+    "./plugin": {
+      "types": "./dist/plugin.d.ts",
+      "default": "./dist/plugin.js"
+    },
+    "./context": {
+      "types": "./dist/context.d.ts",
+      "default": "./dist/context.js"
+    },
+    "./registry": {
+      "types": "./dist/registry.d.ts",
+      "default": "./dist/registry.js"
+    },
+    "./loader": {
+      "types": "./dist/loader.d.ts",
+      "default": "./dist/loader.js"
+    },
+    "./redirect": {
+      "types": "./dist/redirect.d.ts",
+      "default": "./dist/redirect.js"
     }
   },
   "scripts": {

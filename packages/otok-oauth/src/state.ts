@@ -6,6 +6,7 @@ export type OAuthStatePayload = {
   state: string;
   codeVerifier: string | null;
   next: string | null;
+  link?: boolean;
   issuedAt: number;
 };
 
@@ -80,10 +81,14 @@ function isOAuthStatePayload(value: unknown): value is OAuthStatePayload {
   if (!value || typeof value !== "object") return false;
   const record = value as Record<string, unknown>;
   return (
-    (record.provider === "github" || record.provider === "google") &&
+    (record.provider === "github" ||
+      record.provider === "google" ||
+      record.provider === "microsoft" ||
+      record.provider === "gitlab") &&
     typeof record.state === "string" &&
     (typeof record.codeVerifier === "string" || record.codeVerifier === null) &&
     (typeof record.next === "string" || record.next === null) &&
+    (record.link === undefined || typeof record.link === "boolean") &&
     typeof record.issuedAt === "number"
   );
 }

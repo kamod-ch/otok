@@ -1,6 +1,6 @@
 {
   "name": "@kamod-ch/otok-oauth",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "OAuth login helpers (GitHub, Google) for Otok apps.",
   "license": "MIT",
   "homepage": "https://github.com/kamod-ch/otok/tree/main/packages/otok-oauth#readme",
@@ -37,6 +37,18 @@
     "./state": {
       "types": "./dist/state.d.ts",
       "default": "./dist/state.js"
+    },
+    "./plugin": {
+      "types": "./dist/plugin.d.ts",
+      "default": "./dist/plugin.js"
+    },
+    "./providers/microsoft": {
+      "types": "./dist/providers/microsoft.d.ts",
+      "default": "./dist/providers/microsoft.js"
+    },
+    "./providers/gitlab": {
+      "types": "./dist/providers/gitlab.d.ts",
+      "default": "./dist/providers/gitlab.js"
     }
   },
   "scripts": {
@@ -46,6 +58,7 @@
     "test": "vitest run"
   },
   "peerDependencies": {
+    "@kamod-ch/otok-auth": ">=1.1.0",
     "arctic": ">=3.0.0",
     "hono": ">=4",
     "otok": ">=0.3.0"
@@ -53,9 +66,13 @@
   "peerDependenciesMeta": {
     "otok": {
       "optional": true
+    },
+    "@kamod-ch/otok-auth": {
+      "optional": true
     }
   },
   "devDependencies": {
+    "@kamod-ch/otok-auth": "workspace:*",
     "@types/node": "^24.12.2",
     "arctic": "^3.7.0",
     "hono": "^4.12.25",

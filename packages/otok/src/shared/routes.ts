@@ -113,6 +113,7 @@ export interface OtokHead {
 export interface OtokHeadLink {
   rel: string;
   href: string;
+  hreflang?: string;
   crossorigin?: string;
   as?: string;
   type?: string;

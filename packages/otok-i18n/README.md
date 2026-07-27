@@ -1,142 +1,163 @@
 # @kamod-ch/otok-i18n
 
-Locale resolution, message catalogs, and i18n helpers for [Otok](https://github.com/kamod-ch/otok).
-
-Composition package — Otok core stays free of i18n. Pair with optional `[[lang]]` route segments.
+Full i18n integration for [Otok](https://github.com/kamod-ch/otok): routing, SSR, islands, metadata, and the plugin API.
 
 ## Install
 
 ```bash
 pnpm add @kamod-ch/otok-i18n hono otok
-# optional, for islands:
-pnpm add preact
+pnpm add preact   # for islands / client hooks
 ```
 
-## App config
+## Quick start (plugin API)
 
 ```ts
-// src/features/i18n.ts
-import type { I18nConfig } from "@kamod-ch/otok-i18n";
+// otok.config.ts
+import { defineConfig } from "otok";
+import i18n from "@kamod-ch/otok-i18n";
 
-export const catalog = {
-  en: { "about.title": "About", "nav.home": "Home" },
-  de: { "about.title": "Über uns", "nav.home": "Start" },
-} as const;
-
-export const i18nConfig = {
-  catalog,
-  locales: ["en", "de"],
-  defaultLocale: "en",
-} satisfies I18nConfig<typeof catalog>;
+export default defineConfig({
+  plugins: [
+    i18n({
+      locales: ["de", "en", "fr"],
+      defaultLocale: "de",
+      routing: "prefix-except-default",
+      fallbackLocale: "en",
+      messages: {
+        de: () => import("./locales/de.json"),
+        en: () => import("./locales/en.json"),
+        fr: () => import("./locales/fr.json"),
+      },
+    }),
+  ],
+});
 ```
 
-## Middleware
+The plugin registers app-level middleware automatically (`configureApp`). No manual `_middleware.ts` required unless you need custom ordering.
+
+## Routing modes
+
+| Mode | Example URLs |
+|------|----------------|
+| `prefix` | `/de/products`, `/en/products` |
+| `prefix-except-default` | `/products` (de), `/en/products` |
+| `domain` | `example.ch`, `example.fr` (via `domains` map) |
+| `none` | No locale in URL — cookie / `Accept-Language` only |
+
+## Locale resolution priority
+
+1. **URL** — path prefix or domain (depending on `routing`)
+2. **Cookie** — `locale` (configurable via `cookieName`)
+3. **`Accept-Language`**
+4. **`defaultLocale`**
+
+Unknown locale prefixes (e.g. `/xx/about`) redirect once to the canonical path when `redirectUnknownLocale` is true (default).
+
+## Server: loaders and `t()`
 
 ```ts
-// src/app/routes/[[lang]]/_middleware.ts
-import { createI18nMiddleware } from "@kamod-ch/otok-i18n/middleware";
-import { i18nConfig } from "../../features/i18n.js";
-
-export default createI18nMiddleware(i18nConfig);
-```
-
-Resolution order: URL locale segment → cookie → `Accept-Language` → `defaultLocale`.
-
-No automatic redirect — apps choose canonical URL policy.
-
-## Loader + head
-
-```ts
-import { readI18n } from "@kamod-ch/otok-i18n/middleware";
+import { defineLoader, serializeI18n } from "@kamod-ch/otok-i18n/loader";
 import { i18nHead } from "@kamod-ch/otok-i18n";
-import type { OtokContext } from "otok/server";
 
-export const loader = ({ hono }: OtokContext) => {
-  const i18n = readI18n(hono)!;
-  return { locale: i18n.locale, title: i18n.t("about.title") };
-};
+export const loader = defineLoader(({ i18n, hono }) => ({
+  title: i18n.t("dashboard.welcome"),
+  i18n: serializeI18n(hono), // active locale only — safe for hydration
+}));
 
-export const head = ({ data }) => i18nHead(data.locale, { title: data.title });
-```
-
-Or call `createI18n` directly in a loader with `params.lang`:
-
-```ts
-import { createI18n } from "@kamod-ch/otok-i18n";
-import { i18nConfig } from "../../features/i18n.js";
-
-export const loader = ({ params, request }: OtokContext) => {
-  const i18n = createI18n(i18nConfig, {
-    param: params.lang,
-    acceptLanguage: request.headers.get("accept-language") ?? undefined,
+export const head = ({ data }) =>
+  i18nHead({
+    locale: data.i18n.locale,
+    locales: ["de", "en", "fr"],
+    defaultLocale: "de",
+    origin: "https://example.com",
+    pathname: "/dashboard",
+    extra: { title: data.title },
   });
-  return { locale: i18n.locale, title: i18n.t("about.title") };
-};
 ```
 
-## Client / islands
+## Islands: `useI18n()` / `useTranslation()`
 
 ```tsx
-import { I18nProvider, useT } from "@kamod-ch/otok-i18n/client";
+import { I18nProvider, useI18n } from "@kamod-ch/otok-i18n/client";
 
-function Greeting() {
-  const t = useT();
-  return <p>{t("nav.home")}</p>;
+export function Welcome({ itemCount }: { itemCount: number }) {
+  const { t, locale, formatCurrency } = useI18n();
+  return (
+    <>
+      <h1>{t("dashboard.welcome")}</h1>
+      <p>{t("items", { count: itemCount })}</p>
+      <p>{formatCurrency(29, "CHF")}</p>
+    </>
+  );
 }
 
-// Pass serializable locale + catalog from the loader:
-<I18nProvider locale={data.locale} defaultLocale="en" catalog={catalog}>
-  <Greeting />
+// In route: pass loader payload
+<I18nProvider {...data.i18n}>
+  <Welcome itemCount={3} />
 </I18nProvider>
 ```
+
+SSR and hydration use the same `serializeI18n()` payload — only the active locale messages are sent to the client.
+
+## Features
+
+- Lazy message loading per locale (dynamic `import()`)
+- Fallback locale for missing keys
+- Pluralization via `Intl.PluralRules` (`items.one`, `items.other`, + `{count}`)
+- Safe `{variable}` interpolation (HTML-escaped)
+- `formatDate`, `formatTime`, `formatNumber`, `formatPercent`, `formatCurrency` via `Intl`
+- Dev warnings for missing keys; production-safe fallbacks
+- `LocaleSwitcher` component (`@kamod-ch/otok-i18n/switcher`)
+- Localized sitemap helpers (`@kamod-ch/otok-i18n/sitemap`)
+- RTL direction hint via `useI18n().direction`
+- Typed keys: `TranslationKey<typeof messages>`, `FlattenKeys<…>`
 
 ## Route helpers
 
 ```ts
-import { localizePath, withLocaleParam } from "@kamod-ch/otok-i18n/routes";
-import { route } from "virtual:otok-routes";
+import { localizePath, switchLocalePath, createLinkHelper } from "@kamod-ch/otok-i18n/routes";
 
-localizePath("/about", "de"); // "/de/about"
-localizePath("/about", "en", { defaultLocale: "en" }); // "/about"
+localizePath("/products", "en", { defaultLocale: "de", routing: "prefix-except-default" });
+// → "/en/products"
 
-route("/[[lang]]/about", {
-  params: withLocaleParam({}, "de"),
-});
+switchLocalePath("/en/products", "fr", ["de", "en", "fr"], { defaultLocale: "de" });
+// → "/fr/products"
 ```
 
-## API
+## Legacy flat-catalog API
 
-| Export | Purpose |
-|--------|---------|
-| `resolveLocale` / `matchLocale` / `parseAcceptLanguage` | Locale resolution |
-| `createTranslator` | `t(key, fallback?)` from a catalog |
-| `createI18n` | Resolve locale + build translator |
-| `createI18nMiddleware` / `readI18n` | Hono context for routes |
-| `i18nHead` | Set `head.lang` for `<html lang>` |
-| `localizePath` / `stripLocaleParam` / `withLocaleParam` | URL helpers |
-| `I18nProvider` / `useT` / `useLocale` | Client islands |
+Still supported for apps without the plugin:
+
+```ts
+import { createI18nMiddleware, toRouteMiddleware } from "@kamod-ch/otok-i18n/middleware";
+
+// File-based _middleware.ts — export default:
+export default createI18nMiddleware(i18nConfig);
+
+// Programmatic route middleware arrays:
+middleware: [toRouteMiddleware(createI18nMiddleware(i18nConfig))];
+```
 
 ## Exports
 
 | Subpath | Purpose |
 |---------|---------|
-| `@kamod-ch/otok-i18n` | Re-exports (server-safe) |
-| `@kamod-ch/otok-i18n/middleware` | Middleware + `readI18n` |
-| `@kamod-ch/otok-i18n/routes` | Path / param helpers |
-| `@kamod-ch/otok-i18n/client` | Preact provider + hooks |
+| `@kamod-ch/otok-i18n` | Plugin factory + core API |
+| `@kamod-ch/otok-i18n/middleware` | Middleware, `readI18n`, `toRouteMiddleware` |
+| `@kamod-ch/otok-i18n/loader` | `defineLoader`, `serializeI18n` |
+| `@kamod-ch/otok-i18n/client` | `I18nProvider`, `useI18n`, `useTranslation` |
+| `@kamod-ch/otok-i18n/routes` | Path / link helpers |
+| `@kamod-ch/otok-i18n/sitemap` | Localized sitemap XML |
+| `@kamod-ch/otok-i18n/switcher` | `LocaleSwitcher` component |
 
-## Design notes
+## Example
 
-- Flat string catalogs (`"nav.home"`). No ICU / pluralization in v1.
-- Fallback chain: active locale → default locale → explicit fallback → key.
-- Does not add i18n to Otok core.
+See [`examples/i18n-trilingual`](../../examples/i18n-trilingual) for a complete DE / EN / FR app.
 
 ## Related packages
 
 | Package | Purpose |
 |---------|---------|
-| `@kamod-ch/otok-auth` | Sessions, CSRF, auth middleware |
-| `@kamod-ch/otok-validate` | Zod → `validationError()` |
-| `@kamod-ch/otok-flash` | Signed flash cookies for PRG |
-| `@kamod-ch/otok-stripe` | Checkout, portal, webhooks |
-| `@kamod-ch/otok-oauth` | GitHub/Google OAuth login |
+| `@kamod-ch/otok-auth` | Sessions, CSRF |
+| `@kamod-ch/otok-validate` | Zod validation |
+| `@kamod-ch/otok-flash` | Flash messages |

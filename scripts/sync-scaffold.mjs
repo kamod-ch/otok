@@ -33,7 +33,7 @@ const templateTsconfig = `${JSON.stringify(
       noEmit: true,
       types: ["vite/client", "node"],
     },
-    include: ["src", "vite.config.ts"],
+    include: ["src", "vite.config.ts", "otok.config.ts"],
   },
   null,
   2,
@@ -97,6 +97,7 @@ function createTemplatePackageJson() {
 
   pkg.dependencies["@kamod-ui/core"] = "^0.1.5";
   pkg.dependencies.otok = `^${runtimePkg.version}`;
+  delete pkg.dependencies["@otok/plugin-hello"];
 
   pkg.devDependencies["@otok/vite-plugin"] = `^${pluginPkg.version}`;
   delete pkg.devDependencies["@playwright/test"];
@@ -113,6 +114,10 @@ function buildTemplateFiles() {
   }
 
   files.set("vite.config.ts", fs.readFileSync(path.join(sourceRoot, "vite.config.ts"), "utf8"));
+  files.set(
+    "otok.config.ts",
+    'import { defineConfig } from "otok";\n\nexport default defineConfig({});\n',
+  );
   files.set("tsconfig.json", templateTsconfig);
   files.set("package.json", createTemplatePackageJson());
 

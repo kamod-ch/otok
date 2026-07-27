@@ -1,11 +1,14 @@
-export type LocaleSource = "param" | "cookie" | "header" | "default";
+import { matchLocale, normalizeLocale, parseAcceptLanguage } from "./locale-core.js";
+import type { ResolveLocaleInput, ResolvedLocaleResult, RoutingMode } from "./types.js";
+
+export { matchLocale, normalizeLocale, parseAcceptLanguage } from "./locale-core.js";
+
+export type LocaleSource = import("./types.js").LocaleSource;
 
 export interface ResolveLocaleOptions {
-  /** Locale from a route param such as `[[lang]]`. */
   param?: string | undefined;
-  paramKey?: string;
+  domain?: string | undefined;
   cookie?: string | undefined;
-  cookieName?: string;
   acceptLanguage?: string | undefined;
   locales: readonly string[];
   defaultLocale: string;
@@ -16,60 +19,125 @@ export interface ResolvedLocale {
   source: LocaleSource;
 }
 
-const DEFAULT_PARAM_KEY = "lang";
-const DEFAULT_COOKIE_NAME = "locale";
+const LOCALE_SEGMENT_RE = /^[a-z]{2}(?:-[a-z]{2})?$/i;
 
-export function normalizeLocale(value: string | undefined | null): string | undefined {
-  if (value == null) return undefined;
-  const trimmed = value.trim().toLowerCase();
-  return trimmed.length > 0 ? trimmed : undefined;
+export function looksLikeLocaleSegment(segment: string): boolean {
+  return LOCALE_SEGMENT_RE.test(segment);
 }
 
-/**
- * Match a BCP 47 tag against supported locales.
- * Tries exact match first, then the primary language subtag (`de-CH` → `de`).
- */
-export function matchLocale(candidate: string | undefined, locales: readonly string[]): string | undefined {
-  const normalized = normalizeLocale(candidate);
-  if (!normalized) return undefined;
-
-  const exact = locales.find((locale) => normalizeLocale(locale) === normalized);
-  if (exact) return exact;
-
-  const primary = normalized.split("-")[0];
-  if (!primary || primary === normalized) return undefined;
-  return locales.find((locale) => normalizeLocale(locale) === primary);
-}
-
-/**
- * Parse an Accept-Language header and return the first supported locale.
- */
-export function parseAcceptLanguage(header: string | undefined, locales: readonly string[]): string | undefined {
-  if (!header) return undefined;
-
-  const tags = header
-    .split(",")
-    .map((part) => {
-      const [tag, ...params] = part.trim().split(";");
-      const qParam = params.find((p) => p.trim().startsWith("q="));
-      const q = qParam ? Number.parseFloat(qParam.trim().slice(2)) : 1;
-      return { tag: tag?.trim() ?? "", q: Number.isFinite(q) ? q : 0 };
-    })
-    .filter((entry) => entry.tag.length > 0 && entry.q > 0)
-    .sort((a, b) => b.q - a.q);
-
-  for (const { tag } of tags) {
-    const matched = matchLocale(tag, locales);
-    if (matched) return matched;
-  }
+export function resolveLocaleFromDomain(
+  hostname: string,
+  domains: Record<string, string> | undefined,
+  locales: readonly string[],
+): string | undefined {
+  if (!domains) return undefined;
+  const host = hostname.toLowerCase().split(":")[0] ?? hostname;
+  const mapped = domains[host];
+  if (mapped) return matchLocale(mapped, locales);
   return undefined;
 }
 
+export function stripLocaleFromPath(
+  pathname: string,
+  locales: readonly string[],
+  routing: RoutingMode,
+): { pathname: string; locale?: string; unknownLocale?: string } {
+  const normalized = pathname.startsWith("/") ? pathname : `/${pathname}`;
+  if (normalized === "/" || routing === "none" || routing === "domain") {
+    return { pathname: normalized };
+  }
+
+  const segments = normalized.split("/").filter(Boolean);
+  if (segments.length === 0) return { pathname: "/" };
+
+  const first = segments[0] ?? "";
+  const matched = matchLocale(first, locales);
+
+  if (matched) {
+    const rest = segments.slice(1).join("/");
+    return {
+      pathname: rest ? `/${rest}` : "/",
+      locale: matched,
+    };
+  }
+
+  if (looksLikeLocaleSegment(first)) {
+    const rest = segments.slice(1).join("/");
+    return {
+      pathname: rest ? `/${rest}` : "/",
+      unknownLocale: first,
+    };
+  }
+
+  return { pathname: normalized };
+}
+
+/**
+ * Full locale resolution with routing-mode awareness.
+ *
+ * Priority: URL/domain → cookie → Accept-Language → defaultLocale
+ */
+export function resolveLocaleFull(input: ResolveLocaleInput): ResolvedLocaleResult {
+  const { locales, defaultLocale, routing, domains } = input;
+
+  let pathLocale: string | undefined;
+  let unknownPathLocale: string | undefined;
+  let canonicalPathname = input.pathname;
+
+  if (routing === "domain") {
+    const fromDomain = resolveLocaleFromDomain(input.hostname, domains, locales);
+    if (fromDomain) {
+      const stripped = stripLocaleFromPath(input.pathname, locales, "none");
+      return {
+        locale: fromDomain,
+        source: "domain",
+        canonicalPathname: stripped.pathname,
+      };
+    }
+  }
+
+  const stripped = stripLocaleFromPath(input.pathname, locales, routing);
+  canonicalPathname = stripped.pathname;
+  pathLocale = stripped.locale;
+  unknownPathLocale = stripped.unknownLocale;
+
+  if (pathLocale) {
+    return { locale: pathLocale, source: "url", pathLocale, canonicalPathname };
+  }
+
+  if (unknownPathLocale) {
+    const fallback = matchLocale(defaultLocale, locales) ?? defaultLocale;
+    return {
+      locale: fallback,
+      source: "default",
+      unknownPathLocale,
+      canonicalPathname,
+    };
+  }
+
+  const fromCookie = matchLocale(input.cookie, locales);
+  if (fromCookie) {
+    return { locale: fromCookie, source: "cookie", canonicalPathname };
+  }
+
+  const fromHeader = parseAcceptLanguage(input.acceptLanguage, locales);
+  if (fromHeader) {
+    return { locale: fromHeader, source: "header", canonicalPathname };
+  }
+
+  const fallback = matchLocale(defaultLocale, locales) ?? defaultLocale;
+  return { locale: fallback, source: "default", canonicalPathname };
+}
+
+/** Legacy simple resolver (param → cookie → header → default). */
 export function resolveLocale(options: ResolveLocaleOptions): ResolvedLocale {
   const { locales, defaultLocale } = options;
 
   const fromParam = matchLocale(options.param, locales);
-  if (fromParam) return { locale: fromParam, source: "param" };
+  if (fromParam) return { locale: fromParam, source: "url" };
+
+  const fromDomain = matchLocale(options.domain, locales);
+  if (fromDomain) return { locale: fromDomain, source: "domain" };
 
   const fromCookie = matchLocale(options.cookie, locales);
   if (fromCookie) return { locale: fromCookie, source: "cookie" };
@@ -81,4 +149,5 @@ export function resolveLocale(options: ResolveLocaleOptions): ResolvedLocale {
   return { locale: fallback, source: "default" };
 }
 
-export { DEFAULT_COOKIE_NAME, DEFAULT_PARAM_KEY };
+export const DEFAULT_PARAM_KEY = "lang";
+export const DEFAULT_COOKIE_NAME = "locale";

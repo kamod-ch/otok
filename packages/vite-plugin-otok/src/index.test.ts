@@ -20,7 +20,8 @@ function withFixture(files: Record<string, string>, test: (root: string) => void
 
 describe("otok vite plugin", () => {
   it("registers the expected plugin name", () => {
-    const plugin = otok();
+    const plugins = otok();
+    const plugin = Array.isArray(plugins) ? plugins[0] : plugins;
 
     expect(plugin.name).toBe("otok");
     expect(plugin.enforce).toBe("pre");

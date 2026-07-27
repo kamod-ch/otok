@@ -8,10 +8,14 @@ const secret = "test-oauth-secret-at-least-32-chars!!";
 
 const githubTokens = {
   accessToken: () => "gh-access-token",
+  hasRefreshToken: () => false,
+  refreshToken: () => null,
 };
 
 const googleTokens = {
   accessToken: () => "google-access-token",
+  hasRefreshToken: () => false,
+  refreshToken: () => null,
 };
 
 vi.mock("arctic", () => {
@@ -168,6 +172,43 @@ describe("createOAuthFlow", () => {
     );
     expect(response.status).toBe(303);
     expect(response.headers.get("location")).toBe("/login?error=missing_code");
+  });
+
+  it("callback rejects PKCE mismatch for Google", async () => {
+    const { flow } = createFlow();
+    const app = new Hono();
+    flow.mount(app);
+
+    const stateToken = sealOAuthState(
+      {
+        provider: "google",
+        state: "fixed-state",
+        codeVerifier: null,
+        next: null,
+        issuedAt: Date.now(),
+      },
+      secret,
+    );
+
+    const response = await app.request(
+      "http://localhost/auth/google/callback?code=abc&state=fixed-state",
+      { headers: { cookie: `otok_oauth_state=${stateToken}` } },
+    );
+
+    expect(response.status).toBe(303);
+    expect(response.headers.get("location")).toBe("/login?error=pkce_error");
+  });
+
+  it("callback rejects provider error query", async () => {
+    const { flow } = createFlow();
+    const app = new Hono();
+    flow.mount(app);
+
+    const response = await app.request(
+      "http://localhost/auth/github/callback?error=access_denied&state=fixed-state",
+    );
+    expect(response.status).toBe(303);
+    expect(response.headers.get("location")).toBe("/login?error=provider_error");
   });
 
   it("callback rejects invalid state", async () => {

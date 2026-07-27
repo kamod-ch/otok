@@ -49,3 +49,10 @@ declare module "virtual:otok-islands" {
   export const islandModules: IslandRegistry;
   export default islandModules;
 }
+
+declare module "virtual:otok-config" {
+  import type { OtokRuntimeConfig, ResolvedOtokConfig } from "@otok/config";
+
+  export function loadOtokResolvedConfig(): Promise<ResolvedOtokConfig>;
+  export type OtokResolvedRuntimeConfig = OtokRuntimeConfig;
+}

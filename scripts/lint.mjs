@@ -23,7 +23,12 @@ for (const file of walk(repoRoot)) {
   const content = fs.readFileSync(file, "utf8");
   const relative = path.relative(repoRoot, file);
   if (content.includes("console.log(")) {
-    if (!relative.startsWith("scripts/") && !relative.startsWith("packages/create-otok/bin/")) {
+    if (
+      !relative.startsWith("scripts/") &&
+      !relative.startsWith("packages/create-otok/bin/") &&
+      !relative.startsWith("packages/otok-cli/bin/") &&
+      !relative.startsWith("packages/otok-cli/src/")
+    ) {
       problems.push(`${relative}: avoid console.log in package/app source`);
     }
   }

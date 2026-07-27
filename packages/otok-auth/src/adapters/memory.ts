@@ -3,6 +3,7 @@ import type { CreateSessionRecordInput, SessionAdapter } from "../session/types.
 export interface MemorySessionRecord {
   tokenHash: string;
   userId: string;
+  createdAt: Date;
   expiresAt: Date;
   userAgent: string | null;
   ipAddress: string | null;
@@ -56,6 +57,7 @@ export function createMemorySessionAdapter<TUser>(
       sessions.push({
         tokenHash: input.tokenHash,
         userId: input.userId,
+        createdAt: new Date(),
         expiresAt: input.expiresAt,
         userAgent: input.userAgent,
         ipAddress: input.ipAddress,
@@ -82,6 +84,17 @@ export function createMemorySessionAdapter<TUser>(
       if (!session) return;
       session.lastSeenAt = new Date();
       await persist();
+    },
+    async resolveRecord(tokenHash) {
+      await ensureLoaded();
+      const session = sessions.find((entry) => entry.tokenHash === tokenHash && isActive(entry));
+      if (!session) return null;
+      return {
+        tokenHash: session.tokenHash,
+        userId: session.userId,
+        createdAt: session.createdAt,
+        expiresAt: session.expiresAt,
+      };
     },
   };
 }

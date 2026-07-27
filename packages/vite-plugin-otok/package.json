@@ -34,11 +34,16 @@
     "test": "vitest run"
   },
   "dependencies": {
+    "@otok/config": "workspace:*",
+    "esbuild": "^0.28.1",
     "vite": "^8.0.10"
   },
   "devDependencies": {
+    "@otok/config": "workspace:*",
     "@types/node": "^24.12.2",
+    "otok": "workspace:*",
     "typescript": "~6.0.2",
+    "vite": "^8.0.10",
     "vitest": "^4.1.2"
   },
   "peerDependencies": {

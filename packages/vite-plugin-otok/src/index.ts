@@ -1,7 +1,11 @@
 import fs from "node:fs";
 import path from "node:path";
-import type { Plugin, ViteDevServer } from "vite";
+import type { Plugin, UserConfig, ViteDevServer } from "vite";
 import { normalizePath } from "vite";
+import { generateOtokConfigModule } from "./config-loader.js";
+import { loadResolvedOtokConfig, RESOLVED_OTOK_CONFIG_MODULE_ID } from "./plugin-bridge.js";
+
+const OTOK_CONFIG_MODULE_ID = "virtual:otok-config";
 
 const ROUTES_MODULE_ID = "virtual:otok-routes";
 const ISLANDS_MODULE_ID = "virtual:otok-islands";
@@ -12,6 +16,7 @@ export interface OtokPluginOptions {
   appDir?: string;
   routesDir?: string;
   islandsDir?: string;
+  configFile?: string;
 }
 
 interface RouteEntry {
@@ -563,33 +568,67 @@ function invalidateVirtualModules(server: ViteDevServer): void {
   }
 }
 
-export default function otok(options: OtokPluginOptions = {}): Plugin {
+export default function otok(options: OtokPluginOptions = {}): Plugin[] {
   const appDir = options.appDir ?? "src/app";
   const routesDir = options.routesDir ?? path.join(appDir, "routes");
   const islandsDir = options.islandsDir ?? path.join(appDir, "islands");
   let root = process.cwd();
   let routesPath = path.resolve(root, routesDir);
   let islandsPath = path.resolve(root, islandsDir);
+  let pluginContainer: Awaited<ReturnType<typeof loadResolvedOtokConfig>>["container"];
+  let bridgeSource = generateOtokConfigModule(undefined, root);
+  let virtualModules = new Map<string, () => string | Promise<string>>();
+  let ssrBuild = false;
 
-  return {
+  const corePlugin: Plugin = {
     name: "otok",
     enforce: "pre",
+    async config(_userConfig, env) {
+      const root = process.cwd();
+      const loaded = await loadResolvedOtokConfig(
+        options.configFile,
+        root,
+        env.mode === "production" ? "production" : "development",
+        env.command,
+      );
+      pluginContainer = loaded.container;
+      bridgeSource = loaded.configModuleSource;
+      virtualModules = new Map(
+        [...loaded.resolved.virtualModules.entries()].map(([id, factory]) => [id, () => factory()]),
+      );
+
+      return {
+        plugins: [...loaded.resolved.vitePlugins],
+      } as UserConfig;
+    },
     configResolved(config) {
       root = config.root;
       routesPath = path.resolve(root, routesDir);
       islandsPath = path.resolve(root, islandsDir);
+      ssrBuild = Boolean(config.build.ssr);
     },
     resolveId(id) {
       if (id === ROUTES_MODULE_ID) return RESOLVED_ROUTES_MODULE_ID;
       if (id === ISLANDS_MODULE_ID) return RESOLVED_ISLANDS_MODULE_ID;
+      if (id === OTOK_CONFIG_MODULE_ID) return RESOLVED_OTOK_CONFIG_MODULE_ID;
+      for (const [virtualId, resolvedId] of [...virtualModules.entries()].map(([moduleId]) => [moduleId, `\0${moduleId}`] as const)) {
+        if (id === virtualId) return resolvedId;
+      }
       return undefined;
     },
-    load(id) {
+    async load(id) {
       if (id === RESOLVED_ROUTES_MODULE_ID) {
         return generateRoutesModule(scanRoutes(root, routesDir));
       }
       if (id === RESOLVED_ISLANDS_MODULE_ID) {
         return generateIslandsModule(scanIslands(root, appDir, islandsDir, routesDir));
+      }
+      if (id === RESOLVED_OTOK_CONFIG_MODULE_ID) {
+        return bridgeSource;
+      }
+      for (const [virtualId, factory] of virtualModules) {
+        if (id !== `\0${virtualId}`) continue;
+        return await factory();
       }
       return undefined;
     },
@@ -598,7 +637,8 @@ export default function otok(options: OtokPluginOptions = {}): Plugin {
       if (!/\.[cm]?[tj]sx?$/.test(file) || !isIslandFile(file, routesPath, islandsPath)) return undefined;
       return injectIslandId(code, islandIdForFile(file));
     },
-    configureServer(server) {
+    configureServer(server: ViteDevServer) {
+      void pluginContainer?.runConfigureServer(server);
       server.watcher.add([routesPath, islandsPath]);
       server.watcher.on("add", (file) => {
         if (file.startsWith(routesPath) || file.startsWith(islandsPath)) invalidateVirtualModules(server);
@@ -610,7 +650,15 @@ export default function otok(options: OtokPluginOptions = {}): Plugin {
         if (file.startsWith(routesPath) || file.startsWith(islandsPath)) invalidateVirtualModules(server);
       });
     },
+    buildStart() {
+      void pluginContainer?.runBuildStart(ssrBuild);
+    },
+    buildEnd() {
+      void pluginContainer?.runBuildEnd(ssrBuild);
+    },
   };
+
+  return [corePlugin];
 }
 
 export { otok };

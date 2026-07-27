@@ -18,6 +18,14 @@
     "README.md"
   ],
   "exports": {
+    ".": {
+      "types": "./dist/config/index.d.ts",
+      "default": "./dist/config/index.js"
+    },
+    "./config": {
+      "types": "./dist/config/index.d.ts",
+      "default": "./dist/config/index.js"
+    },
     "./client": {
       "types": "./dist/client/index.d.ts",
       "default": "./dist/client/index.js"
@@ -38,6 +46,7 @@
     "test": "vitest run"
   },
   "dependencies": {
+    "@otok/config": "workspace:*",
     "hono": "^4.12.25",
     "preact-render-to-string": "^6.7.0"
   },
