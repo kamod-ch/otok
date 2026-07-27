@@ -85,6 +85,12 @@ function renderHead(head: OtokHead | undefined): string {
         `<meta ${OTOK_HEAD_ATTR}="${escapeHtml(name)}" name="${escapeHtml(name)}" content="${escapeHtml(content)}">`,
     )
     .join("\n    ");
+  const propertyMeta = Object.entries(head?.propertyMeta ?? {})
+    .map(
+      ([property, content]) =>
+        `<meta ${OTOK_HEAD_ATTR}="property:${escapeHtml(property)}" property="${escapeHtml(property)}" content="${escapeHtml(content)}">`,
+    )
+    .join("\n    ");
   const links = (head?.links ?? [])
     .map((link) => {
       const headKey = link.rel === "canonical" ? "canonical" : `link:${link.rel}:${link.href}`;
@@ -121,6 +127,7 @@ function renderHead(head: OtokHead | undefined): string {
     `<title ${OTOK_HEAD_ATTR}="title">${title}</title>`,
     description,
     meta,
+    propertyMeta,
     links,
     scripts,
     jsonLd,

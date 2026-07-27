@@ -12,6 +12,8 @@ describe("resolvePluginPackageName", () => {
     expect(resolvePluginPackageName("i18n")).toBe("@kamod-ch/otok-i18n");
     expect(resolvePluginPackageName("kysely")).toBe("@kamod-ch/otok-kysely");
     expect(resolvePluginPackageName("seo")).toBe("@kamod-ch/otok-seo");
+    expect(resolvePluginPackageName("security")).toBe("@kamod-ch/otok-security");
+    expect(resolvePluginPackageName("observability")).toBe("@kamod-ch/otok-observability");
     expect(resolvePluginPackageName("kamod")).toBe("@kamod-ch/otok-kamod");
   });
 

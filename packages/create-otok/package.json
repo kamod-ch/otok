@@ -20,6 +20,10 @@
     "bin",
     "template",
     "template-minimal",
+    "otok-starter-minimal",
+    "otok-starter-kamod",
+    "otok-starter-dashboard",
+    "otok-starter-saas",
     "README.md"
   ],
   "scripts": {

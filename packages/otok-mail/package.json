@@ -1,0 +1,76 @@
+{
+  "name": "@kamod-ch/otok-mail",
+  "version": "0.1.0",
+  "description": "Provider-based mail integration for Otok — SMTP, Resend, Mailpit, and test providers.",
+  "license": "MIT",
+  "homepage": "https://github.com/kamod-ch/otok/tree/main/packages/otok-mail#readme",
+  "bugs": {
+    "url": "https://github.com/kamod-ch/otok/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kamod-ch/otok.git",
+    "directory": "packages/otok-mail"
+  },
+  "type": "module",
+  "files": [
+    "dist",
+    "README.md"
+  ],
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    },
+    "./providers/test": {
+      "types": "./dist/providers/test.d.ts",
+      "default": "./dist/providers/test.js"
+    },
+    "./providers/smtp": {
+      "types": "./dist/providers/smtp.d.ts",
+      "default": "./dist/providers/smtp.js"
+    },
+    "./providers/resend": {
+      "types": "./dist/providers/resend.d.ts",
+      "default": "./dist/providers/resend.js"
+    },
+    "./providers/mailpit": {
+      "types": "./dist/providers/mailpit.d.ts",
+      "default": "./dist/providers/mailpit.js"
+    }
+  },
+  "scripts": {
+    "build": "rm -rf dist && tsc -p tsconfig.build.json",
+    "prepare": "npm run build",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "test": "vitest run"
+  },
+  "peerDependencies": {
+    "hono": ">=4",
+    "otok": ">=0.3.0",
+    "preact": ">=10"
+  },
+  "peerDependenciesMeta": {
+    "nodemailer": {
+      "optional": true
+    }
+  },
+  "devDependencies": {
+    "@otok/test": "workspace:*",
+    "@types/node": "^24.12.2",
+    "@types/nodemailer": "^6.4.17",
+    "hono": "^4.12.25",
+    "nodemailer": "^7.0.5",
+    "otok": "workspace:*",
+    "preact": "^10.28.2",
+    "preact-render-to-string": "^6.7.0",
+    "typescript": "~6.0.2",
+    "vitest": "^4.1.2"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}

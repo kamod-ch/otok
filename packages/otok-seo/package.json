@@ -1,0 +1,73 @@
+{
+  "name": "@kamod-ch/otok-seo",
+  "version": "1.0.0",
+  "description": "Typed route metadata, sitemaps, feeds, and SEO helpers for Otok apps.",
+  "license": "MIT",
+  "homepage": "https://github.com/kamod-ch/otok/tree/main/packages/otok-seo#readme",
+  "bugs": {
+    "url": "https://github.com/kamod-ch/otok/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kamod-ch/otok.git",
+    "directory": "packages/otok-seo"
+  },
+  "type": "module",
+  "files": [
+    "dist",
+    "README.md"
+  ],
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    },
+    "./sitemap": {
+      "types": "./dist/sitemap.d.ts",
+      "default": "./dist/sitemap.js"
+    },
+    "./feeds": {
+      "types": "./dist/feeds.d.ts",
+      "default": "./dist/feeds.js"
+    },
+    "./robots": {
+      "types": "./dist/robots.d.ts",
+      "default": "./dist/robots.js"
+    },
+    "./loader": {
+      "types": "./dist/loader.d.ts",
+      "default": "./dist/loader.js"
+    }
+  },
+  "scripts": {
+    "build": "rm -rf dist && tsc -p tsconfig.build.json",
+    "prepare": "npm run build",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "test": "vitest run"
+  },
+  "peerDependencies": {
+    "hono": ">=4",
+    "otok": ">=0.3.0"
+  },
+  "peerDependenciesMeta": {
+    "@kamod-ch/otok-i18n": {
+      "optional": true
+    }
+  },
+  "devDependencies": {
+    "@kamod-ch/otok-i18n": "workspace:*",
+    "@otok/test": "workspace:*",
+    "@types/node": "^24.12.2",
+    "hono": "^4.12.25",
+    "otok": "workspace:*",
+    "preact": "^10.28.2",
+    "typescript": "~6.0.2",
+    "vitest": "^4.1.2"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}

@@ -1,0 +1,94 @@
+{
+  "name": "@kamod-ch/otok-kamod",
+  "version": "1.0.0",
+  "description": "Optional Kamod UI integration for Otok — Tailwind, themes, forms, and ecosystem helpers.",
+  "license": "MIT",
+  "homepage": "https://github.com/kamod-ch/otok/tree/main/packages/otok-kamod#readme",
+  "bugs": {
+    "url": "https://github.com/kamod-ch/otok/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kamod-ch/otok.git",
+    "directory": "packages/otok-kamod"
+  },
+  "type": "module",
+  "sideEffects": false,
+  "files": [
+    "dist",
+    "README.md"
+  ],
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    },
+    "./forms": {
+      "types": "./dist/forms/index.d.ts",
+      "default": "./dist/forms/index.js"
+    },
+    "./theme": {
+      "types": "./dist/theme/index.d.ts",
+      "default": "./dist/theme/index.js"
+    },
+    "./signals": {
+      "types": "./dist/signals.d.ts",
+      "default": "./dist/signals.js"
+    },
+    "./css": {
+      "types": "./dist/css.d.ts",
+      "default": "./dist/css.js"
+    }
+  },
+  "scripts": {
+    "build": "rm -rf dist && tsc -p tsconfig.build.json",
+    "prepare": "npm run build",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "test": "vitest run"
+  },
+  "peerDependencies": {
+    "@kamod-ch/hooks": ">=1.0.0",
+    "@kamod-ch/icons": ">=1.0.0",
+    "@kamod-ch/signals": ">=1.0.0",
+    "@kamod-ch/themes": ">=0.2.0",
+    "@kamod-ch/ui": ">=1.0.0",
+    "@preact/signals": ">=2.0.0",
+    "@tailwindcss/vite": ">=4.0.0",
+    "hono": ">=4",
+    "otok": ">=0.3.0",
+    "preact": ">=10.26.0",
+    "tailwindcss": ">=4.0.0"
+  },
+  "peerDependenciesMeta": {
+    "@kamod-ch/hooks": { "optional": true },
+    "@kamod-ch/icons": { "optional": true },
+    "@kamod-ch/signals": { "optional": true },
+    "@kamod-ch/themes": { "optional": true }
+  },
+  "devDependencies": {
+    "@kamod-ch/signals": "^1.0.3",
+    "@kamod-ch/themes": "^0.2.1",
+    "@kamod-ch/ui": "^1.0.1",
+    "@otok/config": "workspace:*",
+    "@otok/test": "workspace:*",
+    "@preact/signals": "^2.0.0",
+    "@tailwindcss/vite": "^4.2.4",
+    "@types/node": "^24.12.2",
+    "hono": "^4.12.25",
+    "otok": "workspace:*",
+    "preact": "^10.28.2",
+    "tailwindcss": "^4.2.4",
+    "typescript": "~6.0.2",
+    "vite": "^8.0.10",
+    "vitest": "^4.1.2"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "otok": {
+    "setup": "./dist/setup.js"
+  }
+}

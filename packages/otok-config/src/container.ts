@@ -1,5 +1,12 @@
 import type { Hono } from "hono";
 import type { Plugin } from "vite";
+import {
+  adapterToPlugin,
+  resolveAdapter,
+  runAdapterCleanup,
+  runAdapterFinish,
+} from "./adapter.js";
+import type { ResolvedOtokAdapter } from "./adapter.js";
 import { normalizePlugins } from "./define.js";
 import { pluginError } from "./errors.js";
 import { extractRuntimeConfig, mergeUserConfig, virtualModuleId } from "./merge.js";
@@ -69,12 +76,17 @@ function parseEnvSchemas(
 export class PluginContainer {
   readonly plugins: OtokPlugin[];
   readonly env: OtokConfigEnv;
+  readonly adapter?: ResolvedOtokAdapter;
   config: OtokUserConfig;
 
   constructor(userConfig: OtokUserConfig, env: OtokConfigEnv) {
     this.env = env;
-    this.config = { ...userConfig, plugins: undefined };
-    this.plugins = normalizePlugins(userConfig.plugins);
+    this.adapter = resolveAdapter(userConfig.adapter, env.root);
+    this.config = { ...userConfig, plugins: undefined, adapter: undefined };
+    this.plugins = [
+      ...(this.adapter ? [adapterToPlugin(this.adapter)] : []),
+      ...normalizePlugins(userConfig.plugins),
+    ];
     assertUniquePluginNames(this.plugins);
     for (const plugin of this.plugins) {
       validatePluginOptions(plugin);
@@ -111,6 +123,17 @@ export class PluginContainer {
     return {
       ...this.baseContext(),
       config: this.config,
+      adapter: this.adapter,
+    };
+  }
+
+  adapterBuildContext(isSsrBuild: boolean) {
+    if (!this.adapter) return undefined;
+    return {
+      ...this.resolvedContext(),
+      isSsrBuild,
+      outDirs: this.adapter.outDirs,
+      adapter: this.adapter,
     };
   }
 
@@ -126,6 +149,14 @@ export class PluginContainer {
     for (let index = this.plugins.length - 1; index >= 0; index -= 1) {
       await this.plugins[index]?.buildEnd?.(ctx);
     }
+    if (isSsrBuild) {
+      await runAdapterFinish(ctx, this.adapter);
+      await runAdapterCleanup(ctx, this.adapter);
+    }
+  }
+
+  async runBuildCleanup(_isSsrBuild: boolean): Promise<void> {
+    // Reserved for callers that need cleanup outside the default buildEnd flow.
   }
 
   async runConfigureServer(server: DevServerContext["server"]): Promise<void> {
@@ -167,6 +198,7 @@ export class PluginContainer {
     return {
       config: this.config,
       runtime: extractRuntimeConfig(this.config),
+      adapter: this.adapter,
       applyAppPlugins: async (app: Hono) => {
         await this.runConfigureApp(app);
       },

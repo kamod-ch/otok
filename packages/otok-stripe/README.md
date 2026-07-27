@@ -1,8 +1,8 @@
 # @kamod-ch/otok-stripe
 
-Stripe Checkout Sessions and webhook helpers for [Otok](https://github.com/kamod-ch/otok) apps.
+Stripe Checkout, Customer Portal, and webhooks for [Otok](https://github.com/kamod-ch/otok) apps.
 
-This package is **composition, not a plugin**. Persistence stays in your app via a `BillingAdapter`. Otok core stays free of Stripe dependencies.
+Provider-based integration with a typed Otok plugin, safe client DTOs, idempotent webhook processing, and a test provider for local development.
 
 ## Install
 
@@ -10,108 +10,84 @@ This package is **composition, not a plugin**. Persistence stays in your app via
 pnpm add @kamod-ch/otok-stripe stripe hono otok
 ```
 
-## Checkout Session
+## Plugin
 
 ```ts
-import { createStripeClient, createCheckoutSession } from "@kamod-ch/otok-stripe";
+import { defineConfig } from "otok";
+import stripe from "@kamod-ch/otok-stripe";
 
-const stripe = createStripeClient({ secretKey: process.env.STRIPE_SECRET_KEY! });
+export default defineConfig({
+  plugins: [
+    stripe({
+      provider: { type: "live" },
+      webhookPath: "/api/billing/webhook",
+    }),
+  ],
+});
+```
 
-const { url } = await createCheckoutSession(stripe, {
+Use `{ type: "test" }` in development and tests — no Stripe API calls.
+
+## Typed actions (safe client payloads)
+
+```ts
+import { stripeCheckoutAction, stripePortalAction, stripeBillingStatusAction } from "@kamod-ch/otok-stripe";
+
+// Returns { sessionId, url } — never raw Stripe objects
+const checkout = await stripeCheckoutAction({
   plan: "launch",
   priceId: process.env.STRIPE_PRICE_LAUNCH!,
-  workspaceId: user.workspaceId,
-  userId: user.id,
-  customerEmail: user.email,
-  successUrl: `${appUrl}/studio/abrechnung?checkout=success`,
-  cancelUrl: `${appUrl}/studio/abrechnung?checkout=cancelled`,
-  mode: "subscription",
+  workspaceId,
+  userId,
+  successUrl: `${appUrl}/billing?success=1`,
+  cancelUrl: `${appUrl}/billing?cancelled=1`,
 });
 
-// Redirect the browser to `url`
+const status = await stripeBillingStatusAction(adapter, workspaceId, "active");
 ```
-
-Session metadata always includes `workspaceId`, `userId`, and `plan` so webhooks can update your store.
-
-## Customer Portal
-
-```ts
-import { createBillingPortalSession } from "@kamod-ch/otok-stripe";
-
-const { url } = await createBillingPortalSession(stripe, {
-  customerId: record.stripeCustomerId,
-  returnUrl: `${appUrl}/studio/abrechnung`,
-});
-```
-
-Requires a Stripe Customer Portal configuration in the Stripe Dashboard.
 
 ## Billing adapter
 
+Apps own persistence via `BillingAdapter`:
+
 ```ts
 import type { BillingAdapter } from "@kamod-ch/otok-stripe/adapter";
-
-type Plan = "free" | "launch" | "pro";
-
-const adapter: BillingAdapter<Plan> = {
-  freePlan: "free",
-  async getRecord(workspaceId) { /* load from DB/file */ },
-  async upsertRecord(record) { /* persist */ },
-  resolvePlanFromPriceId(priceId) {
-    if (priceId === process.env.STRIPE_PRICE_LAUNCH) return "launch";
-    if (priceId === process.env.STRIPE_PRICE_PRO) return "pro";
-    return null;
-  },
-};
 ```
 
-## Webhook handler
+## Webhooks with idempotency
 
-Register on a Hono route via `createOtokApp({ configure })`. Use the **raw body** for signature verification — do not parse JSON first.
+Mount via plugin + adapter in `configureStripeApp`, or use the low-level handler from `@kamod-ch/otok-stripe/webhook`.
 
-```ts
-import { createStripeWebhookHandler } from "@kamod-ch/otok-stripe/webhook";
+Plugin webhooks deduplicate by Stripe event ID — retries return `{ received: true, duplicate: true }` without double-processing.
 
-configure: (app) => {
-  app.post(
-    "/api/billing/webhook",
-    createStripeWebhookHandler({
-      stripe,
-      webhookSecret: process.env.STRIPE_WEBHOOK_SECRET!,
-      adapter,
-    }),
-  );
-};
+## Providers
+
+| Provider | Config | Notes |
+|----------|--------|-------|
+| `live` | `{ type: "live", secretKey? }` | Real Stripe SDK. Uses `STRIPE_SECRET_KEY` when omitted. |
+| `test` | `{ type: "test" }` | Deterministic checkout/portal URLs and webhook parsing for tests. |
+
+## Composition API (still supported)
+
+Direct helpers remain available without the plugin:
+
+- `createStripeClient`
+- `createCheckoutSession`
+- `createBillingPortalSession`
+- `createStripeWebhookHandler`
+
+## Env vars
+
 ```
-
-Handled events:
-
-| Event | Effect |
-|-------|--------|
-| `checkout.session.completed` | Upsert plan from session metadata |
-| `customer.subscription.updated` | Sync plan (active → plan, otherwise free) |
-| `customer.subscription.deleted` | Downgrade to `freePlan` |
-
-Local testing with the Stripe CLI:
-
-```bash
-stripe listen --forward-to localhost:3000/api/billing/webhook
+STRIPE_SECRET_KEY=
+STRIPE_WEBHOOK_SECRET=
 ```
 
 ## Exports
 
 | Subpath | Purpose |
 |---------|---------|
-| `@kamod-ch/otok-stripe` | `createStripeClient`, `createCheckoutSession`, `createBillingPortalSession`, shared types |
-| `@kamod-ch/otok-stripe/adapter` | `BillingAdapter`, `BillingRecord` |
-| `@kamod-ch/otok-stripe/webhook` | `createStripeWebhookHandler`, event helpers |
-
-## Env vars (app)
-
-```
-STRIPE_SECRET_KEY=
-STRIPE_WEBHOOK_SECRET=
-STRIPE_PRICE_LAUNCH=
-STRIPE_PRICE_PRO=
-APP_URL=http://localhost:3000
-```
+| `@kamod-ch/otok-stripe` | Plugin, actions, DTOs, providers |
+| `@kamod-ch/otok-stripe/adapter` | `BillingAdapter` contract |
+| `@kamod-ch/otok-stripe/webhook` | Low-level webhook handler |
+| `@kamod-ch/otok-stripe/providers/test` | Test provider helpers |

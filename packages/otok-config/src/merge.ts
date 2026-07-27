@@ -27,10 +27,6 @@ export function mergeUserConfig(base: OtokUserConfig, patch: Partial<OtokUserCon
     next.env = { ...next.env, ...patch.env };
   }
 
-  if (patch.adapter) {
-    next.adapter = { ...next.adapter, ...patch.adapter };
-  }
-
   if (patch.devtools) {
     next.devtools = { ...next.devtools, ...patch.devtools };
   }

@@ -1,0 +1,26 @@
+{
+  "name": "otok-example-extensions-demo",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build --mode client && vite build",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@kamod-ch/otok-mail": "workspace:*",
+    "@kamod-ch/otok-queue": "workspace:*",
+    "@kamod-ch/otok-storage": "workspace:*",
+    "@kamod-ch/otok-stripe": "workspace:*",
+    "hono": "^4.12.25",
+    "otok": "workspace:*",
+    "preact": "^10.28.2"
+  },
+  "devDependencies": {
+    "@hono/vite-dev-server": "^0.23.0",
+    "@otok/vite-plugin": "workspace:*",
+    "@types/node": "^24.12.2",
+    "typescript": "~6.0.2",
+    "vite": "^8.0.16"
+  }
+}

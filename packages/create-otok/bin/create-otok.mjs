@@ -5,39 +5,52 @@ import { fileURLToPath } from "node:url";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
+const TEMPLATE_ALIASES = {
+  minimal: "otok-starter-minimal",
+  full: "otok-starter-dashboard",
+  kamod: "otok-starter-kamod",
+  saas: "otok-starter-saas",
+  dashboard: "otok-starter-dashboard",
+};
+
 function usage() {
   console.log(`create-otok
 
 Usage:
-  pnpm create otok <app-name> [--template minimal|full]
+  pnpm create otok <app-name> [--template minimal|kamod|dashboard|saas]
+
+Templates:
+  minimal     Small counter demo without UI libraries (otok-starter-minimal)
+  kamod       Kamod UI + Tailwind via @kamod-ch/otok-kamod
+  dashboard   Dashboard playground with Kamod components
+  saas        Auth, i18n, Kysely, validation, security, SEO, and CRUD demo
+
+Legacy aliases: --template full → dashboard
 
 Options:
-  --template    "minimal" ships a small counter demo without UI libraries.
-                "full" includes kamod-ui, Tailwind, and the dashboard playground.
   --help, -h    Show this help message
 `);
 }
 
 function resolveTemplateDir(template) {
-  if (template !== "minimal" && template !== "full") {
-    throw new Error(`Unknown template "${template}". Expected "minimal" or "full".`);
+  const resolved = TEMPLATE_ALIASES[template];
+  if (!resolved) {
+    throw new Error(
+      `Unknown template "${template}". Expected one of: ${Object.keys(TEMPLATE_ALIASES).filter((key) => key !== "full").join(", ")}.`,
+    );
   }
 
-  const candidates =
-    template === "minimal"
-      ? [path.resolve(__dirname, "../template-minimal")]
-      : [
-          path.resolve(__dirname, "../template"),
-          path.resolve(__dirname, "../../../templates/default"),
-        ];
+  const candidates = [
+    path.resolve(__dirname, `../${resolved}`),
+    ...(template === "full" || template === "dashboard"
+      ? [path.resolve(__dirname, "../template"), path.resolve(__dirname, "../../../templates/default")]
+      : []),
+    ...(template === "minimal" ? [path.resolve(__dirname, "../template-minimal")] : []),
+  ];
 
   const found = candidates.find((candidate) => fs.existsSync(path.join(candidate, "package.json")));
   if (!found) {
-    throw new Error(
-      template === "minimal"
-        ? "Could not locate the Otok minimal template. Expected packages/create-otok/template-minimal."
-        : "Could not locate the Otok default template. Expected packages/create-otok/template or templates/default.",
-    );
+    throw new Error(`Could not locate template "${template}" (${resolved}).`);
   }
   return found;
 }
@@ -109,7 +122,9 @@ if (fs.existsSync(target) && fs.readdirSync(target).length > 0) {
 copyDir(resolveTemplateDir(template), target);
 updatePackageName(target, packageName);
 
-console.log(`Created ${packageName} with the ${template} template.
+const displayTemplate = TEMPLATE_ALIASES[template] ?? template;
+
+console.log(`Created ${packageName} with the ${displayTemplate} template.
 
 Next steps:
   cd ${path.relative(process.cwd(), target) || "."}

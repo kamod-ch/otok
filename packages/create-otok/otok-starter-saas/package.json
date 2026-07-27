@@ -1,0 +1,51 @@
+{
+  "name": "otok-starter-saas",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "pnpm build:client && pnpm build:server",
+    "build:client": "vite build --mode client",
+    "build:server": "vite build",
+    "preview": "vite preview",
+    "start": "node dist/server/server.js",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "test": "vitest run",
+    "check": "pnpm typecheck && pnpm test && pnpm build",
+    "db:migrate": "otok db:migrate",
+    "db:seed": "otok db:seed",
+    "db:status": "otok db:status"
+  },
+  "dependencies": {
+    "@hono/node-server": "^2.0.1",
+    "@kamod-ch/otok-auth": "^1.1.0",
+    "@kamod-ch/otok-i18n": "^2.0.0",
+    "@kamod-ch/otok-kamod": "^1.0.0",
+    "@kamod-ch/otok-kysely": "^1.0.0",
+    "@kamod-ch/otok-security": "^1.0.0",
+    "@kamod-ch/otok-seo": "^1.0.0",
+    "@kamod-ch/otok-validation": "^1.0.0",
+    "@kamod-ch/ui": "^1.0.1",
+    "@preact/signals": "^2.0.0",
+    "better-sqlite3": "^11.10.0",
+    "hono": "^4.12.25",
+    "kysely": "^0.29.2",
+    "otok": "^0.3.0",
+    "preact": "^10.28.2",
+    "zod": "^4.0.0"
+  },
+  "devDependencies": {
+    "@hono/vite-dev-server": "^0.21.0",
+    "@otok/vite-plugin": "^0.3.0",
+    "@preact/preset-vite": "^2.10.5",
+    "@tailwindcss/vite": "^4.2.4",
+    "@types/better-sqlite3": "^7.6.13",
+    "@types/node": "^24.12.2",
+    "otok-cli": "^0.1.0",
+    "tailwindcss": "^4.2.4",
+    "typescript": "~6.0.2",
+    "vite": "^8.0.10",
+    "vitest": "^4.1.2"
+  }
+}

@@ -1,0 +1,28 @@
+{
+  "name": "otok-adapter-example-cloudflare",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "scripts": {
+    "build:client": "vite build --mode client",
+    "build:worker": "vite build",
+    "build": "pnpm run build:client && pnpm run build:worker",
+    "preview": "wrangler dev",
+    "typecheck": "tsc -p tsconfig.json --noEmit"
+  },
+  "dependencies": {
+    "@otok/vite-plugin": "workspace:*",
+    "@preact/preset-vite": "^2.10.2",
+    "hono": "^4.12.25",
+    "otok": "workspace:*",
+    "otok-adapter-cloudflare": "workspace:*",
+    "preact": "^10.28.2",
+    "vite": "^8.0.10"
+  },
+  "devDependencies": {
+    "@cloudflare/workers-types": "^5.20260722.1",
+    "@types/node": "^24.12.2",
+    "typescript": "~6.0.2",
+    "wrangler": "^4.14.0"
+  }
+}

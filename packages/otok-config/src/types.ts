@@ -1,5 +1,6 @@
 import type { Hono } from "hono";
 import type { Plugin, UserConfig as ViteUserConfig } from "vite";
+import type { OtokAdapterInput, ResolvedOtokAdapter } from "./adapter.js";
 
 export type OtokPluginFactory<TOptions = void> = [TOptions] extends [void]
   ? () => OtokPlugin
@@ -25,8 +26,8 @@ export interface OtokUserConfig extends OtokRuntimeConfig {
   plugins?: OtokPluginInput[];
   vite?: ViteUserConfig | ((env: OtokConfigEnv) => ViteUserConfig | Promise<ViteUserConfig>);
   env?: Record<string, string | undefined>;
-  /** @internal Reserved for generated deployment metadata. */
-  adapter?: Record<string, unknown>;
+  /** Deployment adapter (Node, Cloudflare, static, or custom). */
+  adapter?: OtokAdapterInput;
   /** @internal Reserved for devtools integrations. */
   devtools?: Record<string, unknown>;
 }
@@ -46,6 +47,7 @@ export interface PluginConfigContext {
 
 export interface PluginResolvedContext extends PluginConfigContext {
   config: OtokUserConfig;
+  adapter?: ResolvedOtokAdapter;
 }
 
 export interface BuildContext extends PluginResolvedContext {
@@ -98,6 +100,7 @@ export interface OtokPlugin<TOptions = unknown> {
 export interface ResolvedOtokConfig {
   config: OtokUserConfig;
   runtime: OtokRuntimeConfig;
+  adapter?: ResolvedOtokAdapter;
   applyAppPlugins: (app: Hono) => Promise<void>;
   env: Record<string, unknown>;
   virtualModules: Map<string, VirtualModuleFactory>;

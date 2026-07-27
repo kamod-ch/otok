@@ -105,6 +105,8 @@ export interface OtokHead {
   description?: string;
   lang?: string;
   meta?: Record<string, string>;
+  /** Meta tags using the `property` attribute (Open Graph, etc.). */
+  propertyMeta?: Record<string, string>;
   links?: OtokHeadLink[];
   scripts?: OtokHeadScript[];
   jsonLd?: Record<string, JsonValue>;

@@ -41,7 +41,7 @@ test("scaffolds an app from the packaged minimal template", () => {
     });
 
     assert.equal(result.status, 0, result.stderr || result.stdout);
-    assert.match(result.stdout, /Created my-app with the minimal template\./);
+    assert.match(result.stdout, /Created my-app with the otok-starter-minimal template\./);
     assert.ok(fs.existsSync(path.join(target, "package.json")));
     assert.ok(fs.existsSync(path.join(target, "src", "server.ts")));
     assert.ok(fs.existsSync(path.join(target, "src", "client.ts")));
@@ -55,6 +55,22 @@ test("scaffolds an app from the packaged minimal template", () => {
   });
 });
 
+test("scaffolds an app from the packaged kamod template", () => {
+  withTempDir((tempDir) => {
+    const target = path.join(tempDir, "kamod-app");
+
+    const result = spawnSync(process.execPath, [cliPath, target, "--template", "kamod"], {
+      encoding: "utf8",
+    });
+
+    assert.equal(result.status, 0, result.stderr || result.stdout);
+    assert.match(result.stdout, /Created kamod-app with the otok-starter-kamod template\./);
+    assert.ok(fs.existsSync(path.join(target, "otok.config.ts")));
+    const config = fs.readFileSync(path.join(target, "otok.config.ts"), "utf8");
+    assert.match(config, /@kamod-ch\/otok-kamod/);
+  });
+});
+
 test("scaffolds an app from the packaged full template", () => {
   withTempDir((tempDir) => {
     const target = path.join(tempDir, "full-app");
@@ -64,7 +80,7 @@ test("scaffolds an app from the packaged full template", () => {
     });
 
     assert.equal(result.status, 0, result.stderr || result.stdout);
-    assert.match(result.stdout, /Created full-app with the full template\./);
+    assert.match(result.stdout, /Created full-app with the otok-starter-dashboard template\./);
 
     const pkg = readJson(path.join(target, "package.json"));
     const versions = expectedPackageVersions();

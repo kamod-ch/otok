@@ -29,6 +29,10 @@
     "./webhook": {
       "types": "./dist/webhook/index.d.ts",
       "default": "./dist/webhook/index.js"
+    },
+    "./providers/test": {
+      "types": "./dist/providers/test.d.ts",
+      "default": "./dist/providers/test.js"
     }
   },
   "scripts": {

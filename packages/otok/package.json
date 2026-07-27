@@ -37,6 +37,10 @@
     "./shared": {
       "types": "./dist/shared/index.d.ts",
       "default": "./dist/shared/index.js"
+    },
+    "./devtools": {
+      "types": "./dist/devtools/index.d.ts",
+      "default": "./dist/devtools/index.js"
     }
   },
   "scripts": {

@@ -1,7 +1,7 @@
 {
   "name": "@otok/test",
-  "version": "0.3.0",
-  "description": "Server-side testing utilities for Otok apps.",
+  "version": "0.4.0",
+  "description": "Official server-side and client testing utilities for Otok apps.",
   "license": "MIT",
   "homepage": "https://github.com/kamod-ch/otok/tree/main/packages/otok-test#readme",
   "bugs": {
@@ -21,6 +21,14 @@
     ".": {
       "types": "./dist/index.d.ts",
       "default": "./dist/index.js"
+    },
+    "./client": {
+      "types": "./dist/client.d.ts",
+      "default": "./dist/client.js"
+    },
+    "./adapter": {
+      "types": "./dist/adapter.d.ts",
+      "default": "./dist/adapter.js"
     }
   },
   "scripts": {
@@ -30,15 +38,23 @@
     "test": "vitest run"
   },
   "dependencies": {
-    "otok": "workspace:*"
+    "otok": "workspace:*",
+    "otok-adapter-contract": "workspace:*"
   },
   "peerDependencies": {
     "hono": ">=4",
     "preact": ">=10.26.0"
   },
+  "peerDependenciesMeta": {
+    "jsdom": {
+      "optional": true
+    }
+  },
   "devDependencies": {
+    "@otok/plugin-hello": "workspace:*",
     "@types/node": "^24.12.2",
     "hono": "^4.12.25",
+    "jsdom": "^29.1.1",
     "preact": "^10.28.2",
     "typescript": "~6.0.2",
     "vitest": "^4.1.2"

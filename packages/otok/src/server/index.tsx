@@ -21,6 +21,29 @@ import {
 } from "../shared/routes.js";
 import { OTOK_PAGE_ATTR } from "../shared/navigation.js";
 import { resolveDarkModeFromCookie } from "../shared/theme.js";
+import {
+  detectLocaleFromHtml,
+  detectRenderMode,
+  extractIslandIdsFromHtml,
+  otokDevtoolsBeginRequest,
+  otokDevtoolsEnabled,
+  otokDevtoolsFinishRequest,
+  otokDevtoolsRecordLoader,
+  otokDevtoolsRecordMiddleware,
+  otokDevtoolsSetRoutes,
+  sanitizeAuthSnapshot,
+} from "../devtools/bridge.js";
+
+interface ActiveDevtoolsTrace {
+  requestId: string;
+  route: string;
+  middlewareMs: number;
+  loaderMs: number;
+  renderMs: number;
+  requestStartedAt: number;
+}
+
+let activeDevtoolsTrace: ActiveDevtoolsTrace | null = null;
 
 export interface CreateOtokHandlerOptions {
   routes: OtokRoute[];
@@ -103,30 +126,61 @@ function mergeContextHeaders(c: Context, response: Response): Response {
 }
 
 export function createOtokHandler(options: CreateOtokHandlerOptions): Handler {
+  if (otokDevtoolsEnabled()) otokDevtoolsSetRoutes(options.routes);
+
   return async (c: Context) => {
     const url = new URL(c.req.url);
     const match = matchRoute(options.routes, url.pathname);
+    const requestId = otokDevtoolsBeginRequest(c.req.method, url.pathname);
+    const trace: ActiveDevtoolsTrace | null = requestId
+      ? {
+          requestId,
+          route: match?.route.path ?? url.pathname,
+          middlewareMs: 0,
+          loaderMs: 0,
+          renderMs: 0,
+          requestStartedAt: performance.now(),
+        }
+      : null;
+    activeDevtoolsTrace = trace;
 
     try {
       if (!match) {
         const notFoundRoute = options.notFoundRoute ?? options.notFound;
-        if (!notFoundRoute) return mergeContextHeaders(c, await c.notFound());
-        return mergeContextHeaders(c, await renderRoute(c, notFoundRoute, {}, options, 404));
+        if (!notFoundRoute) {
+          const response = mergeContextHeaders(c, await c.notFound());
+          await finalizeDevtoolsRequest(trace, c, response, undefined);
+          return response;
+        }
+        if (trace) trace.route = notFoundRoute.path;
+        const response = mergeContextHeaders(c, await renderRoute(c, notFoundRoute, {}, options, 404));
+        await finalizeDevtoolsRequest(trace, c, response, notFoundRoute.module);
+        return response;
       }
 
+      if (trace) trace.route = match.route.path;
+
       if (isActionRequest(c.req.method)) {
-        return mergeContextHeaders(
+        const response = mergeContextHeaders(
           c,
           await runRouteMiddleware(c, match.route, () => handleAction(c, match.route, match.params, options)),
         );
+        await finalizeDevtoolsRequest(trace, c, response, match.route.module);
+        return response;
       }
 
-      return mergeContextHeaders(
+      const response = mergeContextHeaders(
         c,
         await runRouteMiddleware(c, match.route, () => renderRoute(c, match.route, match.params, options)),
       );
+      await finalizeDevtoolsRequest(trace, c, response, match.route.module);
+      return response;
     } catch (error) {
-      return mergeContextHeaders(c, await handleRenderError(c, error, options));
+      const response = mergeContextHeaders(c, await handleRenderError(c, error, options));
+      await finalizeDevtoolsRequest(trace, c, response, match?.route.module);
+      return response;
+    } finally {
+      activeDevtoolsTrace = null;
     }
   };
 }
@@ -210,10 +264,16 @@ async function runRouteMiddleware(c: Context, route: OtokRoute, render: () => Pr
     const middleware = stack[position];
     if (!middleware) return await render();
 
+    const startedAt = performance.now();
     let downstream: Response | undefined;
     const result = await middleware(c, async () => {
       downstream = await dispatch(position + 1);
     });
+    const durationMs = performance.now() - startedAt;
+    if (activeDevtoolsTrace) {
+      activeDevtoolsTrace.middlewareMs += durationMs;
+      otokDevtoolsRecordMiddleware({ route: route.path, index: position, durationMs });
+    }
 
     if (result instanceof Response) return result;
     if (downstream) return downstream;
@@ -221,6 +281,41 @@ async function runRouteMiddleware(c: Context, route: OtokRoute, render: () => Pr
   };
 
   return dispatch(0);
+}
+
+async function finalizeDevtoolsRequest(
+  trace: ActiveDevtoolsTrace | null,
+  hono: Context,
+  response: Response,
+  routeModule: OtokRoute["module"] | undefined,
+): Promise<void> {
+  if (!trace) return;
+
+  const redirect = response.headers.get("location") ?? undefined;
+  let html = "";
+  const contentType = response.headers.get("content-type") ?? "";
+  if (contentType.includes("text/html")) {
+    html = await response.clone().text();
+  }
+
+  const islands = html ? extractIslandIdsFromHtml(html) : [];
+  const user = (hono as Context<{ Variables: { user?: { id?: string; roles?: string[] } } }>).get("user");
+  otokDevtoolsFinishRequest({
+    id: trace.requestId,
+    route: trace.route,
+    status: response.status,
+    renderMode: detectRenderMode({ client: routeModule?.client === true, islands }),
+    islands,
+    redirect: redirect ?? undefined,
+    locale: html ? detectLocaleFromHtml(html) : undefined,
+    auth: sanitizeAuthSnapshot({ user }),
+    timings: {
+      middlewareMs: trace.middlewareMs,
+      loaderMs: trace.loaderMs,
+      renderMs: trace.renderMs,
+      totalMs: performance.now() - trace.requestStartedAt,
+    },
+  });
 }
 
 async function renderRoute(
@@ -238,7 +333,26 @@ async function renderRoute(
     params,
     route: route.path,
   };
-  const data = dataOverride ?? (route.module.loader ? await route.module.loader(context) : {});
+  let data: LoaderResult;
+  if (dataOverride !== undefined) {
+    data = dataOverride;
+  } else if (route.module.loader) {
+    const loaderStartedAt = performance.now();
+    data = await route.module.loader(context);
+    const loaderDuration = performance.now() - loaderStartedAt;
+    if (activeDevtoolsTrace) {
+      activeDevtoolsTrace.loaderMs += loaderDuration;
+      otokDevtoolsRecordLoader({
+        route: route.path,
+        kind: actionData !== undefined ? "action" : "loader",
+        durationMs: loaderDuration,
+        status,
+        validation: typeof data === "object" && data !== null && "fieldErrors" in data,
+      });
+    }
+  } else {
+    data = {};
+  }
   if (data instanceof Response) return data;
   const head = await resolveHead(route, data, params);
   const chrome = await resolveChrome(route, data, params);
@@ -270,7 +384,11 @@ async function renderRoute(
     });
   }
 
+  const renderStartedAt = performance.now();
   const body = withIslandRenderContext(islandContext, () => renderToString(tree));
+  if (activeDevtoolsTrace) {
+    activeDevtoolsTrace.renderMs += performance.now() - renderStartedAt;
+  }
 
   if (options.streaming) {
     const encoder = new TextEncoder();

@@ -1,0 +1,90 @@
+{
+  "name": "@kamod-ch/otok-validation",
+  "version": "1.0.0",
+  "description": "Standard Schema validation for Otok — typed inputs, field errors, and defineAction integration.",
+  "license": "MIT",
+  "homepage": "https://github.com/kamod-ch/otok/tree/main/packages/otok-validation#readme",
+  "bugs": {
+    "url": "https://github.com/kamod-ch/otok/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kamod-ch/otok.git",
+    "directory": "packages/otok-validation"
+  },
+  "type": "module",
+  "files": [
+    "dist",
+    "README.md"
+  ],
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    },
+    "./loader": {
+      "types": "./dist/loader.d.ts",
+      "default": "./dist/loader.js"
+    },
+    "./form": {
+      "types": "./dist/parse/form-data.d.ts",
+      "default": "./dist/parse/form-data.js"
+    },
+    "./json": {
+      "types": "./dist/parse/json.d.ts",
+      "default": "./dist/parse/json.js"
+    },
+    "./params": {
+      "types": "./dist/parse/params.d.ts",
+      "default": "./dist/parse/params.js"
+    },
+    "./client": {
+      "types": "./dist/client.d.ts",
+      "default": "./dist/client.js"
+    },
+    "./adapters/zod": {
+      "types": "./dist/adapters/zod.d.ts",
+      "default": "./dist/adapters/zod.js"
+    },
+    "./adapters/valibot": {
+      "types": "./dist/adapters/valibot.d.ts",
+      "default": "./dist/adapters/valibot.js"
+    },
+    "./adapters/arktype": {
+      "types": "./dist/adapters/arktype.d.ts",
+      "default": "./dist/adapters/arktype.js"
+    }
+  },
+  "scripts": {
+    "build": "rm -rf dist && tsc -p tsconfig.build.json",
+    "prepare": "npm run build",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "test": "vitest run"
+  },
+  "peerDependencies": {
+    "otok": ">=0.3.0"
+  },
+  "peerDependenciesMeta": {
+    "zod": { "optional": true },
+    "valibot": { "optional": true },
+    "arktype": { "optional": true }
+  },
+  "devDependencies": {
+    "@kamod-ch/otok-kysely": "workspace:*",
+    "@otok/test": "workspace:*",
+    "@types/node": "^24.12.2",
+    "arktype": "^2.1.29",
+    "otok": "workspace:*",
+    "preact": "^10.28.2",
+    "typescript": "~6.0.2",
+    "valibot": "^1.0.0",
+    "vitest": "^4.1.2",
+    "zod": "^4.0.0"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}

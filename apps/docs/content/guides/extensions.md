@@ -15,6 +15,9 @@ Optional packages around Otok core. Use them directly (**composition**) or throu
 | [`@kamod-ch/otok-validate`](https://github.com/kamod-ch/otok/tree/main/packages/otok-validate) | Zod → `validationError()` for actions and JSON APIs |
 | [`@kamod-ch/otok-flash`](https://github.com/kamod-ch/otok/tree/main/packages/otok-flash) | Signed one-time flash cookies for PRG redirects and SSR toasts |
 | [`@kamod-ch/otok-stripe`](https://github.com/kamod-ch/otok/tree/main/packages/otok-stripe) | Checkout, Customer Portal, webhooks, `BillingAdapter` |
+| [`@kamod-ch/otok-mail`](https://github.com/kamod-ch/otok/tree/main/packages/otok-mail) | Provider-based mail — SMTP, Resend, Mailpit, test provider |
+| [`@kamod-ch/otok-storage`](https://github.com/kamod-ch/otok/tree/main/packages/otok-storage) | Object storage — local, S3, R2, MinIO |
+| [`@kamod-ch/otok-queue`](https://github.com/kamod-ch/otok/tree/main/packages/otok-queue) | Typed jobs, retry, idempotency, cron, in-memory provider |
 | [`@kamod-ch/otok-oauth`](https://github.com/kamod-ch/otok/tree/main/packages/otok-oauth) | GitHub/Google OAuth login with signed state/PKCE cookies and `OAuthAdapter` |
 
 See also [Plugins](./plugins.md), [`docs/extension-roadmap.md`](https://github.com/kamod-ch/otok/blob/main/docs/extension-roadmap.md) in the repository, and [`docs/adr/0006-plugin-system.md`](https://github.com/kamod-ch/otok/blob/main/docs/adr/0006-plugin-system.md).

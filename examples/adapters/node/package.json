@@ -1,0 +1,28 @@
+{
+  "name": "otok-adapter-example-node",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build:client": "vite build --mode client",
+    "build:server": "vite build",
+    "build": "pnpm run build:client && pnpm run build:server",
+    "start": "node dist/server/server.js",
+    "typecheck": "tsc -p tsconfig.json --noEmit"
+  },
+  "dependencies": {
+    "@hono/node-server": "^2.0.1",
+    "@otok/vite-plugin": "workspace:*",
+    "@preact/preset-vite": "^2.10.2",
+    "hono": "^4.12.25",
+    "otok": "workspace:*",
+    "otok-adapter-node": "workspace:*",
+    "preact": "^10.28.2",
+    "vite": "^8.0.10"
+  },
+  "devDependencies": {
+    "@types/node": "^24.12.2",
+    "typescript": "~6.0.2"
+  }
+}

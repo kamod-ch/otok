@@ -1,8 +1,8 @@
 # @otok/test
 
-Small server-side testing utilities for Otok applications.
+Official testing utilities for Otok applications (`otok-test`).
 
-`@otok/test` uses Otok's real server handler and Hono's `app.request()` API. It does not start Vite, does not launch a browser, and does not implement a second router.
+`@otok/test` uses Otok's real server handler and Hono's in-memory `app.request()` API. It does not start Vite, does not open a network port, and does not implement a second router.
 
 ## Install
 
@@ -10,91 +10,62 @@ Small server-side testing utilities for Otok applications.
 pnpm add -D @otok/test vitest
 ```
 
-## Basic usage
+Optional client helpers (hydration and soft navigation) need `jsdom` in Vitest:
+
+```bash
+pnpm add -D jsdom
+```
+
+## Quick start
 
 ```ts
-import { createTestApp, renderRoute } from "@otok/test";
+import { createOtokTestApp, authenticatedSession } from "@otok/test";
 
-const app = createTestApp({
+const app = await createOtokTestApp({
   routes: [
     {
-      path: "/users/:id",
-      component: ({ params }) => <p>User {params.id}</p>,
-      loader: ({ params }) => ({ userId: params.id }),
+      path: "/dashboard",
+      loader: () => ({ ok: true }),
+      component: ({ data }) => <p>{String(data.ok)}</p>,
     },
   ],
+  plugins: [],
 });
 
-const { response, html } = await renderRoute(app, "/users/123");
+const response = await app.get("/dashboard", {
+  session: authenticatedSession,
+});
+
 expect(response.status).toBe(200);
-expect(html).toContain("User 123");
+await app.cleanup();
 ```
 
-## Actions and forms
+## API overview
+
+| Area | Exports |
+| --- | --- |
+| Test client | `createOtokTestApp`, `OtokTestApp`, `OtokTestResponse` |
+| Legacy helpers | `createTestApp`, `requestRoute`, `renderRoute`, `renderParsedRoute` |
+| Routes | `createTestRoute` |
+| Assertions | `expectRedirect`, `expectValidationError`, `expectValidationDocument` |
+| Sessions | `createTestSession`, `authenticatedSession`, `sessionCookieHeader` |
+| Islands / SSR | `getIslands`, `expectIsland`, `expectSsrPageMarker`, `parseHtml` |
+| Plugins | `createPluginTestApp`, `resolvePluginTestConfig` |
+| i18n | `createI18nTestContext`, `expectLocale`, `prefixedLocalePath` |
+| Adapters | `@otok/test/adapter` → `assertAdapterContract` |
+| Client (jsdom) | `@otok/test/client` → `hydrateTestPage`, `softNavigateTestPage` |
+| Database hooks | `withTestDatabase`, `createDatabaseTestHooks` |
+| Type tests | `Expect`, `AssertEqual`, `expectTypeOf` |
+
+## Subpath exports
 
 ```ts
-const response = await app.request("/projects", {
-  method: "POST",
-  body: new URLSearchParams({ name: "Otok" }),
-});
+import { hydrateTestPage } from "@otok/test/client";
+import { assertAdapterContract } from "@otok/test/adapter";
 ```
-
-## API
-
-### `createTestApp(options)`
-
-Creates a Hono app with `createOtokApp()` using real Otok routes. `routes`, `notFoundRoute`, and `errorRoute` may be real `OtokRoute` objects or test route inputs.
-
-### `createTestRoute(input)`
-
-Creates a small route manifest fixture from a route path such as `/`, `/users/:id`, or `/docs/:slug*`. This avoids running the Vite plugin in unit tests while still using Otok's real request handler and router.
-
-### `requestRoute(appOrOptions, path, init?)`
-
-Calls Hono `app.request()` and returns the `Response`.
-
-### `renderRoute(appOrOptions, path, init?)`
-
-Calls `requestRoute()` and returns:
-
-```ts
-{
-  response: Response;
-  html: string;
-}
-```
-
-### `parseHtml(html)` / `renderParsedRoute(...)`
-
-`parseHtml` provides lightweight SSR assertions without a DOM library:
-
-```ts
-import { parseHtml, renderParsedRoute } from "@otok/test";
-
-const { document } = await renderParsedRoute(app, "/signup", {
-  method: "POST",
-  body: new URLSearchParams({ email: "bad" }),
-});
-
-expect(document.getTitle()).toBe("Signup");
-expect(document.getAttribute("input[name=email]", "aria-invalid")).toBe("true");
-expect(document.getText("p[role=alert]")).toContain("required");
-```
-
-Supported selectors: `tag`, `#id`, `.class`, `[attr]`, `[attr=value]`, and combinations such as `input[name=email]`.
 
 ## Scope
 
-Use `@otok/test` for server-side tests of:
+Use `@otok/test` for server-side tests of loaders, actions, middleware, redirects, validation failures, SSR HTML, headers, cookies, plugin wiring, and adapter contracts.
 
-- loaders
-- actions
-- route params
-- middleware
-- redirects
-- expected failures
-- not-found and error routes
-- SSR HTML
-- headers and cookies
-
-Use Playwright or another browser runner for client behavior such as hydration, soft navigation, and progressive form enhancement.
+Use Playwright for full browser coverage when you need real layout, focus management, or multi-tab behavior.

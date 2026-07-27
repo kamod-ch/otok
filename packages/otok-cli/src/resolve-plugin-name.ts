@@ -4,11 +4,17 @@ export const OFFICIAL_PLUGIN_ALIASES: Record<string, string> = {
   i18n: "@kamod-ch/otok-i18n",
   kysely: "@kamod-ch/otok-kysely",
   seo: "@kamod-ch/otok-seo",
+  security: "@kamod-ch/otok-security",
+  observability: "@kamod-ch/otok-observability",
   kamod: "@kamod-ch/otok-kamod",
   auth: "@kamod-ch/otok-auth",
   validate: "@kamod-ch/otok-validate",
+  validation: "@kamod-ch/otok-validation",
   flash: "@kamod-ch/otok-flash",
   stripe: "@kamod-ch/otok-stripe",
+  mail: "@kamod-ch/otok-mail",
+  storage: "@kamod-ch/otok-storage",
+  queue: "@kamod-ch/otok-queue",
 };
 
 const SCOPED_PACKAGE = /^(@[a-z0-9-~][a-z0-9-._~]*\/)?[a-z0-9-~][a-z0-9-._~]*$/;

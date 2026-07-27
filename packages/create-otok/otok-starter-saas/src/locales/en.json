@@ -1,0 +1,20 @@
+{
+  "nav.dashboard": "Dashboard",
+  "nav.projects": "Projects",
+  "nav.login": "Sign in",
+  "nav.logout": "Sign out",
+  "home.title": "Otok SaaS starter",
+  "home.lead": "Auth, i18n, Kysely, validation, Kamod UI, SEO, and security defaults — optional Kamod integration via otok-kamod.",
+  "home.cta": "Open dashboard",
+  "login.title": "Sign in",
+  "login.submit": "Continue",
+  "login.demo": "Demo: demo@example.com / demo-password",
+  "dashboard.title": "Dashboard",
+  "dashboard.welcome": "Signed in as {email}",
+  "projects.title": "Projects",
+  "projects.new": "New project",
+  "projects.empty": "No projects yet.",
+  "project.title": "Title",
+  "project.description": "Description",
+  "project.save": "Save project"
+}

@@ -33,6 +33,19 @@ export interface AddCommandResult {
   alreadyInstalled: boolean;
 }
 
+const DEFAULT_PLUGIN_CALLS: Record<string, (identifier: string) => string> = {
+  "@kamod-ch/otok-kamod": (identifier) => `${identifier}({
+  theme: "default",
+  icons: true,
+  forms: true,
+})`,
+};
+
+function defaultPluginCall(packageName: string, identifier: string): string | undefined {
+  const factory = DEFAULT_PLUGIN_CALLS[packageName];
+  return factory?.(identifier);
+}
+
 function usage(): string {
   return `Usage: otok add <plugin> [options]
 
@@ -112,7 +125,8 @@ export async function addPlugin(pluginInput: string, options: AddCommandOptions 
     }
   }
 
-  const patch = patchOtokConfig(configSource, { packageName, identifier });
+  const pluginCall = defaultPluginCall(packageName, identifier);
+  const patch = patchOtokConfig(configSource, { packageName, identifier, pluginCall });
   if (patch.reason === "no-define-config") {
     throw new Error(
       `Could not find defineConfig({ ... }) in ${configPath}. Add the plugin manually:\n  import ${identifier} from "${packageName}";\n  plugins: [${identifier}()]`,

@@ -1,0 +1,101 @@
+{
+  "name": "@kamod-ch/otok-kysely",
+  "version": "1.0.0",
+  "description": "Kysely database integration for Otok — typed db context, migrations, seeds, and CLI.",
+  "license": "MIT",
+  "homepage": "https://github.com/kamod-ch/otok/tree/main/packages/otok-kysely#readme",
+  "bugs": {
+    "url": "https://github.com/kamod-ch/otok/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kamod-ch/otok.git",
+    "directory": "packages/otok-kysely"
+  },
+  "type": "module",
+  "files": [
+    "dist",
+    "README.md"
+  ],
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    },
+    "./plugin": {
+      "types": "./dist/plugin.d.ts",
+      "default": "./dist/plugin.js"
+    },
+    "./loader": {
+      "types": "./dist/loader.d.ts",
+      "default": "./dist/loader.js"
+    },
+    "./registry": {
+      "types": "./dist/registry.d.ts",
+      "default": "./dist/registry.js"
+    },
+    "./migrations": {
+      "types": "./dist/migrations/index.d.ts",
+      "default": "./dist/migrations/index.js"
+    },
+    "./seeds": {
+      "types": "./dist/seeds/index.d.ts",
+      "default": "./dist/seeds/index.js"
+    },
+    "./transaction": {
+      "types": "./dist/transaction.d.ts",
+      "default": "./dist/transaction.js"
+    },
+    "./test": {
+      "types": "./dist/test/index.d.ts",
+      "default": "./dist/test/index.js"
+    },
+    "./cli": {
+      "types": "./dist/cli/index.d.ts",
+      "default": "./dist/cli/index.js"
+    },
+    "./dialects": {
+      "types": "./dist/dialects/index.d.ts",
+      "default": "./dist/dialects/index.js"
+    }
+  },
+  "scripts": {
+    "build": "rm -rf dist && tsc -p tsconfig.build.json",
+    "prepare": "npm run build",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "test": "vitest run"
+  },
+  "peerDependencies": {
+    "hono": ">=4",
+    "kysely": ">=0.27.0",
+    "otok": ">=0.3.0"
+  },
+  "peerDependenciesMeta": {
+    "pg": { "optional": true },
+    "better-sqlite3": { "optional": true },
+    "mysql2": { "optional": true }
+  },
+  "devDependencies": {
+    "@otok/test": "workspace:*",
+    "@types/better-sqlite3": "^7.6.13",
+    "@types/node": "^24.12.2",
+    "@types/pg": "^8.15.5",
+    "better-sqlite3": "^11.10.0",
+    "hono": "^4.12.25",
+    "kysely": "^0.29.2",
+    "otok": "workspace:*",
+    "pg": "^8.16.3",
+    "preact": "^10.28.2",
+    "typescript": "~6.0.2",
+    "vitest": "^4.1.2"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "otok": {
+    "setup": "./dist/setup.js"
+  }
+}

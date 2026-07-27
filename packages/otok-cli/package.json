@@ -28,6 +28,7 @@
     "test": "vitest run"
   },
   "dependencies": {
+    "@kamod-ch/otok-kysely": "workspace:*",
     "@otok/config": "workspace:*",
     "typescript": "~6.0.2"
   },

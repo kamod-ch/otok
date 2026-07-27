@@ -1,3 +1,38 @@
+export {
+  assertAdapterCapability,
+  adapterBuildContext,
+  adapterError,
+  adapterToPlugin,
+  defineAdapter,
+  hasAdapterCapability,
+  instantiateAdapter,
+  isAdapterFactory,
+  normalizeAdapter,
+  OTOK_ADAPTER_CAPABILITIES,
+  resolveAdapter,
+  runAdapterCleanup,
+  runAdapterFinish,
+} from "./adapter.js";
+export { createDualBuildVitePlugin, dualBuildScripts } from "./adapter-vite.js";
+export type { DualBuildViteOptions } from "./adapter-vite.js";
+export type {
+  AdapterBuildContext,
+  OtokAdapter,
+  OtokAdapterAssetHandling,
+  OtokAdapterBuildSetup,
+  OtokAdapterCapability,
+  OtokAdapterEnvironment,
+  OtokAdapterFactory,
+  OtokAdapterHooks,
+  OtokAdapterInput,
+  OtokAdapterMiddleware,
+  OtokAdapterOutputDirs,
+  OtokAdapterPrerender,
+  OtokAdapterServerEntry,
+  OtokAdapterSsr,
+  OtokRuntime,
+  ResolvedOtokAdapter,
+} from "./adapter.js";
 export { defineConfig, definePlugin, instantiatePlugin, isPluginFactory, normalizePlugins } from "./define.js";
 export type { DefinePluginSetup } from "./define.js";
 export { PluginContainer, resolveOtokConfig } from "./container.js";

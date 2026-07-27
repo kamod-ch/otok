@@ -48,4 +48,10 @@ Otok core does not depend on Tailwind, Kamod UI, or any CSS framework. Use plain
 
 ## Using Kamod UI
 
-Kamod UI works well in applications and the playground, but it is intentionally not an Otok core dependency.
+Use the optional **`@kamod-ch/otok-kamod`** plugin — Kamod is not part of Otok core.
+
+```bash
+pnpm otok add kamod
+```
+
+See the [Kamod integration guide](./kamod.md) for Tailwind setup, theme tokens, forms, bundle impact, and starters.

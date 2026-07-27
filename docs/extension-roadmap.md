@@ -57,7 +57,19 @@ Signed one-time flash cookies for PRG redirects. devjobs logout → login flow u
 
 ## Shipped: `@kamod-ch/otok-stripe`
 
-Checkout Sessions, webhook signature verification, and a `BillingAdapter` for plan sync. Apps own persistence; Otok core stays free of Stripe.
+Checkout Sessions, Customer Portal, webhook signature verification, idempotent event processing, typed Otok actions, test provider, and a `BillingAdapter` for plan sync. Apps own persistence; Otok core stays free of Stripe.
+
+## Shipped: `@kamod-ch/otok-mail`
+
+Provider-based mail — SMTP, Resend, Mailpit, and test provider. Preact templates, dev preview, retry, and secure secret handling.
+
+## Shipped: `@kamod-ch/otok-storage`
+
+Provider-based object storage — local filesystem, S3, R2, MinIO. Upload/download/delete, presigned URLs, MIME and size validation, typed bucket config.
+
+## Shipped: `@kamod-ch/otok-queue`
+
+Typed jobs with retry/backoff, idempotency keys, dead-letter behavior, cron schedules, and in-memory dev/test provider.
 
 ## Shipped: `@kamod-ch/otok-oauth`
 
@@ -66,6 +78,14 @@ GitHub and Google authorization-code login with signed state/PKCE cookies and an
 ## Shipped: `@kamod-ch/otok-i18n`
 
 Locale resolution (URL/domain → cookie → `Accept-Language` → default), lazy message catalogs, pluralization, `Intl` formatters, Otok plugin API, SSR/hydration payload, hreflang metadata, and localized sitemap helpers. Apps own catalogs; Otok core stays free of i18n.
+
+## Shipped: `@kamod-ch/otok-kysely`
+
+Kysely database plugin with typed `db` context, PostgreSQL/SQLite/MySQL dialects, connection pooling, migrations, seeds, transactions, test utilities, and CLI commands (`otok db:migrate`, `db:rollback`, `db:seed`, `db:status`).
+
+## Shipped: `@kamod-ch/otok-validation`
+
+Standard Schema validation with `defineAction` schema integration, field/form errors, FormData/JSON/params parsing, and adapters for Zod, Valibot, and ArkType.
 
 ## Deferred
 

@@ -1,0 +1,29 @@
+{
+  "name": "otok-example-contacts-crud",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "typecheck": "tsc --noEmit",
+    "db:migrate": "otok db:migrate",
+    "db:seed": "otok db:seed",
+    "db:status": "otok db:status"
+  },
+  "dependencies": {
+    "@kamod-ch/otok-kysely": "workspace:*",
+    "@kamod-ch/otok-validation": "workspace:*",
+    "better-sqlite3": "^11.10.0",
+    "hono": "^4.12.25",
+    "kysely": "^0.29.2",
+    "otok": "workspace:*",
+    "preact": "^10.28.2",
+    "zod": "^4.0.0"
+  },
+  "devDependencies": {
+    "@otok/vite-plugin": "workspace:*",
+    "otok-cli": "workspace:*",
+    "typescript": "~6.0.2",
+    "vite": "^8.0.10"
+  }
+}

@@ -1,0 +1,14 @@
+@import "tailwindcss";
+@import "@kamod-ch/ui/theme.css";
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  background: hsl(var(--background));
+  color: hsl(var(--foreground));
+  font-family: Inter, ui-sans-serif, system-ui, sans-serif;
+}
+
+a {
+  color: inherit;
+}
