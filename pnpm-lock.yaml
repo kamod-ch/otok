@@ -150,6 +150,30 @@ importers:
         specifier: ^4.1.2
         version: 4.1.8(@types/node@24.13.1)(jsdom@29.1.1)(vite@8.0.16(@types/node@24.13.1)(esbuild@0.28.1)(jiti@2.7.0))
 
+  packages/otok-i18n:
+    devDependencies:
+      '@otok/test':
+        specifier: workspace:*
+        version: link:../otok-test
+      '@types/node':
+        specifier: ^24.12.2
+        version: 24.13.1
+      hono:
+        specifier: ^4.12.25
+        version: 4.12.25
+      otok:
+        specifier: workspace:*
+        version: link:../otok
+      preact:
+        specifier: ^10.28.2
+        version: 10.29.2
+      typescript:
+        specifier: ~6.0.2
+        version: 6.0.3
+      vitest:
+        specifier: ^4.1.2
+        version: 4.1.8(@types/node@24.13.1)(jsdom@29.1.1)(vite@8.0.16(@types/node@24.13.1)(esbuild@0.28.1)(jiti@2.7.0))
+
   packages/otok-oauth:
     devDependencies:
       '@types/node':

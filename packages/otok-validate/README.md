@@ -102,3 +102,4 @@ Use these when you need custom parsing but still want Otok-compatible error shap
 | `@kamod-ch/otok-flash` | shipped | Signed flash cookies for PRG |
 | `@kamod-ch/otok-stripe` | shipped | Checkout, portal, webhooks |
 | `@kamod-ch/otok-oauth` | shipped | GitHub/Google OAuth login |
+| `@kamod-ch/otok-i18n` | shipped | Locale resolution, catalogs, `t()` |

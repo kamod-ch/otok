@@ -50,11 +50,16 @@ Checkout Sessions, webhook signature verification, and a `BillingAdapter` for pl
 
 GitHub and Google authorization-code login with signed state/PKCE cookies and an `OAuthAdapter`. Apps own user persistence and call `@kamod-ch/otok-auth` `createSession`.
 
+## Shipped: `@kamod-ch/otok-i18n`
+
+Locale resolution (URL segment → cookie → `Accept-Language` → default), flat message catalogs, `t()`, route helpers, and an optional Preact client provider. Apps own catalogs; Otok core stays free of i18n.
+
 ## Deferred
 
 - Additional OAuth providers / generic OIDC — wait for a concrete flow
 - Account linking (OAuth + password) — wait for a concrete flow
 - General plugin system — explicitly out of scope for Otok core
+- ICU / pluralization in `otok-i18n` — wait for a concrete flow
 
 ## Extraction order
 
@@ -65,3 +70,4 @@ GitHub and Google authorization-code login with signed state/PKCE cookies and an
 5. `otok-flash` ✅
 6. `otok-stripe` ✅
 7. `otok-oauth` ✅
+8. `otok-i18n` ✅
