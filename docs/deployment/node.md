@@ -18,7 +18,7 @@ pnpm build:client
 pnpm build:server
 ```
 
-The client build writes hashed assets and `.vite/manifest.json` to `dist/client`. The server build writes `dist/server/server.js`. `readOtokManifest(import.meta.url)` reads the client manifest at runtime so generated HTML links hashed JS and CSS assets.
+The client build writes hashed assets and `.vite/manifest.json` to `dist/client`. The server build writes `dist/server/server.js`. `readOtokManifest(import.meta.url)` reads the client manifest from disk at runtime (Node only) so generated HTML links hashed JS and CSS assets. On Cloudflare Workers, import the JSON and use `resolveOtokManifest()` instead — see `examples/deployment/cloudflare/` and the deployment guide.
 
 ## Start
 

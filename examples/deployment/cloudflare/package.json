@@ -1,0 +1,31 @@
+{
+  "name": "otok-deployment-cloudflare",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "description": "Cloudflare Workers deployment example for Otok using createOtokWorkerApp.",
+  "scripts": {
+    "dev": "vite --host 0.0.0.0",
+    "build:client": "vite build --mode client",
+    "build:worker": "vite build",
+    "build": "pnpm run build:client && pnpm run build:worker",
+    "typecheck": "node ./scripts/ensure-manifest-stub.mjs && tsc -p tsconfig.json --noEmit",
+    "preview": "wrangler dev",
+    "deploy": "pnpm run build && wrangler deploy",
+    "smoke": "pnpm run build && wrangler deploy --dry-run"
+  },
+  "dependencies": {
+    "@otok/vite-plugin": "^0.3.0",
+    "@preact/preset-vite": "^2.10.2",
+    "hono": "^4.12.25",
+    "otok": "^0.3.0",
+    "preact": "^10.28.2",
+    "vite": "^8.0.10"
+  },
+  "devDependencies": {
+    "@cloudflare/workers-types": "^5.20260722.1",
+    "@types/node": "^24.12.2",
+    "typescript": "~6.0.2",
+    "wrangler": "^4.14.0"
+  }
+}

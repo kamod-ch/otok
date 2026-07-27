@@ -98,6 +98,30 @@ describe("createOtokHandler", () => {
     expect(html).toContain("OK");
   });
 
+  it("emits hashed asset URLs from an injected Vite manifest without reading fs", async () => {
+    const app = new Hono();
+    const page = route("/", /^\/?$/);
+    page.module.client = true;
+    app.get(
+      "*",
+      createOtokHandler({
+        routes: [page],
+        clientEntry: "src/client.ts",
+        manifest: {
+          "src/client.ts": {
+            file: "assets/client-edge.js",
+            css: ["assets/client-edge.css"],
+            isEntry: true,
+          },
+        },
+      }),
+    );
+
+    const html = await (await app.request("/")).text();
+    expect(html).toContain('href="/assets/client-edge.css"');
+    expect(html).toContain('src="/assets/client-edge.js"');
+  });
+
   it("renders convention-based not found routes", async () => {
     const app = new Hono();
     app.get(

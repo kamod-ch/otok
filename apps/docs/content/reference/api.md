@@ -10,7 +10,9 @@ order: 50
 ```ts
 createOtokApp(options)
 createOtokHandler(options)
-readOtokManifest(import.meta.url)
+createOtokWorkerApp(options)
+readOtokManifest(import.meta.url) // Node only (fs)
+resolveOtokManifest(importedJson) // Edge / Workers
 redirect(location, status?)
 notFound(message?)
 fail(status, failure)

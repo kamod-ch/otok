@@ -4,6 +4,18 @@
 
 ### Added
 
+- `resolveOtokManifest()` for Edge/Workers — inject a Vite client manifest without Node `fs`.
+- Standalone Cloudflare Workers example under `examples/deployment/cloudflare/` with Workers Assets, streaming SSR, and `pnpm smoke:cloudflare`.
+- Composition packages guide in docs (`guides/extensions.md`).
+
+### Changed
+
+- `readOtokManifest()` documented as Node-only; implementation lives in `manifest-node` so Worker bundles stay free of `node:fs`.
+- `createOtokApp({ staticDir })` loads `@hono/node-server` via lazy `process.getBuiltinModule("module")` instead of a static `node:module` import.
+- Project roadmap marks Phase 1 hardening and Phase 2 Worker/streaming foundations as shipped.
+
+### Previously unreleased
+
 - `validationError()` helper with flexible field errors and optional form `values`.
 - `parseHtml` / `renderParsedRoute` in `@otok/test` for SSR HTML assertions.
 - Opt-in `streaming: true` on handlers for shell-first HTML responses.
@@ -15,7 +27,7 @@
 - Migration guides (Fresh, Remix, plain Hono) and i18n pattern guide.
 - Cloudflare Workers deployment sketch under `examples/deployment/cloudflare/`.
 
-### Changed
+### Changed (earlier)
 
 - Playground depends on published `@kamod-ui/core` instead of a local `file:` path.
 - `.gitignore` ignores all `**/dist/`, Playwright reports, and test-results.

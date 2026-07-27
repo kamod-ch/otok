@@ -20,18 +20,27 @@ Delivered:
 - Changesets release automation
 - in-repo reference projects under `examples/`
 
-## Phase 1 hardening (0.4.x)
+## Phase 1 hardening (done)
 
-- multi-browser Playwright coverage
-- playground independence from local Kamod UI paths
-- deeper migration guides
-- external showcase projects
+- multi-browser Playwright coverage (Chromium, Firefox, WebKit)
+- playground independence from local Kamod UI `file:` paths
+- deeper migration guides (Fresh, Remix, Hono)
+- reference examples CI via `pnpm check:examples`
+- docs / ADR sync for shipped Phase 1 APIs
 
-## Phase 2 (1.x)
+## Phase 2
 
-- Edge / Worker runtime adapter
-- opt-in streaming SSR
-- i18n patterns via optional `[[lang]]` routes
+Shipped:
+
+- Edge / Worker runtime via `createOtokWorkerApp()` and `examples/deployment/cloudflare`
+- opt-in streaming SSR (`streaming: true`)
+- Edge-safe manifest injection via `resolveOtokManifest()`
+- i18n patterns guide (optional `[[lang]]` route segments; no core i18n runtime)
+
+Still deferred:
+
+- First-class `[[lang]]` scanner conventions in `@otok/vite-plugin` beyond the documented pattern
+- Broader Edge support for native Node addons (auth hashing, etc.)
 
 Otok avoids premature abstractions such as a general plugin system until real applications prove the need.
 

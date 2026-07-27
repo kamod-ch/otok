@@ -46,9 +46,14 @@ Signed one-time flash cookies for PRG redirects. devjobs logout → login flow u
 
 Checkout Sessions, webhook signature verification, and a `BillingAdapter` for plan sync. Apps own persistence; Otok core stays free of Stripe.
 
+## Shipped: `@kamod-ch/otok-oauth`
+
+GitHub and Google authorization-code login with signed state/PKCE cookies and an `OAuthAdapter`. Apps own user persistence and call `@kamod-ch/otok-auth` `createSession`.
+
 ## Deferred
 
-- OAuth providers — wait for a concrete flow
+- Additional OAuth providers / generic OIDC — wait for a concrete flow
+- Account linking (OAuth + password) — wait for a concrete flow
 - General plugin system — explicitly out of scope for Otok core
 
 ## Extraction order
@@ -59,3 +64,4 @@ Checkout Sessions, webhook signature verification, and a `BillingAdapter` for pl
 4. RBAC/tenant middleware in `otok-auth` ✅
 5. `otok-flash` ✅
 6. `otok-stripe` ✅
+7. `otok-oauth` ✅

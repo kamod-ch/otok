@@ -1,22 +1,23 @@
 # Otok Phase 1 Production-Readiness Roadmap
 
-## Aktueller Stand (0.2.0+)
+## Aktueller Stand (0.3.x+)
 
-Phase 1 APIs are implemented and covered by unit/E2E tests. Remaining work is hardening (0.3.x/0.4.x): `validationError` / `parseHtml` polish, docs sync, examples CI, multi-browser E2E, and Kamod decoupling.
+Phase 1 APIs and Phase 1 hardening are shipped. Phase 2 Edge foundations (`createOtokWorkerApp`, streaming SSR, Cloudflare example + `pnpm smoke:cloudflare`) are available. Composition packages (`otok-auth`, `otok-validate`, `otok-flash`, `otok-stripe`, `otok-oauth`) live alongside core.
 
 ### Architektur und Package-Verantwortung
 
-Otok is a pnpm monorepo with four publishable packages and reference apps:
+Otok is a pnpm monorepo with publishable packages and reference apps:
 
-- `packages/otok`: Framework runtime — Hono SSR, Preact, routing, actions, middleware, islands, soft navigation.
+- `packages/otok`: Framework runtime — Hono SSR, Preact, routing, actions, middleware, islands, soft navigation, `createOtokWorkerApp`.
 - `packages/vite-plugin-otok`: File scanner, `virtual:otok-routes` / `virtual:otok-islands`, typed `route()` builder.
 - `packages/create-otok`: CLI and templates (minimal + full synced from playground).
 - `packages/otok-test`: Server-side test helpers including `parseHtml`.
+- `packages/otok-auth` / `otok-validate` / `otok-flash` / `otok-stripe` / `otok-oauth`: optional composition packages.
 - `apps/playground`: Node/Vite reference app with Playwright E2E.
 - `apps/docs`: Product documentation site.
-- `examples/`: Reference apps and Node deployment sample.
+- `examples/`: Reference apps plus Node and Cloudflare deployment samples.
 
-Workspace checks: `pnpm check`, `pnpm test:e2e`, Changesets release workflow on `main`.
+Workspace checks: `pnpm check`, `pnpm test:e2e`, `pnpm check:examples`, `pnpm smoke:cloudflare`, Changesets release workflow on `main`.
 
 ### Laufzeitmodell
 
@@ -79,11 +80,11 @@ Helpers `redirect`, `notFound`, `fail`, and `validationError` share one failure 
 
 ### P3. Route-Level Middleware — **done**
 
-### P4. Typed Route Builder — **done** (add dedicated package type-tests as hardening)
+### P4. Typed Route Builder — **done**
 
 ### P5. Testing Utilities — **done** (`@otok/test` + `parseHtml`)
 
-### P6. E2E-Ausbau für Forms, Soft Navigation und Islands — **done** (multi-browser is hardening)
+### P6. E2E-Ausbau für Forms, Soft Navigation und Islands — **done** (multi-browser included)
 
 ### P7. Node Production Deployment — **done**
 
@@ -91,7 +92,9 @@ Helpers `redirect`, `notFound`, `fail`, and `validationError` share one failure 
 
 ### P9. GitHub Releases und Release-Automatisierung — **done**
 
-### P10. Zwei reale Otok-Referenzprojekte — **done** under `examples/` (wire into CI as hardening)
+### P10. Zwei reale Otok-Referenzprojekte — **done** under `examples/` (`pnpm check:examples`)
+
+### P11. Cloudflare Workers / Edge — **done** (`createOtokWorkerApp`, `resolveOtokManifest`, `examples/deployment/cloudflare`, `pnpm smoke:cloudflare`)
 
 ## Frühere Detailpläne
 

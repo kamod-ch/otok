@@ -33,6 +33,19 @@ const { url } = await createCheckoutSession(stripe, {
 
 Session metadata always includes `workspaceId`, `userId`, and `plan` so webhooks can update your store.
 
+## Customer Portal
+
+```ts
+import { createBillingPortalSession } from "@kamod-ch/otok-stripe";
+
+const { url } = await createBillingPortalSession(stripe, {
+  customerId: record.stripeCustomerId,
+  returnUrl: `${appUrl}/studio/abrechnung`,
+});
+```
+
+Requires a Stripe Customer Portal configuration in the Stripe Dashboard.
+
 ## Billing adapter
 
 ```ts
@@ -89,7 +102,7 @@ stripe listen --forward-to localhost:3000/api/billing/webhook
 
 | Subpath | Purpose |
 |---------|---------|
-| `@kamod-ch/otok-stripe` | `createStripeClient`, `createCheckoutSession`, shared types |
+| `@kamod-ch/otok-stripe` | `createStripeClient`, `createCheckoutSession`, `createBillingPortalSession`, shared types |
 | `@kamod-ch/otok-stripe/adapter` | `BillingAdapter`, `BillingRecord` |
 | `@kamod-ch/otok-stripe/webhook` | `createStripeWebhookHandler`, event helpers |
 

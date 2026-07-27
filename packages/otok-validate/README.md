@@ -97,5 +97,8 @@ Use these when you need custom parsing but still want Otok-compatible error shap
 | Package | Status | Purpose |
 |---------|--------|---------|
 | `@kamod-ch/otok-auth` | shipped | Sessions, CSRF, auth middleware |
+| `@kamod-ch/otok-auth/adapters/*` | shipped | Memory and Kysely session adapters |
 | `@kamod-ch/otok-validate` | this package | Zod → `validationError()` |
-| `@kamod-ch/otok-auth/adapters/*` | planned | Reusable session adapters (see `docs/extension-roadmap.md`) |
+| `@kamod-ch/otok-flash` | shipped | Signed flash cookies for PRG |
+| `@kamod-ch/otok-stripe` | shipped | Checkout, portal, webhooks |
+| `@kamod-ch/otok-oauth` | shipped | GitHub/Google OAuth login |

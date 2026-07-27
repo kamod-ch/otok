@@ -63,6 +63,9 @@ jobs:
       - name: Check reference examples
         run: pnpm check:examples
 
+      - name: Cloudflare Workers smoke
+        run: pnpm smoke:cloudflare
+
       - name: Install Playwright browsers
         run: pnpm --filter playground exec playwright install --with-deps chromium firefox webkit
 

@@ -20,6 +20,7 @@
     "release:check": "pnpm check && pnpm test:e2e && pnpm pack:check",
     "release:publish": "pnpm dlx @changesets/cli publish",
     "smoke:node": "node ./scripts/production-smoke.mjs",
+    "smoke:cloudflare": "node ./scripts/smoke-cloudflare.mjs",
     "sync:scaffold": "node ./scripts/sync-scaffold.mjs",
     "typecheck": "pnpm -r typecheck",
     "test": "pnpm -r test",

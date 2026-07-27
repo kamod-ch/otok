@@ -1,0 +1,8 @@
+name = "otok-cloudflare-example"
+main = "dist/server/server.js"
+compatibility_date = "2025-04-01"
+
+# Hashed Vite client assets (JS/CSS). HTML is rendered by the Worker.
+[assets]
+directory = "./dist/client"
+binding = "ASSETS"

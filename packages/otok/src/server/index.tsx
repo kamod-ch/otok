@@ -1,6 +1,5 @@
 import type { Context, Handler } from "hono";
 import { Hono } from "hono";
-import { createRequire } from "node:module";
 import { h } from "preact";
 import type { ComponentType, VNode } from "preact";
 import renderToString from "preact-render-to-string";
@@ -383,7 +382,17 @@ export function createOtokApp(options: CreateOtokAppOptions): Hono {
 
 function loadServeStatic() {
   try {
-    const require = createRequire(import.meta.url);
+    // Lazy Node builtin access — avoids a static `node:module` import so Edge
+    // bundles (createOtokWorkerApp) stay free of Node-only top-level deps.
+    const nodeModule = (
+      globalThis as typeof globalThis & {
+        process?: { getBuiltinModule?: (id: string) => unknown };
+      }
+    ).process?.getBuiltinModule?.("module") as typeof import("node:module") | undefined;
+    if (!nodeModule?.createRequire) {
+      throw new Error("node:module createRequire unavailable");
+    }
+    const require = nodeModule.createRequire(import.meta.url);
     return require("@hono/node-server/serve-static").serveStatic as (typeof import("@hono/node-server/serve-static"))["serveStatic"];
   } catch {
     throw new Error(
@@ -392,7 +401,7 @@ function loadServeStatic() {
   }
 }
 
-/** Edge-safe app factory without Node static file serving. Serve assets from a CDN/KV/R2. */
+/** Edge-safe app factory without Node static file serving. Serve assets from Workers Assets/CDN/KV/R2 and pass an imported Vite manifest via `resolveOtokManifest()`. */
 export function createOtokWorkerApp(
   options: Omit<CreateOtokAppOptions, "staticDir" | "assetsPath" | "assetCacheControl">,
 ): Hono {
@@ -403,7 +412,14 @@ export function createOtokWorkerApp(
 }
 
 export { pageHtml, composeHtmlStream, type ViteManifest, type ViteManifestEntry } from "./html.js";
-export { readOtokManifest, type ReadOtokManifestOptions } from "./manifest.js";
+export {
+  resolveOtokManifest,
+  type ResolveOtokManifestOptions,
+} from "./manifest.js";
+export {
+  readOtokManifest,
+  type ReadOtokManifestOptions,
+} from "./manifest-node.js";
 export { matchRoute, type RouteMatch } from "./router.js";
 export {
   defineMiddleware,

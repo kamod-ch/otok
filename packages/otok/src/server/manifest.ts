@@ -1,35 +1,37 @@
-import { readFileSync } from "node:fs";
 import type { ViteManifest } from "./html.js";
 
-export interface ReadOtokManifestOptions {
-  /** Skip reading when not in production. Defaults to true. */
+export interface ResolveOtokManifestOptions {
+  /** Skip resolving when not in production. Defaults to true. */
   prodOnly?: boolean;
   /** Override production detection (defaults to `import.meta.env.PROD`). */
   isProd?: boolean;
-  /** Relative path from the server bundle to the client manifest. */
-  manifestPath?: string;
+}
+
+export function isOtokProduction(isProd?: boolean): boolean {
+  return (
+    isProd ??
+    (typeof import.meta !== "undefined" &&
+      !!(import.meta as ImportMeta & { env?: { PROD?: boolean } }).env?.PROD)
+  );
 }
 
 /**
- * Read the Vite client manifest produced by `vite build --mode client`.
+ * Use a Vite manifest that was already loaded (JSON import, KV, R2, etc.).
+ *
+ * Preferred on Edge/Workers where Node `fs` (`readOtokManifest`) is unavailable.
  *
  * @example
  * ```ts
- * const manifest = readOtokManifest(import.meta.url);
+ * import clientManifest from "../client/.vite/manifest.json";
+ * const manifest = resolveOtokManifest(clientManifest, { prodOnly: false });
  * ```
  */
-export function readOtokManifest(
-  moduleUrl: string | URL,
-  options: ReadOtokManifestOptions = {},
+export function resolveOtokManifest(
+  manifest: ViteManifest | null | undefined,
+  options: ResolveOtokManifestOptions = {},
 ): ViteManifest | undefined {
   const prodOnly = options.prodOnly ?? true;
-  const isProd =
-    options.isProd ??
-    (typeof import.meta !== "undefined" &&
-      !!(import.meta as ImportMeta & { env?: { PROD?: boolean } }).env?.PROD);
-
-  if (prodOnly && !isProd) return undefined;
-
-  const manifestUrl = new URL(options.manifestPath ?? "../client/.vite/manifest.json", moduleUrl);
-  return JSON.parse(readFileSync(manifestUrl, "utf8")) as ViteManifest;
+  if (prodOnly && !isOtokProduction(options.isProd)) return undefined;
+  if (!manifest || typeof manifest !== "object") return undefined;
+  return manifest;
 }

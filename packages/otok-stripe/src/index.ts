@@ -1,5 +1,10 @@
 export { createStripeClient } from "./client.js";
 export { createCheckoutSession } from "./checkout.js";
+export {
+  createBillingPortalSession,
+  type BillingPortalSessionInput,
+  type BillingPortalSessionResult,
+} from "./portal.js";
 export type {
   BillingRecord,
   CheckoutMode,
