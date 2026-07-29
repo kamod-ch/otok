@@ -1,6 +1,7 @@
 import fs from "node:fs";
 import path from "node:path";
 import { adapterError, createDualBuildVitePlugin, defineAdapter, type AdapterBuildContext } from "@otok/config";
+import { collectPrerenderEntries, scanRenderingFromSource } from "otok/rendering";
 
 export interface StaticAdapterOptions {
   outDir?: string;
@@ -204,7 +205,7 @@ const staticAdapterFactory = defineAdapter<StaticAdapterOptions>({
       if (ctx.isSsrBuild) {
         const outDirs = outputDirs(ctx.adapter.options as StaticAdapterOptions);
         const routesDir = path.resolve(ctx.root, "src/app/routes");
-        const patterns = collectStaticRoutePaths(routesDir);
+        const patterns = await collectPrerenderPaths(routesDir);
         const outFile = path.resolve(ctx.root, outDirs.server ?? "", "otok-prerender-routes.json");
         fs.mkdirSync(path.dirname(outFile), { recursive: true });
         fs.writeFileSync(outFile, JSON.stringify(patterns, null, 2));
@@ -239,10 +240,10 @@ const staticAdapterFactory = defineAdapter<StaticAdapterOptions>({
   },
 });
 
-function collectStaticRoutePaths(routesDir: string): string[] {
+function collectPrerenderRouteInputs(routesDir: string) {
   const files = walkRoutes(routesDir).filter((file) => {
     const base = path.basename(file).replace(/\.[cm]?[tj]sx?$/, "");
-    return !base.startsWith("_") && !base.startsWith("$") && !/\[[^\]]+\]/.test(file);
+    return !base.startsWith("_") && !base.startsWith("$");
   });
 
   return files.map((file) => {
@@ -250,8 +251,21 @@ function collectStaticRoutePaths(routesDir: string): string[] {
     const segments = relative
       .split(path.sep)
       .filter((segment) => segment !== "index" && !/^\(.+\)$/.test(segment));
-    return `/${segments.join("/")}`.replace(/\/$/, "") || "/";
+    const routePattern = `/${segments.join("/")}`.replace(/\/$/, "") || "/";
+    const source = fs.readFileSync(file, "utf8");
+    return {
+      routePattern,
+      routePath: routePattern.replace(/\[\.\.\.([^\]]+)\]/g, ":$1*").replace(/\[\[([^\]]+)\]\]/g, ":$1").replace(/\[([^\]]+)\]/g, ":$1"),
+      file,
+      rendering: scanRenderingFromSource(source),
+    };
   });
+}
+
+async function collectPrerenderPaths(routesDir: string): Promise<string[]> {
+  const inputs = collectPrerenderRouteInputs(routesDir);
+  const manifest = await collectPrerenderEntries(inputs);
+  return manifest.entries.map((entry) => entry.path);
 }
 
 /** Static hosting adapter that prerenders known routes at build time. */
@@ -274,5 +288,6 @@ export {
   staticAdapterFactory,
   GENERATED_PRERENDER_ENTRY,
   outputDirs as staticOutputDirs,
-  collectStaticRoutePaths,
+  collectPrerenderPaths,
+  collectPrerenderRouteInputs,
 };

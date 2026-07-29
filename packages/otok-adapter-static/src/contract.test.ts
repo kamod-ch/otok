@@ -3,7 +3,7 @@ import { fileURLToPath } from "node:url";
 import { describe, expect, it } from "vitest";
 import { assertAdapterCapability, resolveAdapter } from "@otok/config";
 import { assertAdapterContract, expectMissingCapability } from "otok-adapter-contract";
-import staticAdapter, { collectStaticRoutePaths, staticOutputDirs } from "./index.js";
+import staticAdapter, { collectPrerenderPaths, staticOutputDirs } from "./index.js";
 
 describe("otok-adapter-static contract", () => {
   assertAdapterContract({
@@ -29,10 +29,10 @@ describe("otok-adapter-static contract", () => {
   });
 });
 
-describe("collectStaticRoutePaths", () => {
-  it("collects index and nested static routes", () => {
+describe("collectPrerenderPaths", () => {
+  it("collects index and nested static routes", async () => {
     const routesDir = path.join(path.dirname(fileURLToPath(import.meta.url)), "../fixtures/routes");
-    const routes = collectStaticRoutePaths(routesDir);
+    const routes = await collectPrerenderPaths(routesDir);
     expect(routes).toContain("/");
     expect(routes).toContain("/about");
   });

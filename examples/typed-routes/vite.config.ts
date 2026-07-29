@@ -1,0 +1,12 @@
+import { defineConfig } from "vite";
+import devServer from "@hono/vite-dev-server";
+import otok from "@otok/vite-plugin";
+
+export default defineConfig({
+  plugins: [
+    otok(),
+    devServer({
+      entry: "src/server.ts",
+    }),
+  ],
+});

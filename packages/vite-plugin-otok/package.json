@@ -35,6 +35,7 @@
   },
   "dependencies": {
     "@otok/config": "workspace:*",
+    "@otok/route-typegen": "workspace:*",
     "esbuild": "^0.28.1",
     "vite": "^8.0.10"
   },

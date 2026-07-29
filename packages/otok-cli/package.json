@@ -30,6 +30,7 @@
   "dependencies": {
     "@kamod-ch/otok-kysely": "workspace:*",
     "@otok/config": "workspace:*",
+    "@otok/route-typegen": "workspace:*",
     "typescript": "~6.0.2"
   },
   "devDependencies": {

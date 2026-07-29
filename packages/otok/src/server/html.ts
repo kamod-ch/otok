@@ -227,6 +227,128 @@ export function composeHtmlStream(options: PageHtmlStreamOptions): ReadableStrea
   });
 }
 
+export interface DeferredBodySlot {
+  id: string;
+  promise: Promise<unknown>;
+  /** Render resolved slot value to an HTML string. */
+  render: (value: unknown) => string;
+}
+
+export interface DeferredHtmlStreamOptions
+  extends Pick<
+    PageHtmlOptions,
+    | "head"
+    | "manifest"
+    | "clientEntry"
+    | "devClientEntry"
+    | "devStylesheets"
+    | "base"
+    | "client"
+    | "darkMode"
+    | "theme"
+  > {
+  /** Critical HTML segments surrounding deferred markers (length = slots.length + 1). */
+  segments: string[];
+  slots: DeferredBodySlot[];
+  getIslands: () => string[];
+  signal?: AbortSignal;
+}
+
+/**
+ * Progressive HTML stream: shell → critical prefix → each deferred slot in DOM order → footer.
+ * Deferred marker placeholders from the critical render are replaced by resolved HTML (never sent).
+ */
+export function composeDeferredHtmlStream(options: DeferredHtmlStreamOptions): ReadableStream<Uint8Array> {
+  const encoder = new TextEncoder();
+  const shell = pageShell(options);
+  const { segments, slots, signal } = options;
+
+  if (segments.length !== slots.length + 1) {
+    throw new Error(
+      `[otok:deferred] Expected ${slots.length + 1} HTML segments for ${slots.length} slots, got ${segments.length}.`,
+    );
+  }
+
+  let step = 0;
+  // step 0: shell (handled in start)
+  // steps 1..n: segment[i] then await slot[i] then resolved html
+  // final: last segment + footer
+
+  return new ReadableStream<Uint8Array>({
+    start(controller) {
+      if (signal?.aborted) {
+        controller.error(new DOMException("Aborted", "AbortError"));
+        return;
+      }
+      controller.enqueue(encoder.encode(shell));
+      const onAbort = () => {
+        try {
+          controller.error(new DOMException("Aborted", "AbortError"));
+        } catch {
+          // Controller may already be closed.
+        }
+      };
+      signal?.addEventListener("abort", onAbort, { once: true });
+    },
+    async pull(controller) {
+      if (signal?.aborted) {
+        controller.error(new DOMException("Aborted", "AbortError"));
+        return;
+      }
+
+      if (step < slots.length) {
+        const segment = segments[step] ?? "";
+        if (segment) controller.enqueue(encoder.encode(segment));
+
+        const slot = slots[step]!;
+        const value = await raceAbort(slot.promise, signal);
+        const html = slot.render(value);
+        if (html) controller.enqueue(encoder.encode(html));
+        step += 1;
+        return;
+      }
+
+      const trailing = segments[slots.length] ?? "";
+      if (trailing) controller.enqueue(encoder.encode(trailing));
+      controller.enqueue(
+        encoder.encode(
+          pageFooter({
+            islands: options.getIslands(),
+            manifest: options.manifest,
+            clientEntry: options.clientEntry,
+            devClientEntry: options.devClientEntry,
+            base: options.base,
+            client: options.client,
+          }),
+        ),
+      );
+      controller.close();
+    },
+    cancel() {
+      // Client disconnected — pending slot awaits are abandoned with the stream.
+    },
+  });
+}
+
+function raceAbort<T>(promise: Promise<T>, signal?: AbortSignal): Promise<T> {
+  if (!signal) return promise;
+  if (signal.aborted) return Promise.reject(new DOMException("Aborted", "AbortError"));
+  return new Promise<T>((resolve, reject) => {
+    const onAbort = () => reject(new DOMException("Aborted", "AbortError"));
+    signal.addEventListener("abort", onAbort, { once: true });
+    promise.then(
+      (value) => {
+        signal.removeEventListener("abort", onAbort);
+        resolve(value);
+      },
+      (error) => {
+        signal.removeEventListener("abort", onAbort);
+        reject(error);
+      },
+    );
+  });
+}
+
 function pageShell({
   head,
   manifest,

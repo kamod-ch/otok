@@ -800,4 +800,273 @@ describe("createOtokHandler", () => {
       values: { name: "" },
     });
   });
+
+  it("applies cache headers from defineRendering", async () => {
+    const { defineRendering } = await import("../rendering/define.js");
+    const app = new Hono();
+    app.get(
+      "*",
+      createOtokHandler({
+        routes: [
+          {
+            ...route("/cached", /^\/cached\/?$/),
+            module: {
+              default: Page as OtokRoute["module"]["default"],
+              loader: () => ({ ok: true }),
+              rendering: defineRendering({
+                mode: "ssr",
+                cache: { maxAge: 60, staleWhileRevalidate: 300, tags: ["pages"] },
+              }),
+            },
+          },
+        ],
+      }),
+    );
+
+    const first = await app.request("/cached");
+    const second = await app.request("/cached");
+
+    expect(first.headers.get("cache-control")).toContain("max-age=60");
+    expect(first.headers.get("cache-control")).toContain("stale-while-revalidate=300");
+    expect(first.headers.get("cache-tag")).toBe("pages");
+    expect(second.headers.get("x-otok-cache")).toBe("HIT");
+  });
+
+  it("forces private cache for cookie-backed requests", async () => {
+    const { defineRendering } = await import("../rendering/define.js");
+    const app = new Hono();
+    app.get(
+      "*",
+      createOtokHandler({
+        routes: [
+          {
+            ...route("/account", /^\/account\/?$/),
+            module: {
+              default: Page as OtokRoute["module"]["default"],
+              rendering: defineRendering({
+                mode: "ssr",
+                cache: { public: true, maxAge: 120 },
+              }),
+            },
+          },
+        ],
+      }),
+    );
+
+    const response = await app.request("/account", {
+      headers: { cookie: "session=abc" },
+    });
+
+    expect(response.headers.get("cache-control")).toContain("private");
+    expect(response.headers.get("cache-control")).not.toContain("public");
+  });
+
+  it("streams HTML when route rendering enables streaming", async () => {
+    const { defineRendering } = await import("../rendering/define.js");
+    const app = new Hono();
+    app.get(
+      "*",
+      createOtokHandler({
+        routes: [
+          {
+            ...route("/stream", /^\/stream\/?$/),
+            module: {
+              default: Page as OtokRoute["module"]["default"],
+              rendering: defineRendering({ mode: "ssr", streaming: true }),
+            },
+          },
+        ],
+        adapterCapabilities: new Set(["ssr", "streaming"]),
+      }),
+    );
+
+    const response = await app.request("/stream");
+    expect(response.headers.get("content-type")).toContain("text/html");
+    expect(response.body).toBeTruthy();
+    expect(await response.text()).toContain("<!doctype html>");
+  });
+
+  it("sets no-store on validation failures", async () => {
+    const app = new Hono();
+    app.get(
+      "*",
+      createOtokHandler({
+        routes: [
+          {
+            ...route("/bad", /^\/bad\/?$/),
+            module: {
+              default: ErrorRoute as OtokRoute["module"]["default"],
+              loader: () => {
+                validationError({ message: "Bad request" }, 400);
+              },
+            },
+          },
+        ],
+        errorRoute: {
+          ...route("/_error", /^\/_error\/?$/),
+          module: { default: ErrorRoute as OtokRoute["module"]["default"] },
+        },
+      }),
+    );
+
+    const response = await app.request("/bad");
+    expect(response.status).toBe(400);
+    expect(response.headers.get("cache-control")).toBe("no-store");
+  });
+
+  it("streams shell before deferred slot HTML resolves", async () => {
+    const { defineRendering } = await import("../rendering/define.js");
+    const { createDeferredSlot } = await import("../rendering/deferred.js");
+    const { DeferredBoundary } = await import("../shared/deferred-boundary.js");
+
+    let resolvePosts!: (value: { title: string }[]) => void;
+    const postsPromise = new Promise<{ title: string }[]>((resolve) => {
+      resolvePosts = resolve;
+    });
+
+    const DeferredPage = ({ data }: { data: { user: string; posts: unknown } }) => (
+      <div>
+        <h1>Hello {String((data as { user: string }).user)}</h1>
+        <DeferredBoundary slot={(data as { posts: any }).posts} fallback={<p>Loading posts…</p>}>
+          {(posts) => (
+            <ul>
+              {posts.map((post: { title: string }) => (
+                <li key={post.title}>{post.title}</li>
+              ))}
+            </ul>
+          )}
+        </DeferredBoundary>
+      </div>
+    );
+
+    const app = new Hono();
+    app.get(
+      "*",
+      createOtokHandler({
+        routes: [
+          {
+            ...route("/deferred", /^\/deferred\/?$/),
+            module: {
+              default: DeferredPage as unknown as OtokRoute["module"]["default"],
+              rendering: defineRendering({ mode: "ssr", streaming: true, deferred: true }),
+              loader: () => ({
+                user: "alice",
+                posts: createDeferredSlot("posts", () => postsPromise),
+              }),
+            },
+          },
+        ],
+        adapterCapabilities: new Set(["ssr", "streaming"]),
+      }),
+    );
+
+    const response = await app.request("/deferred");
+    expect(response.body).toBeTruthy();
+    const reader = response.body!.getReader();
+    const decoder = new TextDecoder();
+
+    const first = await reader.read();
+    const firstText = decoder.decode(first.value);
+    expect(firstText).toContain("<!doctype html>");
+    expect(firstText).not.toContain("Deferred Post");
+
+    resolvePosts([{ title: "Deferred Post" }]);
+
+    let rest = "";
+    while (true) {
+      const chunk = await reader.read();
+      if (chunk.done) break;
+      rest += decoder.decode(chunk.value, { stream: true });
+    }
+    const html = firstText + rest;
+    expect(html).toContain("Hello alice");
+    expect(html).toContain("Deferred Post");
+    expect(html).not.toContain("data-otok-loading");
+    expect(html).not.toContain("Loading posts");
+  });
+
+  it("awaits deferred slots before responding when streaming is disabled", async () => {
+    const { defineRendering } = await import("../rendering/define.js");
+    const { createDeferredSlot } = await import("../rendering/deferred.js");
+    const { DeferredBoundary } = await import("../shared/deferred-boundary.js");
+
+    const DeferredPage = ({ data }: { data: { posts: unknown } }) => (
+      <DeferredBoundary slot={(data as { posts: any }).posts}>
+        {(posts) => <p>{posts[0].title}</p>}
+      </DeferredBoundary>
+    );
+
+    const app = new Hono();
+    app.get(
+      "*",
+      createOtokHandler({
+        routes: [
+          {
+            ...route("/buffered-deferred", /^\/buffered-deferred\/?$/),
+            module: {
+              default: DeferredPage as unknown as OtokRoute["module"]["default"],
+              rendering: defineRendering({ mode: "ssr", streaming: false, deferred: true }),
+              loader: () => ({
+                posts: createDeferredSlot(
+                  "posts",
+                  () => new Promise((resolve) => setTimeout(() => resolve([{ title: "Buffered" }]), 20)),
+                ),
+              }),
+            },
+          },
+        ],
+      }),
+    );
+
+    const response = await app.request("/buffered-deferred");
+    const html = await response.text();
+    expect(html).toContain("Buffered");
+    expect(html).not.toContain("data-otok-loading");
+  });
+
+  it("aborts deferred streaming when the request signal aborts", async () => {
+    const { defineRendering } = await import("../rendering/define.js");
+    const { createDeferredSlot } = await import("../rendering/deferred.js");
+    const { DeferredBoundary } = await import("../shared/deferred-boundary.js");
+
+    const DeferredPage = ({ data }: { data: { posts: unknown } }) => (
+      <div>
+        <p>Critical</p>
+        <DeferredBoundary slot={(data as { posts: any }).posts}>
+          {(posts) => <p>{posts.title}</p>}
+        </DeferredBoundary>
+      </div>
+    );
+
+    const app = new Hono();
+    app.get(
+      "*",
+      createOtokHandler({
+        routes: [
+          {
+            ...route("/abort-deferred", /^\/abort-deferred\/?$/),
+            module: {
+              default: DeferredPage as unknown as OtokRoute["module"]["default"],
+              rendering: defineRendering({ mode: "ssr", streaming: true, deferred: true }),
+              loader: () => ({
+                posts: createDeferredSlot(
+                  "posts",
+                  () => new Promise((resolve) => setTimeout(() => resolve({ title: "late" }), 5_000)),
+                ),
+              }),
+            },
+          },
+        ],
+        adapterCapabilities: new Set(["ssr", "streaming"]),
+      }),
+    );
+
+    const controller = new AbortController();
+    const response = await app.request("/abort-deferred", { signal: controller.signal });
+    const reader = response.body!.getReader();
+    await reader.read(); // shell
+    controller.abort();
+
+    await expect(reader.read()).rejects.toThrow();
+  });
 });

@@ -1,10 +1,19 @@
 import type { Context, Handler } from "hono";
 import { Hono } from "hono";
-import { h } from "preact";
+import { h, Fragment } from "preact";
 import type { ComponentType, VNode } from "preact";
 import renderToString from "preact-render-to-string";
-import { composeHtmlStream, pageHtml, type ViteManifest } from "./html.js";
+import { composeDeferredHtmlStream, composeHtmlStream, pageHtml, type ViteManifest } from "./html.js";
 import { matchRoute } from "./router.js";
+import {
+  applyCacheHeaders,
+  buildRenderContext,
+  logRenderingWarnings,
+  readCachedHtml,
+  resolveRouteRendering,
+  writeCachedHtml,
+  type HandlerRenderOptions,
+} from "./rendering.js";
 import { withIslandRenderContext } from "../shared/island-context.js";
 import {
   isOtokHttpError,
@@ -19,6 +28,15 @@ import {
   type OtokMiddleware,
   type OtokRoute,
 } from "../shared/routes.js";
+import type { RenderingConfig } from "../rendering/types.js";
+import {
+  hasDeferredSlots,
+  resolveDeferredData,
+  splitHtmlAtDeferredMarkers,
+  unwrapImmediateData,
+  withDeferredRenderContext,
+  type DeferredRenderContext,
+} from "../rendering/index.js";
 import { OTOK_PAGE_ATTR } from "../shared/navigation.js";
 import { resolveDarkModeFromCookie } from "../shared/theme.js";
 import {
@@ -65,7 +83,13 @@ export interface CreateOtokHandlerOptions {
    * Defaults to false for maximum compatibility.
    */
   streaming?: boolean;
+  /** Default rendering config merged with per-route `defineRendering()`. */
+  rendering?: RenderingConfig;
+  /** Active adapter capabilities for route rendering validation. */
+  adapterCapabilities?: ReadonlySet<string>;
 }
+
+type RenderHandlerOptions = CreateOtokHandlerOptions & HandlerRenderOptions;
 
 export interface CreateOtokAppOptions extends CreateOtokHandlerOptions {
   staticDir?: string;
@@ -81,6 +105,7 @@ async function resolveHead(route: OtokRoute, data: LoaderResult, params: Record<
   if (!route.module.head) return { title: "Otok App" };
   return await route.module.head({
     data,
+    loaderData: data,
     params,
     route: route.path,
   });
@@ -94,6 +119,7 @@ async function resolveChrome(
   if (!route.module.chrome) return undefined;
   return await route.module.chrome({
     data,
+    loaderData: data,
     params,
     route: route.path,
   });
@@ -322,11 +348,40 @@ async function renderRoute(
   c: Context,
   route: OtokRoute,
   params: Record<string, string>,
-  options: CreateOtokHandlerOptions,
+  options: RenderHandlerOptions,
   status = 200,
   dataOverride?: LoaderResult,
   actionData?: ActionResult,
 ): Promise<Response> {
+  const renderContext = buildRenderContext(c, params, route.path);
+  const { plan, warnings } = resolveRouteRendering(route, renderContext, {
+    globalStreaming: options.streaming,
+    adapterCapabilities: options.adapterCapabilities,
+    defaultRendering: options.rendering,
+  });
+  logRenderingWarnings(warnings);
+
+  if (plan.mode === "client") {
+    options = { ...options, streaming: false };
+  }
+
+  if (
+    plan.cache &&
+    renderContext.method === "GET" &&
+    dataOverride === undefined &&
+    actionData === undefined
+  ) {
+    const cached = await readCachedHtml(plan.cache, renderContext);
+    if (cached) {
+      return new Response(cached.html, {
+        status,
+        headers: {
+          ...Object.fromEntries(cached.headers.entries()),
+          "content-type": "text/html; charset=utf-8",
+        },
+      });
+    }
+  }
   const context: OtokContext = {
     hono: c,
     request: c.req.raw,
@@ -334,11 +389,14 @@ async function renderRoute(
     route: route.path,
   };
   let data: LoaderResult;
+  let rawLoaderData: LoaderResult | undefined;
   if (dataOverride !== undefined) {
     data = dataOverride;
   } else if (route.module.loader) {
     const loaderStartedAt = performance.now();
-    data = await route.module.loader(context);
+    // Await only the top-level loader; nested createDeferredSlot promises keep running.
+    rawLoaderData = await route.module.loader(context);
+    data = rawLoaderData;
     const loaderDuration = performance.now() - loaderStartedAt;
     if (activeDevtoolsTrace) {
       activeDevtoolsTrace.loaderMs += loaderDuration;
@@ -354,11 +412,29 @@ async function renderRoute(
     data = {};
   }
   if (data instanceof Response) return data;
-  const head = await resolveHead(route, data, params);
-  const chrome = await resolveChrome(route, data, params);
+
+  const slotsPresent = rawLoaderData !== undefined && hasDeferredSlots(rawLoaderData);
+  const deferredEnabled = (plan.deferred || slotsPresent) && plan.mode === "ssr";
+  const progressiveDeferred = deferredEnabled && plan.streaming && slotsPresent;
+
+  // head/chrome only see immediate placeholders — never await deferred slots.
+  let headData: LoaderResult = data;
+  if (deferredEnabled && slotsPresent && !progressiveDeferred) {
+    // streaming:false — resolve all slots in parallel before render (no progressive TTFB).
+    data = (await resolveDeferredData(rawLoaderData, c.req.raw.signal)) as LoaderResult;
+    headData = data;
+  } else if (progressiveDeferred) {
+    headData = unwrapImmediateData(rawLoaderData) as LoaderResult;
+    // Keep DeferredRenderResult objects in `data` so DeferredBoundary can register markers.
+    data = rawLoaderData as LoaderResult;
+  }
+
+  const head = await resolveHead(route, headData, params);
+  const chrome = await resolveChrome(route, headData, params);
   const Page = route.module.default;
-  const props = { data, actionData, params, route: route.path, chrome };
+  const props = { data, loaderData: data, actionData, params, route: route.path, chrome };
   const islandContext = { islands: new Set<string>(), nextIslandId: 0 };
+  const deferredContext: DeferredRenderContext = { boundaries: [] };
   const themeEnabled = options.theme ?? false;
   const htmlOptions = {
     head,
@@ -367,7 +443,7 @@ async function renderRoute(
     devClientEntry: options.devClientEntry,
     devStylesheets: options.devStylesheets,
     base: options.base,
-    client: route.module.client === true,
+    client: route.module.client === true || plan.mode === "client",
     theme: themeEnabled,
     darkMode: themeEnabled ? resolveDarkModeFromCookie(c.req.header("cookie")) : false,
   };
@@ -385,29 +461,105 @@ async function renderRoute(
   }
 
   const renderStartedAt = performance.now();
-  const body = withIslandRenderContext(islandContext, () => renderToString(tree));
+  const body = withIslandRenderContext(islandContext, () =>
+    withDeferredRenderContext(deferredContext, () => renderToString(tree)),
+  );
   if (activeDevtoolsTrace) {
     activeDevtoolsTrace.renderMs += performance.now() - renderStartedAt;
   }
 
-  if (options.streaming) {
+  const responseHeaders = new Headers({
+    "content-type": "text/html; charset=utf-8",
+  });
+  if (plan.cache) applyCacheHeaders(responseHeaders, plan.cache, status);
+  else if (status >= 400) responseHeaders.set("cache-control", "no-store");
+
+  if (progressiveDeferred && deferredContext.boundaries.length > 0) {
+    const boundaryIds = deferredContext.boundaries.map((boundary) => boundary.id);
+    const { segments } = splitHtmlAtDeferredMarkers(body, boundaryIds);
+    const signal = c.req.raw.signal;
+    const stream = composeDeferredHtmlStream({
+      ...htmlOptions,
+      segments,
+      slots: deferredContext.boundaries.map((boundary) => ({
+        id: boundary.id,
+        promise: boundary.promise,
+        render: (value) =>
+          withIslandRenderContext(islandContext, () =>
+            renderToString(h(Fragment, null, boundary.render(value)) as VNode),
+          ),
+      })),
+      getIslands: () => [...islandContext.islands],
+      signal,
+    });
+    return new Response(stream, { status, headers: responseHeaders });
+  }
+
+  // Deferred slots without DeferredBoundary markers: resolve before responding.
+  if (progressiveDeferred && deferredContext.boundaries.length === 0 && rawLoaderData !== undefined) {
+    data = (await resolveDeferredData(rawLoaderData, c.req.raw.signal)) as LoaderResult;
+    const resolvedProps = { ...props, data, loaderData: data };
+    let resolvedTree: VNode<any> = h(
+      "div",
+      { [OTOK_PAGE_ATTR]: "" },
+      h(Page as ComponentType<typeof resolvedProps>, resolvedProps),
+    );
+    for (const layout of [...(route.layouts ?? [])].reverse()) {
+      resolvedTree = h(layout.default as ComponentType<typeof resolvedProps & { children: VNode<any> }>, {
+        ...resolvedProps,
+        children: resolvedTree,
+      });
+    }
+    const resolvedBody = withIslandRenderContext(islandContext, () => renderToString(resolvedTree));
+    if (plan.streaming) {
+      const encoder = new TextEncoder();
+      const signal = c.req.raw.signal;
+      const stream = composeHtmlStream({
+        ...htmlOptions,
+        bodyStream: new ReadableStream({
+          start(controller) {
+            if (signal.aborted) {
+              controller.error(new DOMException("Aborted", "AbortError"));
+              return;
+            }
+            controller.enqueue(encoder.encode(resolvedBody));
+            controller.close();
+          },
+          cancel() {},
+        }),
+        getIslands: () => [...islandContext.islands],
+      });
+      return new Response(stream, { status, headers: responseHeaders });
+    }
+    const html = pageHtml({
+      ...htmlOptions,
+      body: resolvedBody,
+      islands: [...islandContext.islands],
+    });
+    return new Response(html, { status, headers: responseHeaders });
+  }
+
+  if (plan.streaming) {
     const encoder = new TextEncoder();
+    const signal = c.req.raw.signal;
     const stream = composeHtmlStream({
       ...htmlOptions,
       bodyStream: new ReadableStream({
         start(controller) {
+          if (signal.aborted) {
+            controller.error(new DOMException("Aborted", "AbortError"));
+            return;
+          }
           controller.enqueue(encoder.encode(body));
           controller.close();
+        },
+        cancel() {
+          // Client disconnected — stop work early on future progressive renders.
         },
       }),
       getIslands: () => [...islandContext.islands],
     });
-    return new Response(stream, {
-      status,
-      headers: {
-        "content-type": "text/html; charset=utf-8",
-      },
-    });
+    return new Response(stream, { status, headers: responseHeaders });
   }
 
   const html = pageHtml({
@@ -416,11 +568,13 @@ async function renderRoute(
     islands: [...islandContext.islands],
   });
 
+  if (plan.cache && renderContext.method === "GET") {
+    await writeCachedHtml(plan.cache, renderContext, html);
+  }
+
   return new Response(html, {
     status,
-    headers: {
-      "content-type": "text/html; charset=utf-8",
-    },
+    headers: responseHeaders,
   });
 }
 
@@ -529,7 +683,21 @@ export function createOtokWorkerApp(
   });
 }
 
-export { pageHtml, composeHtmlStream, type ViteManifest, type ViteManifestEntry } from "./html.js";
+export { pageHtml, composeHtmlStream, composeDeferredHtmlStream, type ViteManifest, type ViteManifestEntry } from "./html.js";
+export {
+  applyCacheHeaders,
+  buildRenderContext,
+  resolveRouteRendering,
+} from "./rendering.js";
+export {
+  revalidatePath,
+  revalidateTag,
+  setCacheProvider,
+  getCacheProvider,
+  buildCacheControlHeader,
+} from "../cache/index.js";
+export { defineRendering } from "../rendering/define.js";
+export type { RenderingConfig, RenderPlan, RenderMode } from "../rendering/types.js";
 export {
   resolveOtokManifest,
   type ResolveOtokManifestOptions,

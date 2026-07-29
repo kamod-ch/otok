@@ -228,6 +228,9 @@ importers:
       '@otok/config':
         specifier: workspace:*
         version: link:../otok-config
+      '@otok/route-typegen':
+        specifier: workspace:*
+        version: link:../otok-route-typegen
       typescript:
         specifier: ~6.0.2
         version: 6.0.3
@@ -573,6 +576,19 @@ importers:
         specifier: ^4.1.2
         version: 4.1.8(@opentelemetry/api@1.9.1)(@types/node@24.13.1)(jsdom@29.1.1)(vite@8.0.16(@types/node@24.13.1)(esbuild@0.28.1)(jiti@2.7.0))
 
+  packages/otok-route-typegen:
+    dependencies:
+      typescript:
+        specifier: ~6.0.2
+        version: 6.0.3
+    devDependencies:
+      '@types/node':
+        specifier: ^24.12.2
+        version: 24.13.1
+      vitest:
+        specifier: ^4.1.2
+        version: 4.1.8(@opentelemetry/api@1.9.1)(@types/node@24.13.1)(jsdom@29.1.1)(vite@8.0.16(@types/node@24.13.1)(esbuild@0.28.1)(jiti@2.7.0))
+
   packages/otok-security:
     devDependencies:
       '@otok/test':
@@ -765,6 +781,9 @@ importers:
       '@otok/config':
         specifier: workspace:*
         version: link:../otok-config
+      '@otok/route-typegen':
+        specifier: workspace:*
+        version: link:../otok-route-typegen
       esbuild:
         specifier: ^0.28.1
         version: 0.28.1

@@ -41,6 +41,18 @@
     "./devtools": {
       "types": "./dist/devtools/index.d.ts",
       "default": "./dist/devtools/index.js"
+    },
+    "./route": {
+      "types": "./dist/route/index.d.ts",
+      "default": "./dist/route/index.js"
+    },
+    "./rendering": {
+      "types": "./dist/rendering/index.d.ts",
+      "default": "./dist/rendering/index.js"
+    },
+    "./cache": {
+      "types": "./dist/cache/index.d.ts",
+      "default": "./dist/cache/index.js"
     }
   },
   "scripts": {

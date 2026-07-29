@@ -65,3 +65,4 @@ export {
   OTOK_SWAP_ATTR,
 } from "./navigation.js";
 export { cssEscape } from "./css.js";
+export { DeferredBoundary, type DeferredBoundaryProps } from "./deferred-boundary.js";

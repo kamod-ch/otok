@@ -1,0 +1,25 @@
+{
+  "name": "typed-routes",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "typegen": "otok typegen"
+  },
+  "dependencies": {
+    "@hono/node-server": "^2.0.1",
+    "@otok/vite-plugin": "workspace:*",
+    "hono": "^4.12.25",
+    "otok": "workspace:*",
+    "otok-cli": "workspace:*",
+    "preact": "^10.28.2"
+  },
+  "devDependencies": {
+    "@hono/vite-dev-server": "^1.0.0",
+    "@types/node": "^24.12.2",
+    "typescript": "~6.0.2",
+    "vite": "^8.0.10"
+  }
+}

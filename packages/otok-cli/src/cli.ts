@@ -1,11 +1,14 @@
 import { runAddCommand } from "./commands/add.js";
 import { runDbCommand } from "./commands/db.js";
+import { runRoutesCommand, runTypegenCommand } from "./commands/routes.js";
 
 const HELP = `otok — CLI for Otok apps
 
 Usage:
   otok add <plugin> [options]
   otok db:<command> [options]
+  otok typegen [options]
+  otok routes [options]
 
 Commands:
   add           Install a plugin and register it in otok.config.ts
@@ -13,6 +16,8 @@ Commands:
   db:rollback   Roll back the last migration(s)
   db:seed       Run seed files
   db:status     Show migration status
+  typegen       Generate typed route module declarations
+  routes        Print the route tree
 
 Run "otok add --help" or "otok db --help" for command options.
 `;
@@ -32,6 +37,14 @@ export async function runCli(argv: string[]): Promise<number> {
   if (command === "db" || command.startsWith("db:")) {
     const subcommand = command === "db" ? rest.shift() : command.slice("db:".length);
     return runDbCommand(subcommand, rest);
+  }
+
+  if (command === "typegen") {
+    return runTypegenCommand(rest);
+  }
+
+  if (command === "routes") {
+    return runRoutesCommand(rest);
   }
 
   process.stderr.write(`Unknown command "${command}".\n\n${HELP}\n`);

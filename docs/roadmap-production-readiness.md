@@ -2,7 +2,7 @@
 
 ## Aktueller Stand (0.3.x+)
 
-Phase 1 APIs and Phase 1 hardening are shipped. Phase 2 Edge foundations (`createOtokWorkerApp`, streaming SSR, Cloudflare example + `pnpm smoke:cloudflare`) are available. Composition packages (`otok-auth`, `otok-validate`, `otok-flash`, `otok-stripe`, `otok-oauth`) live alongside core.
+Phase 1 APIs and Phase 1 hardening are shipped. Phase 2 Edge foundations (`createOtokWorkerApp`, streaming SSR, deferred loading boundaries, Cloudflare example + `pnpm smoke:cloudflare`) are available. Composition packages (`otok-auth`, `otok-validate`, `otok-flash`, `otok-stripe`, `otok-oauth`) live alongside core.
 
 ### Architektur und Package-Verantwortung
 

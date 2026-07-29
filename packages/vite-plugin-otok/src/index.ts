@@ -2,6 +2,7 @@ import fs from "node:fs";
 import path from "node:path";
 import type { Plugin, UserConfig, ViteDevServer } from "vite";
 import { normalizePath } from "vite";
+import { runRouteTypegen, formatRouteIssues } from "@otok/route-typegen";
 import { generateOtokConfigModule } from "./config-loader.js";
 import { loadResolvedOtokConfig, RESOLVED_OTOK_CONFIG_MODULE_ID } from "./plugin-bridge.js";
 
@@ -17,6 +18,10 @@ export interface OtokPluginOptions {
   routesDir?: string;
   islandsDir?: string;
   configFile?: string;
+  /** Directory for generated route types. Default: `.otok/types`. */
+  typesDir?: string;
+  /** Disable automatic route type generation. */
+  typegen?: boolean;
 }
 
 interface RouteEntry {
@@ -568,10 +573,39 @@ function invalidateVirtualModules(server: ViteDevServer): void {
   }
 }
 
+function runPluginTypegen(root: string, routesDir: string, typesDir: string | undefined, strict: boolean): void {
+  try {
+    const result = runRouteTypegen({
+      root,
+      routesDir,
+      outputDir: typesDir,
+      strict: false,
+    });
+
+    for (const issue of result.issues) {
+      const formatted = formatRouteIssues([issue]);
+      if (issue.severity === "error") {
+        console.error(`[otok] ${formatted}`);
+      } else if (process.env.NODE_ENV !== "production") {
+        console.warn(`[otok] ${formatted}`);
+      }
+    }
+
+    if (strict && !result.ok) {
+      throw new Error(formatRouteIssues(result.issues.filter((issue) => issue.severity === "error")));
+    }
+  } catch (error) {
+    if (strict) throw error;
+    console.warn(`[otok] Route type generation failed: ${error instanceof Error ? error.message : String(error)}`);
+  }
+}
+
 export default function otok(options: OtokPluginOptions = {}): Plugin[] {
   const appDir = options.appDir ?? "src/app";
   const routesDir = options.routesDir ?? path.join(appDir, "routes");
   const islandsDir = options.islandsDir ?? path.join(appDir, "islands");
+  const typesDir = options.typesDir ?? ".otok/types";
+  const typegenEnabled = options.typegen !== false;
   let root = process.cwd();
   let routesPath = path.resolve(root, routesDir);
   let islandsPath = path.resolve(root, islandsDir);
@@ -640,17 +674,41 @@ export default function otok(options: OtokPluginOptions = {}): Plugin[] {
     configureServer(server: ViteDevServer) {
       void pluginContainer?.runConfigureServer(server);
       server.watcher.add([routesPath, islandsPath]);
+      let typegenTimer: NodeJS.Timeout | undefined;
+
+      const scheduleTypegen = () => {
+        if (!typegenEnabled) return;
+        clearTimeout(typegenTimer);
+        typegenTimer = setTimeout(() => {
+          runPluginTypegen(root, routesDir, typesDir, false);
+        }, 80);
+      };
+
+      scheduleTypegen();
+
       server.watcher.on("add", (file) => {
-        if (file.startsWith(routesPath) || file.startsWith(islandsPath)) invalidateVirtualModules(server);
+        if (file.startsWith(routesPath) || file.startsWith(islandsPath)) {
+          invalidateVirtualModules(server);
+          scheduleTypegen();
+        }
       });
       server.watcher.on("change", (file) => {
-        if (file.startsWith(routesPath) || file.startsWith(islandsPath)) invalidateVirtualModules(server);
+        if (file.startsWith(routesPath) || file.startsWith(islandsPath)) {
+          invalidateVirtualModules(server);
+          scheduleTypegen();
+        }
       });
       server.watcher.on("unlink", (file) => {
-        if (file.startsWith(routesPath) || file.startsWith(islandsPath)) invalidateVirtualModules(server);
+        if (file.startsWith(routesPath) || file.startsWith(islandsPath)) {
+          invalidateVirtualModules(server);
+          scheduleTypegen();
+        }
       });
     },
     buildStart() {
+      if (typegenEnabled) {
+        runPluginTypegen(root, routesDir, typesDir, true);
+      }
       void pluginContainer?.runBuildStart(ssrBuild);
     },
     buildEnd() {

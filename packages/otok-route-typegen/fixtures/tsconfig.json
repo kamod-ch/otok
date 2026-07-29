@@ -1,0 +1,10 @@
+{
+  "extends": "../../../tsconfig.base.json",
+  "compilerOptions": {
+    "noEmit": true,
+    "paths": {
+      "otok/route": ["../../otok/src/route/index.ts"]
+    }
+  },
+  "include": ["route-types.ts"]
+}

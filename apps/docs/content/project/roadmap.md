@@ -34,6 +34,7 @@ Shipped:
 
 - Edge / Worker runtime via `createOtokWorkerApp()` and `examples/deployment/cloudflare`
 - opt-in streaming SSR (`streaming: true`)
+- deferred data / loading boundaries (`createDeferredSlot`, `DeferredBoundary`) with sequential HTML streaming
 - Edge-safe manifest injection via `resolveOtokManifest()`
 - i18n patterns guide (optional `[[lang]]` route segments; no core i18n runtime)
 

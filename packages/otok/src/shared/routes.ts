@@ -24,7 +24,12 @@ export interface OtokActionContext<Env = unknown> extends OtokContext<Env> {
   formData?: FormData;
 }
 
-export type LoaderResult = JsonValue | Record<string, JsonValue> | OtokFailure | Response | void;
+export type LoaderResult =
+  | JsonValue
+  | Record<string, unknown>
+  | OtokFailure
+  | Response
+  | void;
 
 export interface OtokFailure<T = unknown> {
   status: number;
@@ -57,8 +62,15 @@ export type OtokAction<Result extends ActionResult = ActionResult> = (
   context: OtokActionContext,
 ) => Result | Promise<Result>;
 
+export interface TypedOtokAction<Result extends ActionResult = ActionResult, Input = unknown> {
+  (context: OtokActionContext): Result | Promise<Result>;
+  readonly __otokAction?: { input: Input; result: Result };
+}
+
 export interface OtokPageProps<Data extends LoaderResult = LoaderResult> {
   data: Data;
+  /** Alias for `data` — preferred in typed route modules. */
+  loaderData: Data;
   actionData?: ActionResult;
   params: RouteParams;
   route: string;
@@ -77,6 +89,8 @@ export interface RouteModule<Data extends LoaderResult = LoaderResult> {
   client?: boolean;
   head?: (props: OtokPageProps<Data>) => OtokHead | Promise<OtokHead>;
   chrome?: (props: OtokPageProps<Data>) => OtokChrome | Promise<OtokChrome>;
+  /** Route rendering, streaming, and cache policy. */
+  rendering?: import("../rendering/types.js").RenderingDefinition;
 }
 
 export type OtokMiddleware = MiddlewareHandler;
@@ -88,6 +102,7 @@ export interface MiddlewareModule {
 
 export interface LayoutModule<Data extends LoaderResult = LoaderResult> {
   default: ComponentType<OtokLayoutProps<Data>>;
+  rendering?: import("../rendering/types.js").RenderingDefinition;
 }
 
 export interface OtokRoute {
