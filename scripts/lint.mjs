@@ -27,7 +27,9 @@ for (const file of walk(repoRoot)) {
       !relative.startsWith("scripts/") &&
       !relative.startsWith("packages/create-otok/bin/") &&
       !relative.startsWith("packages/otok-cli/bin/") &&
-      !relative.startsWith("packages/otok-cli/src/")
+      !relative.startsWith("packages/otok-cli/src/") &&
+      !relative.includes("/scripts/") &&
+      !relative.endsWith("/bench.mjs")
     ) {
       problems.push(`${relative}: avoid console.log in package/app source`);
     }

@@ -1,6 +1,6 @@
 {
   "name": "@kamod-ch/otok-i18n",
-  "version": "2.0.0",
+  "version": "3.0.0",
   "description": "Locale resolution, message catalogs, and i18n helpers for Otok apps.",
   "license": "MIT",
   "homepage": "https://github.com/kamod-ch/otok/tree/main/packages/otok-i18n#readme",
@@ -55,7 +55,7 @@
   },
   "peerDependencies": {
     "hono": ">=4",
-    "otok": ">=0.3.0",
+    "otok": ">=0.4.0",
     "preact": ">=10"
   },
   "peerDependenciesMeta": {

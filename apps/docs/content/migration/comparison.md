@@ -40,7 +40,7 @@ Fresh popularized islands and progressive enhancement. Otok uses Hono, Preact, V
 | `routes/` file routes | `src/app/routes/` |
 | Islands | `<Island>` + `src/app/islands/` |
 | Handlers | `loader` / `action` exports |
-| Deno Deploy | Node first; Edge planned for 1.x |
+| Deno Deploy | Node first; Edge/Workers via `createOtokWorkerApp()` and Cloudflare adapter |
 
 ## Otok vs Astro
 

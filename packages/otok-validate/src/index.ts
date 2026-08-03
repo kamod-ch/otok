@@ -10,3 +10,5 @@ export type {
   ParseIssue,
   ValidationErrorInput,
 } from "./types.js";
+export { default } from "./plugin.js";
+export type { ValidatePluginOptions } from "./plugin.js";

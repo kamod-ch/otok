@@ -13,11 +13,13 @@ import { extractRuntimeConfig, mergeUserConfig, virtualModuleId } from "./merge.
 import type {
   BuildContext,
   DevServerContext,
+  HtmlTransformContext,
   OtokConfigEnv,
   OtokPlugin,
   OtokUserConfig,
   PluginConfigContext,
   PluginResolvedContext,
+  ProgrammaticRouteDefinition,
   ResolvedOtokConfig,
   VirtualModuleFactory,
 } from "./types.js";
@@ -191,6 +193,31 @@ export class PluginContainer {
     return collected;
   }
 
+  async collectPluginRoutes(): Promise<ProgrammaticRouteDefinition[]> {
+    const routes: ProgrammaticRouteDefinition[] = [];
+    const ctx = this.resolvedContext();
+    for (const plugin of this.plugins) {
+      if (!plugin.registerRoutes) continue;
+      const result = await plugin.registerRoutes(ctx);
+      if (result?.length) routes.push(...result);
+    }
+    return routes;
+  }
+
+  async transformHtml(html: string, meta: { pathname: string; routeId?: string }): Promise<string> {
+    let output = html;
+    const ctx: HtmlTransformContext = {
+      ...this.resolvedContext(),
+      pathname: meta.pathname,
+      routeId: meta.routeId,
+    };
+    for (const plugin of this.plugins) {
+      if (!plugin.transformHtml) continue;
+      output = await plugin.transformHtml(output, ctx);
+    }
+    return output;
+  }
+
   async resolve(): Promise<ResolvedOtokConfig> {
     await this.runConfigHook();
     await this.runConfigResolvedHook();
@@ -202,6 +229,8 @@ export class PluginContainer {
       applyAppPlugins: async (app: Hono) => {
         await this.runConfigureApp(app);
       },
+      collectPluginRoutes: async () => this.collectPluginRoutes(),
+      transformHtml: async (html, meta) => this.transformHtml(html, meta),
       env: parseEnvSchemas(this.config, this.plugins),
       virtualModules: collectVirtualModules(this.plugins),
       vitePlugins: await this.collectVitePlugins(),

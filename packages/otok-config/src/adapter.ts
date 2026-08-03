@@ -110,19 +110,19 @@ export interface OtokAdapter<TOptions = unknown> {
   runtime: OtokRuntime;
   capabilities: readonly OtokAdapterCapability[];
   build?: OtokAdapterBuildSetup;
-  outputDirs: (options: TOptions, root: string) => OtokAdapterOutputDirs;
-  serverEntry?: (
+  outputDirs(options: TOptions, root: string): OtokAdapterOutputDirs;
+  serverEntry?(
     ctx: AdapterBuildContext & { options: TOptions },
-  ) => OtokAdapterServerEntry | Promise<OtokAdapterServerEntry>;
+  ): OtokAdapterServerEntry | Promise<OtokAdapterServerEntry>;
   assets?: OtokAdapterAssetHandling;
   environment?: OtokAdapterEnvironment;
   prerender?: OtokAdapterPrerender;
   ssr?: OtokAdapterSsr;
   middleware?: OtokAdapterMiddleware;
   hooks?: OtokAdapterHooks;
-  configureVite?: (
+  configureVite?(
     ctx: ViteContext & { options: TOptions; isSsrBuild: boolean },
-  ) => void | Plugin | Plugin[] | Promise<void | Plugin | Plugin[]>;
+  ): void | Plugin | Plugin[] | Promise<void | Plugin | Plugin[]>;
   /** @internal Options passed to the adapter factory. */
   __options?: TOptions;
 }
@@ -138,7 +138,7 @@ export type OtokAdapterFactory<TOptions = void> = [TOptions] extends [void]
   ? () => OtokAdapter<TOptions>
   : (options?: TOptions) => OtokAdapter<TOptions>;
 
-export type OtokAdapterInput = OtokAdapter | OtokAdapterFactory;
+export type OtokAdapterInput = OtokAdapter<any> | OtokAdapterFactory<any>;
 
 export function adapterError(adapterName: string, message: string): OtokConfigError {
   return new OtokConfigError(`[otok:adapter:${adapterName}] ${message}`);
@@ -164,7 +164,7 @@ export function instantiateAdapter(input: OtokAdapterInput, options?: unknown): 
     const factory = input as (options?: unknown) => OtokAdapter;
     return factory(options);
   }
-  return input;
+  return input as OtokAdapter;
 }
 
 export function normalizeAdapter(input: OtokAdapterInput | undefined): OtokAdapter | undefined {

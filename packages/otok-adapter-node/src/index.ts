@@ -18,6 +18,11 @@ export interface NodeAdapterOptions {
   serverEntry?: string;
   /** Cache-Control header for hashed static assets. */
   assetCacheControl?: string;
+  /**
+   * When true, the generated server wires `RedisCacheProvider` from
+   * `UPSTASH_REDIS_REST_URL` + `UPSTASH_REDIS_REST_TOKEN` (or `OTOK_REDIS_REST_*`).
+   */
+  redisCache?: boolean;
 }
 
 const NODE_CAPABILITIES = [
@@ -50,16 +55,32 @@ function generatedServerSource(options: NodeAdapterOptions): string {
   const port = options.port ?? 3000;
   const host = options.host ?? "0.0.0.0";
   const cacheControl = options.assetCacheControl ?? "public, max-age=31536000, immutable";
+  const redisCache = options.redisCache === true;
+
+  const redisBootstrap = redisCache
+    ? `
+import { setCacheProvider, RedisCacheProvider, createRedisRestClient } from "otok/cache";
+
+const redisUrl = process.env.UPSTASH_REDIS_REST_URL ?? process.env.OTOK_REDIS_REST_URL;
+const redisToken = process.env.UPSTASH_REDIS_REST_TOKEN ?? process.env.OTOK_REDIS_REST_TOKEN;
+if (redisUrl && redisToken) {
+  setCacheProvider(new RedisCacheProvider({
+    client: createRedisRestClient({ url: redisUrl, token: redisToken }),
+  }));
+}
+`
+    : "";
 
   return `import { serve } from "@hono/node-server";
 import { createOtokApp, readOtokManifest } from "otok/server";
 import { loadOtokResolvedConfig } from "virtual:otok-config";
 import { errorRoute, notFoundRoute, routes } from "virtual:otok-routes";
-
-const { runtime, applyAppPlugins } = await loadOtokResolvedConfig();
+${redisBootstrap}
+const { runtime, applyAppPlugins, collectPluginRoutes, transformHtml } = await loadOtokResolvedConfig();
+const pluginRoutes = await collectPluginRoutes();
 
 const app = createOtokApp({
-  routes,
+  routes: [...routes, ...(pluginRoutes as typeof routes)],
   notFoundRoute,
   errorRoute,
   ...runtime,
@@ -70,6 +91,7 @@ const app = createOtokApp({
   staticDir: ${JSON.stringify(`./${outDirs.client}`)},
   assetCacheControl: ${JSON.stringify(cacheControl)},
   health: { ok: true, runtime: "node", adapter: "otok-adapter-node" },
+  transformHtml,
   configure: (app) => {
     void applyAppPlugins(app);
   },

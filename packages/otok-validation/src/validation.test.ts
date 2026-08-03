@@ -81,7 +81,7 @@ describe("parseParams", () => {
 
 describe("Standard Schema adapters", () => {
   it("validates Valibot schemas", async () => {
-    const result = await validateSchema(valibotContactSchema, {
+    const result = await validateSchema(valibotContactSchema as never, {
       name: "Ada",
       email: "ada@example.com",
     });

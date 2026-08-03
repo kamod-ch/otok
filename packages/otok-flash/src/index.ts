@@ -15,3 +15,5 @@ export {
 } from "./flash.js";
 export { createFlashMiddleware, readFlash, type FlashMiddlewareOptions } from "./middleware.js";
 export { seal, unseal } from "./sign.js";
+export { default } from "./plugin.js";
+export type { FlashPluginOptions } from "./plugin.js";

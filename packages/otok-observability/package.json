@@ -1,6 +1,6 @@
 {
   "name": "@kamod-ch/otok-observability",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "description": "Structured logging, tracing, and error reporting for Otok apps.",
   "license": "MIT",
   "homepage": "https://github.com/kamod-ch/otok/tree/main/packages/otok-observability#readme",
@@ -47,7 +47,7 @@
   },
   "peerDependencies": {
     "hono": ">=4",
-    "otok": ">=0.3.0"
+    "otok": ">=0.4.0"
   },
   "peerDependenciesMeta": {
     "@opentelemetry/api": {

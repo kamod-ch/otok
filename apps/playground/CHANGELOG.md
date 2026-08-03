@@ -1,5 +1,15 @@
 # playground
 
+## 0.1.2
+
+### Patch Changes
+
+- Updated dependencies [2e24c99]
+- Updated dependencies [15b45d9]
+- Updated dependencies
+  - otok@0.4.0
+  - @otok/plugin-hello@1.0.0
+
 ## 0.1.1
 
 ### Patch Changes

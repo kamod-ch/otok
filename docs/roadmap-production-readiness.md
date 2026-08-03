@@ -352,15 +352,17 @@ Phase 1 sollte als `0.3.0` oder `0.4.0` veröffentlicht werden, abhängig davon,
 - Playground-Artefakte unter `dist` können bei Builds den Working Tree verändern, falls sie versioniert bleiben.
 - Full Template hängt bewusst an Kamod UI/Tailwind; Minimal Template muss die Core-Unabhängigkeit zeigen.
 
-## Ausdrücklich nicht enthalten
+## Ausdrücklich nicht enthalten (Phase 1 scope)
 
-- Allgemeines Plugin-System.
-- Edge-/Worker-Runtime als primäres Ziel.
-- Vorgeschriebene Validation-, Database- oder Auth-Bibliothek.
+These were out of scope for Phase 1. Several are now available as Phase 2 / composition packages:
+
+- Allgemeines Plugin-System — **shipped** (v1); render hooks / programmatic routes in ADR 0007.
+- Edge-/Worker-Runtime als *primäres* Ziel — Node remains the default; Cloudflare Workers foundations are **shipped**.
+- Vorgeschriebene Validation-, Database- oder Auth-Bibliothek — composition packages only.
 - Kamod UI, Tailwind oder Icons als Core-Abhängigkeit.
 - Client-side Router als Ersatz für SSR.
-- Server Components oder Streaming als Phase-1-Anforderung.
-- Internationalisierungssystem.
+- Server Components — not planned; Streaming SSR and deferred boundaries are **shipped**.
+- Internationalisierungssystem im Core — use `@kamod-ch/otok-i18n` (composition); `[[lang]]` optional segments are first-class in the file scanner.
 - Asset-Pipeline außerhalb von Vite.
 
 ## Empfohlene Reihenfolge

@@ -1,6 +1,6 @@
 {
   "name": "@kamod-ch/otok-kysely",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "description": "Kysely database integration for Otok — typed db context, migrations, seeds, and CLI.",
   "license": "MIT",
   "homepage": "https://github.com/kamod-ch/otok/tree/main/packages/otok-kysely#readme",
@@ -68,12 +68,18 @@
   "peerDependencies": {
     "hono": ">=4",
     "kysely": ">=0.27.0",
-    "otok": ">=0.3.0"
+    "otok": ">=0.4.0"
   },
   "peerDependenciesMeta": {
-    "pg": { "optional": true },
-    "better-sqlite3": { "optional": true },
-    "mysql2": { "optional": true }
+    "pg": {
+      "optional": true
+    },
+    "better-sqlite3": {
+      "optional": true
+    },
+    "mysql2": {
+      "optional": true
+    }
   },
   "devDependencies": {
     "@otok/test": "workspace:*",

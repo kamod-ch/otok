@@ -40,8 +40,8 @@ Shipped:
 
 Still deferred:
 
-- First-class `[[lang]]` scanner conventions in `@otok/vite-plugin` beyond the documented pattern
-- Broader Edge support for native Node addons (auth hashing, etc.)
+- Broader Edge support notes for native Node addons (prefer Web Crypto password helpers on Workers)
+- Generic OIDC / Better Auth adapters
 
 Otok avoids premature abstractions such as a general plugin system until real applications prove the need.
 

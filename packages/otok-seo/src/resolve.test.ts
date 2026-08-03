@@ -34,15 +34,20 @@ describe("resolveMetaToHead", () => {
 
 describe("defineMeta", () => {
   it("produces a head function from loader data", async () => {
-    const head = defineMeta(({ data }) => ({
-      title: data.product.name,
-      description: data.product.description,
-      canonical: `/products/${data.product.slug}`,
-      openGraph: { type: "product" },
-    }));
+    const head = defineMeta(({ data }) => {
+      const product = (data as { product: { name: string; description: string; slug: string } }).product;
+      return {
+        title: product.name,
+        description: product.description,
+        canonical: `/products/${product.slug}`,
+        openGraph: { type: "product" },
+      };
+    });
 
+    const data = { product: { name: "Widget", description: "Nice", slug: "widget" } };
     const result = await head({
-      data: { product: { name: "Widget", description: "Nice", slug: "widget" } },
+      data,
+      loaderData: data,
       params: {},
       route: "/products/:slug",
     });

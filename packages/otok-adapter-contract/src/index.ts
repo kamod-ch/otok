@@ -23,7 +23,7 @@ export interface AdapterContractExpectation {
 }
 
 export interface AdapterContractOptions {
-  adapter: OtokAdapter;
+  adapter: OtokAdapter<any>;
   expected: AdapterContractExpectation;
   root?: string;
 }

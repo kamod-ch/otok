@@ -1,6 +1,6 @@
 {
   "name": "@kamod-ch/otok-validate",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "description": "Zod validation helpers for Otok route actions and API handlers.",
   "license": "MIT",
   "homepage": "https://github.com/kamod-ch/otok/tree/main/packages/otok-validate#readme",
@@ -38,7 +38,7 @@
     "test": "vitest run"
   },
   "peerDependencies": {
-    "otok": ">=0.3.0",
+    "otok": ">=0.4.0",
     "zod": ">=3.22.0"
   },
   "devDependencies": {

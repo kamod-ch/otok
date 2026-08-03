@@ -13,3 +13,5 @@ export type {
   JsonValue,
   ValidationErrorInput,
 } from "./types.js";
+export { default } from "./plugin.js";
+export type { ValidationPluginOptions } from "./plugin.js";

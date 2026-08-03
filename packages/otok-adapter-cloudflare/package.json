@@ -1,6 +1,6 @@
 {
   "name": "otok-adapter-cloudflare",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "description": "Cloudflare Workers deployment adapter for Otok with worker-safe bundles and Workers Assets.",
   "license": "MIT",
   "homepage": "https://github.com/kamod-ch/otok/tree/main/packages/otok-adapter-cloudflare#readme",
@@ -30,7 +30,7 @@
     "test": "vitest run"
   },
   "peerDependencies": {
-    "otok": ">=0.3.0",
+    "otok": ">=0.4.0",
     "vite": ">=6"
   },
   "dependencies": {

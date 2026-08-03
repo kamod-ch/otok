@@ -14,7 +14,7 @@ describe("otok/route helpers", () => {
           return { name: String((value as { name?: string }).name ?? "") };
         },
       },
-      handler: async ({ input }) => ({ ok: true, name: input.name }),
+      handler: async ({ input }) => ({ ok: true, name: (input as { name: string }).name }),
     });
     expect(typeof action).toBe("function");
     expect(action.__otokAction).toBeDefined();

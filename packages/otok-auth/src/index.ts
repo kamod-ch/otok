@@ -53,6 +53,7 @@ export {
   type SessionManager,
 } from "./session/index.js";
 export { hashPassword, verifyPassword } from "./password.js";
+export { hashPasswordWebCrypto, verifyPasswordWebCrypto } from "./password-webcrypto.js";
 export {
   createMemorySessionAdapter,
   type MemorySessionAdapterOptions,

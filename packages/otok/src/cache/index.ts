@@ -1,4 +1,16 @@
 import type { CacheConfig, CacheEntry, CacheKeyInput, CacheLookupResult, CacheProvider } from "./types.js";
+import { isFresh, isStale, lookupEntry } from "./lookup.js";
+
+export { isFresh, isStale, lookupEntry } from "./lookup.js";
+export {
+  createRedisRestClient,
+  EdgeKvCacheProvider,
+  RedisCacheProvider,
+  type EdgeKvCacheProviderOptions,
+  type EdgeKvNamespace,
+  type RedisCacheProviderOptions,
+  type RedisClient,
+} from "./providers.js";
 
 export function buildCacheKey(input: CacheKeyInput): string {
   const parts = [
@@ -47,22 +59,6 @@ export function buildCacheTagHeader(tags: string[] | undefined): string | undefi
 export function buildVaryHeader(config: CacheConfig, extra: string[] = []): string | undefined {
   const values = [...new Set([...(config.vary ?? []), ...extra])];
   return values.length > 0 ? values.join(", ") : undefined;
-}
-
-export function isFresh(entry: CacheEntry, now = Date.now()): boolean {
-  return now - entry.createdAt <= entry.maxAge * 1000;
-}
-
-export function isStale(entry: CacheEntry, now = Date.now()): boolean {
-  const ageMs = now - entry.createdAt;
-  return ageMs > entry.maxAge * 1000 && ageMs <= (entry.maxAge + entry.staleWhileRevalidate) * 1000;
-}
-
-export function lookupEntry(entry: CacheEntry | undefined, now = Date.now()): CacheLookupResult | undefined {
-  if (!entry) return { hit: "miss" };
-  if (isFresh(entry, now)) return { hit: "fresh", entry };
-  if (isStale(entry, now)) return { hit: "stale", entry };
-  return { hit: "miss" };
 }
 
 const inflight = new Map<string, Promise<unknown>>();

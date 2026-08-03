@@ -7,7 +7,27 @@ import { fileURLToPath } from "node:url";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const repoRoot = path.resolve(__dirname, "..");
-const examples = ["reference-ai-audit", "reference-flat-cms"];
+
+/** Examples validated in CI (pack local packages, typecheck, build). */
+const examples = [
+  "reference-ai-audit",
+  "reference-flat-cms",
+  "typed-routes",
+  "i18n-trilingual",
+  "auth-github",
+];
+
+/** Workspace packages that examples may depend on — packed and rewritten to file: URLs. */
+const packTargets = [
+  { filter: "otok", name: "otok", prefix: "otok-" },
+  { filter: "@otok/vite-plugin", name: "@otok/vite-plugin", prefix: "otok-vite-plugin-" },
+  { filter: "@otok/config", name: "@otok/config", prefix: "otok-config-" },
+  { filter: "@otok/route-typegen", name: "@otok/route-typegen", prefix: "otok-route-typegen-" },
+  { filter: "otok-cli", name: "otok-cli", prefix: "otok-cli-" },
+  { filter: "@kamod-ch/otok-i18n", name: "@kamod-ch/otok-i18n", prefix: "kamod-ch-otok-i18n-" },
+  { filter: "@kamod-ch/otok-auth", name: "@kamod-ch/otok-auth", prefix: "kamod-ch-otok-auth-" },
+  { filter: "@kamod-ch/otok-oauth", name: "@kamod-ch/otok-oauth", prefix: "kamod-ch-otok-oauth-" },
+];
 
 function run(command, options = {}) {
   console.log(`\n$ ${command}`);
@@ -34,10 +54,21 @@ function copyExample(name, destRoot) {
     recursive: true,
     filter: (src) => {
       const base = path.basename(src);
-      return base !== "node_modules" && base !== "dist";
+      return base !== "node_modules" && base !== "dist" && base !== ".otok";
     },
   });
   return dest;
+}
+
+function rewriteWorkspaceDeps(deps, packsByName) {
+  if (!deps) return deps;
+  const next = { ...deps };
+  for (const name of Object.keys(next)) {
+    if (packsByName[name]) {
+      next[name] = `file:${packsByName[name]}`;
+    }
+  }
+  return next;
 }
 
 const packDir = fs.mkdtempSync(path.join(os.tmpdir(), "otok-packs-"));
@@ -45,21 +76,45 @@ const workDir = fs.mkdtempSync(path.join(os.tmpdir(), "otok-examples-"));
 
 try {
   run("pnpm -r --filter './packages/*' build");
-  run(`pnpm --filter otok pack --pack-destination ${JSON.stringify(packDir)}`);
-  run(`pnpm --filter @otok/vite-plugin pack --pack-destination ${JSON.stringify(packDir)}`);
 
-  const otokPack = findPack(packDir, "otok-");
-  const pluginPack = findPack(packDir, "otok-vite-plugin-");
+  for (const target of packTargets) {
+    run(`pnpm --filter ${JSON.stringify(target.filter)} pack --pack-destination ${JSON.stringify(packDir)}`);
+  }
+
+  /** @type {Record<string, string>} */
+  const packsByName = {};
+  for (const target of packTargets) {
+    packsByName[target.name] = findPack(packDir, target.prefix);
+  }
 
   for (const example of examples) {
     const exampleDir = copyExample(example, workDir);
     const packageJsonPath = path.join(exampleDir, "package.json");
     const packageJson = JSON.parse(fs.readFileSync(packageJsonPath, "utf8"));
-    packageJson.dependencies = {
-      ...packageJson.dependencies,
-      otok: `file:${otokPack}`,
-      "@otok/vite-plugin": `file:${pluginPack}`,
-    };
+
+    packageJson.dependencies = rewriteWorkspaceDeps(
+      {
+        ...(packageJson.dependencies ?? {}),
+        otok: `file:${packsByName.otok}`,
+        "@otok/vite-plugin":
+          packageJson.dependencies?.["@otok/vite-plugin"] || packageJson.devDependencies?.["@otok/vite-plugin"]
+            ? undefined
+            : `file:${packsByName["@otok/vite-plugin"]}`,
+      },
+      packsByName,
+    );
+    // Remove undefined keys
+    for (const key of Object.keys(packageJson.dependencies)) {
+      if (packageJson.dependencies[key] === undefined) delete packageJson.dependencies[key];
+    }
+
+    packageJson.devDependencies = rewriteWorkspaceDeps(packageJson.devDependencies ?? {}, packsByName);
+
+    // Ensure vite-plugin is always installable
+    if (!packageJson.dependencies["@otok/vite-plugin"] && !packageJson.devDependencies["@otok/vite-plugin"]) {
+      packageJson.devDependencies["@otok/vite-plugin"] = `file:${packsByName["@otok/vite-plugin"]}`;
+    }
+
     fs.writeFileSync(packageJsonPath, `${JSON.stringify(packageJson, null, 2)}\n`);
 
     run("npm install --no-fund --no-audit", { cwd: exampleDir });
@@ -67,7 +122,7 @@ try {
     run("npm run build", { cwd: exampleDir });
   }
 
-  console.log("\nAll reference examples typechecked and built successfully.");
+  console.log("\nAll examples typechecked and built successfully.");
 } finally {
   fs.rmSync(packDir, { recursive: true, force: true });
   fs.rmSync(workDir, { recursive: true, force: true });

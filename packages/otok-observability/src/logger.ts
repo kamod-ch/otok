@@ -19,7 +19,7 @@ export function createJsonLogger(options: { redactKeys?: string[]; base?: Record
     const line = formatRecord(record);
     if (level === "error") console.error(line);
     else if (level === "warn") console.warn(line);
-    else console.log(line);
+    else console.info(line);
   };
 
   const logger: Logger = {

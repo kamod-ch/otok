@@ -59,10 +59,10 @@ describe("withTransaction", () => {
       .execute();
 
     await withTransaction(testDb.db, async (trx) => {
-      await trx.insertInto("items").values({ name: "alpha" }).execute();
+      await (trx as any).insertInto("items").values({ name: "alpha" }).execute();
     });
 
-    const rows = await testDb.db.selectFrom("items").selectAll().execute();
+    const rows = await (testDb.db as any).selectFrom("items").selectAll().execute();
     expect(rows).toHaveLength(1);
     await testDb.cleanup();
   });
@@ -79,7 +79,7 @@ describe("defineLoader integration", () => {
       .addColumn("id", "integer", (col) => col.primaryKey().autoIncrement())
       .addColumn("name", "text", (col) => col.notNull())
       .execute();
-    await testDb.db.insertInto("contacts").values({ name: "Ada" }).execute();
+    await (testDb.db as any).insertInto("contacts").values({ name: "Ada" }).execute();
 
     registerKyselyRuntime({
       db: testDb.db,
@@ -92,7 +92,7 @@ describe("defineLoader integration", () => {
     });
 
     const loader = defineLoader(async ({ db }) => {
-      return db.selectFrom("contacts").selectAll().execute();
+      return (db as any).selectFrom("contacts").selectAll().execute();
     });
 
     const result = await loader({

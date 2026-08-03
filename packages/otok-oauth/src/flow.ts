@@ -6,9 +6,17 @@ import { tryGetAuthRuntime } from "@kamod-ch/otok-auth/registry";
 import type { OAuthAdapter, OAuthProviderId, OAuthTokenRefreshHandler } from "./adapter/types.js";
 import { OAuthFlowError, type OAuthErrorCode } from "./errors.js";
 import { fetchGitHubProfile } from "./profile/github.js";
+import { fetchGitLabProfile } from "./profile/gitlab.js";
 import { fetchGoogleProfile } from "./profile/google.js";
+import { fetchMicrosoftProfile } from "./profile/microsoft.js";
 import { createGitHubClient, githubScopes } from "./providers/github.js";
+import { createGitLabClient, gitlabScopes, type GitLabProviderConfig } from "./providers/gitlab.js";
 import { createGoogleClient, googleScopes } from "./providers/google.js";
+import {
+  createMicrosoftClient,
+  microsoftScopes,
+  type MicrosoftProviderConfig,
+} from "./providers/microsoft.js";
 import type { OAuthProviderConfig } from "./providers/types.js";
 import { safeNextPath } from "./redirect.js";
 import {
@@ -113,6 +121,17 @@ export function createOAuthFlow<TUser>(options: OAuthFlowOptions<TUser>): OAuthF
             codeVerifier,
             googleScopes(config),
           );
+        } else if (provider === "microsoft") {
+          const client = createMicrosoftClient(config as MicrosoftProviderConfig);
+          codeVerifier = generateCodeVerifier();
+          authorizationURL = client.createAuthorizationURL(
+            state,
+            codeVerifier,
+            microsoftScopes(config),
+          );
+        } else if (provider === "gitlab") {
+          const client = createGitLabClient(config as GitLabProviderConfig);
+          authorizationURL = client.createAuthorizationURL(state, gitlabScopes(config));
         } else {
           return fail(c, "provider_unavailable");
         }
@@ -179,6 +198,17 @@ export function createOAuthFlow<TUser>(options: OAuthFlowOptions<TUser>): OAuthF
           const tokens = await client.validateAuthorizationCode(code, payload.codeVerifier);
           accessToken = tokens.accessToken();
           refreshToken = tokens.hasRefreshToken() ? tokens.refreshToken() : null;
+        } else if (provider === "microsoft") {
+          if (!payload.codeVerifier) return fail(c, "pkce_error");
+          const client = createMicrosoftClient(config as MicrosoftProviderConfig);
+          const tokens = await client.validateAuthorizationCode(code, payload.codeVerifier);
+          accessToken = tokens.accessToken();
+          refreshToken = tokens.hasRefreshToken() ? tokens.refreshToken() : null;
+        } else if (provider === "gitlab") {
+          const client = createGitLabClient(config as GitLabProviderConfig);
+          const tokens = await client.validateAuthorizationCode(code);
+          accessToken = tokens.accessToken();
+          refreshToken = tokens.hasRefreshToken() ? tokens.refreshToken() : null;
         } else {
           return fail(c, "provider_unavailable");
         }
@@ -189,10 +219,18 @@ export function createOAuthFlow<TUser>(options: OAuthFlowOptions<TUser>): OAuthF
 
         let profile;
         try {
-          profile =
-            provider === "github"
-              ? await fetchGitHubProfile(accessToken)
-              : await fetchGoogleProfile(accessToken);
+          if (provider === "github") {
+            profile = await fetchGitHubProfile(accessToken);
+          } else if (provider === "google") {
+            profile = await fetchGoogleProfile(accessToken);
+          } else if (provider === "microsoft") {
+            profile = await fetchMicrosoftProfile(accessToken);
+          } else if (provider === "gitlab") {
+            const baseURL = (config as GitLabProviderConfig).baseURL ?? "https://gitlab.com";
+            profile = await fetchGitLabProfile(accessToken, baseURL);
+          } else {
+            return fail(c, "provider_unavailable");
+          }
         } catch (error) {
           if (error instanceof OAuthFlowError) return fail(c, error.code);
           return fail(c, "profile_error");

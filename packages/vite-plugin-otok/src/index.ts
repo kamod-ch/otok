@@ -34,6 +34,19 @@ interface RouteEntry {
   score: number;
   layouts: string[];
   middleware: string[];
+  /**
+   * First-class optional locale segment (`[[lang]]` / `[[locale]]`) present on this variant.
+   * Omitted on the path variant that drops the optional segment.
+   */
+  localeParam?: string;
+}
+
+/** Optional filesystem segments treated as locale prefixes by convention. */
+export const LOCALE_OPTIONAL_PARAM_NAMES = new Set(["lang", "locale"]);
+
+export function isLocaleOptionalSegment(segment: string): boolean {
+  const optional = /^\[\[([^\]]+)\]\]$/.exec(segment);
+  return Boolean(optional && LOCALE_OPTIONAL_PARAM_NAMES.has(optional[1]!));
 }
 
 interface RoutesScanResult {
@@ -81,7 +94,7 @@ function escapeRegex(value: string): string {
   return value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 }
 
-type RoutePartKind = "static" | "dynamic" | "catchall";
+type RoutePartKind = "static" | "dynamic" | "catchall" | "optional";
 
 interface RoutePart {
   part: string;
@@ -107,7 +120,7 @@ function appendPart(variant: RouteVariant, part: RoutePart): RouteVariant {
     parts: [...variant.parts, part],
     params: part.param ? [...variant.params, part.param] : variant.params,
     staticCount: variant.staticCount + (part.kind === "static" ? 1 : 0),
-    dynamicCount: variant.dynamicCount + (part.kind === "dynamic" ? 1 : 0),
+    dynamicCount: variant.dynamicCount + (part.kind === "dynamic" || part.kind === "optional" ? 1 : 0),
     catchAllCount: variant.catchAllCount + (part.kind === "catchall" ? 1 : 0),
   };
 }
@@ -134,7 +147,7 @@ function segmentToVariants(segment: string, variants: RouteVariant[]): RouteVari
       appendPart(variant, {
         part: `:${optional[1]}`,
         pattern: "([^/]+)",
-        kind: "dynamic",
+        kind: "optional",
         param: optional[1],
       }),
     ]);
@@ -189,6 +202,9 @@ function routeFileToEntries(
     const routePath = `/${routeParts.join("/")}`.replace(/\/$/, "") || "/";
     const patternParts = variant.parts.map((part) => part.pattern);
     const pattern = patternParts.length > 0 ? `^/${patternParts.join("/")}/?$` : "^/?$";
+    const localePart = variant.parts.find(
+      (part) => part.kind === "optional" && part.param && LOCALE_OPTIONAL_PARAM_NAMES.has(part.param),
+    );
 
     return {
       id: `${relative.replaceAll("/", ".")}${variants.length > 1 ? `.${index}` : ""}`,
@@ -200,6 +216,7 @@ function routeFileToEntries(
       score: variant.staticCount * 100 - variant.dynamicCount * 10 - variant.catchAllCount * 1000,
       layouts,
       middleware,
+      localeParam: localePart?.param,
     };
   });
 }
@@ -371,6 +388,7 @@ function routeToModuleEntry(
     path: ${JSON.stringify(route.routePath)},
     pattern: new RegExp(${JSON.stringify(route.pattern)}),
     params: ${JSON.stringify(route.params)},
+    localeParam: ${JSON.stringify(route.localeParam)},
     module: ${moduleName},
     layouts: [${layoutNames.join(", ")}],
     middleware: [${middlewareNames.join(", ")}]

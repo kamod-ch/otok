@@ -1,5 +1,18 @@
 # otok
 
+## 0.4.0
+
+### Minor Changes
+
+- 2e24c99: Add `resolveOtokManifest()` for Edge/Workers, keep `readOtokManifest()` Node-only, harden `createOtokApp` against static `node:module` imports, and ship a standalone Cloudflare Workers example with `pnpm smoke:cloudflare`.
+- 15b45d9: Wire deferred data and loading boundaries into SSR: `createDeferredSlot` + `DeferredBoundary` stream critical HTML before slow loader regions resolve (sequential zero-JS HTML), with buffered fallback when streaming is off.
+- Implement Redis/Edge KV cache providers with adapter wiring, plugin render hooks and programmatic routes (ADR 0007), flash/validate/validation plugin wrappers, Microsoft/GitLab OAuth, Web Crypto password helpers, first-class `[[lang]]`/`[[locale]]` scanner metadata, deferred E2E coverage, and expanded examples CI.
+
+### Patch Changes
+
+- Updated dependencies
+  - @otok/config@0.2.0
+
 ## 0.3.0
 
 ### Minor Changes

@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { h } from "preact";
-import { redirect, validationError } from "otok/server";
+import { redirect, validationError, type OtokPageProps } from "otok/server";
 import hello from "@otok/plugin-hello";
 import {
   authenticatedSession,
@@ -18,7 +18,8 @@ describe("createOtokTestApp", () => {
       routes: [
         {
           path: "/dashboard",
-          component: ({ data }: { data?: { message?: string } }) => h("p", null, data?.message ?? "Dashboard"),
+          component: (({ data }: OtokPageProps<{ message?: string }>) =>
+            h("p", null, data?.message ?? "Dashboard")) as never,
           loader: () => ({ message: "Welcome" }),
         },
       ],
@@ -37,11 +38,16 @@ describe("createOtokTestApp", () => {
           path: "/signup",
           action: () => validationError({ fieldErrors: { email: "Invalid email" }, values: { email: "bad" } }),
           module: {
-            default: ({ actionData }: { actionData?: { fieldErrors?: Record<string, string[]> } }) =>
-              h("form", null, [
+            default: (({ actionData }: OtokPageProps) => {
+              const errors =
+                actionData && typeof actionData === "object" && actionData !== null && "fieldErrors" in actionData
+                  ? (actionData as { fieldErrors?: Record<string, string[]> }).fieldErrors
+                  : undefined;
+              return h("form", null, [
                 h("input", { name: "email", "aria-invalid": "true", value: "bad" }),
-                h("p", { role: "alert" }, actionData?.fieldErrors?.email?.[0] ?? ""),
-              ]),
+                h("p", { role: "alert" }, errors?.email?.[0] ?? ""),
+              ]);
+            }) as never,
           },
         }),
         createTestRoute({

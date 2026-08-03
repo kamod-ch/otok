@@ -118,16 +118,38 @@ export const action = defineAction({
 
 Default: in-memory provider (single process).
 
-Contract stubs:
-
-- `RedisCacheProvider` — shared multi-node cache
-- `EdgeKvCacheProvider` — Cloudflare KV and similar edge stores
+Shared / edge backends (no hard Redis dependency — inject a client or use REST):
 
 ```ts
-import { setCacheProvider, MemoryCacheProvider } from "otok/cache";
+import {
+  setCacheProvider,
+  MemoryCacheProvider,
+  RedisCacheProvider,
+  createRedisRestClient,
+  EdgeKvCacheProvider,
+} from "otok/cache";
 
+// Single process
 setCacheProvider(new MemoryCacheProvider());
+
+// Upstash / Redis REST
+setCacheProvider(
+  new RedisCacheProvider({
+    client: createRedisRestClient({
+      url: process.env.UPSTASH_REDIS_REST_URL!,
+      token: process.env.UPSTASH_REDIS_REST_TOKEN!,
+    }),
+  }),
+);
+
+// Cloudflare KV (from a Worker env binding)
+setCacheProvider(new EdgeKvCacheProvider({ namespace: env.OTOK_CACHE }));
 ```
+
+Adapters can wire this automatically:
+
+- Node: `node({ redisCache: true })` reads `UPSTASH_REDIS_REST_*` / `OTOK_REDIS_REST_*`
+- Cloudflare: `cloudflare({ cacheKvBinding: "OTOK_CACHE" })` sets the provider per request and stubs `[[kv_namespaces]]` in wrangler.toml
 
 Stampede protection deduplicates concurrent cache misses via `withCacheStampedeProtection`.
 

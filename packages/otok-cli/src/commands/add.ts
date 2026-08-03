@@ -39,6 +39,8 @@ const DEFAULT_PLUGIN_CALLS: Record<string, (identifier: string) => string> = {
   icons: true,
   forms: true,
 })`,
+  "@kamod-ch/otok-flash": (identifier) =>
+    `${identifier}({\n  secret: process.env.FLASH_SECRET!,\n})`,
 };
 
 function defaultPluginCall(packageName: string, identifier: string): string | undefined {

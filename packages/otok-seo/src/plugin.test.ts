@@ -16,7 +16,14 @@ describe("seo plugin routes", () => {
     });
 
     const app = new Hono();
-    plugin.configureApp?.({ app, adapter: { name: "test", runtime: "node", capabilities: new Set() } });
+    plugin.configureApp?.({
+      app,
+      root: "/tmp",
+      mode: "test",
+      command: "serve",
+      userConfig: {},
+      config: {},
+    } as never);
     app.all("*", (c) => c.text("ok"));
 
     const robots = await app.request("/robots.txt");
@@ -41,7 +48,7 @@ describe("defineMeta SSR integration", () => {
     const { defineMeta } = await import("./define-meta.js");
     const head = defineMeta(
       ({ data }) => ({
-        title: data.title,
+        title: (data as { title: string }).title,
         description: "Desc",
         canonical: "/page",
         openGraph: { type: "website" },

@@ -89,17 +89,23 @@ Standard Schema validation with `defineAction` schema integration, field/form er
 
 ## Deferred
 
-- Additional OAuth providers / generic OIDC — wait for a concrete flow
-- Account linking (OAuth + password) — wait for a concrete flow
-- Plugin render hooks and programmatic route registration — follow-up after v1 plugin API
+- Generic OIDC provider — wait for a concrete flow
+- Account linking UX beyond the existing `linkAccount` adapter hook — wait for a concrete flow
+- Better Auth adapter (`otok-better-auth`) — intentionally deferred; see `docs/auth-architecture.md`
+
+## Plugin system follow-ups
+
+- Render hooks (`transformHtml`) and programmatic `registerRoutes` — **shipped** (ADR 0007)
+- Deeper Devtools metadata beyond the base panel
 
 ## Extraction order
 
-1. `@kamod-ch/otok-validate` ✅
+1. `@kamod-ch/otok-validate` ✅ (+ plugin wrapper)
 2. `otok-auth/adapters/memory` ✅
 3. `otok-auth/adapters/kysely` ✅
 4. RBAC/tenant middleware in `otok-auth` ✅
-5. `otok-flash` ✅
+5. `otok-flash` ✅ (+ plugin wrapper)
 6. `otok-stripe` ✅
-7. `otok-oauth` ✅
+7. `otok-oauth` ✅ (GitHub, Google, Microsoft, GitLab)
 8. `otok-i18n` ✅
+9. `otok-validation` ✅ (+ plugin wrapper)

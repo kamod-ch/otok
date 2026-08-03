@@ -110,6 +110,11 @@ export interface OtokRoute {
   path: string;
   pattern: RegExp;
   params: string[];
+  /**
+   * Optional locale param name when the route came from `[[lang]]` / `[[locale]]`.
+   * Undefined on the variant that omits the optional segment.
+   */
+  localeParam?: string;
   module: RouteModule;
   layouts?: LayoutModule[];
   middleware?: MiddlewareModule[];

@@ -33,8 +33,8 @@ describe("redaction", () => {
 describe("logger", () => {
   it("emits JSON without secrets", () => {
     const lines: string[] = [];
-    const original = console.log;
-    console.log = (line: string) => lines.push(line);
+    const original = console.info;
+    console.info = ((line: string) => lines.push(line)) as typeof console.info;
     try {
       const logger = createJsonLogger();
       logger.info("test", { token: "secret", ok: true });
@@ -42,7 +42,7 @@ describe("logger", () => {
       expect(parsed.token).toBe("[REDACTED]");
       expect(parsed.ok).toBe(true);
     } finally {
-      console.log = original;
+      console.info = original;
     }
   });
 });
@@ -64,7 +64,14 @@ describe("observability plugin", () => {
   it("adds request id header", async () => {
     const plugin = observability();
     const app = new Hono();
-    await plugin.configureApp?.({ app, adapter: { name: "test", runtime: "node", capabilities: new Set() } });
+    await plugin.configureApp?.({
+      app,
+      root: "/tmp",
+      mode: "test",
+      command: "serve",
+      userConfig: {},
+      config: {},
+    } as never);
     app.get("/", (c) => c.text("ok"));
 
     const response = await app.request("/");

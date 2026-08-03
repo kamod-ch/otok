@@ -1,6 +1,6 @@
 {
   "name": "@otok/plugin-hello",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "description": "Minimal Otok plugin example that registers a health-style API route.",
   "license": "MIT",
   "homepage": "https://github.com/kamod-ch/otok/tree/main/packages/otok-plugin-hello#readme",
@@ -31,7 +31,7 @@
   },
   "peerDependencies": {
     "hono": ">=4",
-    "otok": ">=0.3.0"
+    "otok": ">=0.4.0"
   },
   "devDependencies": {
     "@otok/test": "workspace:*",

@@ -87,6 +87,14 @@ export interface CreateOtokHandlerOptions {
   rendering?: RenderingConfig;
   /** Active adapter capabilities for route rendering validation. */
   adapterCapabilities?: ReadonlySet<string>;
+  /**
+   * Transform buffered SSR HTML after `pageHtml()` (ADR 0007).
+   * Not applied to streaming responses.
+   */
+  transformHtml?: (
+    html: string,
+    meta: { pathname: string; routeId?: string },
+  ) => string | Promise<string>;
 }
 
 type RenderHandlerOptions = CreateOtokHandlerOptions & HandlerRenderOptions;
@@ -536,7 +544,11 @@ async function renderRoute(
       body: resolvedBody,
       islands: [...islandContext.islands],
     });
-    return new Response(html, { status, headers: responseHeaders });
+    const transformed =
+      options.transformHtml != null
+        ? await options.transformHtml(html, { pathname: c.req.path, routeId: route.id })
+        : html;
+    return new Response(transformed, { status, headers: responseHeaders });
   }
 
   if (plan.streaming) {
@@ -568,11 +580,16 @@ async function renderRoute(
     islands: [...islandContext.islands],
   });
 
+  const transformed =
+    options.transformHtml != null
+      ? await options.transformHtml(html, { pathname: c.req.path, routeId: route.id })
+      : html;
+
   if (plan.cache && renderContext.method === "GET") {
-    await writeCachedHtml(plan.cache, renderContext, html);
+    await writeCachedHtml(plan.cache, renderContext, transformed);
   }
 
-  return new Response(html, {
+  return new Response(transformed, {
     status,
     headers: responseHeaders,
   });

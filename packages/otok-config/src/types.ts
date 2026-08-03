@@ -66,6 +66,29 @@ export interface ViteContext extends PluginResolvedContext {
   viteConfig: ViteUserConfig;
 }
 
+/** Minimal route description plugins can register without file routes. */
+export interface ProgrammaticRouteDefinition {
+  id: string;
+  /** Pathname pattern, e.g. `/api/plugin/hello` or `/admin/tools`. */
+  path: string;
+  /** Optional matcher; when omitted, a RegExp is derived from `path`. */
+  pattern?: RegExp;
+  /** Param names extracted from `path` (e.g. `:id`). */
+  params?: string[];
+  /**
+   * Route module shape compatible with Otok file routes (`default`, `loader`, `action`, …).
+   * Typed as unknown here to avoid a circular dependency on the `otok` package.
+   */
+  module: unknown;
+  layouts?: unknown[];
+  middleware?: unknown[];
+}
+
+export interface HtmlTransformContext extends PluginResolvedContext {
+  pathname: string;
+  routeId?: string;
+}
+
 export type VirtualModuleFactory = () => string | Promise<string>;
 
 export interface ConfigSchema<T = unknown> {
@@ -91,6 +114,19 @@ export interface OtokPlugin<TOptions = unknown> {
   configureServer?: (ctx: DevServerContext) => void | Promise<void>;
   configureApp?: (ctx: AppContext) => void | Promise<void>;
   configureVite?: (ctx: ViteContext) => void | Plugin | Plugin[] | Promise<void | Plugin | Plugin[]>;
+  /**
+   * Register additional routes (ADR 0007). Merged after file routes by the app bootstrap.
+   */
+  registerRoutes?: (
+    ctx: PluginResolvedContext,
+  ) => ProgrammaticRouteDefinition[] | void | Promise<ProgrammaticRouteDefinition[] | void>;
+  /**
+   * Transform buffered SSR HTML (ADR 0007). Not applied to streaming responses.
+   */
+  transformHtml?: (
+    html: string,
+    ctx: HtmlTransformContext,
+  ) => string | Promise<string>;
   virtualModules?: Record<string, VirtualModuleFactory>;
   envSchema?: EnvSchema;
   /** @internal Marker set by definePlugin factories. */
@@ -102,6 +138,13 @@ export interface ResolvedOtokConfig {
   runtime: OtokRuntimeConfig;
   adapter?: ResolvedOtokAdapter;
   applyAppPlugins: (app: Hono) => Promise<void>;
+  /** Collect programmatic routes from all plugins (ADR 0007). */
+  collectPluginRoutes: () => Promise<ProgrammaticRouteDefinition[]>;
+  /** Run plugin HTML transforms for buffered SSR (ADR 0007). */
+  transformHtml: (
+    html: string,
+    meta: { pathname: string; routeId?: string },
+  ) => Promise<string>;
   env: Record<string, unknown>;
   virtualModules: Map<string, VirtualModuleFactory>;
   vitePlugins: Plugin[];

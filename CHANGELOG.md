@@ -1,11 +1,18 @@
 # Changelog
 
-## Unreleased
+## 0.4.0
 
 ### Added
 
+- Deferred data / loading boundaries: `createDeferredSlot` + `DeferredBoundary` stream critical HTML before slow loader regions resolve (sequential zero-JS HTML), with buffered fallback when streaming is off.
 - `resolveOtokManifest()` for Edge/Workers — inject a Vite client manifest without Node `fs`.
 - Standalone Cloudflare Workers example under `examples/deployment/cloudflare/` with Workers Assets, streaming SSR, and `pnpm smoke:cloudflare`.
+- Redis and Edge KV cache providers (`RedisCacheProvider`, `EdgeKvCacheProvider`, `createRedisRestClient`) with optional Node/Cloudflare adapter wiring.
+- Plugin `registerRoutes` / `transformHtml` hooks (ADR 0007).
+- Composition package plugin wrappers for flash, validate, and validation.
+- Microsoft and GitLab OAuth providers; Web Crypto PBKDF2 password helpers for Edge.
+- First-class `[[lang]]` / `[[locale]]` scanner `localeParam` metadata.
+- Deferred streaming Playwright E2E coverage; expanded `pnpm check:examples`.
 - Composition packages guide in docs (`guides/extensions.md`).
 
 ### Changed

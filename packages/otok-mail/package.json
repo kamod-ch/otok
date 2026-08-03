@@ -1,6 +1,6 @@
 {
   "name": "@kamod-ch/otok-mail",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "description": "Provider-based mail integration for Otok — SMTP, Resend, Mailpit, and test providers.",
   "license": "MIT",
   "homepage": "https://github.com/kamod-ch/otok/tree/main/packages/otok-mail#readme",
@@ -47,7 +47,7 @@
   },
   "peerDependencies": {
     "hono": ">=4",
-    "otok": ">=0.3.0",
+    "otok": ">=0.4.0",
     "preact": ">=10"
   },
   "peerDependenciesMeta": {

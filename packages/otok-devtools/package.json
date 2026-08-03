@@ -1,6 +1,6 @@
 {
   "name": "@otok/devtools",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "description": "Development-only diagnostics and inspector UI for Otok apps.",
   "license": "MIT",
   "homepage": "https://github.com/kamod-ch/otok/tree/main/packages/otok-devtools#readme",
@@ -35,7 +35,7 @@
   },
   "peerDependencies": {
     "hono": ">=4",
-    "otok": ">=0.3.0",
+    "otok": ">=0.4.0",
     "preact": ">=10.26.0",
     "vite": ">=6"
   },

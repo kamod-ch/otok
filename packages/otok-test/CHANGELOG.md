@@ -1,5 +1,15 @@
 # @otok/test
 
+## 0.4.1
+
+### Patch Changes
+
+- Updated dependencies [2e24c99]
+- Updated dependencies [15b45d9]
+- Updated dependencies
+  - otok@0.4.0
+  - otok-adapter-contract@0.1.1
+
 ## 0.3.0
 
 ### Minor Changes

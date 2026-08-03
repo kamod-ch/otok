@@ -52,6 +52,8 @@ describe("otok vite plugin", () => {
         expect(scan.routes.find((route) => route.routePath === "/users/:id")?.layouts).toHaveLength(1);
         expect(scan.routes.find((route) => route.routePath === "/users/:id")?.middleware).toHaveLength(1);
         expect(scan.routes.find((route) => route.routePath === "/admin/users/:id")?.middleware).toHaveLength(2);
+        expect(scan.routes.find((route) => route.routePath === "/:lang/about")?.localeParam).toBe("lang");
+        expect(scan.routes.find((route) => route.routePath === "/about")?.localeParam).toBeUndefined();
       },
     );
   });

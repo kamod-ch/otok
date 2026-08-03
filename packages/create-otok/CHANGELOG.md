@@ -1,5 +1,11 @@
 # create-otok
 
+## 0.4.0
+
+### Minor Changes
+
+- Align scaffolded apps with otok / @otok/vite-plugin 0.4.0 (deferred streaming, cache providers, Edge foundations).
+
 ## 0.3.0
 
 ### Patch Changes

@@ -155,7 +155,23 @@ configure: (app) => {
 import { hashPassword, verifyPassword } from "@kamod-ch/otok-auth/password";
 ```
 
-Requires peer dependency `@node-rs/argon2`.
+Requires peer dependency `@node-rs/argon2` (Node / `nodejs_compat` Workers).
+
+### Edge / Workers (Web Crypto)
+
+When native Argon2 is unavailable, use PBKDF2 via Web Crypto:
+
+```ts
+import {
+  hashPasswordWebCrypto,
+  verifyPasswordWebCrypto,
+} from "@kamod-ch/otok-auth/password/webcrypto";
+
+const hash = await hashPasswordWebCrypto("secret");
+await verifyPasswordWebCrypto(hash, "secret");
+```
+
+Prefer Argon2 on Node. Do not mix hash formats without a migration path.
 
 ## Exports
 
@@ -166,6 +182,7 @@ Requires peer dependency `@node-rs/argon2`.
 | `@kamod-ch/otok-auth/middleware` | Auth, CSRF, tenant context, RBAC, `composeMiddleware` |
 | `@kamod-ch/otok-auth/csrf` | CSRF cookie/field helpers |
 | `@kamod-ch/otok-auth/password` | Argon2 hash/verify |
+| `@kamod-ch/otok-auth/password/webcrypto` | Edge-safe PBKDF2 hash/verify |
 | `@kamod-ch/otok-auth/adapters/memory` | In-memory/file-backed session adapter |
 | `@kamod-ch/otok-auth/adapters/kysely` | Kysely session CRUD adapter |
 

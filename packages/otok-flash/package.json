@@ -1,6 +1,6 @@
 {
   "name": "@kamod-ch/otok-flash",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "description": "Signed flash cookies for Otok PRG redirects and SSR toasts.",
   "license": "MIT",
   "homepage": "https://github.com/kamod-ch/otok/tree/main/packages/otok-flash#readme",
@@ -35,7 +35,7 @@
   },
   "peerDependencies": {
     "hono": ">=4",
-    "otok": ">=0.3.0"
+    "otok": ">=0.4.0"
   },
   "devDependencies": {
     "@otok/test": "workspace:*",

@@ -31,13 +31,13 @@
     "better-sqlite3": "^11.10.0",
     "hono": "^4.12.25",
     "kysely": "^0.29.2",
-    "otok": "^0.3.0",
+    "otok": "^0.4.0",
     "preact": "^10.28.2",
     "zod": "^4.0.0"
   },
   "devDependencies": {
     "@hono/vite-dev-server": "^0.21.0",
-    "@otok/vite-plugin": "^0.3.0",
+    "@otok/vite-plugin": "^0.4.0",
     "@preact/preset-vite": "^2.10.5",
     "@tailwindcss/vite": "^4.2.4",
     "@types/better-sqlite3": "^7.6.13",

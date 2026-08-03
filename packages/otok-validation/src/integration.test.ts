@@ -43,7 +43,7 @@ describe("kysely + validation integration", () => {
       schema: contactSchema,
       handler: async ({ input, db }) => {
         if (!db) throw new Error("db required");
-        return db
+        return (db as any)
           .insertInto("contacts")
           .values({ name: input.name, email: input.email })
           .returningAll()
@@ -66,7 +66,7 @@ describe("kysely + validation integration", () => {
 
     expect(result).toMatchObject({ name: "Ada Lovelace", email: "ada@example.com" });
 
-    const rows = await testDb.db.selectFrom("contacts").selectAll().execute();
+    const rows = await (testDb.db as any).selectFrom("contacts").selectAll().execute();
     expect(rows).toHaveLength(1);
   });
 
@@ -82,11 +82,11 @@ describe("kysely + validation integration", () => {
       .execute();
 
     await withTransaction(testDb.db, async (trx) => {
-      await trx.insertInto("contacts").values({ name: "Ada", email: "a@example.com" }).execute();
-      await trx.insertInto("contacts").values({ name: "Grace", email: "g@example.com" }).execute();
+      await (trx as any).insertInto("contacts").values({ name: "Ada", email: "a@example.com" }).execute();
+      await (trx as any).insertInto("contacts").values({ name: "Grace", email: "g@example.com" }).execute();
     });
 
-    const rows = await testDb.db.selectFrom("contacts").selectAll().execute();
+    const rows = await (testDb.db as any).selectFrom("contacts").selectAll().execute();
     expect(rows).toHaveLength(2);
   });
 });

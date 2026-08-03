@@ -1,6 +1,6 @@
 {
   "name": "@kamod-ch/otok-seo",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "description": "Typed route metadata, sitemaps, feeds, and SEO helpers for Otok apps.",
   "license": "MIT",
   "homepage": "https://github.com/kamod-ch/otok/tree/main/packages/otok-seo#readme",
@@ -47,7 +47,7 @@
   },
   "peerDependencies": {
     "hono": ">=4",
-    "otok": ">=0.3.0"
+    "otok": ">=0.4.0"
   },
   "peerDependenciesMeta": {
     "@kamod-ch/otok-i18n": {
