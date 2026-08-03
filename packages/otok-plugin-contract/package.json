@@ -1,0 +1,35 @@
+{
+  "name": "@otok/plugin-contract",
+  "version": "0.1.0",
+  "description": "Shared contract tests for Otok plugins — validates definePlugin hooks and lifecycle.",
+  "license": "MIT",
+  "type": "module",
+  "files": ["dist", "README.md"],
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    }
+  },
+  "scripts": {
+    "build": "rm -rf dist && tsc -p tsconfig.build.json",
+    "prepare": "npm run build",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "test": "vitest run"
+  },
+  "peerDependencies": {
+    "vitest": ">=2"
+  },
+  "dependencies": {
+    "@otok/config": "workspace:*",
+    "otok": "workspace:*"
+  },
+  "devDependencies": {
+    "@otok/plugin-fixture": "workspace:*",
+    "@types/node": "^24.12.2",
+    "typescript": "~6.0.2",
+    "vitest": "^4.1.2"
+  },
+  "engines": { "node": ">=20" },
+  "publishConfig": { "access": "public" }
+}

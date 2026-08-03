@@ -1,0 +1,61 @@
+{
+  "name": "@kamod-ch/otok-audit",
+  "version": "0.1.0",
+  "description": "Immutable audit trail for Otok — actor, action, resource, changes, multi-tenant search and export.",
+  "license": "MIT",
+  "type": "module",
+  "files": ["dist", "README.md"],
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    },
+    "./plugin": {
+      "types": "./dist/plugin.d.ts",
+      "default": "./dist/plugin.js"
+    },
+    "./providers/kysely": {
+      "types": "./dist/providers/kysely/index.d.ts",
+      "default": "./dist/providers/kysely/index.js"
+    },
+    "./testing": {
+      "types": "./dist/testing/index.d.ts",
+      "default": "./dist/testing/index.js"
+    },
+    "./crm": {
+      "types": "./dist/crm/index.d.ts",
+      "default": "./dist/crm/index.js"
+    }
+  },
+  "scripts": {
+    "build": "rm -rf dist && tsc -p tsconfig.build.json",
+    "prepare": "npm run build",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "@otok/config": "workspace:*",
+    "zod": "^3.24.0"
+  },
+  "peerDependencies": {
+    "hono": ">=4",
+    "kysely": ">=0.27.0",
+    "otok": ">=0.4.0"
+  },
+  "peerDependenciesMeta": {
+    "kysely": { "optional": true },
+    "hono": { "optional": true }
+  },
+  "devDependencies": {
+    "@types/better-sqlite3": "^7.6.13",
+    "@types/node": "^24.12.2",
+    "better-sqlite3": "^12.6.2",
+    "hono": "^4.12.25",
+    "kysely": "^0.29.3",
+    "otok": "workspace:*",
+    "typescript": "~6.0.2",
+    "vitest": "^4.1.2"
+  },
+  "engines": { "node": ">=20" },
+  "publishConfig": { "access": "public" }
+}

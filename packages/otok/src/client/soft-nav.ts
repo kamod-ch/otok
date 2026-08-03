@@ -9,6 +9,12 @@ import {
 } from "../shared/navigation.js";
 import type { IslandRegistry } from "../shared/islands.js";
 import { cancelPendingHydration, hydrateIslands } from "./hydration.js";
+import {
+  restoreFocus,
+  restoreScrollPosition,
+  saveScrollPosition,
+  withViewTransition,
+} from "./mutations/scroll.js";
 
 export interface SoftNavOptions {
   /** Enable link interception. Defaults to true for backwards compatibility. */
@@ -199,12 +205,20 @@ export async function softNavigate(
       return false;
     }
 
-    await hydrateIslands(document, registry, (error) => options.onError?.(error));
+    await withViewTransition(async () => {
+      await hydrateIslands(document, registry, (error) => options.onError?.(error));
+    });
 
     const scrollBehavior = options.scroll ?? true;
     if (scrollBehavior !== false) {
-      window.scrollTo({ top: 0, behavior: scrollBehavior === true ? "auto" : scrollBehavior });
+      if (options.history === false) {
+        restoreScrollPosition(undefined, scrollBehavior === true ? "auto" : scrollBehavior);
+      } else {
+        window.scrollTo({ top: 0, behavior: scrollBehavior === true ? "auto" : scrollBehavior });
+      }
     }
+
+    restoreFocus();
 
     return true;
   } catch (error) {
@@ -300,16 +314,18 @@ async function submitSoftNavigationForm(
     const applied = applySoftNavigationDocument(nextDoc);
     if (!applied) return false;
 
-    await hydrateIslands(document, registry, (error) => options.onError?.(error));
+    await withViewTransition(async () => {
+      await hydrateIslands(document, registry, (error) => options.onError?.(error));
+    });
 
     const historyPath = `${final.pathname}${final.search}${final.hash}`;
     const currentPath = `${window.location.pathname}${window.location.search}${window.location.hash}`;
     if (historyPath !== currentPath) {
+      saveScrollPosition(currentPath);
       history.pushState({ [OTOK_HISTORY_STATE_KEY]: true, url: historyPath }, "", historyPath);
     }
 
-    const invalid = document.querySelector('[aria-invalid="true"], [role="alert"]');
-    if (invalid instanceof HTMLElement) invalid.focus?.();
+    restoreFocus();
 
     const scrollBehavior = options.scroll ?? true;
     if (scrollBehavior !== false) {
@@ -385,6 +401,7 @@ export function setupSoftNavigation(registry: IslandRegistry, options: SoftNavOp
   };
 
   const onPopState = (event: PopStateEvent) => {
+    saveScrollPosition();
     const stateUrl = typeof event.state?.url === "string" ? event.state.url : undefined;
     const path = stateUrl ?? `${window.location.pathname}${window.location.search}${window.location.hash}`;
     void softNavigate(path, registry, {
@@ -393,6 +410,7 @@ export function setupSoftNavigation(registry: IslandRegistry, options: SoftNavOp
       scroll: false,
     }).then((applied) => {
       if (!applied || !stateUrl) return;
+      restoreScrollPosition(stateUrl);
       const currentPath = `${window.location.pathname}${window.location.search}${window.location.hash}`;
       if (currentPath !== stateUrl) {
         history.replaceState({ [OTOK_HISTORY_STATE_KEY]: true, url: stateUrl }, "", stateUrl);

@@ -1,5 +1,6 @@
 import { writeFile } from "node:fs/promises";
 import { join } from "node:path";
+import { checkCompatibility, resolveExtension } from "@otok/registry";
 import { detectPackageManager, installCommand } from "../detect-manager.js";
 import {
   patchOtokConfig,
@@ -18,6 +19,7 @@ import {
   findOtokConfigFile,
 } from "../project.js";
 import { confirm, fail, findProjectRoot, ok, runCommand, warn } from "../utils.js";
+import { loadProjectSnapshot, loadRegistryForProject } from "../registry-context.js";
 
 export interface AddCommandOptions {
   cwd?: string;
@@ -92,6 +94,28 @@ export function parseAddArgv(argv: string[]): { plugin?: string; options: AddCom
 export async function addPlugin(pluginInput: string, options: AddCommandOptions = {}): Promise<AddCommandResult> {
   const root = await findProjectRoot(options.cwd ?? process.cwd());
   const packageName = resolvePluginPackageName(pluginInput);
+
+  const registry = await loadRegistryForProject(root);
+  const project = await loadProjectSnapshot(root);
+  const entry = resolveExtension(registry, packageName);
+  if (entry) {
+    const compat = checkCompatibility(entry, {
+      otokVersion: project.otokVersion,
+      adapter: project.adapter,
+    });
+    for (const message of compat.warnings) warn(message);
+    if (!compat.compatible) {
+      for (const message of compat.errors) fail(message);
+      if (!options.dryRun) {
+        const proceed =
+          !process.stdin.isTTY || (await confirm("Compatibility errors detected. Install anyway?"));
+        if (!proceed) throw new Error("Aborted due to compatibility errors.");
+      }
+    }
+  } else if (packageName.startsWith("@kamod-ch/otok-")) {
+    warn(`${packageName} is not listed in the extension registry.`);
+  }
+
   const preferredIdentifier = pluginImportIdentifier(packageName);
 
   let configPath = await findOtokConfigFile(root);

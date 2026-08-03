@@ -1,0 +1,38 @@
+{
+  "name": "otok-example-preactpress-migration",
+  "private": true,
+  "version": "0.1.0",
+  "description": "Representative PreactPress docs page migrated to Otok + otok-content.",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build --mode client && vite build",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "test": "vitest run",
+    "test:e2e": "playwright test"
+  },
+  "dependencies": {
+    "@kamod-ch/otok-content": "workspace:*",
+    "@kamod-ch/otok-i18n": "workspace:*",
+    "@kamod-ch/otok-kamod": "workspace:*",
+    "@kamod-ch/otok-seo": "workspace:*",
+    "@kamod-ch/preactpress-compat": "workspace:*",
+    "@kamod-ch/ui": "^1.0.1",
+    "@otok/vite-plugin": "workspace:*",
+    "@preact/preset-vite": "^2.10.5",
+    "@preact/signals": "^2.0.0",
+    "hono": "^4.12.25",
+    "otok": "workspace:*",
+    "otok-adapter-static": "workspace:*",
+    "preact": "^10.28.2",
+    "vite": "^8.0.10"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.55.0",
+    "@tailwindcss/vite": "^4.2.4",
+    "@types/node": "^24.12.2",
+    "tailwindcss": "^4.2.4",
+    "typescript": "~6.0.2",
+    "vitest": "^4.1.2"
+  }
+}

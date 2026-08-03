@@ -1,0 +1,48 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`registry cli commands > doctor runs read-only checks 1`] = `
+"Otok Doctor
+===========
+
+· Otok 0.4.0 installed.
+· Detected adapter: node.
+! @kamod-ch/otok-kysely: Installed 0.9.0, registry latest 1.0.0.
+! @kamod-ch/otok-kysely is outdated (0.9.0 → 1.0.0).
+! No generated route types found. Run \`otok typegen\` to generate .otok/types/routes.d.ts.
+! Kysely plugin registered but no migrations/ directory found.
+
+6 check(s): 0 error(s), 4 warning(s).
+
+Tip: run \`otok upgrade --dry-run\` to see available package upgrades.
+"
+`;
+
+exports[`registry cli commands > info otok-kysely matches snapshot 1`] = `
+"@kamod-ch/otok-kysely@1.0.0
+Type-safe SQL with Kysely — migrations, seeds, and typed queries for Otok apps.
+
+Publisher:    Kamod (verified)
+Tier:         official
+Otok:         ^0.4.0
+Runtime:      node, edge
+Adapters:     node, cloudflare
+Maintenance:  active
+Quality:      verified
+License:      MIT
+Published:    2026-06-01
+Capabilities: database, migrations, sql
+Docs:         https://github.com/kamod-ch/otok/tree/main/packages/otok-kysely
+Repository:   https://github.com/kamod-ch/otok
+"
+`;
+
+exports[`registry cli commands > search storage matches snapshot 1`] = `
+"@kamod-ch/otok-kysely@1.0.0 ✓
+  Type-safe SQL with Kysely — migrations, seeds, and typed queries for Otok apps.
+
+@kamod-ch/otok-storage@0.1.0 ✓
+  Object storage abstraction — local, S3-compatible, and Cloudflare R2 providers.
+
+2 result(s)
+"
+`;

@@ -1,0 +1,49 @@
+{
+  "name": "otok-reference-kit-crm-swiss",
+  "private": true,
+  "version": "0.1.0",
+  "description": "Swiss B2B CRM reference product for Otok — real business flows, not a demo.",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "start": "node dist/server/server.js",
+    "typecheck": "tsc --noEmit",
+    "db:migrate": "otok db:migrate",
+    "db:seed": "otok db:seed",
+    "db:status": "otok db:status",
+    "test:e2e": "playwright test",
+    "docker:up": "docker compose up -d postgres",
+    "docker:down": "docker compose down"
+  },
+  "dependencies": {
+    "@kamod-ch/otok-audit": "workspace:*",
+    "@kamod-ch/otok-auth": "workspace:*",
+    "@kamod-ch/otok-i18n": "workspace:*",
+    "@kamod-ch/otok-kamod": "workspace:*",
+    "@kamod-ch/otok-kysely": "workspace:*",
+    "@kamod-ch/otok-search": "workspace:*",
+    "@kamod-ch/otok-validation": "workspace:*",
+    "@kamod-ch/otok-workflows": "workspace:*",
+    "@kamod-ch/ui": "^1.0.1",
+    "@otok/kit-crm": "workspace:*",
+    "hono": "^4.12.25",
+    "kysely": "^0.29.2",
+    "otok": "workspace:*",
+    "otok-adapter-node": "workspace:*",
+    "pg": "^8.16.0",
+    "preact": "^10.28.2",
+    "zod": "^4.0.0"
+  },
+  "devDependencies": {
+    "@otok/vite-plugin": "workspace:*",
+    "@playwright/test": "^1.55.0",
+    "@preact/preset-vite": "^2.10.5",
+    "@tailwindcss/vite": "^4.2.4",
+    "@types/node": "^24.12.2",
+    "otok-cli": "workspace:*",
+    "tailwindcss": "^4.2.4",
+    "typescript": "~6.0.2",
+    "vite": "^8.0.10"
+  }
+}

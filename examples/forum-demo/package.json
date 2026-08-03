@@ -1,0 +1,27 @@
+{
+  "name": "otok-forum-demo",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "db:seed": "node --experimental-strip-types src/seed.ts"
+  },
+  "dependencies": {
+    "@otok/forum": "workspace:*",
+    "better-sqlite3": "^12.6.2",
+    "kysely": "^0.29.3",
+    "otok": "workspace:*",
+    "otok-adapter-node": "workspace:*",
+    "preact": "^10.28.2"
+  },
+  "devDependencies": {
+    "@otok/vite-plugin": "workspace:*",
+    "@types/better-sqlite3": "^7.6.13",
+    "@types/node": "^24.12.2",
+    "typescript": "~6.0.2",
+    "vite": "^7.3.1"
+  }
+}

@@ -1,0 +1,9 @@
+DROP TABLE IF EXISTS audit_log;
+DROP TABLE IF EXISTS stripe_event;
+DROP TABLE IF EXISTS billing_record;
+DROP TABLE IF EXISTS invitation;
+DROP TABLE IF EXISTS org_member;
+DROP TABLE IF EXISTS organization;
+DROP TABLE IF EXISTS oauth_account;
+DROP TABLE IF EXISTS app_session;
+DROP TABLE IF EXISTS app_user;

@@ -1,0 +1,20 @@
+{
+  "name": "otok-minimal-bench",
+  "private": true,
+  "type": "module",
+  "description": "Minimal Otok SSR page for cross-framework benchmarks",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "verify": "node verify.mjs"
+  },
+  "dependencies": {
+    "otok": "workspace:*",
+    "otok-adapter-node": "workspace:*",
+    "preact": "^10.26.0"
+  },
+  "devDependencies": {
+    "@otok/vite-plugin": "workspace:*",
+    "vite": "^6.0.0"
+  }
+}

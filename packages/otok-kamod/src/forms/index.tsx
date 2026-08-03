@@ -66,14 +66,17 @@ export interface FormActionsProps {
   children?: ComponentChildren;
   submitLabel?: string;
   cancelHref?: string;
+  pending?: boolean;
 }
 
-export function FormActions({ children, submitLabel = "Save", cancelHref }: FormActionsProps) {
+export function FormActions({ children, submitLabel = "Save", cancelHref, pending }: FormActionsProps) {
   return (
     <div class="flex flex-wrap items-center gap-3">
       {children ?? (
         <>
-          <Button type="submit">{submitLabel}</Button>
+          <Button type="submit" disabled={pending} aria-busy={pending}>
+            {pending ? "Saving…" : submitLabel}
+          </Button>
           {cancelHref ? (
             <a href={cancelHref} class="text-sm text-muted-foreground hover:text-foreground">
               Cancel

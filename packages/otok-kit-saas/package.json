@@ -1,0 +1,10 @@
+{
+  "name": "@otok/kit-saas",
+  "version": "0.1.0",
+  "type": "module",
+  "files": ["dist", "kit-files"],
+  "exports": { ".": "./dist/index.js", "./kit": "./dist/kit.js" },
+  "scripts": { "build": "tsc -p tsconfig.build.json", "test": "vitest run" },
+  "dependencies": { "@otok/config": "workspace:*" },
+  "devDependencies": { "typescript": "~6.0.2", "vitest": "^4.1.2" }
+}

@@ -1,0 +1,40 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Otok API Stability Manifest",
+  "type": "object",
+  "required": ["version", "packages", "classifications"],
+  "properties": {
+    "version": { "type": "string" },
+    "updatedAt": { "type": "string", "format": "date" },
+    "packages": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "object",
+        "properties": {
+          "exports": {
+            "type": "object",
+            "additionalProperties": {
+              "enum": ["public", "experimental", "internal"]
+            }
+          },
+          "symbols": {
+            "type": "object",
+            "additionalProperties": {
+              "enum": ["public", "experimental", "internal"]
+            }
+          },
+          "bin": {
+            "type": "object",
+            "additionalProperties": {
+              "enum": ["public", "experimental", "internal"]
+            }
+          }
+        }
+      }
+    },
+    "classifications": {
+      "type": "object",
+      "additionalProperties": { "type": "string" }
+    }
+  }
+}

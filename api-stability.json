@@ -1,0 +1,98 @@
+{
+  "$schema": "./docs/governance/api-stability.schema.json",
+  "version": "1.0.0-draft",
+  "updatedAt": "2026-08-03",
+  "packages": {
+    "otok": {
+      "exports": {
+        ".": "public",
+        "./config": "public",
+        "./server": "public",
+        "./client": "public",
+        "./shared": "public",
+        "./route": "public",
+        "./rendering": "public",
+        "./cache": "public",
+        "./client/mutations": "public",
+        "./devtools": "experimental"
+      },
+      "symbols": {
+        "defineConfig": "public",
+        "definePlugin": "public",
+        "defineAdapter": "public",
+        "definePreset": "experimental",
+        "defineKit": "experimental",
+        "createOtokApp": "public",
+        "createOtokHandler": "public",
+        "createOtokWorkerApp": "public",
+        "defineLoader": "public",
+        "defineAction": "public",
+        "defineMeta": "public",
+        "defineRendering": "public",
+        "Island": "public",
+        "createOtokClient": "public"
+      }
+    },
+    "@otok/config": {
+      "exports": {
+        ".": "public"
+      },
+      "symbols": {
+        "PluginContainer": "public",
+        "resolveOtokConfig": "public",
+        "defineSetup": "public",
+        "mergeKits": "experimental",
+        "defineKit": "experimental",
+        "mergePresets": "experimental"
+      }
+    },
+    "@otok/vite-plugin": {
+      "exports": {
+        ".": "public"
+      },
+      "symbols": {
+        "otok": "public"
+      }
+    },
+    "@otok/test": {
+      "exports": {
+        ".": "public"
+      },
+      "symbols": {}
+    },
+    "otok-cli": {
+      "exports": {
+        ".": "internal"
+      },
+      "bin": {
+        "otok": "public"
+      }
+    },
+    "@otok/registry": {
+      "exports": {
+        ".": "public",
+        "./fixtures": "internal"
+      },
+      "symbols": {}
+    },
+    "@otok/route-typegen": {
+      "exports": {
+        ".": "internal"
+      },
+      "symbols": {}
+    },
+    "@otok/plugin-contract": {
+      "exports": {
+        ".": "public"
+      },
+      "symbols": {
+        "assertPluginContract": "public"
+      }
+    }
+  },
+  "classifications": {
+    "public": "SemVer-stable. Breaking changes only in major releases with migration guide.",
+    "experimental": "May change in minor releases. Documented opt-in. Not covered by semver guarantees.",
+    "internal": "No stability guarantee. Not for external use."
+  }
+}

@@ -2,6 +2,8 @@
 
 Thanks for helping improve Otok.
 
+**Otok 1.0:** See [docs/1.0/contributor-guide.md](./docs/1.0/contributor-guide.md) for API classification, RFC process, and release expectations.
+
 ## Development Setup
 
 ```bash
@@ -74,4 +76,8 @@ pnpm sync:scaffold
 
 ## Release Process
 
-See `docs/release.md`. Releases are handled by the GitHub Actions `Release` workflow and Changesets.
+See `docs/release.md` and [docs/1.0/release-runbook.md](./docs/1.0/release-runbook.md). Releases are handled by the GitHub Actions `Release` workflow and Changesets.
+
+## Security
+
+See [SECURITY.md](./SECURITY.md).

@@ -1,0 +1,63 @@
+{
+  "name": "@otok/forum",
+  "version": "0.1.0",
+  "description": "Production-ready optional forum extension for Otok — SSR, Kysely, permissions, moderation.",
+  "license": "MIT",
+  "type": "module",
+  "files": ["dist", "README.md", "docs"],
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    },
+    "./kysely": {
+      "types": "./dist/kysely/index.d.ts",
+      "default": "./dist/kysely/index.js"
+    },
+    "./testing": {
+      "types": "./dist/testing/index.d.ts",
+      "default": "./dist/testing/index.js"
+    },
+    "./plugin": {
+      "types": "./dist/plugin.d.ts",
+      "default": "./dist/plugin.js"
+    }
+  },
+  "scripts": {
+    "build": "rm -rf dist && tsc -p tsconfig.build.json",
+    "prepare": "npm run build",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "@otok/config": "workspace:*",
+    "markdown-it": "^14.1.0",
+    "zod": "^3.24.0"
+  },
+  "peerDependencies": {
+    "hono": ">=4",
+    "kysely": ">=0.27.0",
+    "otok": ">=0.4.0",
+    "preact": ">=10.26.0"
+  },
+  "peerDependenciesMeta": {
+    "kysely": { "optional": true },
+    "hono": { "optional": true },
+    "preact": { "optional": true }
+  },
+  "devDependencies": {
+    "@otok/test": "workspace:*",
+    "@types/better-sqlite3": "^7.6.13",
+    "@types/markdown-it": "^14.1.2",
+    "@types/node": "^24.12.2",
+    "better-sqlite3": "^12.6.2",
+    "hono": "^4.12.25",
+    "kysely": "^0.29.3",
+    "otok": "workspace:*",
+    "preact": "^10.28.2",
+    "typescript": "~6.0.2",
+    "vitest": "^4.1.2"
+  },
+  "engines": { "node": ">=20" },
+  "publishConfig": { "access": "public" }
+}

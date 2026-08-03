@@ -82,6 +82,77 @@ jobs:
             apps/playground/test-results
           if-no-files-found: ignore
 
+  crm-e2e:
+    name: Swiss CRM E2E (Postgres)
+    runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgres:16-alpine
+        env:
+          POSTGRES_USER: otok
+          POSTGRES_PASSWORD: otok
+          POSTGRES_DB: crm_swiss
+        ports:
+          - 5433:5432
+        options: >-
+          --health-cmd "pg_isready -U otok -d crm_swiss"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 5
+
+    env:
+      DATABASE_URL: postgres://otok:otok@localhost:5433/crm_swiss
+      AUTH_SECRET: ci-secret-at-least-32-characters-long-for-crm!!
+      CRM_BASE_URL: http://127.0.0.1:5173
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v6
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+
+      - name: Setup Node.js 22
+        uses: actions/setup-node@v6
+        with:
+          node-version: 22
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build packages
+        run: pnpm -r --filter './packages/*' build
+
+      - name: Migrate and seed CRM database
+        run: |
+          pnpm --filter otok-reference-kit-crm-swiss db:migrate
+          pnpm --filter otok-reference-kit-crm-swiss db:seed
+
+      - name: Install Playwright Chromium
+        run: pnpm --filter otok-reference-kit-crm-swiss exec playwright install --with-deps chromium
+
+      - name: Start CRM dev server
+        run: pnpm --filter otok-reference-kit-crm-swiss dev &
+        shell: bash
+
+      - name: Wait for CRM server
+        run: npx --yes wait-on@8.0.1 http://127.0.0.1:5173 --timeout 120000
+
+      - name: Run CRM E2E tests
+        run: pnpm --filter otok-reference-kit-crm-swiss test:e2e
+
+      - name: Upload CRM Playwright artifacts
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: crm-playwright-artifacts
+          path: |
+            examples/kit-crm-swiss/playwright-report
+            examples/kit-crm-swiss/test-results
+          if-no-files-found: ignore
+
   workflows:
     name: Lint GitHub workflows
     runs-on: ubuntu-latest

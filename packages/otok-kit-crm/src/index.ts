@@ -1,0 +1,12 @@
+export type * from "./schema/types.js";
+export { CrmService, getCrmService, setCrmService, resetCrmServiceForTests } from "./domain/service.js";
+export { createCrmStore, searchCompanies, importCompaniesFromCsv, exportCompaniesCsv } from "./domain/memory-store.js";
+export { importZefixRecords, findDuplicateCompany } from "./domain/zefix-import.js";
+export { normalizeSwissUid, parseZefixJson, zefixToCompanyInput, uidEquals } from "./schema/zefix.js";
+export type { ZefixRecord, ZefixImportResult } from "./schema/zefix.js";
+export { CRM_PERMISSIONS, DEFAULT_ADMIN_PERMISSIONS, DEFAULT_SALES_PERMISSIONS, hasCrmPermission } from "./permissions.js";
+export type { CrmPermission } from "./permissions.js";
+export { createSwissDemoSeed, seedSwissDemo, SWISS_DEMO_ORG_ID } from "./seed/swiss.js";
+export { t, crmMessages } from "./i18n/index.js";
+export type { MessageKey } from "./i18n/index.js";
+export { default as crmKit } from "./kit.js";

@@ -15,6 +15,8 @@ export interface OtokContext<Env = unknown> {
   request: Request;
   params: RouteParams;
   route: string;
+  /** Abort signal tied to the incoming request (client disconnect / navigation abort). */
+  signal: AbortSignal;
 }
 
 export interface OtokActionContext<Env = unknown> extends OtokContext<Env> {
@@ -22,6 +24,8 @@ export interface OtokActionContext<Env = unknown> extends OtokContext<Env> {
   method: "POST" | "PUT" | "PATCH" | "DELETE";
   /** Parsed form data for form submissions. Undefined for non-form requests. */
   formData?: FormData;
+  /** Idempotency key from `X-Otok-Idempotency-Key` or form field when present. */
+  idempotencyKey?: string;
 }
 
 export type LoaderResult =

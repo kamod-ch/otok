@@ -1,0 +1,51 @@
+name: Canary publish
+
+on:
+  workflow_dispatch:
+    inputs:
+      dist_tag:
+        description: npm dist-tag
+        required: true
+        default: canary
+
+jobs:
+  canary:
+    name: Publish canary
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      - uses: pnpm/action-setup@v4
+
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 22
+          cache: pnpm
+          registry-url: https://registry.npmjs.org
+
+      - run: pnpm install --frozen-lockfile
+
+      - run: pnpm release:check
+
+      - run: pnpm api:check
+
+      - name: Enter canary pre-mode
+        run: pnpm dlx @changesets/cli pre enter ${{ inputs.dist_tag }}
+
+      - name: Version packages
+        run: pnpm version-packages
+
+      - name: Publish canary
+        run: pnpm release:publish --tag ${{ inputs.dist_tag }}
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+          npm_config_provenance: true
+
+      - name: Exit pre-mode
+        if: always()
+        run: pnpm dlx @changesets/cli pre exit

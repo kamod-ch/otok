@@ -1,0 +1,90 @@
+{
+  "name": "@kamod-ch/otok-ai",
+  "version": "0.1.0",
+  "description": "Framework-wide AI integration for Otok — streaming, tools, agents, RAG, budgets, MCP.",
+  "license": "MIT",
+  "homepage": "https://github.com/kamod-ch/otok/tree/main/packages/otok-ai#readme",
+  "bugs": {
+    "url": "https://github.com/kamod-ch/otok/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kamod-ch/otok.git",
+    "directory": "packages/otok-ai"
+  },
+  "type": "module",
+  "files": [
+    "dist",
+    "README.md",
+    "docs"
+  ],
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    },
+    "./loader": {
+      "types": "./dist/loader.d.ts",
+      "default": "./dist/loader.js"
+    },
+    "./plugin": {
+      "types": "./dist/plugin.d.ts",
+      "default": "./dist/plugin.js"
+    },
+    "./providers/test": {
+      "types": "./dist/providers/test.d.ts",
+      "default": "./dist/providers/test.js"
+    },
+    "./testing": {
+      "types": "./dist/testing/index.d.ts",
+      "default": "./dist/testing/index.js"
+    },
+    "./cli": {
+      "types": "./dist/cli/index.d.ts",
+      "default": "./dist/cli/index.js"
+    },
+    "./tools": {
+      "types": "./dist/tools/define-tool.d.ts",
+      "default": "./dist/tools/define-tool.js"
+    },
+    "./mcp": {
+      "types": "./dist/mcp/index.d.ts",
+      "default": "./dist/mcp/index.js"
+    },
+    "./rag": {
+      "types": "./dist/rag/index.d.ts",
+      "default": "./dist/rag/index.js"
+    }
+  },
+  "scripts": {
+    "build": "rm -rf dist && tsc -p tsconfig.build.json",
+    "prepare": "npm run build",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "test": "vitest run"
+  },
+  "peerDependencies": {
+    "hono": ">=4",
+    "otok": ">=0.4.0",
+    "@kamod-ch/otok-workflows": ">=0.1.0"
+  },
+  "peerDependenciesMeta": {
+    "hono": { "optional": true },
+    "@kamod-ch/otok-workflows": { "optional": true }
+  },
+  "devDependencies": {
+    "@kamod-ch/otok-workflows": "workspace:*",
+    "@otok/test": "workspace:*",
+    "@types/node": "^24.12.2",
+    "hono": "^4.12.25",
+    "otok": "workspace:*",
+    "typescript": "~6.0.2",
+    "vitest": "^4.1.2",
+    "zod": "^4.0.0"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}

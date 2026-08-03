@@ -53,6 +53,10 @@
     "./cache": {
       "types": "./dist/cache/index.d.ts",
       "default": "./dist/cache/index.js"
+    },
+    "./client/mutations": {
+      "types": "./dist/client/mutations/index.d.ts",
+      "default": "./dist/client/mutations/index.js"
     }
   },
   "scripts": {

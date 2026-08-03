@@ -17,6 +17,26 @@ export function definePlugin<TOptions = void>(
   return factory;
 }
 
+export { definePreset, isDefinedPreset } from "./preset.js";
+export { defineKit, isDefinedKit } from "./kit.js";
+export type {
+  DefinedOtokPreset,
+  OtokPresetDefinition,
+  PresetConflictStrategy,
+  PresetFileEntry,
+  PresetPackageJsonPatch,
+} from "./preset.js";
+export type {
+  DefinedOtokKit,
+  OtokKitDefinition,
+  KitModuleDefinition,
+  KitMigration,
+  KitVersionRequirement,
+  KitComposeOptions,
+  KitConflict,
+  KitVersionMismatch,
+} from "./kit.js";
+
 export function isPluginFactory(input: OtokPluginInput): input is OtokPluginFactory {
   return typeof input === "function";
 }

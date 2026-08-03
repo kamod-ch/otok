@@ -1,0 +1,62 @@
+{
+  "name": "@otok/kit-crm",
+  "version": "0.1.0",
+  "description": "Composable Swiss B2B CRM kit for Otok — organizations, companies, contacts, pipelines, audit, search, import/export.",
+  "license": "MIT",
+  "type": "module",
+  "files": ["dist", "kit-files", "README.md"],
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    },
+    "./kit": {
+      "types": "./dist/kit.d.ts",
+      "default": "./dist/kit.js"
+    },
+    "./seed": {
+      "types": "./dist/seed/swiss.d.ts",
+      "default": "./dist/seed/swiss.js"
+    },
+    "./i18n": {
+      "types": "./dist/i18n/index.d.ts",
+      "default": "./dist/i18n/index.js"
+    },
+    "./db": {
+      "types": "./dist/db/index.d.ts",
+      "default": "./dist/db/index.js"
+    }
+  },
+  "scripts": {
+    "build": "rm -rf dist && tsc -p tsconfig.build.json",
+    "prepare": "npm run build",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "@otok/config": "workspace:*"
+  },
+  "peerDependencies": {
+    "kysely": ">=0.27.0",
+    "otok": ">=0.4.0"
+  },
+  "peerDependenciesMeta": {
+    "kysely": {
+      "optional": false
+    }
+  },
+  "devDependencies": {
+    "better-sqlite3": "^11.10.0",
+    "kysely": "^0.29.2",
+    "@otok/kit-admin": "workspace:*",
+    "@otok/kit-saas": "workspace:*",
+    "@otok/kit-marketplace": "workspace:*",
+    "@types/better-sqlite3": "^7.6.13",
+    "@types/node": "^24.12.2",
+    "otok": "workspace:*",
+    "typescript": "~6.0.2",
+    "vitest": "^4.1.2"
+  },
+  "engines": { "node": ">=20" },
+  "publishConfig": { "access": "public" }
+}

@@ -1,4 +1,5 @@
 import type { LoaderResult, OtokActionContext, OtokContext, OtokLoader } from "otok/server";
+import type { LoaderEnhancer } from "otok/route";
 import type { Kysely } from "kysely";
 import { dbFromHono } from "./context.js";
 import { tryGetKyselyRuntime } from "./registry.js";
@@ -33,6 +34,12 @@ export function defineLoader<Data extends LoaderResult, DB = unknown>(
   handler: (ctx: OtokContext & LoaderDbContext<DB>) => Data | Promise<Data>,
 ): OtokLoader<Data> {
   return (context) => handler({ ...context, db: resolveDb<DB>(context.hono) });
+}
+
+/** Loader enhancer that injects `db` from the otok-kysely runtime (outermost in composeLoader). */
+export function withDb<DB>(): LoaderEnhancer {
+  return (loader) => (context) =>
+    loader({ ...context, db: resolveDb<DB>(context.hono) } as OtokContext);
 }
 
 /**

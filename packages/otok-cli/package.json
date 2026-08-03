@@ -28,8 +28,10 @@
     "test": "vitest run"
   },
   "dependencies": {
+    "@kamod-ch/otok-ai": "workspace:*",
     "@kamod-ch/otok-kysely": "workspace:*",
     "@otok/config": "workspace:*",
+    "@otok/registry": "workspace:*",
     "@otok/route-typegen": "workspace:*",
     "typescript": "~6.0.2"
   },

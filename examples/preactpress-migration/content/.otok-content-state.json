@@ -1,0 +1,29 @@
+{
+  "version": 1,
+  "files": {
+    "/home/watzak/master/kamod/otok/examples/preactpress-migration/content/de/docs/index.md": {
+      "hash": "08859e39ae5638487ca944dddbc31aaed43dd77c0db77192eb00dfbe970e9b72",
+      "mtimeMs": 1785771120148.5955
+    },
+    "/home/watzak/master/kamod/otok/examples/preactpress-migration/content/docs/index.md": {
+      "hash": "9e81799e818ea56a50acbfbf0bb31d0abc6feb434407978a10873f50b90b1f19",
+      "mtimeMs": 1785771118152.5706
+    },
+    "/home/watzak/master/kamod/otok/examples/preactpress-migration/content/de/docs/getting-started.md": {
+      "hash": "37a606a1750bb3086eacfd3f74bed383f93c1d0dff246ef854d189306fcf3f5f",
+      "mtimeMs": 1785771120265.597
+    },
+    "/home/watzak/master/kamod/otok/examples/preactpress-migration/content/docs/getting-started.md": {
+      "hash": "20140f255b172e23618102ca0c8e61a885dfd2ece39b08fb31ba59a9b34804f9",
+      "mtimeMs": 1785771118814.5789
+    },
+    "/home/watzak/master/kamod/otok/examples/preactpress-migration/content/docs/markdown-examples.md": {
+      "hash": "471ebd30e5e5404c86ea79eda6073989ee2011b9004ef566d468774c52fbb1c9",
+      "mtimeMs": 1785771119398.586
+    },
+    "/home/watzak/master/kamod/otok/examples/preactpress-migration/content/docs/v2-overview.md": {
+      "hash": "4703c74dff3d2f4da0f9f3052d46fb94ba9452ff79b179b1153a1374208da8a5",
+      "mtimeMs": 1785771161167.0686
+    }
+  }
+}

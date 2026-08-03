@@ -1,0 +1,25 @@
+{
+  "generatedAt": "2026-08-03T00:00:00.000Z",
+  "note": "Run `node scripts/benchmark-preactpress-migration.mjs` after `pnpm install` in otok workspace. Otok example static build requires adapter dual-build wiring (see examples/preactpress-migration README).",
+  "preactpress": {
+    "engine": "preactpress",
+    "fixture": "templates/docs",
+    "buildTimeMs": null,
+    "totalStaticBytes": null,
+    "pageCount": null,
+    "searchIndexBytes": null,
+    "mainJsBytes": null,
+    "sampleRoute": "/guide/getting-started"
+  },
+  "otok": {
+    "engine": "otok",
+    "fixture": "examples/preactpress-migration",
+    "buildTimeMs": null,
+    "totalStaticBytes": null,
+    "pageCount": null,
+    "searchIndexBytes": null,
+    "mainJsBytes": null,
+    "sampleRoute": "/docs/getting-started"
+  },
+  "comparison": {}
+}

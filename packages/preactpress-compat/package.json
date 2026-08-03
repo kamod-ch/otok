@@ -1,0 +1,34 @@
+{
+  "name": "@kamod-ch/preactpress-compat",
+  "version": "0.1.0",
+  "description": "Compatibility layer for migrating PreactPress sites to Otok and @kamod-ch/otok-content.",
+  "license": "MIT",
+  "type": "module",
+  "files": ["dist", "README.md"],
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    }
+  },
+  "scripts": {
+    "build": "rm -rf dist && tsc -p tsconfig.build.json",
+    "prepare": "npm run build",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "@kamod-ch/otok-content": "workspace:*"
+  },
+  "peerDependencies": {
+    "otok": ">=0.4.0"
+  },
+  "devDependencies": {
+    "@types/node": "^24.12.2",
+    "otok": "workspace:*",
+    "typescript": "~6.0.2",
+    "vitest": "^4.1.2"
+  },
+  "engines": { "node": ">=20" },
+  "publishConfig": { "access": "public" }
+}

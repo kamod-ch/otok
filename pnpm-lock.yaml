@@ -16,7 +16,7 @@ importers:
         version: 6.0.3
       vitest:
         specifier: ^4.1.2
-        version: 4.1.8(@opentelemetry/api@1.9.1)(@types/node@24.13.1)(jsdom@29.1.1)(vite@8.0.16(@types/node@24.13.1)(esbuild@0.28.1)(jiti@2.7.0))
+        version: 4.1.8(@opentelemetry/api@1.9.1)(@types/node@24.13.1)(jsdom@29.1.1)(vite@8.0.16(@types/node@24.13.1)(esbuild@0.28.1)(jiti@2.7.0)(tsx@4.23.5))
 
   apps/docs: {}
 
@@ -25,6 +25,9 @@ importers:
       '@hono/node-server':
         specifier: ^2.0.1
         version: 2.0.4(hono@4.12.25)
+      '@kamod-ch/otok-kamod':
+        specifier: workspace:*
+        version: link:../../packages/otok-kamod
       '@kamod-ui/core':
         specifier: ^0.1.5
         version: 0.1.5(@preact/signals@2.9.1(preact@10.29.2))(preact@10.29.2)(tailwindcss@4.3.0)
@@ -55,10 +58,10 @@ importers:
         version: 1.60.0
       '@preact/preset-vite':
         specifier: ^2.10.5
-        version: 2.10.5(@babel/core@7.29.7)(preact@10.29.2)(vite@8.0.16(@types/node@24.13.1)(esbuild@0.28.1)(jiti@2.7.0))
+        version: 2.10.5(@babel/core@7.29.7)(preact@10.29.2)(vite@8.0.16(@types/node@24.13.1)(esbuild@0.28.1)(jiti@2.7.0)(tsx@4.23.5))
       '@tailwindcss/vite':
         specifier: ^4.2.4
-        version: 4.3.0(vite@8.0.16(@types/node@24.13.1)(esbuild@0.28.1)(jiti@2.7.0))
+        version: 4.3.0(vite@8.0.16(@types/node@24.13.1)(esbuild@0.28.1)(jiti@2.7.0)(tsx@4.23.5))
       '@types/node':
         specifier: ^24.12.2
         version: 24.13.1
@@ -70,12 +73,308 @@ importers:
         version: 6.0.3
       vite:
         specifier: ^8.0.10
-        version: 8.0.16(@types/node@24.13.1)(esbuild@0.28.1)(jiti@2.7.0)
+        version: 8.0.16(@types/node@24.13.1)(esbuild@0.28.1)(jiti@2.7.0)(tsx@4.23.5)
       vitest:
         specifier: ^4.1.2
-        version: 4.1.8(@opentelemetry/api@1.9.1)(@types/node@24.13.1)(jsdom@29.1.1)(vite@8.0.16(@types/node@24.13.1)(esbuild@0.28.1)(jiti@2.7.0))
+        version: 4.1.8(@opentelemetry/api@1.9.1)(@types/node@24.13.1)(jsdom@29.1.1)(vite@8.0.16(@types/node@24.13.1)(esbuild@0.28.1)(jiti@2.7.0)(tsx@4.23.5))
 
-  packages/create-otok: {}
+  examples/kit-crm-swiss:
+    dependencies:
+      '@kamod-ch/otok-audit':
+        specifier: workspace:*
+        version: link:../../packages/otok-audit
+      '@kamod-ch/otok-auth':
+        specifier: workspace:*
+        version: link:../../packages/otok-auth
+      '@kamod-ch/otok-i18n':
+        specifier: workspace:*
+        version: link:../../packages/otok-i18n
+      '@kamod-ch/otok-kamod':
+        specifier: workspace:*
+        version: link:../../packages/otok-kamod
+      '@kamod-ch/otok-kysely':
+        specifier: workspace:*
+        version: link:../../packages/otok-kysely
+      '@kamod-ch/otok-search':
+        specifier: workspace:*
+        version: link:../../packages/otok-search
+      '@kamod-ch/otok-validation':
+        specifier: workspace:*
+        version: link:../../packages/otok-validation
+      '@kamod-ch/otok-workflows':
+        specifier: workspace:*
+        version: link:../../packages/otok-workflows
+      '@kamod-ch/ui':
+        specifier: ^1.0.1
+        version: 1.0.1(@kamod-ch/themes@0.2.1(@preact/signals@2.9.1(preact@10.29.2))(preact@10.29.2))(@preact/signals@2.9.1(preact@10.29.2))(preact@10.29.2)(tailwindcss@4.3.0)
+      '@otok/kit-crm':
+        specifier: workspace:*
+        version: link:../../packages/otok-kit-crm
+      hono:
+        specifier: ^4.12.25
+        version: 4.12.25
+      kysely:
+        specifier: ^0.29.2
+        version: 0.29.3
+      otok:
+        specifier: workspace:*
+        version: link:../../packages/otok
+      otok-adapter-node:
+        specifier: workspace:*
+        version: link:../../packages/otok-adapter-node
+      pg:
+        specifier: ^8.16.0
+        version: 8.22.0
+      preact:
+        specifier: ^10.28.2
+        version: 10.29.2
+      zod:
+        specifier: ^4.0.0
+        version: 4.4.3
+    devDependencies:
+      '@otok/vite-plugin':
+        specifier: workspace:*
+        version: link:../../packages/vite-plugin-otok
+      '@playwright/test':
+        specifier: ^1.55.0
+        version: 1.60.0
+      '@preact/preset-vite':
+        specifier: ^2.10.5
+        version: 2.10.5(@babel/core@7.29.7)(preact@10.29.2)(vite@8.0.16(@types/node@24.13.1)(esbuild@0.28.1)(jiti@2.7.0)(tsx@4.23.5))
+      '@tailwindcss/vite':
+        specifier: ^4.2.4
+        version: 4.3.0(vite@8.0.16(@types/node@24.13.1)(esbuild@0.28.1)(jiti@2.7.0)(tsx@4.23.5))
+      '@types/node':
+        specifier: ^24.12.2
+        version: 24.13.1
+      otok-cli:
+        specifier: workspace:*
+        version: link:../../packages/otok-cli
+      tailwindcss:
+        specifier: ^4.2.4
+        version: 4.3.0
+      typescript:
+        specifier: ~6.0.2
+        version: 6.0.3
+      vite:
+        specifier: ^8.0.10
+        version: 8.0.16(@types/node@24.13.1)(esbuild@0.28.1)(jiti@2.7.0)(tsx@4.23.5)
+
+  examples/preactpress-migration:
+    dependencies:
+      '@kamod-ch/otok-content':
+        specifier: workspace:*
+        version: link:../../packages/otok-content
+      '@kamod-ch/otok-i18n':
+        specifier: workspace:*
+        version: link:../../packages/otok-i18n
+      '@kamod-ch/otok-kamod':
+        specifier: workspace:*
+        version: link:../../packages/otok-kamod
+      '@kamod-ch/otok-seo':
+        specifier: workspace:*
+        version: link:../../packages/otok-seo
+      '@kamod-ch/preactpress-compat':
+        specifier: workspace:*
+        version: link:../../packages/preactpress-compat
+      '@kamod-ch/ui':
+        specifier: ^1.0.1
+        version: 1.0.1(@kamod-ch/themes@0.2.1(@preact/signals@2.9.1(preact@10.29.2))(preact@10.29.2))(@preact/signals@2.9.1(preact@10.29.2))(preact@10.29.2)(tailwindcss@4.3.0)
+      '@otok/vite-plugin':
+        specifier: workspace:*
+        version: link:../../packages/vite-plugin-otok
+      '@preact/preset-vite':
+        specifier: ^2.10.5
+        version: 2.10.5(@babel/core@7.29.7)(preact@10.29.2)(vite@8.0.16(@types/node@24.13.1)(esbuild@0.28.1)(jiti@2.7.0)(tsx@4.23.5))
+      '@preact/signals':
+        specifier: ^2.0.0
+        version: 2.9.1(preact@10.29.2)
+      hono:
+        specifier: ^4.12.25
+        version: 4.12.25
+      otok:
+        specifier: workspace:*
+        version: link:../../packages/otok
+      otok-adapter-static:
+        specifier: workspace:*
+        version: link:../../packages/otok-adapter-static
+      preact:
+        specifier: ^10.28.2
+        version: 10.29.2
+      vite:
+        specifier: ^8.0.10
+        version: 8.0.16(@types/node@24.13.1)(esbuild@0.28.1)(jiti@2.7.0)(tsx@4.23.5)
+    devDependencies:
+      '@playwright/test':
+        specifier: ^1.55.0
+        version: 1.60.0
+      '@tailwindcss/vite':
+        specifier: ^4.2.4
+        version: 4.3.0(vite@8.0.16(@types/node@24.13.1)(esbuild@0.28.1)(jiti@2.7.0)(tsx@4.23.5))
+      '@types/node':
+        specifier: ^24.12.2
+        version: 24.13.1
+      tailwindcss:
+        specifier: ^4.2.4
+        version: 4.3.0
+      typescript:
+        specifier: ~6.0.2
+        version: 6.0.3
+      vitest:
+        specifier: ^4.1.2
+        version: 4.1.8(@opentelemetry/api@1.9.1)(@types/node@24.13.1)(jsdom@29.1.1)(vite@8.0.16(@types/node@24.13.1)(esbuild@0.28.1)(jiti@2.7.0)(tsx@4.23.5))
+
+  examples/saas-reference:
+    dependencies:
+      '@kamod-ch/otok-audit':
+        specifier: workspace:*
+        version: link:../../packages/otok-audit
+      '@kamod-ch/otok-auth':
+        specifier: workspace:*
+        version: link:../../packages/otok-auth
+      '@kamod-ch/otok-i18n':
+        specifier: workspace:*
+        version: link:../../packages/otok-i18n
+      '@kamod-ch/otok-kamod':
+        specifier: workspace:*
+        version: link:../../packages/otok-kamod
+      '@kamod-ch/otok-kysely':
+        specifier: workspace:*
+        version: link:../../packages/otok-kysely
+      '@kamod-ch/otok-mail':
+        specifier: workspace:*
+        version: link:../../packages/otok-mail
+      '@kamod-ch/otok-oauth':
+        specifier: workspace:*
+        version: link:../../packages/otok-oauth
+      '@kamod-ch/otok-observability':
+        specifier: workspace:*
+        version: link:../../packages/otok-observability
+      '@kamod-ch/otok-security':
+        specifier: workspace:*
+        version: link:../../packages/otok-security
+      '@kamod-ch/otok-seo':
+        specifier: workspace:*
+        version: link:../../packages/otok-seo
+      '@kamod-ch/otok-stripe':
+        specifier: workspace:*
+        version: link:../../packages/otok-stripe
+      '@kamod-ch/otok-validation':
+        specifier: workspace:*
+        version: link:../../packages/otok-validation
+      '@kamod-ch/ui':
+        specifier: ^1.0.1
+        version: 1.0.1(@kamod-ch/themes@0.2.1(@preact/signals@2.9.1(preact@10.29.2))(preact@10.29.2))(@preact/signals@2.9.1(preact@10.29.2))(preact@10.29.2)(tailwindcss@4.3.0)
+      hono:
+        specifier: ^4.12.25
+        version: 4.12.25
+      kysely:
+        specifier: ^0.29.2
+        version: 0.29.3
+      otok:
+        specifier: workspace:*
+        version: link:../../packages/otok
+      otok-adapter-node:
+        specifier: workspace:*
+        version: link:../../packages/otok-adapter-node
+      pg:
+        specifier: ^8.16.0
+        version: 8.22.0
+      preact:
+        specifier: ^10.28.2
+        version: 10.29.2
+      zod:
+        specifier: ^4.0.0
+        version: 4.4.3
+    devDependencies:
+      '@otok/vite-plugin':
+        specifier: workspace:*
+        version: link:../../packages/vite-plugin-otok
+      '@playwright/test':
+        specifier: ^1.55.0
+        version: 1.60.0
+      '@preact/preset-vite':
+        specifier: ^2.10.5
+        version: 2.10.5(@babel/core@7.29.7)(preact@10.29.2)(vite@8.0.16(@types/node@24.13.1)(esbuild@0.28.1)(jiti@2.7.0)(tsx@4.23.5))
+      '@tailwindcss/vite':
+        specifier: ^4.2.4
+        version: 4.3.0(vite@8.0.16(@types/node@24.13.1)(esbuild@0.28.1)(jiti@2.7.0)(tsx@4.23.5))
+      '@types/node':
+        specifier: ^24.12.2
+        version: 24.13.1
+      otok-cli:
+        specifier: workspace:*
+        version: link:../../packages/otok-cli
+      tailwindcss:
+        specifier: ^4.2.4
+        version: 4.3.0
+      tsx:
+        specifier: ^4.20.3
+        version: 4.23.5
+      typescript:
+        specifier: ~6.0.2
+        version: 6.0.3
+      vite:
+        specifier: ^8.0.10
+        version: 8.0.16(@types/node@24.13.1)(esbuild@0.28.1)(jiti@2.7.0)(tsx@4.23.5)
+      vitest:
+        specifier: ^4.1.2
+        version: 4.1.8(@opentelemetry/api@1.9.1)(@types/node@24.13.1)(jsdom@29.1.1)(vite@8.0.16(@types/node@24.13.1)(esbuild@0.28.1)(jiti@2.7.0)(tsx@4.23.5))
+
+  packages/create-otok:
+    dependencies:
+      '@clack/prompts':
+        specifier: ^0.10.1
+        version: 0.10.1
+      '@otok/config':
+        specifier: workspace:*
+        version: link:../otok-config
+
+  packages/forum:
+    dependencies:
+      '@otok/config':
+        specifier: workspace:*
+        version: link:../otok-config
+      markdown-it:
+        specifier: ^14.1.0
+        version: 14.3.0
+      zod:
+        specifier: ^3.24.0
+        version: 3.25.76
+    devDependencies:
+      '@otok/test':
+        specifier: workspace:*
+        version: link:../otok-test
+      '@types/better-sqlite3':
+        specifier: ^7.6.13
+        version: 7.6.13
+      '@types/markdown-it':
+        specifier: ^14.1.2
+        version: 14.1.2
+      '@types/node':
+        specifier: ^24.12.2
+        version: 24.13.1
+      better-sqlite3:
+        specifier: ^12.6.2
+        version: 12.11.1
+      hono:
+        specifier: ^4.12.25
+        version: 4.12.25
+      kysely:
+        specifier: ^0.29.3
+        version: 0.29.3
+      otok:
+        specifier: workspace:*
+        version: link:../otok
+      preact:
+        specifier: ^10.28.2
+        version: 10.29.2
+      typescript:
+        specifier: ~6.0.2
+        version: 6.0.3
+      vitest:
+        specifier: ^4.1.2
+        version: 4.1.8(@opentelemetry/api@1.9.1)(@types/node@24.13.1)(jsdom@29.1.1)(vite@8.0.16(@types/node@24.13.1)(esbuild@0.28.1)(jiti@2.7.0)(tsx@4.23.5))
 
   packages/otok:
     dependencies:
@@ -100,7 +399,7 @@ importers:
         version: 6.0.3
       vitest:
         specifier: ^4.1.2
-        version: 4.1.8(@opentelemetry/api@1.9.1)(@types/node@24.13.1)(jsdom@29.1.1)(vite@8.0.16(@types/node@24.13.1)(esbuild@0.28.1)(jiti@2.7.0))
+        version: 4.1.8(@opentelemetry/api@1.9.1)(@types/node@24.13.1)(jsdom@29.1.1)(vite@8.0.16(@types/node@24.13.1)(esbuild@0.28.1)(jiti@2.7.0)(tsx@4.23.5))
 
   packages/otok-adapter-cloudflare:
     dependencies:
@@ -122,10 +421,10 @@ importers:
         version: 6.0.3
       vite:
         specifier: ^8.0.10
-        version: 8.0.16(@types/node@24.13.1)(esbuild@0.28.1)(jiti@2.7.0)
+        version: 8.0.16(@types/node@24.13.1)(esbuild@0.28.1)(jiti@2.7.0)(tsx@4.23.5)
       vitest:
         specifier: ^4.1.2
-        version: 4.1.8(@opentelemetry/api@1.9.1)(@types/node@24.13.1)(jsdom@29.1.1)(vite@8.0.16(@types/node@24.13.1)(esbuild@0.28.1)(jiti@2.7.0))
+        version: 4.1.8(@opentelemetry/api@1.9.1)(@types/node@24.13.1)(jsdom@29.1.1)(vite@8.0.16(@types/node@24.13.1)(esbuild@0.28.1)(jiti@2.7.0)(tsx@4.23.5))
 
   packages/otok-adapter-contract:
     dependencies:
@@ -138,7 +437,7 @@ importers:
         version: 6.0.3
       vitest:
         specifier: ^4.1.2
-        version: 4.1.8(@opentelemetry/api@1.9.1)(@types/node@24.13.1)(jsdom@29.1.1)(vite@8.0.16(@types/node@24.13.1)(esbuild@0.28.1)(jiti@2.7.0))
+        version: 4.1.8(@opentelemetry/api@1.9.1)(@types/node@24.13.1)(jsdom@29.1.1)(vite@8.0.16(@types/node@24.13.1)(esbuild@0.28.1)(jiti@2.7.0)(tsx@4.23.5))
 
   packages/otok-adapter-node:
     dependencies:
@@ -160,10 +459,10 @@ importers:
         version: 6.0.3
       vite:
         specifier: ^8.0.10
-        version: 8.0.16(@types/node@24.13.1)(esbuild@0.28.1)(jiti@2.7.0)
+        version: 8.0.16(@types/node@24.13.1)(esbuild@0.28.1)(jiti@2.7.0)(tsx@4.23.5)
       vitest:
         specifier: ^4.1.2
-        version: 4.1.8(@opentelemetry/api@1.9.1)(@types/node@24.13.1)(jsdom@29.1.1)(vite@8.0.16(@types/node@24.13.1)(esbuild@0.28.1)(jiti@2.7.0))
+        version: 4.1.8(@opentelemetry/api@1.9.1)(@types/node@24.13.1)(jsdom@29.1.1)(vite@8.0.16(@types/node@24.13.1)(esbuild@0.28.1)(jiti@2.7.0)(tsx@4.23.5))
 
   packages/otok-adapter-static:
     dependencies:
@@ -185,10 +484,71 @@ importers:
         version: 6.0.3
       vite:
         specifier: ^8.0.10
-        version: 8.0.16(@types/node@24.13.1)(esbuild@0.28.1)(jiti@2.7.0)
+        version: 8.0.16(@types/node@24.13.1)(esbuild@0.28.1)(jiti@2.7.0)(tsx@4.23.5)
       vitest:
         specifier: ^4.1.2
-        version: 4.1.8(@opentelemetry/api@1.9.1)(@types/node@24.13.1)(jsdom@29.1.1)(vite@8.0.16(@types/node@24.13.1)(esbuild@0.28.1)(jiti@2.7.0))
+        version: 4.1.8(@opentelemetry/api@1.9.1)(@types/node@24.13.1)(jsdom@29.1.1)(vite@8.0.16(@types/node@24.13.1)(esbuild@0.28.1)(jiti@2.7.0)(tsx@4.23.5))
+
+  packages/otok-ai:
+    devDependencies:
+      '@kamod-ch/otok-workflows':
+        specifier: workspace:*
+        version: link:../otok-workflows
+      '@otok/test':
+        specifier: workspace:*
+        version: link:../otok-test
+      '@types/node':
+        specifier: ^24.12.2
+        version: 24.13.1
+      hono:
+        specifier: ^4.12.25
+        version: 4.12.25
+      otok:
+        specifier: workspace:*
+        version: link:../otok
+      typescript:
+        specifier: ~6.0.2
+        version: 6.0.3
+      vitest:
+        specifier: ^4.1.2
+        version: 4.1.8(@opentelemetry/api@1.9.1)(@types/node@24.13.1)(jsdom@29.1.1)(vite@8.0.16(@types/node@24.13.1)(esbuild@0.28.1)(jiti@2.7.0)(tsx@4.23.5))
+      zod:
+        specifier: ^4.0.0
+        version: 4.4.3
+
+  packages/otok-audit:
+    dependencies:
+      '@otok/config':
+        specifier: workspace:*
+        version: link:../otok-config
+      zod:
+        specifier: ^3.24.0
+        version: 3.25.76
+    devDependencies:
+      '@types/better-sqlite3':
+        specifier: ^7.6.13
+        version: 7.6.13
+      '@types/node':
+        specifier: ^24.12.2
+        version: 24.13.1
+      better-sqlite3:
+        specifier: ^12.6.2
+        version: 12.11.1
+      hono:
+        specifier: ^4.12.25
+        version: 4.12.25
+      kysely:
+        specifier: ^0.29.3
+        version: 0.29.3
+      otok:
+        specifier: workspace:*
+        version: link:../otok
+      typescript:
+        specifier: ~6.0.2
+        version: 6.0.3
+      vitest:
+        specifier: ^4.1.2
+        version: 4.1.8(@opentelemetry/api@1.9.1)(@types/node@24.13.1)(jsdom@29.1.1)(vite@8.0.16(@types/node@24.13.1)(esbuild@0.28.1)(jiti@2.7.0)(tsx@4.23.5))
 
   packages/otok-auth:
     devDependencies:
@@ -218,16 +578,22 @@ importers:
         version: 6.0.3
       vitest:
         specifier: ^4.1.2
-        version: 4.1.8(@opentelemetry/api@1.9.1)(@types/node@24.13.1)(jsdom@29.1.1)(vite@8.0.16(@types/node@24.13.1)(esbuild@0.28.1)(jiti@2.7.0))
+        version: 4.1.8(@opentelemetry/api@1.9.1)(@types/node@24.13.1)(jsdom@29.1.1)(vite@8.0.16(@types/node@24.13.1)(esbuild@0.28.1)(jiti@2.7.0)(tsx@4.23.5))
 
   packages/otok-cli:
     dependencies:
+      '@kamod-ch/otok-ai':
+        specifier: workspace:*
+        version: link:../otok-ai
       '@kamod-ch/otok-kysely':
         specifier: workspace:*
         version: link:../otok-kysely
       '@otok/config':
         specifier: workspace:*
         version: link:../otok-config
+      '@otok/registry':
+        specifier: workspace:*
+        version: link:../otok-registry
       '@otok/route-typegen':
         specifier: workspace:*
         version: link:../otok-route-typegen
@@ -240,7 +606,7 @@ importers:
         version: 24.13.1
       vitest:
         specifier: ^4.1.2
-        version: 4.1.8(@opentelemetry/api@1.9.1)(@types/node@24.13.1)(jsdom@29.1.1)(vite@8.0.16(@types/node@24.13.1)(esbuild@0.28.1)(jiti@2.7.0))
+        version: 4.1.8(@opentelemetry/api@1.9.1)(@types/node@24.13.1)(jsdom@29.1.1)(vite@8.0.16(@types/node@24.13.1)(esbuild@0.28.1)(jiti@2.7.0)(tsx@4.23.5))
 
   packages/otok-config:
     devDependencies:
@@ -255,10 +621,47 @@ importers:
         version: 6.0.3
       vite:
         specifier: ^8.0.10
-        version: 8.0.16(@types/node@24.13.1)(esbuild@0.28.1)(jiti@2.7.0)
+        version: 8.0.16(@types/node@24.13.1)(esbuild@0.28.1)(jiti@2.7.0)(tsx@4.23.5)
       vitest:
         specifier: ^4.1.2
-        version: 4.1.8(@opentelemetry/api@1.9.1)(@types/node@24.13.1)(jsdom@29.1.1)(vite@8.0.16(@types/node@24.13.1)(esbuild@0.28.1)(jiti@2.7.0))
+        version: 4.1.8(@opentelemetry/api@1.9.1)(@types/node@24.13.1)(jsdom@29.1.1)(vite@8.0.16(@types/node@24.13.1)(esbuild@0.28.1)(jiti@2.7.0)(tsx@4.23.5))
+
+  packages/otok-content:
+    dependencies:
+      '@otok/config':
+        specifier: workspace:*
+        version: link:../otok-config
+      gray-matter:
+        specifier: ^4.0.3
+        version: 4.0.3
+      markdown-it:
+        specifier: ^14.1.0
+        version: 14.3.0
+      tinyglobby:
+        specifier: ^0.2.15
+        version: 0.2.17
+      vite:
+        specifier: '>=6.0.0'
+        version: 8.0.16(@types/node@24.13.1)(esbuild@0.28.1)(jiti@2.7.0)(tsx@4.23.5)
+      zod:
+        specifier: ^3.24.0
+        version: 3.25.76
+    devDependencies:
+      '@types/markdown-it':
+        specifier: ^14.1.2
+        version: 14.1.2
+      '@types/node':
+        specifier: ^24.12.2
+        version: 24.13.1
+      otok:
+        specifier: workspace:*
+        version: link:../otok
+      typescript:
+        specifier: ~6.0.2
+        version: 6.0.3
+      vitest:
+        specifier: ^4.1.2
+        version: 4.1.8(@opentelemetry/api@1.9.1)(@types/node@24.13.1)(jsdom@29.1.1)(vite@8.0.16(@types/node@24.13.1)(esbuild@0.28.1)(jiti@2.7.0)(tsx@4.23.5))
 
   packages/otok-devtools:
     devDependencies:
@@ -282,10 +685,44 @@ importers:
         version: 6.0.3
       vite:
         specifier: ^8.0.16
-        version: 8.0.16(@types/node@24.13.1)(esbuild@0.28.1)(jiti@2.7.0)
+        version: 8.0.16(@types/node@24.13.1)(esbuild@0.28.1)(jiti@2.7.0)(tsx@4.23.5)
       vitest:
         specifier: ^4.1.2
-        version: 4.1.8(@opentelemetry/api@1.9.1)(@types/node@24.13.1)(jsdom@29.1.1)(vite@8.0.16(@types/node@24.13.1)(esbuild@0.28.1)(jiti@2.7.0))
+        version: 4.1.8(@opentelemetry/api@1.9.1)(@types/node@24.13.1)(jsdom@29.1.1)(vite@8.0.16(@types/node@24.13.1)(esbuild@0.28.1)(jiti@2.7.0)(tsx@4.23.5))
+
+  packages/otok-events:
+    dependencies:
+      '@otok/config':
+        specifier: workspace:*
+        version: link:../otok-config
+      zod:
+        specifier: ^3.24.0
+        version: 3.25.76
+    devDependencies:
+      '@types/better-sqlite3':
+        specifier: ^7.6.13
+        version: 7.6.13
+      '@types/node':
+        specifier: ^24.12.2
+        version: 24.13.1
+      better-sqlite3:
+        specifier: ^12.6.2
+        version: 12.11.1
+      hono:
+        specifier: ^4.12.25
+        version: 4.12.25
+      kysely:
+        specifier: ^0.29.3
+        version: 0.29.3
+      otok:
+        specifier: workspace:*
+        version: link:../otok
+      typescript:
+        specifier: ~6.0.2
+        version: 6.0.3
+      vitest:
+        specifier: ^4.1.2
+        version: 4.1.8(@opentelemetry/api@1.9.1)(@types/node@24.13.1)(jsdom@29.1.1)(vite@8.0.16(@types/node@24.13.1)(esbuild@0.28.1)(jiti@2.7.0)(tsx@4.23.5))
 
   packages/otok-flash:
     devDependencies:
@@ -309,7 +746,7 @@ importers:
         version: 6.0.3
       vitest:
         specifier: ^4.1.2
-        version: 4.1.8(@opentelemetry/api@1.9.1)(@types/node@24.13.1)(jsdom@29.1.1)(vite@8.0.16(@types/node@24.13.1)(esbuild@0.28.1)(jiti@2.7.0))
+        version: 4.1.8(@opentelemetry/api@1.9.1)(@types/node@24.13.1)(jsdom@29.1.1)(vite@8.0.16(@types/node@24.13.1)(esbuild@0.28.1)(jiti@2.7.0)(tsx@4.23.5))
 
   packages/otok-i18n:
     devDependencies:
@@ -336,7 +773,7 @@ importers:
         version: 6.0.3
       vitest:
         specifier: ^4.1.2
-        version: 4.1.8(@opentelemetry/api@1.9.1)(@types/node@24.13.1)(jsdom@29.1.1)(vite@8.0.16(@types/node@24.13.1)(esbuild@0.28.1)(jiti@2.7.0))
+        version: 4.1.8(@opentelemetry/api@1.9.1)(@types/node@24.13.1)(jsdom@29.1.1)(vite@8.0.16(@types/node@24.13.1)(esbuild@0.28.1)(jiti@2.7.0)(tsx@4.23.5))
 
   packages/otok-kamod:
     dependencies:
@@ -367,7 +804,7 @@ importers:
         version: 2.9.1(preact@10.29.2)
       '@tailwindcss/vite':
         specifier: ^4.2.4
-        version: 4.3.0(vite@8.0.16(@types/node@24.13.1)(esbuild@0.28.1)(jiti@2.7.0))
+        version: 4.3.0(vite@8.0.16(@types/node@24.13.1)(esbuild@0.28.1)(jiti@2.7.0)(tsx@4.23.5))
       '@types/node':
         specifier: ^24.12.2
         version: 24.13.1
@@ -388,10 +825,93 @@ importers:
         version: 6.0.3
       vite:
         specifier: ^8.0.10
-        version: 8.0.16(@types/node@24.13.1)(esbuild@0.28.1)(jiti@2.7.0)
+        version: 8.0.16(@types/node@24.13.1)(esbuild@0.28.1)(jiti@2.7.0)(tsx@4.23.5)
       vitest:
         specifier: ^4.1.2
-        version: 4.1.8(@opentelemetry/api@1.9.1)(@types/node@24.13.1)(jsdom@29.1.1)(vite@8.0.16(@types/node@24.13.1)(esbuild@0.28.1)(jiti@2.7.0))
+        version: 4.1.8(@opentelemetry/api@1.9.1)(@types/node@24.13.1)(jsdom@29.1.1)(vite@8.0.16(@types/node@24.13.1)(esbuild@0.28.1)(jiti@2.7.0)(tsx@4.23.5))
+
+  packages/otok-kit-admin:
+    dependencies:
+      '@otok/config':
+        specifier: workspace:*
+        version: link:../otok-config
+    devDependencies:
+      typescript:
+        specifier: ~6.0.2
+        version: 6.0.3
+      vitest:
+        specifier: ^4.1.2
+        version: 4.1.8(@opentelemetry/api@1.9.1)(@types/node@24.13.1)(jsdom@29.1.1)(vite@8.0.16(@types/node@24.13.1)(esbuild@0.28.1)(jiti@2.7.0)(tsx@4.23.5))
+
+  packages/otok-kit-content:
+    dependencies:
+      '@otok/config':
+        specifier: workspace:*
+        version: link:../otok-config
+    devDependencies:
+      typescript:
+        specifier: ~6.0.2
+        version: 6.0.3
+
+  packages/otok-kit-crm:
+    dependencies:
+      '@otok/config':
+        specifier: workspace:*
+        version: link:../otok-config
+    devDependencies:
+      '@otok/kit-admin':
+        specifier: workspace:*
+        version: link:../otok-kit-admin
+      '@otok/kit-marketplace':
+        specifier: workspace:*
+        version: link:../otok-kit-marketplace
+      '@otok/kit-saas':
+        specifier: workspace:*
+        version: link:../otok-kit-saas
+      '@types/better-sqlite3':
+        specifier: ^7.6.13
+        version: 7.6.13
+      '@types/node':
+        specifier: ^24.12.2
+        version: 24.13.1
+      better-sqlite3:
+        specifier: ^11.10.0
+        version: 11.10.0
+      kysely:
+        specifier: ^0.29.2
+        version: 0.29.3
+      otok:
+        specifier: workspace:*
+        version: link:../otok
+      typescript:
+        specifier: ~6.0.2
+        version: 6.0.3
+      vitest:
+        specifier: ^4.1.2
+        version: 4.1.8(@opentelemetry/api@1.9.1)(@types/node@24.13.1)(jsdom@29.1.1)(vite@8.0.16(@types/node@24.13.1)(esbuild@0.28.1)(jiti@2.7.0)(tsx@4.23.5))
+
+  packages/otok-kit-marketplace:
+    dependencies:
+      '@otok/config':
+        specifier: workspace:*
+        version: link:../otok-config
+    devDependencies:
+      typescript:
+        specifier: ~6.0.2
+        version: 6.0.3
+
+  packages/otok-kit-saas:
+    dependencies:
+      '@otok/config':
+        specifier: workspace:*
+        version: link:../otok-config
+    devDependencies:
+      typescript:
+        specifier: ~6.0.2
+        version: 6.0.3
+      vitest:
+        specifier: ^4.1.2
+        version: 4.1.8(@opentelemetry/api@1.9.1)(@types/node@24.13.1)(jsdom@29.1.1)(vite@8.0.16(@types/node@24.13.1)(esbuild@0.28.1)(jiti@2.7.0)(tsx@4.23.5))
 
   packages/otok-kysely:
     devDependencies:
@@ -430,7 +950,7 @@ importers:
         version: 6.0.3
       vitest:
         specifier: ^4.1.2
-        version: 4.1.8(@opentelemetry/api@1.9.1)(@types/node@24.13.1)(jsdom@29.1.1)(vite@8.0.16(@types/node@24.13.1)(esbuild@0.28.1)(jiti@2.7.0))
+        version: 4.1.8(@opentelemetry/api@1.9.1)(@types/node@24.13.1)(jsdom@29.1.1)(vite@8.0.16(@types/node@24.13.1)(esbuild@0.28.1)(jiti@2.7.0)(tsx@4.23.5))
 
   packages/otok-mail:
     devDependencies:
@@ -463,7 +983,7 @@ importers:
         version: 6.0.3
       vitest:
         specifier: ^4.1.2
-        version: 4.1.8(@opentelemetry/api@1.9.1)(@types/node@24.13.1)(jsdom@29.1.1)(vite@8.0.16(@types/node@24.13.1)(esbuild@0.28.1)(jiti@2.7.0))
+        version: 4.1.8(@opentelemetry/api@1.9.1)(@types/node@24.13.1)(jsdom@29.1.1)(vite@8.0.16(@types/node@24.13.1)(esbuild@0.28.1)(jiti@2.7.0)(tsx@4.23.5))
 
   packages/otok-oauth:
     devDependencies:
@@ -487,7 +1007,7 @@ importers:
         version: 6.0.3
       vitest:
         specifier: ^4.1.2
-        version: 4.1.8(@opentelemetry/api@1.9.1)(@types/node@24.13.1)(jsdom@29.1.1)(vite@8.0.16(@types/node@24.13.1)(esbuild@0.28.1)(jiti@2.7.0))
+        version: 4.1.8(@opentelemetry/api@1.9.1)(@types/node@24.13.1)(jsdom@29.1.1)(vite@8.0.16(@types/node@24.13.1)(esbuild@0.28.1)(jiti@2.7.0)(tsx@4.23.5))
 
   packages/otok-observability:
     devDependencies:
@@ -511,7 +1031,29 @@ importers:
         version: 6.0.3
       vitest:
         specifier: ^4.1.2
-        version: 4.1.8(@opentelemetry/api@1.9.1)(@types/node@24.13.1)(jsdom@29.1.1)(vite@8.0.16(@types/node@24.13.1)(esbuild@0.28.1)(jiti@2.7.0))
+        version: 4.1.8(@opentelemetry/api@1.9.1)(@types/node@24.13.1)(jsdom@29.1.1)(vite@8.0.16(@types/node@24.13.1)(esbuild@0.28.1)(jiti@2.7.0)(tsx@4.23.5))
+
+  packages/otok-plugin-contract:
+    dependencies:
+      '@otok/config':
+        specifier: workspace:*
+        version: link:../otok-config
+      otok:
+        specifier: workspace:*
+        version: link:../otok
+    devDependencies:
+      '@otok/plugin-fixture':
+        specifier: workspace:*
+        version: link:../otok-plugin-fixture
+      '@types/node':
+        specifier: ^24.12.2
+        version: 24.13.1
+      typescript:
+        specifier: ~6.0.2
+        version: 6.0.3
+      vitest:
+        specifier: ^4.1.2
+        version: 4.1.8(@opentelemetry/api@1.9.1)(@types/node@24.13.1)(jsdom@29.1.1)(vite@8.0.16(@types/node@24.13.1)(esbuild@0.28.1)(jiti@2.7.0)(tsx@4.23.5))
 
   packages/otok-plugin-fixture:
     devDependencies:
@@ -529,10 +1071,10 @@ importers:
         version: 6.0.3
       vite:
         specifier: ^8.0.10
-        version: 8.0.16(@types/node@24.13.1)(esbuild@0.28.1)(jiti@2.7.0)
+        version: 8.0.16(@types/node@24.13.1)(esbuild@0.28.1)(jiti@2.7.0)(tsx@4.23.5)
       vitest:
         specifier: ^4.1.2
-        version: 4.1.8(@opentelemetry/api@1.9.1)(@types/node@24.13.1)(jsdom@29.1.1)(vite@8.0.16(@types/node@24.13.1)(esbuild@0.28.1)(jiti@2.7.0))
+        version: 4.1.8(@opentelemetry/api@1.9.1)(@types/node@24.13.1)(jsdom@29.1.1)(vite@8.0.16(@types/node@24.13.1)(esbuild@0.28.1)(jiti@2.7.0)(tsx@4.23.5))
 
   packages/otok-plugin-hello:
     devDependencies:
@@ -553,7 +1095,37 @@ importers:
         version: 6.0.3
       vitest:
         specifier: ^4.1.2
-        version: 4.1.8(@opentelemetry/api@1.9.1)(@types/node@24.13.1)(jsdom@29.1.1)(vite@8.0.16(@types/node@24.13.1)(esbuild@0.28.1)(jiti@2.7.0))
+        version: 4.1.8(@opentelemetry/api@1.9.1)(@types/node@24.13.1)(jsdom@29.1.1)(vite@8.0.16(@types/node@24.13.1)(esbuild@0.28.1)(jiti@2.7.0)(tsx@4.23.5))
+
+  packages/otok-preset-crm:
+    dependencies:
+      '@otok/config':
+        specifier: workspace:*
+        version: link:../otok-config
+
+  packages/otok-preset-dashboard:
+    dependencies:
+      '@otok/config':
+        specifier: workspace:*
+        version: link:../otok-config
+
+  packages/otok-preset-kamod:
+    dependencies:
+      '@otok/config':
+        specifier: workspace:*
+        version: link:../otok-config
+
+  packages/otok-preset-minimal:
+    dependencies:
+      '@otok/config':
+        specifier: workspace:*
+        version: link:../otok-config
+
+  packages/otok-preset-saas:
+    dependencies:
+      '@otok/config':
+        specifier: workspace:*
+        version: link:../otok-config
 
   packages/otok-queue:
     devDependencies:
@@ -574,7 +1146,54 @@ importers:
         version: 6.0.3
       vitest:
         specifier: ^4.1.2
-        version: 4.1.8(@opentelemetry/api@1.9.1)(@types/node@24.13.1)(jsdom@29.1.1)(vite@8.0.16(@types/node@24.13.1)(esbuild@0.28.1)(jiti@2.7.0))
+        version: 4.1.8(@opentelemetry/api@1.9.1)(@types/node@24.13.1)(jsdom@29.1.1)(vite@8.0.16(@types/node@24.13.1)(esbuild@0.28.1)(jiti@2.7.0)(tsx@4.23.5))
+
+  packages/otok-realtime:
+    dependencies:
+      '@otok/config':
+        specifier: workspace:*
+        version: link:../otok-config
+      zod:
+        specifier: ^3.24.0
+        version: 3.25.76
+    devDependencies:
+      '@types/node':
+        specifier: ^24.12.2
+        version: 24.13.1
+      '@types/ws':
+        specifier: ^8.18.1
+        version: 8.18.1
+      hono:
+        specifier: ^4.12.25
+        version: 4.12.25
+      otok:
+        specifier: workspace:*
+        version: link:../otok
+      typescript:
+        specifier: ~6.0.2
+        version: 6.0.3
+      vitest:
+        specifier: ^4.1.2
+        version: 4.1.8(@opentelemetry/api@1.9.1)(@types/node@24.13.1)(jsdom@29.1.1)(vite@8.0.16(@types/node@24.13.1)(esbuild@0.28.1)(jiti@2.7.0)(tsx@4.23.5))
+      ws:
+        specifier: ^8.19.0
+        version: 8.21.0
+
+  packages/otok-registry:
+    dependencies:
+      zod:
+        specifier: ^3.24.0
+        version: 3.25.76
+    devDependencies:
+      '@types/node':
+        specifier: ^24.12.2
+        version: 24.13.1
+      typescript:
+        specifier: ~6.0.2
+        version: 6.0.3
+      vitest:
+        specifier: ^4.1.2
+        version: 4.1.8(@opentelemetry/api@1.9.1)(@types/node@24.13.1)(jsdom@29.1.1)(vite@8.0.16(@types/node@24.13.1)(esbuild@0.28.1)(jiti@2.7.0)(tsx@4.23.5))
 
   packages/otok-route-typegen:
     dependencies:
@@ -587,7 +1206,29 @@ importers:
         version: 24.13.1
       vitest:
         specifier: ^4.1.2
-        version: 4.1.8(@opentelemetry/api@1.9.1)(@types/node@24.13.1)(jsdom@29.1.1)(vite@8.0.16(@types/node@24.13.1)(esbuild@0.28.1)(jiti@2.7.0))
+        version: 4.1.8(@opentelemetry/api@1.9.1)(@types/node@24.13.1)(jsdom@29.1.1)(vite@8.0.16(@types/node@24.13.1)(esbuild@0.28.1)(jiti@2.7.0)(tsx@4.23.5))
+
+  packages/otok-search:
+    dependencies:
+      '@otok/config':
+        specifier: workspace:*
+        version: link:../otok-config
+    devDependencies:
+      '@types/node':
+        specifier: ^24.12.2
+        version: 24.13.1
+      hono:
+        specifier: ^4.12.25
+        version: 4.12.25
+      otok:
+        specifier: workspace:*
+        version: link:../otok
+      typescript:
+        specifier: ~6.0.2
+        version: 6.0.3
+      vitest:
+        specifier: ^4.1.2
+        version: 4.1.8(@opentelemetry/api@1.9.1)(@types/node@24.13.1)(jsdom@29.1.1)(vite@8.0.16(@types/node@24.13.1)(esbuild@0.28.1)(jiti@2.7.0)(tsx@4.23.5))
 
   packages/otok-security:
     devDependencies:
@@ -608,7 +1249,7 @@ importers:
         version: 6.0.3
       vitest:
         specifier: ^4.1.2
-        version: 4.1.8(@opentelemetry/api@1.9.1)(@types/node@24.13.1)(jsdom@29.1.1)(vite@8.0.16(@types/node@24.13.1)(esbuild@0.28.1)(jiti@2.7.0))
+        version: 4.1.8(@opentelemetry/api@1.9.1)(@types/node@24.13.1)(jsdom@29.1.1)(vite@8.0.16(@types/node@24.13.1)(esbuild@0.28.1)(jiti@2.7.0)(tsx@4.23.5))
 
   packages/otok-seo:
     devDependencies:
@@ -635,7 +1276,7 @@ importers:
         version: 6.0.3
       vitest:
         specifier: ^4.1.2
-        version: 4.1.8(@opentelemetry/api@1.9.1)(@types/node@24.13.1)(jsdom@29.1.1)(vite@8.0.16(@types/node@24.13.1)(esbuild@0.28.1)(jiti@2.7.0))
+        version: 4.1.8(@opentelemetry/api@1.9.1)(@types/node@24.13.1)(jsdom@29.1.1)(vite@8.0.16(@types/node@24.13.1)(esbuild@0.28.1)(jiti@2.7.0)(tsx@4.23.5))
 
   packages/otok-storage:
     devDependencies:
@@ -662,7 +1303,7 @@ importers:
         version: 6.0.3
       vitest:
         specifier: ^4.1.2
-        version: 4.1.8(@opentelemetry/api@1.9.1)(@types/node@24.13.1)(jsdom@29.1.1)(vite@8.0.16(@types/node@24.13.1)(esbuild@0.28.1)(jiti@2.7.0))
+        version: 4.1.8(@opentelemetry/api@1.9.1)(@types/node@24.13.1)(jsdom@29.1.1)(vite@8.0.16(@types/node@24.13.1)(esbuild@0.28.1)(jiti@2.7.0)(tsx@4.23.5))
 
   packages/otok-stripe:
     devDependencies:
@@ -686,7 +1327,7 @@ importers:
         version: 6.0.3
       vitest:
         specifier: ^4.1.2
-        version: 4.1.8(@opentelemetry/api@1.9.1)(@types/node@24.13.1)(jsdom@29.1.1)(vite@8.0.16(@types/node@24.13.1)(esbuild@0.28.1)(jiti@2.7.0))
+        version: 4.1.8(@opentelemetry/api@1.9.1)(@types/node@24.13.1)(jsdom@29.1.1)(vite@8.0.16(@types/node@24.13.1)(esbuild@0.28.1)(jiti@2.7.0)(tsx@4.23.5))
 
   packages/otok-test:
     dependencies:
@@ -717,7 +1358,7 @@ importers:
         version: 6.0.3
       vitest:
         specifier: ^4.1.2
-        version: 4.1.8(@opentelemetry/api@1.9.1)(@types/node@24.13.1)(jsdom@29.1.1)(vite@8.0.16(@types/node@24.13.1)(esbuild@0.28.1)(jiti@2.7.0))
+        version: 4.1.8(@opentelemetry/api@1.9.1)(@types/node@24.13.1)(jsdom@29.1.1)(vite@8.0.16(@types/node@24.13.1)(esbuild@0.28.1)(jiti@2.7.0)(tsx@4.23.5))
 
   packages/otok-validate:
     devDependencies:
@@ -738,7 +1379,7 @@ importers:
         version: 6.0.3
       vitest:
         specifier: ^4.1.2
-        version: 4.1.8(@opentelemetry/api@1.9.1)(@types/node@24.13.1)(jsdom@29.1.1)(vite@8.0.16(@types/node@24.13.1)(esbuild@0.28.1)(jiti@2.7.0))
+        version: 4.1.8(@opentelemetry/api@1.9.1)(@types/node@24.13.1)(jsdom@29.1.1)(vite@8.0.16(@types/node@24.13.1)(esbuild@0.28.1)(jiti@2.7.0)(tsx@4.23.5))
       zod:
         specifier: ^4.0.0
         version: 4.4.3
@@ -771,10 +1412,63 @@ importers:
         version: 1.4.2(typescript@6.0.3)
       vitest:
         specifier: ^4.1.2
-        version: 4.1.8(@opentelemetry/api@1.9.1)(@types/node@24.13.1)(jsdom@29.1.1)(vite@8.0.16(@types/node@24.13.1)(esbuild@0.28.1)(jiti@2.7.0))
+        version: 4.1.8(@opentelemetry/api@1.9.1)(@types/node@24.13.1)(jsdom@29.1.1)(vite@8.0.16(@types/node@24.13.1)(esbuild@0.28.1)(jiti@2.7.0)(tsx@4.23.5))
       zod:
         specifier: ^4.0.0
         version: 4.4.3
+
+  packages/otok-workflows:
+    dependencies:
+      '@otok/config':
+        specifier: workspace:*
+        version: link:../otok-config
+      zod:
+        specifier: ^3.24.0
+        version: 3.25.76
+    devDependencies:
+      '@types/better-sqlite3':
+        specifier: ^7.6.13
+        version: 7.6.13
+      '@types/node':
+        specifier: ^24.12.2
+        version: 24.13.1
+      better-sqlite3:
+        specifier: ^12.6.2
+        version: 12.11.1
+      hono:
+        specifier: ^4.12.25
+        version: 4.12.25
+      kysely:
+        specifier: ^0.29.3
+        version: 0.29.3
+      otok:
+        specifier: workspace:*
+        version: link:../otok
+      typescript:
+        specifier: ~6.0.2
+        version: 6.0.3
+      vitest:
+        specifier: ^4.1.2
+        version: 4.1.8(@opentelemetry/api@1.9.1)(@types/node@24.13.1)(jsdom@29.1.1)(vite@8.0.16(@types/node@24.13.1)(esbuild@0.28.1)(jiti@2.7.0)(tsx@4.23.5))
+
+  packages/preactpress-compat:
+    dependencies:
+      '@kamod-ch/otok-content':
+        specifier: workspace:*
+        version: link:../otok-content
+    devDependencies:
+      '@types/node':
+        specifier: ^24.12.2
+        version: 24.13.1
+      otok:
+        specifier: workspace:*
+        version: link:../otok
+      typescript:
+        specifier: ~6.0.2
+        version: 6.0.3
+      vitest:
+        specifier: ^4.1.2
+        version: 4.1.8(@opentelemetry/api@1.9.1)(@types/node@24.13.1)(jsdom@29.1.1)(vite@8.0.16(@types/node@24.13.1)(esbuild@0.28.1)(jiti@2.7.0)(tsx@4.23.5))
 
   packages/vite-plugin-otok:
     dependencies:
@@ -789,7 +1483,7 @@ importers:
         version: 0.28.1
       vite:
         specifier: ^8.0.10
-        version: 8.0.16(@types/node@24.13.1)(esbuild@0.28.1)(jiti@2.7.0)
+        version: 8.0.16(@types/node@24.13.1)(esbuild@0.28.1)(jiti@2.7.0)(tsx@4.23.5)
     devDependencies:
       '@types/node':
         specifier: ^24.12.2
@@ -802,7 +1496,7 @@ importers:
         version: 6.0.3
       vitest:
         specifier: ^4.1.2
-        version: 4.1.8(@opentelemetry/api@1.9.1)(@types/node@24.13.1)(jsdom@29.1.1)(vite@8.0.16(@types/node@24.13.1)(esbuild@0.28.1)(jiti@2.7.0))
+        version: 4.1.8(@opentelemetry/api@1.9.1)(@types/node@24.13.1)(jsdom@29.1.1)(vite@8.0.16(@types/node@24.13.1)(esbuild@0.28.1)(jiti@2.7.0)(tsx@4.23.5))
 
 packages:
 
@@ -999,6 +1693,12 @@ packages:
   '@bramus/specificity@2.4.2':
     resolution: {integrity: sha512-ctxtJ/eA+t+6q2++vj5j7FYX3nRu311q1wfYH3xjlLOsczhlhxAg2FWNUXhpGvAw3BWo1xBcvOV6/YLc2r5FJw==}
     hasBin: true
+
+  '@clack/core@0.4.2':
+    resolution: {integrity: sha512-NYQfcEy8MWIxrT5Fj8nIVchfRFA26yYKJcvBS7WlUIlw2OmQOY9DhGGXMovyI5J5PpxrCPGkgUi207EBrjpBvg==}
+
+  '@clack/prompts@0.10.1':
+    resolution: {integrity: sha512-Q0T02vx8ZM9XSv9/Yde0jTmmBQufZhPJfYAg2XrrrxWWaZgq1rr8nU8Hv710BQ1dhoP8rtY7YUdpGej2Qza/cw==}
 
   '@cloudflare/kv-asset-handler@0.5.0':
     resolution: {integrity: sha512-jxQYkj8dSIzc0cD6cMMNdOc1UVjqSqu8BZdor5s8cGjW2I8BjODt/kWPVdY+u9zj3ms75Q5qaZgnxUad83+eAg==}
@@ -1899,6 +2599,15 @@ packages:
   '@types/estree@1.0.9':
     resolution: {integrity: sha512-GhdPgy1el4/ImP05X05Uw4cw2/M93BCUmnEvWZNStlCzEKME4Fkk+YpoA5OiHNQmoS7Cafb8Xa3Pya8m1Qrzeg==}
 
+  '@types/linkify-it@5.0.0':
+    resolution: {integrity: sha512-sVDA58zAw4eWAffKOaQH5/5j3XeayukzDk+ewSsnv3p4yJEZHCCzMDiZM8e0OUrRvmpGZ85jf4yDHkHsgBNr9Q==}
+
+  '@types/markdown-it@14.1.2':
+    resolution: {integrity: sha512-promo4eFwuiW+TfGxhi+0x3czqTYJkG8qB17ZUJiVF10Xm7NLVRSLUsfRTU/6h1e24VvRnXCx+hG7li58lkzog==}
+
+  '@types/mdurl@2.0.0':
+    resolution: {integrity: sha512-RGdgjQUZba5p6QEFAVx2OGb8rQDL/cPRG7GiedRzMcJ1tYnUANBncjbSB1NRGwbvjcPeikRABz2nshyPk1bhWg==}
+
   '@types/node@24.13.1':
     resolution: {integrity: sha512-RSpUJGmvsJ1ZeBehQZFhIdpsz+bIpES0nIQXko4Ybq+N+kX6XvOq3Jo+iJ82FWLdblFq85AsMikd3m35jgezYg==}
 
@@ -1907,6 +2616,9 @@ packages:
 
   '@types/pg@8.20.0':
     resolution: {integrity: sha512-bEPFOaMAHTEP1EzpvHTbmwR8UsFyHSKsRisLIHVMXnpNefSbGA1bD6CVy+qKjGSqmZqNqBDV2azOBo8TgkcVow==}
+
+  '@types/ws@8.18.1':
+    resolution: {integrity: sha512-ThVF6DCVhA8kUGy+aazFQ4kXQ7E1Ty7A3ypFOe0IcJV8O/M511G99AW24irKrW56Wt44yG9+ij8FaqoBGkuBXg==}
 
   '@vitest/expect@4.1.8':
     resolution: {integrity: sha512-h3nDO677RDLEGlBxyQ5CW8RlMThSKSRLUePLOx09gNIWRL40edgA1GCZSZgf1W55MFAG6/Sw14KeaAnqv0NKdQ==}
@@ -1939,6 +2651,13 @@ packages:
 
   arctic@3.7.0:
     resolution: {integrity: sha512-ZMQ+f6VazDgUJOd+qNV+H7GohNSYal1mVjm5kEaZfE2Ifb7Ss70w+Q7xpJC87qZDkMZIXYf0pTIYZA0OPasSbw==}
+    deprecated: Package no longer supported. Contact Support at https://www.npmjs.com/support for more info.
+
+  argparse@1.0.10:
+    resolution: {integrity: sha512-o5Roy6tNG4SL/FOkCAN6RzjiakZS25RLYFrcMttJqbdd8BWrnA+fGz57iN5Pb06pvBGvl5gQ0B48dJlslXvoTg==}
+
+  argparse@2.0.1:
+    resolution: {integrity: sha512-8+9WqebbFzpX9OR+Wa6O29asIogeRMzcGtAINdpMHHyAg10f05aSFVBbcEqGf/PXw1EjAZ+q2/bEBg3DvurK3Q==}
 
   arkregex@0.0.8:
     resolution: {integrity: sha512-PJcx6G1kQTgLKPUbeYlYecDRaKq15AMSGVajlKFYWlPeJRQL+j3dKE6tyMs40HZ99djS1l9Vhl3ezAHy9JBIqQ==}
@@ -1968,6 +2687,10 @@ packages:
 
   better-sqlite3@11.10.0:
     resolution: {integrity: sha512-EwhOpyXiOEL/lKzHz9AW1msWFNzGc/z+LzeB3/jnFJpxu+th2yqvzsSWas1v9jgs9+xiXJcD5A8CJxAG2TaghQ==}
+
+  better-sqlite3@12.11.1:
+    resolution: {integrity: sha512-dq9AtApgg5PGFtBzPFSBl3HZQjHok5gaQCM6zh2Yk0aSmDCs1CbnVI8/HgASQkNKsWFpseIO9beg5xxpYhbIfA==}
+    engines: {node: 20.x || 22.x || 23.x || 24.x || 25.x || 26.x}
 
   bidi-js@1.0.3:
     resolution: {integrity: sha512-RKshQI1R3YQ+n9YJz2QQ147P66ELpa1FQEg20Dk8oW9t2KgLbpDLLp9aGZ7y8WHSshDknG0bknqGw5/tyCs5tw==}
@@ -2136,6 +2859,11 @@ packages:
     resolution: {integrity: sha512-WUj2qlxaQtO4g6Pq5c29GTcWGDyd8itL8zTlipgECz3JesAiiOKotd8JU6otB3PACgG6xkJUyVhboMS+bje/jA==}
     engines: {node: '>=6'}
 
+  esprima@4.0.1:
+    resolution: {integrity: sha512-eGuFFw7Upda+g4p+QHvnW0RyTX/SVeJBDM/gCtMARO0cLuT2HcEKnTPvhjV6aGeqrCB/sbNop0Kszm0jsaWU4A==}
+    engines: {node: '>=4'}
+    hasBin: true
+
   estree-walker@2.0.2:
     resolution: {integrity: sha512-Rfkk/Mp/DL7JVje3u18FxFujQlTNR2q6QfMSMB7AvCBx91NGj/ba3kCfza0f6dVDbw7YlRf/nDrn7pQrCCyQ/w==}
 
@@ -2149,6 +2877,10 @@ packages:
   expect-type@1.3.0:
     resolution: {integrity: sha512-knvyeauYhqjOYvQ66MznSMs83wmHrCycNEN6Ao+2AeYEfxUIkuiVxdEa1qlGEPK+We3n0THiDciYSsCcgW/DoA==}
     engines: {node: '>=12.0.0'}
+
+  extend-shallow@2.0.1:
+    resolution: {integrity: sha512-zCnTtlxNoAiDc3gqY2aYAWFx7XWWiasuF2K8Me5WbN8otHKTUKBwjPtNpRs/rbUZm7KxWAaNj7P1a/p52GbVug==}
+    engines: {node: '>=0.10.0'}
 
   fdir@6.5.0:
     resolution: {integrity: sha512-tIbYtZbucOs0BRGqPJkshJUYdL+SDH7dVM8gjy+ERp3WAUjLEFJE+02kanyHtwjWOnwrKYBiwAmM0p4kLJAnXg==}
@@ -2200,6 +2932,10 @@ packages:
   graceful-fs@4.2.11:
     resolution: {integrity: sha512-RbJ5/jmFcNNCcDV5o9eTnBLJ/HszWV0P73bc+Ff4nS/rJj+YaS6IGyiOL0VoBYX+l1Wrl3k63h/KrH+nhJ0XvQ==}
 
+  gray-matter@4.0.3:
+    resolution: {integrity: sha512-5v6yZd4JK3eMI3FqqCouswVqwugaA9r4dNZB1wwcmrD02QkV5H0y7XBQW8QwQqEaZY1pM9aqORSORhJRdNK44Q==}
+    engines: {node: '>=6.0'}
+
   has-symbols@1.1.0:
     resolution: {integrity: sha512-1cDNdwJ2Jaohmb3sg4OmKaMBwuC48sYni5HUw2DvsC8LjGTLK9h+eb1X6RyuOHe4hT0ULCW68iomhjUoKUqlPQ==}
     engines: {node: '>= 0.4'}
@@ -2229,6 +2965,10 @@ packages:
   ini@1.3.8:
     resolution: {integrity: sha512-JV/yugV2uzW5iMRSiZAyDtQd+nxtUnjeLt0acNdw98kKLrvuRVyB80tsREOE7yvGVgalhZ6RNXCmEHkUKBKxew==}
 
+  is-extendable@0.1.1:
+    resolution: {integrity: sha512-5BMULNob1vgFX6EjQw5izWDxrecWK9AM72rugNr0TFldMOi0fj6Jk+zeKIt0xGj4cEfQIJth4w3OKWOJ4f+AFw==}
+    engines: {node: '>=0.10.0'}
+
   is-potential-custom-element-name@1.0.1:
     resolution: {integrity: sha512-bCYeRA2rVibKZd+s2625gGnGF/t7DSqDs4dP7CrLA1m7jKWz6pps0LpYLJN8Q64HtmPKJ1hrN3nzPNKFEKOUiQ==}
 
@@ -2238,6 +2978,10 @@ packages:
 
   js-tokens@4.0.0:
     resolution: {integrity: sha512-RdJUflcE3cUzKiMqQgsCu06FPu9UdIJO0beYbPhHN4k6apgJtifcoCtT9bcxOpYBtpD2kCM6Sbzg4CausW/PKQ==}
+
+  js-yaml@3.15.1:
+    resolution: {integrity: sha512-S99WuO3HlhO3XN41EtYUNl9zzXjoJx7QvmipxsJVxtCBT0YHEFy+iOJhjSvrmV12nYhWpZaM8lPHkJm0yUMbag==}
+    hasBin: true
 
   jsdom@29.1.1:
     resolution: {integrity: sha512-ECi4Fi2f7BdJtUKTflYRTiaMxIB0O6zfR1fX0GXpUrf6flp8QIYn1UT20YQqdSOfk2dfkCwS8LAFoJDEppNK5Q==}
@@ -2257,6 +3001,10 @@ packages:
     resolution: {integrity: sha512-XmOWe7eyHYH14cLdVPoyg+GOH3rYX++KpzrylJwSW98t3Nk+U8XOl8FWKOgwtzdb8lXGf6zYwDUzeHMWfxasyg==}
     engines: {node: '>=6'}
     hasBin: true
+
+  kind-of@6.0.3:
+    resolution: {integrity: sha512-dcS1ul+9tmeD95T+x28/ehLgd9mENa3LsvDTtzm3vyBEO7RPptvAD+t44WVXaUjTBRcrpFeFlC8WCruUR456hw==}
+    engines: {node: '>=0.10.0'}
 
   kleur@4.1.5:
     resolution: {integrity: sha512-o+NO+8WrRiQEE4/7nwRJhN1HWpVmJm511pBHUxPLtp0BUISzlBplORYSmTclCnJvQq2tKu/sgl3xVpkc7ZWuQQ==}
@@ -2339,6 +3087,9 @@ packages:
     resolution: {integrity: sha512-NXYBzinNrblfraPGyrbPoD19C1h9lfI/1mzgWYvXUTe414Gz/X1FD2XBZSZM7rRTrMA8JL3OtAaGifrIKhQ5yQ==}
     engines: {node: '>= 12.0.0'}
 
+  linkify-it@5.0.2:
+    resolution: {integrity: sha512-ONTm2jCMAVZjgQa/Fy1kScXsuOoF5NPTsoFBdE1KVIZ2vAh/r9+Bqo+0jINCBYnavTPQZz38QzFTme79ENoN3Q==}
+
   lru-cache@11.5.1:
     resolution: {integrity: sha512-RPimw/7aMdv2oqRrxKwvZXcPfwBrn/JZ2xYcY9Hus/6LaS3VOAKVWKWgNLCFSiOm1ESXinjsDlidVU7JlnCN2A==}
     engines: {node: 20 || >=22}
@@ -2349,12 +3100,19 @@ packages:
   magic-string@0.30.21:
     resolution: {integrity: sha512-vd2F4YUyEXKGcLHoq+TEyCjxueSeHnFxyyjNp80yg0XV4vUhnDer/lvvlqM/arB5bXQN5K2/3oinyCRyx8T2CQ==}
 
+  markdown-it@14.3.0:
+    resolution: {integrity: sha512-RCEsPjR+sr0x+AuYp601tKTkgFG4YEPLCzHST3cQ/fhlJkqAkz1L2/Qbp1j9qw5SBwQHFBoW8+hoN5xssOF0Tw==}
+    hasBin: true
+
   math-intrinsics@1.1.0:
     resolution: {integrity: sha512-/IXtbwEk5HTPyEwyKX6hGkYXxM9nbj64B+ilVJnC/R6B0pH5G4V3b0pVbL7DBj4tkhBAppbQUlf6F6Xl9LHu1g==}
     engines: {node: '>= 0.4'}
 
   mdn-data@2.27.1:
     resolution: {integrity: sha512-9Yubnt3e8A0OKwxYSXyhLymGW4sCufcLG6VdiDdUGVkPhpqLxlvP5vl1983gQjJl3tqbrM731mjaZaP68AgosQ==}
+
+  mdurl@2.1.0:
+    resolution: {integrity: sha512-1+HBaOx0zi/dQWht8rNv9MYf9qqpqL/kxI0hXImU6Y547zM6Sni8BQibt7ifgMcYtQg41ao3Ivd6cnSM86inpg==}
 
   mimic-response@3.1.0:
     resolution: {integrity: sha512-z0yWI+4FDrrweS8Zmt4Ej5HdJmky15+L2e6Wgn3+iK5fWzb6T3fhNFq2+MeTRb064c6Wr4N/wv0DzQTjNzHNGQ==}
@@ -2516,6 +3274,10 @@ packages:
   pump@3.0.4:
     resolution: {integrity: sha512-VS7sjc6KR7e1ukRFhQSY5LM2uBWAUPiOPa/A3mkKmiMwSmRFUITt0xuj+/lesgnCv+dPIEYlkzrcyXgquIHMcA==}
 
+  punycode.js@2.3.1:
+    resolution: {integrity: sha512-uxFIHU0YlHYhDQtV4R9J6a52SLx28BCjT+4ieh7IGbgwVJWO+km431c4yRlREUAsAmt/uMjQUyQHNEPf0M39CA==}
+    engines: {node: '>=6'}
+
   punycode@2.3.1:
     resolution: {integrity: sha512-vYt7UD1U9Wg6138shLtLOvdAu+8DsC/ilFtEVHcH+wydcSpNE20AfSOduf6MkRFahL5FY7X1oU7nKVZFtfq8Fg==}
     engines: {node: '>=6'}
@@ -2547,6 +3309,10 @@ packages:
   saxes@6.0.0:
     resolution: {integrity: sha512-xAg7SOnEhrm5zI3puOOKyy1OMcMlIJZYNJY7xLBwSze0UjhPLnWfj2GF2EpT0jmzaJKIWKHLsaSSajf35bcYnA==}
     engines: {node: '>=v12.22.7'}
+
+  section-matter@1.0.0:
+    resolution: {integrity: sha512-vfD3pmTzGpufjScBh50YHKzEu2lxBWhVEHsNGoEXmCmn2hKGfeNLYMzCJpe8cD7gqX7TJluOVpBkAequ6dgMmA==}
+    engines: {node: '>=4'}
 
   semver@6.3.1:
     resolution: {integrity: sha512-BR7VvDCVHO+q2xBEWskxS6DJE1qRnb7DxzUrogb71CWoSficBxYsiAGd+Kl0mmq/MprG9yArRkyrQxTO6XjMzA==}
@@ -2589,6 +3355,9 @@ packages:
   simple-get@4.0.1:
     resolution: {integrity: sha512-brv7p5WgH0jmQJr1ZDDfKDOSeWWg+OVypG99A/5vYGPqJ6pxiaHLy8nxtFjBA7oMa01ebA9gfh1uMCFqOuXxvA==}
 
+  sisteransi@1.0.5:
+    resolution: {integrity: sha512-bLGGlR1QxBcynn2d5YmDX4MGjlZvy2MRBDRNHLJ8VI6l6+9FUiyTFNJ0IveOSP0bcXgVDPRcfGqA0pjaqUpfVg==}
+
   source-map-js@1.2.1:
     resolution: {integrity: sha512-UXWMKhLOwVKb728IUtQPXxfYU+usdybtUrK/8uGE8CQMvrhOpwvzDBwj0QhSL7MQc7vIsISBG8VQ8+IDQxpfQA==}
     engines: {node: '>=0.10.0'}
@@ -2600,6 +3369,9 @@ packages:
   split2@4.2.0:
     resolution: {integrity: sha512-UcjcJOWknrNkF6PLX83qcHM6KHgVKNkV62Y8a5uYDVv9ydGQVwAHMKqHdJje1VTWpljG0WYpCDhrCdAOYH4TWg==}
     engines: {node: '>= 10.x'}
+
+  sprintf-js@1.0.3:
+    resolution: {integrity: sha512-D9cPgkvLlV3t3IzL0D0YLvGA9Ahk4PcvVwUbN0dSGr1aP0Nrt4AEnTUbuGvquEC0mA64Gqt1fzirlRs5ibXx8g==}
 
   stack-trace@1.0.0:
     resolution: {integrity: sha512-H6D7134xi6qONvh7ZHKgviXf+rd3vhGBSvebPZCaUkd8zvQ+7PtDw6CljPTe4cXWNf2IKZGNqw6VJXSb9IgBpA==}
@@ -2613,6 +3385,10 @@ packages:
 
   string_decoder@1.3.0:
     resolution: {integrity: sha512-hkRX8U1WjJFd8LsDJ2yQ/wWWxaopEsABU1XfkM8A+j0+85JAGppt16cr1Whg6KIbb4okU6Mql6BOj+uup/wKeA==}
+
+  strip-bom-string@1.0.0:
+    resolution: {integrity: sha512-uCC2VHvQRYu+lMh4My/sFNmF2klFymLX1wHJeXnbEJERpV/ZsVuonzerjfrGpIGF7LBVa1O7i9kjiWvJiFck8g==}
+    engines: {node: '>=0.10.0'}
 
   strip-json-comments@2.0.1:
     resolution: {integrity: sha512-4gB8na07fecVVkOI6Rs4e7T6NOTki5EmL7TUduTs6bu3EdnSycntVJ4re8kgZA+wx9IueI2Y11bfbgwtzuE0KQ==}
@@ -2694,6 +3470,11 @@ packages:
   tslib@2.8.1:
     resolution: {integrity: sha512-oJFu94HQb+KVduSUQL7wnpmqnfmLsOA/nAh6b6EH0wCEoK0/mPeXU6c3wKDV83MkOuHPRHtSXKKU99IBazS/2w==}
 
+  tsx@4.23.5:
+    resolution: {integrity: sha512-rw55FUaqOoI7RvlQwLbhO4nSDApnQ4/CykPuiQ/EPvtrX3WA9Ig55jIt9VvbBJbzJuj12ueRu4PMZ2SxPVbihg==}
+    engines: {node: '>=18.0.0'}
+    hasBin: true
+
   tunnel-agent@0.6.0:
     resolution: {integrity: sha512-McnNiV1l8RYeY8tBgEpuodCC1mLUdbSN+CYBL7kJsJNInOP8UjDDEwdk6Mw60vdLLrr5NHKZhMAOSrR2NZuQ+w==}
 
@@ -2701,6 +3482,9 @@ packages:
     resolution: {integrity: sha512-y2TvuxSZPDyQakkFRPZHKFm+KKVqIisdg9/CZwm9ftvKXLP8NRWj38/ODjNbr43SsoXqNuAisEf1GdCxqWcdBw==}
     engines: {node: '>=14.17'}
     hasBin: true
+
+  uc.micro@2.1.0:
+    resolution: {integrity: sha512-ARDJmphmdvUk6Glw7y9DQ2bFkKBHwQHLi2lsaH6PPmz/Ka9sFOBsBluozhDltWmnv9u/cF6Rt87znRTPV+yp/A==}
 
   undici-types@7.18.2:
     resolution: {integrity: sha512-AsuCzffGHJybSaRrmr5eHr81mwJU3kjw6M+uprWvCXiNeN9SOGwQ3Jn8jb8m3Z6izVgknn1R0FTCEAP2QrLY/w==}
@@ -2891,6 +3675,9 @@ packages:
 
   zimmerframe@1.1.4:
     resolution: {integrity: sha512-B58NGBEoc8Y9MWWCQGl/gq9xBCe4IiKM0a2x7GZdQKOW5Exr8S1W24J6OgM1njK8xCRGvAJIL/MxXHf6SkmQKQ==}
+
+  zod@3.25.76:
+    resolution: {integrity: sha512-gzUt/qt81nXsFGKIFcC3YnfEAx5NkunCfnDlvuBSSFS02bcXu4Lmea0AFIUwbLWxWPx3d9p8S5QoaujKcNQxcQ==}
 
   zod@4.4.3:
     resolution: {integrity: sha512-ytENFjIJFl2UwYglde2jchW2Hwm4GJFLDiSXWdTrJQBIN9Fcyp7n4DhxJEiWNAJMV1/BqWfW/kkg71UDcHJyTQ==}
@@ -3229,6 +4016,17 @@ snapshots:
   '@bramus/specificity@2.4.2':
     dependencies:
       css-tree: 3.2.1
+
+  '@clack/core@0.4.2':
+    dependencies:
+      picocolors: 1.1.1
+      sisteransi: 1.0.5
+
+  '@clack/prompts@0.10.1':
+    dependencies:
+      '@clack/core': 0.4.2
+      picocolors: 1.1.1
+      sisteransi: 1.0.5
 
   '@cloudflare/kv-asset-handler@0.5.0':
     optional: true
@@ -3694,19 +4492,19 @@ snapshots:
   '@poppinss/exception@1.2.3':
     optional: true
 
-  '@preact/preset-vite@2.10.5(@babel/core@7.29.7)(preact@10.29.2)(vite@8.0.16(@types/node@24.13.1)(esbuild@0.28.1)(jiti@2.7.0))':
+  '@preact/preset-vite@2.10.5(@babel/core@7.29.7)(preact@10.29.2)(vite@8.0.16(@types/node@24.13.1)(esbuild@0.28.1)(jiti@2.7.0)(tsx@4.23.5))':
     dependencies:
       '@babel/core': 7.29.7
       '@babel/plugin-transform-react-jsx': 7.29.7(@babel/core@7.29.7)
       '@babel/plugin-transform-react-jsx-development': 7.29.7(@babel/core@7.29.7)
-      '@prefresh/vite': 2.4.12(preact@10.29.2)(vite@8.0.16(@types/node@24.13.1)(esbuild@0.28.1)(jiti@2.7.0))
+      '@prefresh/vite': 2.4.12(preact@10.29.2)(vite@8.0.16(@types/node@24.13.1)(esbuild@0.28.1)(jiti@2.7.0)(tsx@4.23.5))
       '@rollup/pluginutils': 5.4.0
       babel-plugin-transform-hook-names: 1.0.2(@babel/core@7.29.7)
       debug: 4.4.3
       magic-string: 0.30.21
       picocolors: 1.1.1
-      vite: 8.0.16(@types/node@24.13.1)(esbuild@0.28.1)(jiti@2.7.0)
-      vite-prerender-plugin: 0.5.13(vite@8.0.16(@types/node@24.13.1)(esbuild@0.28.1)(jiti@2.7.0))
+      vite: 8.0.16(@types/node@24.13.1)(esbuild@0.28.1)(jiti@2.7.0)(tsx@4.23.5)
+      vite-prerender-plugin: 0.5.13(vite@8.0.16(@types/node@24.13.1)(esbuild@0.28.1)(jiti@2.7.0)(tsx@4.23.5))
       zimmerframe: 1.1.4
     transitivePeerDependencies:
       - preact
@@ -3728,7 +4526,7 @@ snapshots:
 
   '@prefresh/utils@1.2.1': {}
 
-  '@prefresh/vite@2.4.12(preact@10.29.2)(vite@8.0.16(@types/node@24.13.1)(esbuild@0.28.1)(jiti@2.7.0))':
+  '@prefresh/vite@2.4.12(preact@10.29.2)(vite@8.0.16(@types/node@24.13.1)(esbuild@0.28.1)(jiti@2.7.0)(tsx@4.23.5))':
     dependencies:
       '@babel/core': 7.29.7
       '@prefresh/babel-plugin': 0.5.3
@@ -3736,7 +4534,7 @@ snapshots:
       '@prefresh/utils': 1.2.1
       '@rollup/pluginutils': 4.2.1
       preact: 10.29.2
-      vite: 8.0.16(@types/node@24.13.1)(esbuild@0.28.1)(jiti@2.7.0)
+      vite: 8.0.16(@types/node@24.13.1)(esbuild@0.28.1)(jiti@2.7.0)(tsx@4.23.5)
     transitivePeerDependencies:
       - supports-color
 
@@ -3904,12 +4702,12 @@ snapshots:
       '@tailwindcss/oxide-win32-arm64-msvc': 4.3.0
       '@tailwindcss/oxide-win32-x64-msvc': 4.3.0
 
-  '@tailwindcss/vite@4.3.0(vite@8.0.16(@types/node@24.13.1)(esbuild@0.28.1)(jiti@2.7.0))':
+  '@tailwindcss/vite@4.3.0(vite@8.0.16(@types/node@24.13.1)(esbuild@0.28.1)(jiti@2.7.0)(tsx@4.23.5))':
     dependencies:
       '@tailwindcss/node': 4.3.0
       '@tailwindcss/oxide': 4.3.0
       tailwindcss: 4.3.0
-      vite: 8.0.16(@types/node@24.13.1)(esbuild@0.28.1)(jiti@2.7.0)
+      vite: 8.0.16(@types/node@24.13.1)(esbuild@0.28.1)(jiti@2.7.0)(tsx@4.23.5)
 
   '@tybys/wasm-util@0.10.2':
     dependencies:
@@ -3929,6 +4727,15 @@ snapshots:
 
   '@types/estree@1.0.9': {}
 
+  '@types/linkify-it@5.0.0': {}
+
+  '@types/markdown-it@14.1.2':
+    dependencies:
+      '@types/linkify-it': 5.0.0
+      '@types/mdurl': 2.0.0
+
+  '@types/mdurl@2.0.0': {}
+
   '@types/node@24.13.1':
     dependencies:
       undici-types: 7.18.2
@@ -3943,6 +4750,10 @@ snapshots:
       pg-protocol: 1.15.0
       pg-types: 2.2.0
 
+  '@types/ws@8.18.1':
+    dependencies:
+      '@types/node': 24.13.1
+
   '@vitest/expect@4.1.8':
     dependencies:
       '@standard-schema/spec': 1.1.0
@@ -3952,13 +4763,13 @@ snapshots:
       chai: 6.2.2
       tinyrainbow: 3.1.0
 
-  '@vitest/mocker@4.1.8(vite@8.0.16(@types/node@24.13.1)(esbuild@0.28.1)(jiti@2.7.0))':
+  '@vitest/mocker@4.1.8(vite@8.0.16(@types/node@24.13.1)(esbuild@0.28.1)(jiti@2.7.0)(tsx@4.23.5))':
     dependencies:
       '@vitest/spy': 4.1.8
       estree-walker: 3.0.3
       magic-string: 0.30.21
     optionalDependencies:
-      vite: 8.0.16(@types/node@24.13.1)(esbuild@0.28.1)(jiti@2.7.0)
+      vite: 8.0.16(@types/node@24.13.1)(esbuild@0.28.1)(jiti@2.7.0)(tsx@4.23.5)
 
   '@vitest/pretty-format@4.1.8':
     dependencies:
@@ -3990,6 +4801,12 @@ snapshots:
       '@oslojs/encoding': 1.1.0
       '@oslojs/jwt': 0.2.0
 
+  argparse@1.0.10:
+    dependencies:
+      sprintf-js: 1.0.3
+
+  argparse@2.0.1: {}
+
   arkregex@0.0.8:
     dependencies:
       '@ark/util': 0.56.2
@@ -4013,6 +4830,11 @@ snapshots:
   baseline-browser-mapping@2.10.34: {}
 
   better-sqlite3@11.10.0:
+    dependencies:
+      bindings: 1.5.0
+      prebuild-install: 7.1.3
+
+  better-sqlite3@12.11.1:
     dependencies:
       bindings: 1.5.0
       prebuild-install: 7.1.3
@@ -4203,6 +5025,8 @@ snapshots:
 
   escalade@3.2.0: {}
 
+  esprima@4.0.1: {}
+
   estree-walker@2.0.2: {}
 
   estree-walker@3.0.3:
@@ -4212,6 +5036,10 @@ snapshots:
   expand-template@2.0.3: {}
 
   expect-type@1.3.0: {}
+
+  extend-shallow@2.0.1:
+    dependencies:
+      is-extendable: 0.1.1
 
   fdir@6.5.0(picomatch@4.0.4):
     optionalDependencies:
@@ -4255,6 +5083,13 @@ snapshots:
 
   graceful-fs@4.2.11: {}
 
+  gray-matter@4.0.3:
+    dependencies:
+      js-yaml: 3.15.1
+      kind-of: 6.0.3
+      section-matter: 1.0.0
+      strip-bom-string: 1.0.0
+
   has-symbols@1.1.0: {}
 
   hasown@2.0.4:
@@ -4277,11 +5112,18 @@ snapshots:
 
   ini@1.3.8: {}
 
+  is-extendable@0.1.1: {}
+
   is-potential-custom-element-name@1.0.1: {}
 
   jiti@2.7.0: {}
 
   js-tokens@4.0.0: {}
+
+  js-yaml@3.15.1:
+    dependencies:
+      argparse: 1.0.10
+      esprima: 4.0.1
 
   jsdom@29.1.1:
     dependencies:
@@ -4312,6 +5154,8 @@ snapshots:
   jsesc@3.1.0: {}
 
   json5@2.2.3: {}
+
+  kind-of@6.0.3: {}
 
   kleur@4.1.5:
     optional: true
@@ -4369,6 +5213,10 @@ snapshots:
       lightningcss-win32-arm64-msvc: 1.32.0
       lightningcss-win32-x64-msvc: 1.32.0
 
+  linkify-it@5.0.2:
+    dependencies:
+      uc.micro: 2.1.0
+
   lru-cache@11.5.1: {}
 
   lru-cache@5.1.1:
@@ -4379,9 +5227,20 @@ snapshots:
     dependencies:
       '@jridgewell/sourcemap-codec': 1.5.5
 
+  markdown-it@14.3.0:
+    dependencies:
+      argparse: 2.0.1
+      entities: 4.5.0
+      linkify-it: 5.0.2
+      mdurl: 2.1.0
+      punycode.js: 2.3.1
+      uc.micro: 2.1.0
+
   math-intrinsics@1.1.0: {}
 
   mdn-data@2.27.1: {}
+
+  mdurl@2.1.0: {}
 
   mimic-response@3.1.0: {}
 
@@ -4537,6 +5396,8 @@ snapshots:
       end-of-stream: 1.4.5
       once: 1.4.0
 
+  punycode.js@2.3.1: {}
+
   punycode@2.3.1: {}
 
   qs@6.15.3:
@@ -4585,6 +5446,11 @@ snapshots:
   saxes@6.0.0:
     dependencies:
       xmlchars: 2.2.0
+
+  section-matter@1.0.0:
+    dependencies:
+      extend-shallow: 2.0.1
+      kind-of: 6.0.3
 
   semver@6.3.1: {}
 
@@ -4665,11 +5531,15 @@ snapshots:
       once: 1.4.0
       simple-concat: 1.0.1
 
+  sisteransi@1.0.5: {}
+
   source-map-js@1.2.1: {}
 
   source-map@0.7.6: {}
 
   split2@4.2.0: {}
+
+  sprintf-js@1.0.3: {}
 
   stack-trace@1.0.0: {}
 
@@ -4680,6 +5550,8 @@ snapshots:
   string_decoder@1.3.0:
     dependencies:
       safe-buffer: 5.2.1
+
+  strip-bom-string@1.0.0: {}
 
   strip-json-comments@2.0.1: {}
 
@@ -4748,11 +5620,19 @@ snapshots:
 
   tslib@2.8.1: {}
 
+  tsx@4.23.5:
+    dependencies:
+      esbuild: 0.28.1
+    optionalDependencies:
+      fsevents: 2.3.3
+
   tunnel-agent@0.6.0:
     dependencies:
       safe-buffer: 5.2.1
 
   typescript@6.0.3: {}
+
+  uc.micro@2.1.0: {}
 
   undici-types@7.18.2: {}
 
@@ -4775,7 +5655,7 @@ snapshots:
     optionalDependencies:
       typescript: 6.0.3
 
-  vite-prerender-plugin@0.5.13(vite@8.0.16(@types/node@24.13.1)(esbuild@0.28.1)(jiti@2.7.0)):
+  vite-prerender-plugin@0.5.13(vite@8.0.16(@types/node@24.13.1)(esbuild@0.28.1)(jiti@2.7.0)(tsx@4.23.5)):
     dependencies:
       kolorist: 1.8.0
       magic-string: 0.30.21
@@ -4783,9 +5663,9 @@ snapshots:
       simple-code-frame: 1.3.0
       source-map: 0.7.6
       stack-trace: 1.0.0
-      vite: 8.0.16(@types/node@24.13.1)(esbuild@0.28.1)(jiti@2.7.0)
+      vite: 8.0.16(@types/node@24.13.1)(esbuild@0.28.1)(jiti@2.7.0)(tsx@4.23.5)
 
-  vite@8.0.16(@types/node@24.13.1)(esbuild@0.28.1)(jiti@2.7.0):
+  vite@8.0.16(@types/node@24.13.1)(esbuild@0.28.1)(jiti@2.7.0)(tsx@4.23.5):
     dependencies:
       lightningcss: 1.32.0
       picomatch: 4.0.4
@@ -4797,11 +5677,12 @@ snapshots:
       esbuild: 0.28.1
       fsevents: 2.3.3
       jiti: 2.7.0
+      tsx: 4.23.5
 
-  vitest@4.1.8(@opentelemetry/api@1.9.1)(@types/node@24.13.1)(jsdom@29.1.1)(vite@8.0.16(@types/node@24.13.1)(esbuild@0.28.1)(jiti@2.7.0)):
+  vitest@4.1.8(@opentelemetry/api@1.9.1)(@types/node@24.13.1)(jsdom@29.1.1)(vite@8.0.16(@types/node@24.13.1)(esbuild@0.28.1)(jiti@2.7.0)(tsx@4.23.5)):
     dependencies:
       '@vitest/expect': 4.1.8
-      '@vitest/mocker': 4.1.8(vite@8.0.16(@types/node@24.13.1)(esbuild@0.28.1)(jiti@2.7.0))
+      '@vitest/mocker': 4.1.8(vite@8.0.16(@types/node@24.13.1)(esbuild@0.28.1)(jiti@2.7.0)(tsx@4.23.5))
       '@vitest/pretty-format': 4.1.8
       '@vitest/runner': 4.1.8
       '@vitest/snapshot': 4.1.8
@@ -4818,7 +5699,7 @@ snapshots:
       tinyexec: 1.2.4
       tinyglobby: 0.2.17
       tinyrainbow: 3.1.0
-      vite: 8.0.16(@types/node@24.13.1)(esbuild@0.28.1)(jiti@2.7.0)
+      vite: 8.0.16(@types/node@24.13.1)(esbuild@0.28.1)(jiti@2.7.0)(tsx@4.23.5)
       why-is-node-running: 2.3.0
     optionalDependencies:
       '@opentelemetry/api': 1.9.1
@@ -4876,8 +5757,7 @@ snapshots:
 
   wrappy@1.0.2: {}
 
-  ws@8.21.0:
-    optional: true
+  ws@8.21.0: {}
 
   xml-name-validator@5.0.0: {}
 
@@ -4903,5 +5783,7 @@ snapshots:
     optional: true
 
   zimmerframe@1.1.4: {}
+
+  zod@3.25.76: {}
 
   zod@4.4.3: {}

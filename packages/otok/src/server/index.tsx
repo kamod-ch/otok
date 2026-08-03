@@ -38,6 +38,15 @@ import {
   type DeferredRenderContext,
 } from "../rendering/index.js";
 import { OTOK_PAGE_ATTR } from "../shared/navigation.js";
+import {
+  buildDataResponse,
+  dataResponseFromActionResult,
+  dataResponseFromError,
+  dataResponseFromRedirect,
+  wantsDataResponse,
+} from "./data-response.js";
+import { resolveIdempotencyKey, withIdempotency } from "./idempotency.js";
+import { serializeLoaderData } from "../shared/mutations.js";
 import { resolveDarkModeFromCookie } from "../shared/theme.js";
 import {
   detectLocaleFromHtml,
@@ -254,28 +263,54 @@ async function handleAction(
   }
 
   const formData = await resolveActionFormData(c.req.raw);
+  const idempotencyKey = resolveIdempotencyKey(c.req.raw, formData);
+  const dataRequest = wantsDataResponse(c.req.raw);
   const context: OtokActionContext = {
     hono: c,
     request: c.req.raw,
     params,
     route: route.path,
+    signal: c.req.raw.signal,
     method: resolveActionMethod(c.req.method, formData),
     formData,
+    idempotencyKey,
   };
 
-  try {
-    const result = await route.module.action(context);
-    if (result instanceof Response) return result;
-    return await renderRoute(c, route, params, options, statusForActionResult(result), undefined, result);
-  } catch (error) {
-    if (isOtokHttpError(error) && error.headers.has("location")) {
-      return new Response(null, { status: error.status, headers: error.headers });
+  return withIdempotency(idempotencyKey, async () => {
+    try {
+      const result = await route.module.action!(context);
+      if (result instanceof Response) return result;
+
+      if (dataRequest) {
+        const loaderData = await loadRouteData(c, route, params, context);
+        return dataResponseFromActionResult(result, loaderData);
+      }
+
+      return await renderRoute(c, route, params, options, statusForActionResult(result), undefined, result);
+    } catch (error) {
+      if (isOtokHttpError(error) && error.headers.has("location")) {
+        const location = error.headers.get("location")!;
+        if (dataRequest) return dataResponseFromRedirect(location, error.status);
+        return new Response(null, { status: error.status, headers: error.headers });
+      }
+      if (isOtokHttpError(error) && error.failure && error.status !== 404) {
+        if (dataRequest) return dataResponseFromError(error.failure);
+        return await renderRoute(c, route, params, options, error.status, undefined, error.failure);
+      }
+      throw error;
     }
-    if (isOtokHttpError(error) && error.failure && error.status !== 404) {
-      return await renderRoute(c, route, params, options, error.status, undefined, error.failure);
-    }
-    throw error;
-  }
+  });
+}
+
+async function loadRouteData(
+  c: Context,
+  route: OtokRoute,
+  params: Record<string, string>,
+  context: OtokContext,
+): Promise<LoaderResult> {
+  if (!route.module.loader) return {};
+  const data = await route.module.loader(context);
+  return data instanceof Response ? {} : data;
 }
 
 function statusForActionResult(result: ActionResult): number {
@@ -395,6 +430,7 @@ async function renderRoute(
     request: c.req.raw,
     params,
     route: route.path,
+    signal: c.req.raw.signal,
   };
   let data: LoaderResult;
   let rawLoaderData: LoaderResult | undefined;
@@ -423,6 +459,18 @@ async function renderRoute(
 
   const slotsPresent = rawLoaderData !== undefined && hasDeferredSlots(rawLoaderData);
   const deferredEnabled = (plan.deferred || slotsPresent) && plan.mode === "ssr";
+
+  if (wantsDataResponse(c.req.raw)) {
+    let resolvedData = data;
+    if (deferredEnabled && slotsPresent && rawLoaderData !== undefined) {
+      resolvedData = (await resolveDeferredData(rawLoaderData, c.req.raw.signal)) as LoaderResult;
+    }
+    if (actionData !== undefined) {
+      return dataResponseFromActionResult(actionData, resolvedData);
+    }
+    return buildDataResponse({ loaderData: serializeLoaderData(resolvedData) });
+  }
+
   const progressiveDeferred = deferredEnabled && plan.streaming && slotsPresent;
 
   // head/chrome only see immediate placeholders — never await deferred slots.

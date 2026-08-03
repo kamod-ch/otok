@@ -1,7 +1,7 @@
 {
   "name": "create-otok",
-  "version": "0.4.0",
-  "description": "Scaffold a new Otok app.",
+  "version": "0.5.0",
+  "description": "Scaffold a new Otok app with presets, layers, and reproducible versions.",
   "license": "MIT",
   "homepage": "https://github.com/kamod-ch/otok/tree/main/packages/create-otok#readme",
   "bugs": {
@@ -16,20 +16,43 @@
   "bin": {
     "create-otok": "./bin/create-otok.mjs"
   },
+  "exports": {
+    ".": {
+      "types": "./dist/cli.d.ts",
+      "default": "./dist/cli.js"
+    },
+    "./presets": {
+      "types": "./dist/registry.d.ts",
+      "default": "./dist/registry.js"
+    }
+  },
   "files": [
     "bin",
+    "dist",
+    "layers",
+    "versions.json",
     "template",
     "template-minimal",
     "otok-starter-minimal",
     "otok-starter-kamod",
     "otok-starter-dashboard",
     "otok-starter-saas",
-    "README.md"
+    "otok-starter-crm",
+    "otok-starter-content",
+    "otok-starter-api",
+    "README.md",
+    "docs"
   ],
   "scripts": {
-    "build": "npm pack --dry-run >/dev/null",
-    "typecheck": "node --check ./bin/create-otok.mjs && node --check ./test/create-otok.test.mjs",
-    "test": "node --test ./test/create-otok.test.mjs"
+    "build": "rm -rf dist && tsc -p tsconfig.build.json",
+    "prepare": "npm run build",
+    "generate:versions": "node ./scripts/generate-versions.mjs",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "test": "pnpm --filter @otok/kit-crm build && pnpm build && node --test ./test/create-otok.test.mjs ./test/preset-matrix.test.mjs"
+  },
+  "dependencies": {
+    "@clack/prompts": "^0.10.1",
+    "@otok/config": "workspace:*"
   },
   "engines": {
     "node": ">=20"

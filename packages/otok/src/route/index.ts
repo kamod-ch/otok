@@ -269,3 +269,5 @@ function parseWithSchema(schema: unknown, value: unknown): unknown {
 }
 
 export type RedirectTarget = string;
+
+export { composeLoader, loaderEnhancer, type LoaderEnhancer } from "./compose.js";

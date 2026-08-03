@@ -1,0 +1,33 @@
+{
+  "name": "@kamod-ch/otok-search",
+  "version": "0.1.0",
+  "description": "Lightweight full-text search index for Otok apps — CRM company indexing.",
+  "license": "MIT",
+  "type": "module",
+  "files": ["dist", "README.md"],
+  "exports": {
+    ".": { "types": "./dist/index.d.ts", "default": "./dist/index.js" }
+  },
+  "scripts": {
+    "build": "rm -rf dist && tsc -p tsconfig.build.json",
+    "prepare": "npm run build",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "@otok/config": "workspace:*"
+  },
+  "peerDependencies": {
+    "otok": ">=0.4.0",
+    "hono": "^4.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "^24.12.2",
+    "hono": "^4.12.25",
+    "otok": "workspace:*",
+    "typescript": "~6.0.2",
+    "vitest": "^4.1.2"
+  },
+  "engines": { "node": ">=20" },
+  "publishConfig": { "access": "public" }
+}

@@ -101,8 +101,8 @@ export default function Home({ data }: { data: HomeData }) {
             <Button href="/demo" variant="outline" size="sm">
               kamod-ui islands
             </Button>
-            <Button href="/deferred-demo" variant="outline" size="sm">
-              Deferred streaming
+            <Button href="/crm" variant="outline" size="sm">
+              CRM mutations
             </Button>
             <Badge variant="secondary">SSR + islands</Badge>
           </div>

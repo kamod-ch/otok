@@ -1,0 +1,13 @@
+{
+  "version": "1.0.0",
+  "tolerancePercent": 5,
+  "metrics": {
+    "devServerStartMs": { "max": 3000 },
+    "productionBuildMs": { "max": 45000 },
+    "ssrLatencyP50Ms": { "max": 15 },
+    "ssrThroughputRps": { "min": 500 },
+    "clientJsKb": { "max": 45 },
+    "edgeBundleKb": { "max": 250 },
+    "peakRssMb": { "max": 256 }
+  }
+}

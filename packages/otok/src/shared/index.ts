@@ -66,3 +66,20 @@ export {
 } from "./navigation.js";
 export { cssEscape } from "./css.js";
 export { DeferredBoundary, type DeferredBoundaryProps } from "./deferred-boundary.js";
+export type {
+  ActionDescriptor,
+  FetcherState,
+  MutationSubmitOptions,
+  OtokDataResponse,
+} from "./mutations.js";
+export {
+  createIdempotencyKey,
+  isDataRequest,
+  OTOK_CSRF_FIELD,
+  OTOK_CSRF_HEADER,
+  OTOK_DATA_ACCEPT,
+  OTOK_DATA_HEADER,
+  OTOK_FETCHER_ATTR,
+  OTOK_IDEMPOTENCY_FIELD,
+  OTOK_IDEMPOTENCY_HEADER,
+} from "./mutations.js";

@@ -1,0 +1,35 @@
+{
+  "name": "@otok/registry",
+  "version": "0.1.0",
+  "description": "Versioned extension registry for Otok — schema, cache, search, and compatibility checks.",
+  "license": "MIT",
+  "type": "module",
+  "files": ["dist", "registry", "README.md"],
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    },
+    "./fixtures": {
+      "types": "./dist/fixtures.d.ts",
+      "default": "./dist/fixtures.js"
+    }
+  },
+  "scripts": {
+    "build": "rm -rf dist && tsc -p tsconfig.build.json && node ./scripts/copy-registry.mjs",
+    "prepare": "npm run build",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "test": "vitest run",
+    "registry:checksum": "node ./scripts/update-checksum.mjs"
+  },
+  "dependencies": {
+    "zod": "^3.24.0"
+  },
+  "devDependencies": {
+    "@types/node": "^24.12.2",
+    "typescript": "~6.0.2",
+    "vitest": "^4.1.2"
+  },
+  "engines": { "node": ">=20" },
+  "publishConfig": { "access": "public" }
+}

@@ -9,6 +9,7 @@ import {
 import { registerRenderedIsland } from "../shared/island-context.js";
 import { hydrateIslands } from "./hydration.js";
 import { prefetchSoftNavUrl, setupSoftNavigation, softNavigate, type SoftNavOptions } from "./soft-nav.js";
+import { patchHistoryScroll, setMutationRegistry } from "./mutations/index.js";
 
 export interface IslandComponentProps<Props extends IslandProps = IslandProps> {
   component: ComponentType<Props>;
@@ -87,6 +88,8 @@ export interface CreateOtokClientOptions {
   root?: ParentNode;
   onError?: (error: unknown, element: Element) => void;
   softNav?: boolean | SoftNavOptions;
+  /** Enable mutation runtime (useAction, useFetcher). Defaults to true when registry is present. */
+  mutations?: boolean;
 }
 
 export function createOtokClient(options: CreateOtokClientOptions = {}): void {
@@ -97,6 +100,12 @@ export function createOtokClient(options: CreateOtokClientOptions = {}): void {
 
   const root = options.root ?? document;
   void hydrateIslands(root, registry, options.onError);
+
+  const mutationsEnabled = options.mutations !== false;
+  if (mutationsEnabled) {
+    setMutationRegistry(registry);
+    patchHistoryScroll();
+  }
 
   if (options.softNav) {
     const softNavOptions = options.softNav === true ? {} : options.softNav;
@@ -117,3 +126,26 @@ export type { IslandHydrationStrategy, IslandProps, IslandRegistry } from "../sh
 export type { SoftNavOptions } from "./soft-nav.js";
 export { cancelPendingHydration, hydrateIslands } from "./hydration.js";
 export { isSoftNavForm, isSoftNavLink, prefetchSoftNavUrl, setupSoftNavigation, softNavigate } from "./soft-nav.js";
+export {
+  useAction,
+  useFetcher,
+  useRevalidator,
+  useNavigationBlocker,
+  useLoaderData,
+  LoadingBoundary,
+  ErrorBoundary,
+  mutationStore,
+  submitMutation,
+  revalidateLoader,
+  readCsrfToken,
+  createIdempotencyKey,
+} from "./mutations/index.js";
+export type {
+  ActionHandle,
+  FetcherHandle,
+  FetcherFormProps,
+  FetcherState,
+  MutationSubmitOptions,
+  OtokDataResponse,
+  ActionDescriptor,
+} from "./mutations/index.js";

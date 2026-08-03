@@ -15,6 +15,7 @@
   },
   "dependencies": {
     "@hono/node-server": "^2.0.1",
+    "@kamod-ch/otok-kamod": "workspace:*",
     "@kamod-ui/core": "^0.1.5",
     "@otok/plugin-hello": "workspace:*",
     "@preact/signals": "^2.0.0",
