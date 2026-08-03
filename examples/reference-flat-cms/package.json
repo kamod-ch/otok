@@ -12,10 +12,11 @@
   },
   "dependencies": {
     "@hono/node-server": "^2.0.1",
-    "@otok/vite-plugin": "^0.2.0",
+    "@hono/vite-dev-server": "^0.26.1",
+    "@otok/vite-plugin": "workspace:*",
     "@preact/preset-vite": "^2.10.2",
     "hono": "^4.12.25",
-    "otok": "^0.2.0",
+    "otok": "workspace:*",
     "preact": "^10.28.2",
     "vite": "^8.0.10"
   },

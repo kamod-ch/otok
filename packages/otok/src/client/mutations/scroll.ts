@@ -36,8 +36,27 @@ function currentPath(): string {
 
 export async function withViewTransition(update: () => void | Promise<void>): Promise<void> {
   if (typeof document !== "undefined" && "startViewTransition" in document) {
-    await (document as Document & { startViewTransition: (cb: () => void | Promise<void>) => { finished: Promise<void> } })
-      .startViewTransition(update).finished;
+    let updatePromise: Promise<void> = Promise.resolve();
+    const transition = (document as Document & { startViewTransition: (cb: () => void) => { finished: Promise<void> } })
+      .startViewTransition(() => {
+        try {
+          updatePromise = Promise.resolve(update());
+        } catch (error) {
+          updatePromise = Promise.reject(error);
+        }
+      });
+
+    await updatePromise;
+
+    try {
+      await transition.finished;
+    } catch (error) {
+      // Browsers may abort view transitions if the DOM update takes too long or
+      // another navigation starts. The DOM has already been updated, so keep the
+      // navigation instead of surfacing a noisy unhandled TimeoutError/AbortError.
+      if (error instanceof DOMException && (error.name === "TimeoutError" || error.name === "AbortError")) return;
+      throw error;
+    }
     return;
   }
   await update();

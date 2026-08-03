@@ -17,7 +17,7 @@
     "preact": "^10.28.2"
   },
   "devDependencies": {
-    "@hono/vite-dev-server": "^1.0.0",
+    "@hono/vite-dev-server": "^0.26.1",
     "@types/node": "^24.12.2",
     "typescript": "~6.0.2",
     "vite": "^8.0.10"

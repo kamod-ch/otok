@@ -1,6 +1,4 @@
 packages:
   - "packages/*"
   - "apps/*"
-  - "examples/kit-crm-swiss"
-  - "examples/preactpress-migration"
-  - "examples/saas-reference"
+  - "examples/*"
