@@ -1360,30 +1360,6 @@ importers:
         specifier: ^4.1.2
         version: 4.1.8(@opentelemetry/api@1.9.1)(@types/node@24.13.1)(jsdom@29.1.1)(vite@8.0.16(@types/node@24.13.1)(esbuild@0.28.1)(jiti@2.7.0)(tsx@4.23.5))
 
-  packages/otok-validate:
-    devDependencies:
-      '@otok/test':
-        specifier: workspace:*
-        version: link:../otok-test
-      '@types/node':
-        specifier: ^24.12.2
-        version: 24.13.1
-      otok:
-        specifier: workspace:*
-        version: link:../otok
-      preact:
-        specifier: ^10.28.2
-        version: 10.29.2
-      typescript:
-        specifier: ~6.0.2
-        version: 6.0.3
-      vitest:
-        specifier: ^4.1.2
-        version: 4.1.8(@opentelemetry/api@1.9.1)(@types/node@24.13.1)(jsdom@29.1.1)(vite@8.0.16(@types/node@24.13.1)(esbuild@0.28.1)(jiti@2.7.0)(tsx@4.23.5))
-      zod:
-        specifier: ^4.0.0
-        version: 4.4.3
-
   packages/otok-validation:
     devDependencies:
       '@kamod-ch/otok-kysely':

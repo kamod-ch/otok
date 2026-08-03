@@ -8,7 +8,7 @@ export const OFFICIAL_PLUGIN_ALIASES: Record<string, string> = {
   observability: "@kamod-ch/otok-observability",
   kamod: "@kamod-ch/otok-kamod",
   auth: "@kamod-ch/otok-auth",
-  validate: "@kamod-ch/otok-validate",
+  validate: "@kamod-ch/otok-validation",
   validation: "@kamod-ch/otok-validation",
   flash: "@kamod-ch/otok-flash",
   stripe: "@kamod-ch/otok-stripe",

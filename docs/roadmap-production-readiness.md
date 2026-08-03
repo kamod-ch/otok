@@ -2,7 +2,7 @@
 
 ## Aktueller Stand (0.3.x+)
 
-Phase 1 APIs and Phase 1 hardening are shipped. Phase 2 Edge foundations (`createOtokWorkerApp`, streaming SSR, deferred loading boundaries, Cloudflare example + `pnpm smoke:cloudflare`) are available. Composition packages (`otok-auth`, `otok-validate`, `otok-flash`, `otok-stripe`, `otok-oauth`) live alongside core.
+Phase 1 APIs and Phase 1 hardening are shipped. Phase 2 Edge foundations (`createOtokWorkerApp`, streaming SSR, deferred loading boundaries, Cloudflare example + `pnpm smoke:cloudflare`) are available. Composition packages (`otok-auth`, `otok-validation`, `otok-flash`, `otok-stripe`, `otok-oauth`) live alongside core.
 
 ### Architektur und Package-Verantwortung
 
@@ -12,7 +12,7 @@ Otok is a pnpm monorepo with publishable packages and reference apps:
 - `packages/vite-plugin-otok`: File scanner, `virtual:otok-routes` / `virtual:otok-islands`, typed `route()` builder.
 - `packages/create-otok`: CLI and templates (minimal + full synced from playground).
 - `packages/otok-test`: Server-side test helpers including `parseHtml`.
-- `packages/otok-auth` / `otok-validate` / `otok-flash` / `otok-stripe` / `otok-oauth`: optional composition packages.
+- `packages/otok-auth` / `otok-validation` / `otok-flash` / `otok-stripe` / `otok-oauth`: optional composition packages.
 - `apps/playground`: Node/Vite reference app with Playwright E2E.
 - `apps/docs`: Product documentation site.
 - `examples/`: Reference apps plus Node and Cloudflare deployment samples.

@@ -11,7 +11,7 @@ Publishable packages live under `packages/`:
 - `create-otok`
 - `@otok/test`
 - `@kamod-ch/otok-auth`
-- `@kamod-ch/otok-validate`
+- `@kamod-ch/otok-validation`
 - `@kamod-ch/otok-flash`
 - `@kamod-ch/otok-stripe`
 - `@kamod-ch/otok-oauth`

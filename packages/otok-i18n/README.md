@@ -159,5 +159,5 @@ See [`examples/i18n-trilingual`](../../examples/i18n-trilingual) for a complete 
 | Package | Purpose |
 |---------|---------|
 | `@kamod-ch/otok-auth` | Sessions, CSRF |
-| `@kamod-ch/otok-validate` | Zod validation |
+| `@kamod-ch/otok-validation` | Standard Schema validation |
 | `@kamod-ch/otok-flash` | Flash messages |

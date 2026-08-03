@@ -23,10 +23,6 @@ Cookie sessions, CSRF, password hashing, route/API middleware.
 
 Adapter pattern: apps implement `SessionAdapter<TUser>` for persistence and user resolution.
 
-### `@kamod-ch/otok-validate`
-
-Zod → `validationError()` bridge for route actions and JSON APIs.
-
 ### `@kamod-ch/otok-flash`
 
 Signed one-time flash cookies for PRG redirects and SSR toasts.
@@ -100,7 +96,7 @@ Standard Schema validation with `defineAction` schema integration, field/form er
 
 ## Extraction order
 
-1. `@kamod-ch/otok-validate` ✅ (+ plugin wrapper)
+1. `@kamod-ch/otok-validation` ✅ (+ plugin wrapper)
 2. `otok-auth/adapters/memory` ✅
 3. `otok-auth/adapters/kysely` ✅
 4. RBAC/tenant middleware in `otok-auth` ✅
@@ -108,4 +104,4 @@ Standard Schema validation with `defineAction` schema integration, field/form er
 6. `otok-stripe` ✅
 7. `otok-oauth` ✅ (GitHub, Google, Microsoft, GitLab)
 8. `otok-i18n` ✅
-9. `otok-validation` ✅ (+ plugin wrapper)
+9. `otok-validation` ✅ (+ plugin wrapper) — supersedes the earlier Zod-only `otok-validate` package (removed from monorepo)
