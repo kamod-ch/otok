@@ -16,7 +16,7 @@ Fix errors reported by doctor before proceeding.
 ## 1. Update core packages
 
 ```bash
-pnpm add otok@^1.0.0 @otok/vite-plugin@^1.0.0
+pnpm add otok@^1.0.0 @kamod-ch/otok-vite-plugin@^1.0.0
 pnpm add -D otok-cli@^1.0.0
 ```
 
@@ -27,7 +27,7 @@ npx otok upgrade --dry-run
 npx otok upgrade
 ```
 
-Linked packages (`otok`, `@otok/vite-plugin`, `create-otok`) share the same major.
+Linked packages (`otok`, `@kamod-ch/otok-vite-plugin`, `create-otok`) share the same major.
 
 ## 2. Update adapters
 
@@ -73,7 +73,7 @@ export default defineConfig({
 
 ### Experimental: presets and kits
 
-If using `@otok/preset-*` or `@otok/kit-*`, review [business-kits.md](../business-kits.md). Kit merge API remains Experimental — minor API adjustments possible in 1.0.x.
+If using `@kamod-ch/otok-preset-*` or `@kamod-ch/otok-kit-*`, review [business-kits.md](../business-kits.md). Kit merge API remains Experimental — minor API adjustments possible in 1.0.x.
 
 ## 5. Route types
 

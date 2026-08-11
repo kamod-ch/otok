@@ -1,5 +1,5 @@
 {
-  "name": "@otok/plugin-fixture",
+  "name": "@kamod-ch/otok-plugin-fixture",
   "version": "1.0.0",
   "description": "Otok plugin fixture used by tests to exercise multiple plugin hooks.",
   "license": "MIT",

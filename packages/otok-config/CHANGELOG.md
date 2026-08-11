@@ -1,4 +1,4 @@
-# @otok/config
+# @kamod-ch/otok-config
 
 ## 0.2.0
 

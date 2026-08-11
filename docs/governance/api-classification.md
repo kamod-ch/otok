@@ -28,7 +28,7 @@ Machine-readable manifest: [`api-stability.json`](../../api-stability.json) at r
 ### Tooling
 
 - `otok` CLI commands documented in README
-- `@otok/test` — testing utilities
+- `@kamod-ch/otok-test` — testing utilities
 
 ## Experimental surfaces (1.0)
 
@@ -36,7 +36,7 @@ Machine-readable manifest: [`api-stability.json`](../../api-stability.json) at r
 |---------|--------|
 | `otok/devtools` | Dev-only, API evolving |
 | `definePreset`, `defineKit`, `mergeKits` | Preset/kit system at 0.1 |
-| `@otok/registry` fixture export | Test infrastructure |
+| `@kamod-ch/otok-registry` fixture export | Test infrastructure |
 
 Experimental APIs must be marked with `@experimental` in docs and may log runtime warnings when imported.
 
@@ -44,8 +44,8 @@ Experimental APIs must be marked with `@experimental` in docs and may log runtim
 
 Do not import from:
 
-- `@otok/route-typegen` (CLI/typegen internal)
-- `@otok/registry/fixtures`
+- `@kamod-ch/otok-route-typegen` (CLI/typegen internal)
+- `@kamod-ch/otok-registry/fixtures`
 - Vite plugin internals not re-exported by `otok`
 - Plugin `__options` marker field
 

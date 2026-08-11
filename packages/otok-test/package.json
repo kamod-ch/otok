@@ -1,5 +1,5 @@
 {
-  "name": "@otok/test",
+  "name": "@kamod-ch/otok-test",
   "version": "0.4.1",
   "description": "Official server-side and client testing utilities for Otok apps.",
   "license": "MIT",
@@ -51,7 +51,7 @@
     }
   },
   "devDependencies": {
-    "@otok/plugin-hello": "workspace:*",
+    "@kamod-ch/otok-plugin-hello": "workspace:*",
     "@types/node": "^24.12.2",
     "hono": "^4.12.25",
     "jsdom": "^29.1.1",

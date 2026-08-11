@@ -48,11 +48,11 @@
     "prepare": "npm run build",
     "generate:versions": "node ./scripts/generate-versions.mjs",
     "typecheck": "tsc -p tsconfig.json --noEmit",
-    "test": "pnpm --filter @otok/kit-crm build && pnpm build && node --test ./test/create-otok.test.mjs ./test/preset-matrix.test.mjs"
+    "test": "pnpm --filter @kamod-ch/otok-kit-crm build && pnpm build && node --test ./test/create-otok.test.mjs ./test/preset-matrix.test.mjs"
   },
   "dependencies": {
     "@clack/prompts": "^0.10.1",
-    "@otok/config": "workspace:*"
+    "@kamod-ch/otok-config": "workspace:*"
   },
   "engines": {
     "node": ">=20"

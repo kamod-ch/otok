@@ -18,7 +18,7 @@ Select affected packages and bump type (patch/minor/major). Commit the generated
 ## Configuration
 
 - `.changeset/config.json` — linked packages, access, changelog generator
-- Linked group: `otok`, `@otok/vite-plugin`, `create-otok`
+- Linked group: `otok`, `@kamod-ch/otok-vite-plugin`, `create-otok`
 
 ## Release notes
 

@@ -1,6 +1,6 @@
 import { describe, expect, it, beforeEach } from "vitest";
 import { Hono } from "hono";
-import { createTestApp } from "@otok/test";
+import { createTestApp } from "@kamod-ch/otok-test";
 import seo from "./plugin.js";
 import { resetSeoRuntimeForTests } from "./registry.js";
 

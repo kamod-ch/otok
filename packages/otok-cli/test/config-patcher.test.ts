@@ -14,12 +14,12 @@ describe("patchOtokConfig", () => {
   it("adds import and plugin to an empty config", () => {
     const source = readFixture("empty-config");
     const result = patchOtokConfig(source, {
-      packageName: "@otok/plugin-hello",
+      packageName: "@kamod-ch/otok-plugin-hello",
       identifier: "hello",
     });
 
     expect(result.changed).toBe(true);
-    expect(result.content).toContain('import hello from "@otok/plugin-hello";');
+    expect(result.content).toContain('import hello from "@kamod-ch/otok-plugin-hello";');
     expect(result.content).toContain("plugins: [hello()]");
   });
 
@@ -38,7 +38,7 @@ describe("patchOtokConfig", () => {
   it("creates plugins property when missing", () => {
     const source = readFixture("no-plugins-property");
     const result = patchOtokConfig(source, {
-      packageName: "@otok/plugin-hello",
+      packageName: "@kamod-ch/otok-plugin-hello",
       identifier: "hello",
     });
 
@@ -50,7 +50,7 @@ describe("patchOtokConfig", () => {
   it("is idempotent when plugin is already registered", () => {
     const source = readFixture("with-plugin");
     const result = patchOtokConfig(source, {
-      packageName: "@otok/plugin-hello",
+      packageName: "@kamod-ch/otok-plugin-hello",
       identifier: "hello",
     });
 
@@ -75,11 +75,11 @@ describe("patchOtokConfig", () => {
   it("does not duplicate on repeated patch", () => {
     const source = readFixture("empty-config");
     const first = patchOtokConfig(source, {
-      packageName: "@otok/plugin-hello",
+      packageName: "@kamod-ch/otok-plugin-hello",
       identifier: "hello",
     });
     const second = patchOtokConfig(first.content, {
-      packageName: "@otok/plugin-hello",
+      packageName: "@kamod-ch/otok-plugin-hello",
       identifier: "hello",
     });
 

@@ -1,5 +1,5 @@
 {
-  "name": "@otok/devtools",
+  "name": "@kamod-ch/otok-devtools",
   "version": "1.0.0",
   "description": "Development-only diagnostics and inspector UI for Otok apps.",
   "license": "MIT",
@@ -40,7 +40,7 @@
     "vite": ">=6"
   },
   "devDependencies": {
-    "@otok/test": "workspace:*",
+    "@kamod-ch/otok-test": "workspace:*",
     "@types/node": "^24.12.2",
     "hono": "^4.12.25",
     "otok": "workspace:*",

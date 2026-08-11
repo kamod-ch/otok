@@ -33,7 +33,7 @@
         "createOtokClient": "public"
       }
     },
-    "@otok/config": {
+    "@kamod-ch/otok-config": {
       "exports": {
         ".": "public"
       },
@@ -46,7 +46,7 @@
         "mergePresets": "experimental"
       }
     },
-    "@otok/vite-plugin": {
+    "@kamod-ch/otok-vite-plugin": {
       "exports": {
         ".": "public"
       },
@@ -54,7 +54,7 @@
         "otok": "public"
       }
     },
-    "@otok/test": {
+    "@kamod-ch/otok-test": {
       "exports": {
         ".": "public"
       },
@@ -68,20 +68,20 @@
         "otok": "public"
       }
     },
-    "@otok/registry": {
+    "@kamod-ch/otok-registry": {
       "exports": {
         ".": "public",
         "./fixtures": "internal"
       },
       "symbols": {}
     },
-    "@otok/route-typegen": {
+    "@kamod-ch/otok-route-typegen": {
       "exports": {
         ".": "internal"
       },
       "symbols": {}
     },
-    "@otok/plugin-contract": {
+    "@kamod-ch/otok-plugin-contract": {
       "exports": {
         ".": "public"
       },

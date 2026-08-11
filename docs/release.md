@@ -7,9 +7,9 @@ Otok uses Changesets for package versioning, npm publishing, changelog updates, 
 Publishable packages live under `packages/`:
 
 - `otok`
-- `@otok/vite-plugin`
+- `@kamod-ch/otok-vite-plugin`
 - `create-otok`
-- `@otok/test`
+- `@kamod-ch/otok-test`
 - `@kamod-ch/otok-auth`
 - `@kamod-ch/otok-validation`
 - `@kamod-ch/otok-flash`
@@ -50,7 +50,7 @@ After the version PR is merged, the same workflow publishes packages to npm and 
 
 Required repository secrets:
 
-- `NPM_TOKEN` with publish access for the `otok`, `@otok/*`, `@kamod-ch/*`, and `create-otok` packages
+- `NPM_TOKEN` with publish access for the `otok`, `@kamod-ch/*`, and `create-otok` packages
 - the default `GITHUB_TOKEN` is used for version PRs and GitHub releases
 
 The workflow enables npm provenance with `npm_config_provenance=true`, so packages are published from GitHub Actions with supply-chain metadata.
@@ -95,7 +95,7 @@ Prefer the GitHub workflow for normal releases.
 - Minor: new APIs, new route/runtime capabilities, and backward-compatible framework features.
 - Major: breaking API changes, removed exports, changed runtime assumptions, or incompatible template changes.
 
-Packages `otok`, `@otok/vite-plugin`, and `create-otok` are linked in Changesets and version together. `@otok/test` may version independently unless a changeset selects it with other packages.
+Packages `otok`, `@kamod-ch/otok-vite-plugin`, and `create-otok` are linked in Changesets and version together. `@kamod-ch/otok-test` may version independently unless a changeset selects it with other packages.
 
 ## Publishing Failures
 

@@ -1,4 +1,4 @@
-# @otok/vite-plugin
+# @kamod-ch/otok-vite-plugin
 
 ## 0.4.0
 
@@ -9,7 +9,7 @@
 ### Patch Changes
 
 - Updated dependencies
-  - @otok/config@0.2.0
+  - @kamod-ch/otok-config@0.2.0
 
 ## 0.3.0
 

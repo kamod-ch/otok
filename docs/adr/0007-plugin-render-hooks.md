@@ -15,7 +15,7 @@ Streaming responses intentionally skip `transformHtml` until a streaming-safe AP
 
 ## Decision
 
-Extend `OtokPlugin` in `@otok/config`:
+Extend `OtokPlugin` in `@kamod-ch/otok-config`:
 
 ```ts
 registerRoutes?(ctx): ProgrammaticRouteDefinition[] | Promise<...>

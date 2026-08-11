@@ -15,7 +15,7 @@
     "smoke": "pnpm run build && wrangler deploy --dry-run"
   },
   "dependencies": {
-    "@otok/vite-plugin": "^0.3.0",
+    "@kamod-ch/otok-vite-plugin": "^0.3.0",
     "@preact/preset-vite": "^2.10.2",
     "hono": "^4.12.25",
     "otok": "^0.3.0",

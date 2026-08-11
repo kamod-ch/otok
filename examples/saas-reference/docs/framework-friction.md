@@ -75,7 +75,7 @@ Dokumentation aus dem Bau der Referenz-App: was sich bewährt hat und welche API
 
 **Problem:** Kein Standard für „auth user + org + db“ in Actions. CRM hat `defineCrmAction`; SaaS brauchte `defineSaasSchemaAction`.
 
-**Vorschlag:** Otok Core oder `@otok/kit-saas` mit `defineTenantAction` / `composeAction` analog zu `composeLoader`.
+**Vorschlag:** Otok Core oder `@kamod-ch/otok-kit-saas` mit `defineTenantAction` / `composeAction` analog zu `composeLoader`.
 
 ### 5. `@kamod-ch/otok-audit` — Kysely-Store zur Laufzeit
 
@@ -83,11 +83,11 @@ Dokumentation aus dem Bau der Referenz-App: was sich bewährt hat und welche API
 
 **Vorschlag:** `audit({ provider: { type: "kysely" }})` mit Auto-Resolve aus Kysely-Runtime (wie Mail/Stripe Registry).
 
-### 6. `@otok/kit-saas`
+### 6. `@kamod-ch/otok-kit-saas`
 
 **Problem:** Paket ist Stub; Referenz-Logik liegt vollständig in `examples/saas-reference`.
 
-**Vorschlag:** Extrahieren: Permissions-Matrix, `defineSaasLoader`, Billing-Helpers, Einladungs-Flow in `@otok/kit-saas`.
+**Vorschlag:** Extrahieren: Permissions-Matrix, `defineSaasLoader`, Billing-Helpers, Einladungs-Flow in `@kamod-ch/otok-kit-saas`.
 
 ### 7. Multi-Tenant Cookie
 

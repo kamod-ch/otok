@@ -1,10 +1,41 @@
 {
-  "name": "@otok/kit-saas",
+  "name": "@kamod-ch/otok-kit-saas",
   "version": "0.1.0",
   "type": "module",
-  "files": ["dist", "kit-files"],
-  "exports": { ".": "./dist/index.js", "./kit": "./dist/kit.js" },
-  "scripts": { "build": "tsc -p tsconfig.build.json", "test": "vitest run" },
-  "dependencies": { "@otok/config": "workspace:*" },
-  "devDependencies": { "typescript": "~6.0.2", "vitest": "^4.1.2" }
+  "files": [
+    "dist",
+    "kit-files"
+  ],
+  "exports": {
+    ".": "./dist/index.js",
+    "./kit": "./dist/kit.js"
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "@kamod-ch/otok-config": "workspace:*"
+  },
+  "devDependencies": {
+    "typescript": "~6.0.2",
+    "vitest": "^4.1.2"
+  },
+  "homepage": "https://github.com/kamod-ch/otok/tree/main/packages/otok-kit-saas#readme",
+  "bugs": {
+    "url": "https://github.com/kamod-ch/otok/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kamod-ch/otok.git",
+    "directory": "packages/otok-kit-saas"
+  },
+  "license": "MIT",
+  "engines": {
+    "node": ">=20"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "description": "Otok package @kamod-ch/otok-kit-saas"
 }

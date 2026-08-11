@@ -1,5 +1,5 @@
 import type { Plugin } from "vite";
-import type { PluginContainer, ResolvedOtokConfig } from "@otok/config";
+import type { PluginContainer, ResolvedOtokConfig } from "@kamod-ch/otok-config";
 import { findOtokConfigFile, generateOtokConfigModule, importOtokConfigFile } from "./config-loader.js";
 
 const RESOLVED_OTOK_CONFIG_MODULE_ID = "\0virtual:otok-config.ts";
@@ -50,7 +50,7 @@ export async function loadResolvedOtokConfig(
   mode: "development" | "production" | "test",
   command: "build" | "serve",
 ): Promise<{ container?: PluginContainer; resolved: ResolvedOtokConfig; configModuleSource: string }> {
-  const { PluginContainer: Container, resolveOtokConfig } = await import("@otok/config");
+  const { PluginContainer: Container, resolveOtokConfig } = await import("@kamod-ch/otok-config");
 
   const discovered = findOtokConfigFile(root, configFile);
   const configModuleSource = generateOtokConfigModule(discovered, root);
@@ -61,7 +61,7 @@ export async function loadResolvedOtokConfig(
   }
 
   const userConfig = await importOtokConfigFile(discovered);
-  const container = new Container(userConfig as import("@otok/config").OtokUserConfig, { root, mode, command });
+  const container = new Container(userConfig as import("@kamod-ch/otok-config").OtokUserConfig, { root, mode, command });
   const resolved = await container.resolve();
 
   return {

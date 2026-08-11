@@ -1,7 +1,7 @@
 import { readdir, readFile, access } from "node:fs/promises";
 import type { Dirent } from "node:fs";
-import { checkCompatibility, findOutdated, resolveExtension } from "@otok/registry";
-import { runRouteTypegen } from "@otok/route-typegen";
+import { checkCompatibility, findOutdated, resolveExtension } from "@kamod-ch/otok-registry";
+import { runRouteTypegen } from "@kamod-ch/otok-route-typegen";
 import { loadOtokAppConfig } from "../load-config.js";
 import {
   extractPluginsFromConfig,

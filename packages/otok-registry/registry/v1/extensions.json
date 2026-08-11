@@ -233,7 +233,7 @@
       "keywords": ["ui", "kamod", "components", "tailwind"]
     },
     {
-      "name": "@otok/kit-crm",
+      "name": "@kamod-ch/otok-kit-crm",
       "aliases": ["kit-crm", "crm"],
       "description": "Swiss B2B CRM business kit — companies, contacts, pipelines, import/export.",
       "publisher": "kamod-ch",

@@ -8,10 +8,10 @@ Presets compose starters, optional layers, configuration patches, and file copie
 import { definePreset } from "otok";
 
 export default definePreset({
-  name: "@otok/preset-saas",
+  name: "@kamod-ch/otok-preset-saas",
   starter: "saas",
   otok: "^0.4.0",
-  extends: "@otok/preset-minimal",
+  extends: "@kamod-ch/otok-preset-minimal",
   plugins: [],
   config: {},
   routes: [],
@@ -30,7 +30,7 @@ export default definePreset({
 });
 ```
 
-Import `definePreset` from `otok` or `@otok/config`. Preset modules should stay **server/tooling safe** — no browser-only imports in preset definition files.
+Import `definePreset` from `otok` or `@kamod-ch/otok-config`. Preset modules should stay **server/tooling safe** — no browser-only imports in preset definition files.
 
 ## Merge order (deterministic)
 
@@ -53,18 +53,18 @@ Import `definePreset` from `otok` or `@otok/config`. Preset modules should stay 
 
 | Package | Starter key |
 |---------|-------------|
-| `@otok/preset-minimal` | `minimal` |
-| `@otok/preset-kamod` | `kamod` |
-| `@otok/preset-dashboard` | `dashboard` |
-| `@otok/preset-saas` | `saas` |
-| `@otok/preset-crm` | `crm` |
+| `@kamod-ch/otok-preset-minimal` | `minimal` |
+| `@kamod-ch/otok-preset-kamod` | `kamod` |
+| `@kamod-ch/otok-preset-dashboard` | `dashboard` |
+| `@kamod-ch/otok-preset-saas` | `saas` |
+| `@kamod-ch/otok-preset-crm` | `crm` |
 
 Built-in registry in `create-otok` mirrors these packages so `pnpm create otok` works without installing preset packages separately.
 
 ## Local and package presets
 
 - **Built-in:** `create-otok/src/registry.ts`
-- **npm package:** export `default` from `@otok/preset-*` and reference via `--preset @otok/preset-saas`
+- **npm package:** export `default` from `@kamod-ch/otok-preset-*` and reference via `--preset @kamod-ch/otok-preset-saas`
 - **Local:** publish a preset package in your monorepo and pass `--preset` after linking
 
 ## Version compatibility

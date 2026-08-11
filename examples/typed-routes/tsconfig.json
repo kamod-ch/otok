@@ -7,7 +7,7 @@
       "otok/client": ["../../packages/otok/src/client/index.tsx"],
       "otok/server": ["../../packages/otok/src/server/index.tsx"],
       "otok/route": ["../../packages/otok/src/route/index.ts"],
-      "@otok/vite-plugin": ["../../packages/vite-plugin-otok/src/index.ts"]
+      "@kamod-ch/otok-vite-plugin": ["../../packages/vite-plugin-otok/src/index.ts"]
     }
   },
   "include": ["src", "otok.config.ts", ".otok/types/**/*.d.ts"]

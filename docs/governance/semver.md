@@ -19,10 +19,10 @@ Otok follows [Semantic Versioning 2.0.0](https://semver.org/).
 These version together via Changesets (`linked` group):
 
 - `otok`
-- `@otok/vite-plugin`
+- `@kamod-ch/otok-vite-plugin`
 - `create-otok`
 
-Other packages (`@otok/test`, `@kamod-ch/*`, adapters) version independently unless explicitly grouped in a changeset.
+Other packages (`@kamod-ch/otok-test`, `@kamod-ch/*`, adapters) version independently unless explicitly grouped in a changeset.
 
 ## Pre-release tags
 

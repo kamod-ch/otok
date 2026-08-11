@@ -13,7 +13,7 @@ Delivered:
 - route actions and progressive forms
 - route middleware
 - typed route builder
-- `@otok/test` utilities including `parseHtml`
+- `@kamod-ch/otok-test` utilities including `parseHtml`
 - browser E2E matrix for the playground
 - Node deployment guides and smoke tests
 - documentation site

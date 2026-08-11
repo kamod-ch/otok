@@ -5,19 +5,19 @@ order: 35
 ---
 # Devtools
 
-`@otok/devtools` adds a development-only inspector for Otok apps.
+`@kamod-ch/otok-devtools` adds a development-only inspector for Otok apps.
 
 ## Install
 
 ```bash
-pnpm add -D @otok/devtools
+pnpm add -D @kamod-ch/otok-devtools
 ```
 
 ## Enable
 
 ```ts
 import { defineConfig } from "otok";
-import devtools from "@otok/devtools";
+import devtools from "@kamod-ch/otok-devtools";
 
 export default defineConfig({
   plugins: [devtools()],
@@ -40,8 +40,8 @@ During `pnpm dev` the plugin exposes:
 
 ## Safety rules
 
-- keep `@otok/devtools` as a dev dependency
-- do not import `@otok/devtools/client` from production code paths
+- keep `@kamod-ch/otok-devtools` as a dev dependency
+- do not import `@kamod-ch/otok-devtools/client` from production code paths
 - the panel never renders cookies, tokens, or full form payloads
 
 See [`examples/devtools-demo`](https://github.com/kamod-ch/otok/tree/main/examples/devtools-demo).

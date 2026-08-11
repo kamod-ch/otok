@@ -10,7 +10,7 @@
     "db:seed": "node --experimental-strip-types src/seed.ts"
   },
   "dependencies": {
-    "@otok/forum": "workspace:*",
+    "@kamod-ch/otok-forum": "workspace:*",
     "better-sqlite3": "^12.6.2",
     "kysely": "^0.29.3",
     "otok": "workspace:*",
@@ -18,7 +18,7 @@
     "preact": "^10.28.2"
   },
   "devDependencies": {
-    "@otok/vite-plugin": "workspace:*",
+    "@kamod-ch/otok-vite-plugin": "workspace:*",
     "@types/better-sqlite3": "^7.6.13",
     "@types/node": "^24.12.2",
     "typescript": "~6.0.2",

@@ -1,4 +1,4 @@
-# @otok/plugin-fixture
+# @kamod-ch/otok-plugin-fixture
 
 ## 1.0.0
 

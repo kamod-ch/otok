@@ -5,7 +5,7 @@ const setup: PluginSetupHook = defineSetup(() => ({
     {
       kind: "append-file",
       path: ".env.example",
-      content: "\n# @otok/plugin-fixture\nFIXTURE_PREFIX=fixture\n",
+      content: "\n# @kamod-ch/otok-plugin-fixture\nFIXTURE_PREFIX=fixture\n",
     },
     {
       kind: "mkdir",

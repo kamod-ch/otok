@@ -11,7 +11,7 @@
     "typecheck": "tsc -p tsconfig.json --noEmit"
   },
   "dependencies": {
-    "@otok/vite-plugin": "workspace:*",
+    "@kamod-ch/otok-vite-plugin": "workspace:*",
     "@preact/preset-vite": "^2.10.2",
     "hono": "^4.12.25",
     "otok": "workspace:*",

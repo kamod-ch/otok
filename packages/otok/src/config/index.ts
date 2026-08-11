@@ -17,7 +17,7 @@ export {
   resolveOtokConfig,
   validateSetupChanges,
   virtualModuleId,
-} from "@otok/config";
+} from "@kamod-ch/otok-config";
 export type {
   AdapterBuildContext,
   AppContext,
@@ -57,4 +57,4 @@ export type {
   ResolvedOtokConfig,
   VirtualModuleFactory,
   ViteContext,
-} from "@otok/config";
+} from "@kamod-ch/otok-config";

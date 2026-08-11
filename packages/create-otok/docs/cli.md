@@ -35,7 +35,7 @@ pnpm create otok@latest my-saas \
 | Flag | Description |
 |------|-------------|
 | `--variant`, `--template` | Project variant (see table above) |
-| `--preset` | Named preset (e.g. `@otok/preset-saas`) |
+| `--preset` | Named preset (e.g. `@kamod-ch/otok-preset-saas`) |
 | `--adapter` | `node`, `cloudflare`, or `static` |
 | `--database` | `none`, `sqlite`, `postgres` (with `--kysely`) |
 | `--auth`, `--i18n`, `--kysely`, `--validation`, `--testing` | Optional layers |

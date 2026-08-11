@@ -1,13 +1,13 @@
-# @otok/test
+# @kamod-ch/otok-test
 
 Official testing utilities for Otok applications (`otok-test`).
 
-`@otok/test` uses Otok's real server handler and Hono's in-memory `app.request()` API. It does not start Vite, does not open a network port, and does not implement a second router.
+`@kamod-ch/otok-test` uses Otok's real server handler and Hono's in-memory `app.request()` API. It does not start Vite, does not open a network port, and does not implement a second router.
 
 ## Install
 
 ```bash
-pnpm add -D @otok/test vitest
+pnpm add -D @kamod-ch/otok-test vitest
 ```
 
 Optional client helpers (hydration and soft navigation) need `jsdom` in Vitest:
@@ -19,7 +19,7 @@ pnpm add -D jsdom
 ## Quick start
 
 ```ts
-import { createOtokTestApp, authenticatedSession } from "@otok/test";
+import { createOtokTestApp, authenticatedSession } from "@kamod-ch/otok-test";
 
 const app = await createOtokTestApp({
   routes: [
@@ -52,20 +52,20 @@ await app.cleanup();
 | Islands / SSR | `getIslands`, `expectIsland`, `expectSsrPageMarker`, `parseHtml` |
 | Plugins | `createPluginTestApp`, `resolvePluginTestConfig` |
 | i18n | `createI18nTestContext`, `expectLocale`, `prefixedLocalePath` |
-| Adapters | `@otok/test/adapter` → `assertAdapterContract` |
-| Client (jsdom) | `@otok/test/client` → `hydrateTestPage`, `softNavigateTestPage` |
+| Adapters | `@kamod-ch/otok-test/adapter` → `assertAdapterContract` |
+| Client (jsdom) | `@kamod-ch/otok-test/client` → `hydrateTestPage`, `softNavigateTestPage` |
 | Database hooks | `withTestDatabase`, `createDatabaseTestHooks` |
 | Type tests | `Expect`, `AssertEqual`, `expectTypeOf` |
 
 ## Subpath exports
 
 ```ts
-import { hydrateTestPage } from "@otok/test/client";
-import { assertAdapterContract } from "@otok/test/adapter";
+import { hydrateTestPage } from "@kamod-ch/otok-test/client";
+import { assertAdapterContract } from "@kamod-ch/otok-test/adapter";
 ```
 
 ## Scope
 
-Use `@otok/test` for server-side tests of loaders, actions, middleware, redirects, validation failures, SSR HTML, headers, cookies, plugin wiring, and adapter contracts.
+Use `@kamod-ch/otok-test` for server-side tests of loaders, actions, middleware, redirects, validation failures, SSR HTML, headers, cookies, plugin wiring, and adapter contracts.
 
 Use Playwright for full browser coverage when you need real layout, focus management, or multi-tab behavior.

@@ -8,4 +8,4 @@
 - Updated dependencies [15b45d9]
 - Updated dependencies
   - otok@0.4.0
-  - @otok/config@0.2.0
+  - @kamod-ch/otok-config@0.2.0

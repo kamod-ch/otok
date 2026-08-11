@@ -1,6 +1,6 @@
 import { writeFile } from "node:fs/promises";
 import { join } from "node:path";
-import { checkCompatibility, resolveExtension } from "@otok/registry";
+import { checkCompatibility, resolveExtension } from "@kamod-ch/otok-registry";
 import { detectPackageManager, installCommand } from "../detect-manager.js";
 import {
   patchOtokConfig,

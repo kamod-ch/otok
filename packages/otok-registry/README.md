@@ -1,11 +1,11 @@
-# @otok/registry
+# @kamod-ch/otok-registry
 
 Versioned extension registry for the Otok ecosystem — schema validation, offline cache, search, compatibility checks, and CLI integration.
 
 ## Install
 
 ```bash
-pnpm add @otok/registry
+pnpm add @kamod-ch/otok-registry
 ```
 
 ## API
@@ -17,7 +17,7 @@ import {
   resolveExtension,
   checkCompatibility,
   findOutdated,
-} from "@otok/registry";
+} from "@kamod-ch/otok-registry";
 
 const registry = await createRegistryClient({ offline: true }).then((c) => c.load());
 const results = searchExtensions(registry, { q: "storage" });

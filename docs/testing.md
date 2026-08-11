@@ -2,15 +2,15 @@
 
 Otok uses two complementary test layers:
 
-1. server-side tests with `@otok/test` and Hono `app.request()`;
+1. server-side tests with `@kamod-ch/otok-test` and Hono `app.request()`;
 2. browser E2E tests with Playwright for hydration, soft navigation, and progressive enhancement.
 
 ## Server-side tests
 
-Use `@otok/test` when you want to verify route modules without a browser or Vite dev server.
+Use `@kamod-ch/otok-test` when you want to verify route modules without a browser or Vite dev server.
 
 ```ts
-import { createTestApp, renderRoute } from "@otok/test";
+import { createTestApp, renderRoute } from "@kamod-ch/otok-test";
 
 const app = createTestApp({
   routes: [
@@ -30,14 +30,14 @@ expect(html).toContain("User 123");
 Use `parseHtml` or `renderParsedRoute` for structured HTML assertions:
 
 ```ts
-import { renderParsedRoute } from "@otok/test";
+import { renderParsedRoute } from "@kamod-ch/otok-test";
 
 const { document } = await renderParsedRoute(app, "/users/123");
 expect(document.getText("p")).toContain("User 123");
 expect(document.getTitle()).toBeTruthy();
 ```
 
-Good fits for `@otok/test`:
+Good fits for `@kamod-ch/otok-test`:
 
 - loaders;
 - actions;
@@ -49,7 +49,7 @@ Good fits for `@otok/test`:
 - SSR HTML;
 - request headers and cookies.
 
-Use the real Vite-generated route manifest in integration tests, or `createTestRoute()` for small unit-test fixtures. `@otok/test` does not contain a second Otok router; fixtures are converted to normal Otok route entries and then handled by the real Otok server runtime.
+Use the real Vite-generated route manifest in integration tests, or `createTestRoute()` for small unit-test fixtures. `@kamod-ch/otok-test` does not contain a second Otok router; fixtures are converted to normal Otok route entries and then handled by the real Otok server runtime.
 
 ## Browser E2E matrix
 

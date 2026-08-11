@@ -1,4 +1,4 @@
-import { findOutdated } from "@otok/registry";
+import { findOutdated } from "@kamod-ch/otok-registry";
 import { loadProjectSnapshot, loadRegistryForProject } from "../registry-context.js";
 import { findProjectRoot, fail, ok, warn } from "../utils.js";
 

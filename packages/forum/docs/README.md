@@ -1,16 +1,16 @@
-# @otok/forum documentation
+# @kamod-ch/otok-forum documentation
 
 ## Installation
 
 ```bash
-pnpm add @otok/forum kysely better-sqlite3   # SQLite dev
-pnpm add @otok/forum kysely pg              # PostgreSQL prod
+pnpm add @kamod-ch/otok-forum kysely better-sqlite3   # SQLite dev
+pnpm add @kamod-ch/otok-forum kysely pg              # PostgreSQL prod
 ```
 
 Run migrations:
 
 ```ts
-import { migrateForumSchema } from "@otok/forum/kysely";
+import { migrateForumSchema } from "@kamod-ch/otok-forum/kysely";
 await migrateForumSchema(db, "postgres"); // or "sqlite"
 ```
 
@@ -71,7 +71,7 @@ async getCurrentUser({ otok }) {
 Wrap the forum message adapter:
 
 ```ts
-import { createMessageAdapter } from "@otok/forum";
+import { createMessageAdapter } from "@kamod-ch/otok-forum";
 
 messages: {
   t(key, params) {
@@ -88,7 +88,7 @@ Override components via `createForum({ components: { Post, ThreadList } })`. See
 ## Testing
 
 ```ts
-import { createTestDatabase, createTestForum, createTestUser } from "@otok/forum/testing";
+import { createTestDatabase, createTestForum, createTestUser } from "@kamod-ch/otok-forum/testing";
 ```
 
 ## Phase 2 roadmap

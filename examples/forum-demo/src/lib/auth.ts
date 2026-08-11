@@ -1,4 +1,4 @@
-import type { ForumAuthAdapter, ForumRequestContext, ForumUser } from "@otok/forum";
+import type { ForumAuthAdapter, ForumRequestContext, ForumUser } from "@kamod-ch/otok-forum";
 
 const DEMO_USERS: Record<string, ForumUser> = {
   alice: { id: "alice", displayName: "Alice Member", roles: ["member"] },

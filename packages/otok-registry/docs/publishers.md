@@ -11,7 +11,7 @@ The registry is versioned static JSON hosted at `registry/v1/`:
 | `index.json` | Metadata, publisher list, SHA256 checksum of extensions bundle |
 | `extensions.json` | Array of extension entries |
 
-Schema version: `1.0.0` (validated with Zod in `@otok/registry`).
+Schema version: `1.0.0` (validated with Zod in `@kamod-ch/otok-registry`).
 
 ### Extension entry fields
 
@@ -44,7 +44,7 @@ Schema version: `1.0.0` (validated with Zod in `@otok/registry`).
 After editing `extensions.json`, regenerate the index checksum:
 
 ```bash
-pnpm --filter @otok/registry registry:checksum
+pnpm --filter @kamod-ch/otok-registry registry:checksum
 ```
 
 The CLI rejects bundles whose SHA256 does not match `index.json.checksum`. This provides tamper detection for cached and remote copies.
@@ -54,7 +54,7 @@ The CLI rejects bundles whose SHA256 does not match `index.json.checksum`. This 
 1. **Open a PR** adding your entry to `registry/v1/extensions.json`.
 2. **Publisher record** — add or reference your publisher in `index.json` (`verified: false` initially).
 3. **Review** — maintainers verify package ownership, semver accuracy, and security notes.
-4. **Merge** — checksum is updated; registry is published with the next `@otok/registry` release.
+4. **Merge** — checksum is updated; registry is published with the next `@kamod-ch/otok-registry` release.
 
 Official `@kamod-ch/*` packages use the `kamod-ch` verified publisher.
 
@@ -91,8 +91,8 @@ Report suspicious entries to the abuse contact listed in the registry index.
 ## Local development
 
 ```bash
-pnpm --filter @otok/registry build
-pnpm --filter @otok/registry test
+pnpm --filter @kamod-ch/otok-registry build
+pnpm --filter @kamod-ch/otok-registry test
 pnpm --filter otok-cli build
 OTOK_REGISTRY_OFFLINE=1 otok search storage
 ```

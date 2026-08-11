@@ -20,7 +20,7 @@ export interface PresetPackageJsonPatch {
 
 /** Serializable preset definition — safe to import from server and client tooling. */
 export interface OtokPresetDefinition {
-  /** Unique preset identifier, e.g. `@otok/preset-saas`. */
+  /** Unique preset identifier, e.g. `@kamod-ch/otok-preset-saas`. */
   name: string;
   /** Semver compatibility range for the otok runtime this preset targets. */
   otok?: string;

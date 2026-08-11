@@ -1,6 +1,6 @@
 import { defineCrmLoader, defineCrmAction } from "../../../lib/crm-loader.js";
 import { requirePermission } from "../../../lib/auth-users.js";
-import { CRM_PERMISSIONS } from "@otok/kit-crm";
+import { CRM_PERMISSIONS } from "@kamod-ch/otok-kit-crm";
 import { CrmShell } from "../../components/crm-shell.js";
 import { Button } from "@kamod-ch/ui/button";
 

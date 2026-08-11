@@ -19,14 +19,14 @@ describe("addPlugin", () => {
   it("creates otok.config.ts when missing", async () => {
     const root = scaffoldProject("create-config");
     try {
-      const result = await addPlugin("@otok/plugin-hello", {
+      const result = await addPlugin("@kamod-ch/otok-plugin-hello", {
         cwd: root,
         skipInstall: true,
         dryRun: false,
       });
 
       expect(result.configChanged).toBe(true);
-      expect(readFileSync(join(root, "otok.config.ts"), "utf8")).toContain("@otok/plugin-hello");
+      expect(readFileSync(join(root, "otok.config.ts"), "utf8")).toContain("@kamod-ch/otok-plugin-hello");
     } finally {
       rmSync(root, { recursive: true, force: true });
     }
@@ -38,7 +38,7 @@ describe("addPlugin", () => {
     writeFileSync(join(root, "otok.config.ts"), readFileSync(fixture, "utf8"));
 
     try {
-      const result = await addPlugin("@otok/plugin-hello", {
+      const result = await addPlugin("@kamod-ch/otok-plugin-hello", {
         cwd: root,
         skipInstall: true,
         dryRun: true,
@@ -59,14 +59,14 @@ describe("addPlugin", () => {
     );
 
     try {
-      const first = await addPlugin("@otok/plugin-hello", {
+      const first = await addPlugin("@kamod-ch/otok-plugin-hello", {
         cwd: root,
         skipInstall: true,
         dryRun: false,
       });
       expect(first.alreadyInstalled).toBe(false);
 
-      const second = await addPlugin("@otok/plugin-hello", {
+      const second = await addPlugin("@kamod-ch/otok-plugin-hello", {
         cwd: root,
         skipInstall: true,
         dryRun: false,
@@ -74,7 +74,7 @@ describe("addPlugin", () => {
       expect(second.alreadyInstalled).toBe(true);
 
       const content = readFileSync(join(root, "otok.config.ts"), "utf8");
-      expect(content.match(/@otok\/plugin-hello/g)?.length).toBe(1);
+      expect(content.match(/@kamod-ch\/otok-plugin-hello/g)?.length).toBe(1);
       expect(content.match(/hello\(\)/g)?.length).toBe(1);
     } finally {
       rmSync(root, { recursive: true, force: true });

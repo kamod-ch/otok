@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { h } from "preact";
 import type { Context } from "hono";
-import { createTestApp, renderRoute } from "@otok/test";
+import { createTestApp, renderRoute } from "@kamod-ch/otok-test";
 import type { OtokPageProps } from "otok/server";
 import { isOtokHttpError } from "otok/server";
 import {

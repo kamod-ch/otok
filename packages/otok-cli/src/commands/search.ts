@@ -1,7 +1,7 @@
 import {
   resolveExtension,
   searchExtensions,
-} from "@otok/registry";
+} from "@kamod-ch/otok-registry";
 import { loadRegistryForProject } from "../registry-context.js";
 import { fail } from "../utils.js";
 

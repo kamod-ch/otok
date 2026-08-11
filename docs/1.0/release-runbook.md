@@ -98,7 +98,7 @@ Custom changelog config: `.changeset/config.json`.
 These version together:
 
 - `otok`
-- `@otok/vite-plugin`
+- `@kamod-ch/otok-vite-plugin`
 - `create-otok`
 
 Single changeset can target the group.

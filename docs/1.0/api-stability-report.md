@@ -38,11 +38,11 @@ From **1.0.0**, all **Public** exports follow SemVer:
 |---------|------|------------------|
 | `otok/devtools` | API may change | 1.1 review |
 | `definePreset`, `defineKit` | Kit system evolving | 1.2 |
-| `@otok/registry/fixtures` | Test only | Never public |
+| `@kamod-ch/otok-registry/fixtures` | Test only | Never public |
 
 ## Internal (do not use)
 
-- `@otok/route-typegen` programmatic API
+- `@kamod-ch/otok-route-typegen` programmatic API
 - Vite plugin private modules
 - Plugin `__options` field
 
@@ -51,8 +51,8 @@ From **1.0.0**, all **Public** exports follow SemVer:
 | Contract | Package | Status |
 |----------|---------|--------|
 | Adapter | `otok-adapter-contract` | Enforced |
-| Plugin | `@otok/plugin-contract` | Enforced |
-| Config merge | `@otok/config` tests | Enforced |
+| Plugin | `@kamod-ch/otok-plugin-contract` | Enforced |
+| Config merge | `@kamod-ch/otok-config` tests | Enforced |
 
 ## Changes from 0.4
 

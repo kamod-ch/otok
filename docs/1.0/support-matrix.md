@@ -48,7 +48,7 @@ Platform and deployment support for Otok **1.0**.
 
 ## Official plugins
 
-See [@otok/registry](https://github.com/kamod-ch/otok/tree/main/packages/otok-registry) for per-plugin adapter/runtime matrix.
+See [@kamod-ch/otok-registry](https://github.com/kamod-ch/otok/tree/main/packages/otok-registry) for per-plugin adapter/runtime matrix.
 
 Run locally:
 

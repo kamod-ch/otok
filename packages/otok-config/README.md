@@ -1,4 +1,4 @@
-# @otok/config
+# @kamod-ch/otok-config
 
 Typed plugin API and config resolution for [Otok](https://github.com/kamod-ch/otok) apps.
 

@@ -19,7 +19,7 @@ function expectedPackageVersions() {
   const matrix = readJson(path.join(__dirname, "../versions.json"));
   return {
     otok: matrix.otok,
-    plugin: matrix["@otok/vite-plugin"],
+    plugin: matrix["@kamod-ch/otok-vite-plugin"],
   };
 }
 
@@ -48,7 +48,7 @@ test("scaffolds an app from the packaged minimal template", () => {
     const versions = expectedPackageVersions();
     assert.equal(pkg.name, "my-app");
     assert.equal(pkg.dependencies.otok, versions.otok);
-    assert.equal(pkg.devDependencies["@otok/vite-plugin"], versions.plugin);
+    assert.equal(pkg.devDependencies["@kamod-ch/otok-vite-plugin"], versions.plugin);
   });
 });
 
@@ -145,7 +145,7 @@ test("scaffolds crm variant with kit files and manifest", () => {
     const result = runCli([target, "--yes", "--variant", "crm", "--no-install"], tempDir);
     assert.equal(result.status, 0, result.stderr || result.stdout);
     assert.match(result.stdout, /Created crm-app \(crm\)/);
-    assert.match(result.stdout, /@otok\/kit-crm/);
+    assert.match(result.stdout, /@kamod-ch\/otok-kit-crm/);
 
     assert.ok(fs.existsSync(path.join(target, "src/app/routes/crm/index.tsx")), "crm index route");
     assert.ok(fs.existsSync(path.join(target, "src/app/data/crm-runtime.ts")), "crm runtime");
@@ -153,11 +153,11 @@ test("scaffolds crm variant with kit files and manifest", () => {
     assert.ok(fs.existsSync(path.join(target, ".otok/kit-manifest.json")), "kit manifest");
 
     const manifest = readJson(path.join(target, ".otok/kit-manifest.json"));
-    assert.ok(manifest.kits.includes("@otok/kit-crm"));
+    assert.ok(manifest.kits.includes("@kamod-ch/otok-kit-crm"));
     assert.ok(manifest.files.some((f) => f.includes("crm/index.tsx")));
 
     const pkg = readJson(path.join(target, "package.json"));
-    assert.ok(pkg.dependencies["@otok/kit-crm"]);
+    assert.ok(pkg.dependencies["@kamod-ch/otok-kit-crm"]);
   });
 });
 
@@ -166,7 +166,7 @@ test("--dry-run crm includes kit in plan", () => {
     const target = path.join(tempDir, "crm-dry");
     const result = runCli([target, "--yes", "--variant", "crm", "--dry-run", "--no-install"], tempDir);
     assert.equal(result.status, 0, result.stderr || result.stdout);
-    assert.match(result.stdout, /@otok\/kit-crm/);
+    assert.match(result.stdout, /@kamod-ch\/otok-kit-crm/);
     assert.equal(fs.existsSync(target), false);
   });
 });

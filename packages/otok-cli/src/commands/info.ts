@@ -1,4 +1,4 @@
-import { formatExtensionDetail, resolveExtension } from "@otok/registry";
+import { formatExtensionDetail, resolveExtension } from "@kamod-ch/otok-registry";
 import { loadRegistryForProject } from "../registry-context.js";
 import { fail } from "../utils.js";
 

@@ -1,6 +1,6 @@
 import fs from "node:fs";
 import path from "node:path";
-import { adapterError, createDualBuildVitePlugin, defineAdapter, type AdapterBuildContext } from "@otok/config";
+import { adapterError, createDualBuildVitePlugin, defineAdapter, type AdapterBuildContext } from "@kamod-ch/otok-config";
 import { collectPrerenderEntries, scanRenderingFromSource } from "otok/rendering";
 
 export interface StaticAdapterOptions {

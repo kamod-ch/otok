@@ -4,7 +4,10 @@
   "description": "Typed SSE and WebSocket realtime for Otok — channels, rooms, presence, and scalable providers.",
   "license": "MIT",
   "type": "module",
-  "files": ["dist", "README.md"],
+  "files": [
+    "dist",
+    "README.md"
+  ],
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
@@ -42,7 +45,7 @@
     "test": "vitest run"
   },
   "dependencies": {
-    "@otok/config": "workspace:*",
+    "@kamod-ch/otok-config": "workspace:*",
     "zod": "^3.24.0"
   },
   "peerDependencies": {
@@ -50,10 +53,18 @@
     "otok": ">=0.4.0"
   },
   "peerDependenciesMeta": {
-    "hono": { "optional": true },
-    "@kamod-ch/otok-auth": { "optional": true },
-    "@kamod-ch/otok-observability": { "optional": true },
-    "@kamod-ch/otok-security": { "optional": true }
+    "hono": {
+      "optional": true
+    },
+    "@kamod-ch/otok-auth": {
+      "optional": true
+    },
+    "@kamod-ch/otok-observability": {
+      "optional": true
+    },
+    "@kamod-ch/otok-security": {
+      "optional": true
+    }
   },
   "devDependencies": {
     "@types/node": "^24.12.2",
@@ -64,6 +75,19 @@
     "vitest": "^4.1.2",
     "ws": "^8.19.0"
   },
-  "engines": { "node": ">=20" },
-  "publishConfig": { "access": "public" }
+  "engines": {
+    "node": ">=20"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "homepage": "https://github.com/kamod-ch/otok/tree/main/packages/otok-realtime#readme",
+  "bugs": {
+    "url": "https://github.com/kamod-ch/otok/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kamod-ch/otok.git",
+    "directory": "packages/otok-realtime"
+  }
 }

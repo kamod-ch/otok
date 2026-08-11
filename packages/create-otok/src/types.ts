@@ -33,18 +33,18 @@ export interface ScaffoldOptions {
   smoke: boolean;
   preset?: string;
   layers: string[];
-  /** Additional business kits to compose (e.g. @otok/kit-admin). */
+  /** Additional business kits to compose (e.g. @kamod-ch/otok-kit-admin). */
   kits?: string[];
   /** Enabled module ids per kit name. */
   kitModules?: Record<string, readonly string[]>;
   /** Local file overrides — destination → absolute source path. */
-  kitOverrides?: import("@otok/config").PresetFileEntry[];
+  kitOverrides?: import("@kamod-ch/otok-config").PresetFileEntry[];
 }
 
 export interface VersionMatrix extends Record<string, string> {
   generatedAt: string;
   otok: string;
-  "@otok/vite-plugin": string;
+  "@kamod-ch/otok-vite-plugin": string;
 }
 
 export interface ScaffoldResult {

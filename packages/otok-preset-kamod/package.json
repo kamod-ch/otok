@@ -1,5 +1,5 @@
 {
-  "name": "@otok/preset-kamod",
+  "name": "@kamod-ch/otok-preset-kamod",
   "version": "0.1.0",
   "description": "Official Otok kamod preset.",
   "license": "MIT",
@@ -18,6 +18,21 @@
     "typecheck": "tsc -p tsconfig.json --noEmit"
   },
   "dependencies": {
-    "@otok/config": "workspace:*"
+    "@kamod-ch/otok-config": "workspace:*"
+  },
+  "homepage": "https://github.com/kamod-ch/otok/tree/main/packages/otok-preset-kamod#readme",
+  "bugs": {
+    "url": "https://github.com/kamod-ch/otok/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kamod-ch/otok.git",
+    "directory": "packages/otok-preset-kamod"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "publishConfig": {
+    "access": "public"
   }
 }

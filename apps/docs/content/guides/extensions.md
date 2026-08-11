@@ -9,8 +9,8 @@ Optional packages around Otok core. Use them directly (**composition**) or throu
 
 | Package | Purpose |
 |---------|---------|
-| `@otok/config` | Typed plugin API (`defineConfig`, `definePlugin`) |
-| `@otok/plugin-hello` | Minimal example plugin |
+| `@kamod-ch/otok-config` | Typed plugin API (`defineConfig`, `definePlugin`) |
+| `@kamod-ch/otok-plugin-hello` | Minimal example plugin |
 | [`@kamod-ch/otok-auth`](https://github.com/kamod-ch/otok/tree/main/packages/otok-auth) | Cookie sessions, CSRF, password hashing, route/API middleware, memory/Kysely session adapters |
 | [`@kamod-ch/otok-validation`](https://github.com/kamod-ch/otok/tree/main/packages/otok-validation) | Standard Schema validation with `defineAction`, field errors, Zod/Valibot/ArkType adapters |
 | [`@kamod-ch/otok-flash`](https://github.com/kamod-ch/otok/tree/main/packages/otok-flash) | Signed one-time flash cookies for PRG redirects and SSR toasts |

@@ -1,4 +1,4 @@
-import { mergeKits, mergePresets, type MergedKitPlan, type MergedPresetPlan } from "@otok/config";
+import { mergeKits, mergePresets, type MergedKitPlan, type MergedPresetPlan } from "@kamod-ch/otok-config";
 import fs from "node:fs";
 import path from "node:path";
 import { writeAiJsonSupport } from "./ai-json.js";

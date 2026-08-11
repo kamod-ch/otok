@@ -1,13 +1,23 @@
 {
-  "name": "@otok/kit-admin",
+  "name": "@kamod-ch/otok-kit-admin",
   "version": "0.1.0",
   "description": "Admin shell kit — users, roles, org settings.",
   "license": "MIT",
   "type": "module",
-  "files": ["dist", "kit-files", "README.md"],
+  "files": [
+    "dist",
+    "kit-files",
+    "README.md"
+  ],
   "exports": {
-    ".": { "types": "./dist/index.d.ts", "default": "./dist/index.js" },
-    "./kit": { "types": "./dist/kit.d.ts", "default": "./dist/kit.js" }
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    },
+    "./kit": {
+      "types": "./dist/kit.d.ts",
+      "default": "./dist/kit.js"
+    }
   },
   "scripts": {
     "build": "rm -rf dist && tsc -p tsconfig.build.json",
@@ -15,6 +25,26 @@
     "typecheck": "tsc -p tsconfig.json --noEmit",
     "test": "vitest run"
   },
-  "dependencies": { "@otok/config": "workspace:*" },
-  "devDependencies": { "typescript": "~6.0.2", "vitest": "^4.1.2" }
+  "dependencies": {
+    "@kamod-ch/otok-config": "workspace:*"
+  },
+  "devDependencies": {
+    "typescript": "~6.0.2",
+    "vitest": "^4.1.2"
+  },
+  "homepage": "https://github.com/kamod-ch/otok/tree/main/packages/otok-kit-admin#readme",
+  "bugs": {
+    "url": "https://github.com/kamod-ch/otok/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kamod-ch/otok.git",
+    "directory": "packages/otok-kit-admin"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
 }

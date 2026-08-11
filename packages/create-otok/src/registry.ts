@@ -1,45 +1,45 @@
-import { definePreset, type OtokPresetDefinition } from "@otok/config";
+import { definePreset, type OtokPresetDefinition } from "@kamod-ch/otok-config";
 
 /** Built-in preset registry — reused by official otok-preset-* packages. */
 export const presetRegistry: Record<string, OtokPresetDefinition> = {
-  "@otok/preset-minimal": definePreset({
-    name: "@otok/preset-minimal",
+  "@kamod-ch/otok-preset-minimal": definePreset({
+    name: "@kamod-ch/otok-preset-minimal",
     starter: "minimal",
     otok: "^0.4.0",
   }),
-  "@otok/preset-kamod": definePreset({
-    name: "@otok/preset-kamod",
+  "@kamod-ch/otok-preset-kamod": definePreset({
+    name: "@kamod-ch/otok-preset-kamod",
     starter: "kamod",
     otok: "^0.4.0",
   }),
-  "@otok/preset-dashboard": definePreset({
-    name: "@otok/preset-dashboard",
+  "@kamod-ch/otok-preset-dashboard": definePreset({
+    name: "@kamod-ch/otok-preset-dashboard",
     starter: "dashboard",
     otok: "^0.4.0",
   }),
-  "@otok/preset-saas": definePreset({
-    name: "@otok/preset-saas",
+  "@kamod-ch/otok-preset-saas": definePreset({
+    name: "@kamod-ch/otok-preset-saas",
     starter: "saas",
     otok: "^0.4.0",
   }),
-  "@otok/preset-crm": definePreset({
-    name: "@otok/preset-crm",
-    extends: "@otok/preset-minimal",
+  "@kamod-ch/otok-preset-crm": definePreset({
+    name: "@kamod-ch/otok-preset-crm",
+    extends: "@kamod-ch/otok-preset-minimal",
     starter: "minimal",
     otok: "^0.4.0",
     packageJson: {
       dependencies: {
-        "@otok/kit-crm": "workspace:*",
+        "@kamod-ch/otok-kit-crm": "workspace:*",
       },
     },
   }),
-  "@otok/preset-content": definePreset({
-    name: "@otok/preset-content",
+  "@kamod-ch/otok-preset-content": definePreset({
+    name: "@kamod-ch/otok-preset-content",
     starter: "content",
     otok: "^0.4.0",
   }),
-  "@otok/preset-api": definePreset({
-    name: "@otok/preset-api",
+  "@kamod-ch/otok-preset-api": definePreset({
+    name: "@kamod-ch/otok-preset-api",
     starter: "api",
     otok: "^0.4.0",
   }),
@@ -119,13 +119,13 @@ export const layerPresets: Record<string, OtokPresetDefinition> = {
 
 export function variantToPreset(variant: string): string {
   const map: Record<string, string> = {
-    minimal: "@otok/preset-minimal",
-    kamod: "@otok/preset-kamod",
-    dashboard: "@otok/preset-dashboard",
-    saas: "@otok/preset-saas",
-    crm: "@otok/preset-crm",
-    content: "@otok/preset-content",
-    api: "@otok/preset-api",
+    minimal: "@kamod-ch/otok-preset-minimal",
+    kamod: "@kamod-ch/otok-preset-kamod",
+    dashboard: "@kamod-ch/otok-preset-dashboard",
+    saas: "@kamod-ch/otok-preset-saas",
+    crm: "@kamod-ch/otok-preset-crm",
+    content: "@kamod-ch/otok-preset-content",
+    api: "@kamod-ch/otok-preset-api",
   };
   const preset = map[variant];
   if (!preset) throw new Error(`otok: unknown variant "${variant}".`);

@@ -1,5 +1,5 @@
-/** Example: wrap Kamod UI components for @otok/forum */
-import type { ForumComponentOverrides } from "@otok/forum";
+/** Example: wrap Kamod UI components for @kamod-ch/otok-forum */
+import type { ForumComponentOverrides } from "@kamod-ch/otok-forum";
 
 /**
  * Pass to createForum({ components: kamodForumComponents }) when @kamod-ch/otok-kamod is installed.

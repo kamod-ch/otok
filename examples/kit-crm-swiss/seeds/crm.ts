@@ -4,9 +4,9 @@ import {
   SWISS_DEMO_ORG_ID,
   importZefixRecords,
   createCrmStore,
-} from "@otok/kit-crm";
+} from "@kamod-ch/otok-kit-crm";
 import { getSearchIndex, indexCompany } from "@kamod-ch/otok-search";
-import type { CrmDatabase } from "@otok/kit-crm/db";
+import type { CrmDatabase } from "@kamod-ch/otok-kit-crm/db";
 import zefixSample from "../data/zefix-sample.json" with { type: "json" };
 
 export default async function seed(db: Kysely<CrmDatabase>) {

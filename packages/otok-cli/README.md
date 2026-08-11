@@ -29,7 +29,7 @@ pnpm otok doctor --fix
 | `outdated` | Compare installed versions with registry |
 | `doctor` | Read-only health checks (optional `--fix`) |
 
-Set `OTOK_REGISTRY_OFFLINE=1` to use the bundled registry only. See [@otok/registry](../otok-registry/docs/users.md) for details.
+Set `OTOK_REGISTRY_OFFLINE=1` to use the bundled registry only. See [@kamod-ch/otok-registry](../otok-registry/docs/users.md) for details.
 
 ## Add options
 

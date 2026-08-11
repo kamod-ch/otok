@@ -1,5 +1,5 @@
 import { defineLoader as defineDbLoader } from "@kamod-ch/otok-kysely/loader";
-import type { CrmDatabase } from "@otok/kit-crm/db";
+import type { CrmDatabase } from "@kamod-ch/otok-kit-crm/db";
 import { CrmShell } from "../../components/crm-shell.js";
 
 export const loader = defineDbLoader<

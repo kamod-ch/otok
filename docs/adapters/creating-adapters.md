@@ -1,11 +1,11 @@
 # Creating custom Otok adapters
 
-Third-party adapters implement the typed `OtokAdapter` contract from `@otok/config` (re-exported by `otok`).
+Third-party adapters implement the typed `OtokAdapter` contract from `@kamod-ch/otok-config` (re-exported by `otok`).
 
 ## Minimal adapter
 
 ```ts
-import { defineAdapter, createDualBuildVitePlugin } from "@otok/config";
+import { defineAdapter, createDualBuildVitePlugin } from "@kamod-ch/otok-config";
 
 export default defineAdapter<{ outDir?: string }>({
   name: "otok-adapter-acme",
@@ -86,6 +86,6 @@ describe("contract", () => {
 
 - Export a default factory function (`export default function acme(options) { ... }`)
 - Peer-depend on `otok` and `vite`
-- Depend on `@otok/config` for `defineAdapter` and Vite helpers
+- Depend on `@kamod-ch/otok-config` for `defineAdapter` and Vite helpers
 - Document deployment steps, environment variables, and limitations
 - Provide a minimal example under `examples/` or in the package README

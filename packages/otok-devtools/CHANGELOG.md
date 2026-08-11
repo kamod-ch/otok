@@ -1,4 +1,4 @@
-# @otok/devtools
+# @kamod-ch/otok-devtools
 
 ## 1.0.0
 

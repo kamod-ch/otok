@@ -1,6 +1,6 @@
 import { defineConfig } from "otok";
 import node from "otok-adapter-node";
-import forum from "@otok/forum/plugin";
+import forum from "@kamod-ch/otok-forum/plugin";
 import { forumStorage } from "./src/lib/db.js";
 import { createDemoAuthAdapter } from "./src/lib/auth.js";
 

@@ -1,10 +1,39 @@
 {
-  "name": "@otok/kit-marketplace",
+  "name": "@kamod-ch/otok-kit-marketplace",
   "version": "0.1.0",
   "type": "module",
-  "files": ["dist", "kit-files"],
-  "exports": { ".": "./dist/index.js", "./kit": "./dist/kit.js" },
-  "scripts": { "build": "tsc -p tsconfig.build.json" },
-  "dependencies": { "@otok/config": "workspace:*" },
-  "devDependencies": { "typescript": "~6.0.2" }
+  "files": [
+    "dist",
+    "kit-files"
+  ],
+  "exports": {
+    ".": "./dist/index.js",
+    "./kit": "./dist/kit.js"
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json"
+  },
+  "dependencies": {
+    "@kamod-ch/otok-config": "workspace:*"
+  },
+  "devDependencies": {
+    "typescript": "~6.0.2"
+  },
+  "homepage": "https://github.com/kamod-ch/otok/tree/main/packages/otok-kit-marketplace#readme",
+  "bugs": {
+    "url": "https://github.com/kamod-ch/otok/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kamod-ch/otok.git",
+    "directory": "packages/otok-kit-marketplace"
+  },
+  "license": "MIT",
+  "engines": {
+    "node": ">=20"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "description": "Otok package @kamod-ch/otok-kit-marketplace"
 }

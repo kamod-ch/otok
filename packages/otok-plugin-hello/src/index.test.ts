@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { createTestApp } from "@otok/test";
+import { createTestApp } from "@kamod-ch/otok-test";
 import { resolveOtokConfig } from "otok";
 import hello from "./index.js";
 

@@ -15,7 +15,7 @@ packages/my-otok-plugin/
   src/index.ts
 ```
 
-Use `@otok/plugin-hello` as a reference implementation.
+Use `@kamod-ch/otok-plugin-hello` as a reference implementation.
 
 ## 2. Define the plugin
 
@@ -80,10 +80,10 @@ const app = createOtokApp({
 
 ## 5. Test the plugin
 
-Use `@otok/test` with `resolveOtokConfig()`:
+Use `@kamod-ch/otok-test` with `resolveOtokConfig()`:
 
 ```ts
-import { createTestApp } from "@otok/test";
+import { createTestApp } from "@kamod-ch/otok-test";
 import { resolveOtokConfig } from "otok";
 import myPlugin from "my-otok-plugin";
 
@@ -110,4 +110,4 @@ Keep Node-only imports in server hooks such as `configureApp`, `configureServer`
 
 - Add virtual modules under `virtual:otok-plugin/<plugin-name>/<id>`
 - Extend typed env via `envSchema`
-- Contribute official extensions as separate packages (`@otok/*`, `@kamod-ch/otok-*`)
+- Contribute official extensions as separate packages (`@kamod-ch/otok-*`, `@kamod-ch/otok-*`)

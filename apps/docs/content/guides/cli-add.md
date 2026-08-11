@@ -57,7 +57,7 @@ pnpm otok add oauth --dry-run
 Update configuration only — useful in monorepos or when the package is already present:
 
 ```bash
-pnpm otok add @otok/plugin-hello --skip-install
+pnpm otok add @kamod-ch/otok-plugin-hello --skip-install
 ```
 
 ## Missing config file

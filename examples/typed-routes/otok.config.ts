@@ -1,4 +1,4 @@
-import { defineConfig } from "@otok/config";
+import { defineConfig } from "@kamod-ch/otok-config";
 
 export default defineConfig({
   app: {

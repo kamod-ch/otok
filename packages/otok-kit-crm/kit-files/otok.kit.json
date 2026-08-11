@@ -1,5 +1,5 @@
 {
-  "kits": ["@otok/kit-crm"],
+  "kits": ["@kamod-ch/otok-kit-crm"],
   "defaultOrgId": "org-swiss-demo",
   "locale": "de",
   "modules": ["pipelines", "import-export"]

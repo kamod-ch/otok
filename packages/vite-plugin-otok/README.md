@@ -1,4 +1,4 @@
-# @otok/vite-plugin
+# @kamod-ch/otok-vite-plugin
 
 Vite plugin for Otok file routes, typed route helpers, route middleware discovery, and Preact islands.
 

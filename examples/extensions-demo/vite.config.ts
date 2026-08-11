@@ -1,7 +1,7 @@
 import { defineConfig } from "vite";
 import preact from "@preact/preset-vite";
 import devServer from "@hono/vite-dev-server";
-import otok from "@otok/vite-plugin";
+import otok from "@kamod-ch/otok-vite-plugin";
 
 export default defineConfig({
   plugins: [

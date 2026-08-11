@@ -1,5 +1,5 @@
 import { randomUUID } from "node:crypto";
-import { buildThreadSlug } from "@otok/forum";
+import { buildThreadSlug } from "@kamod-ch/otok-forum";
 import { forumStorage } from "./lib/db.js";
 
 const storage = forumStorage;

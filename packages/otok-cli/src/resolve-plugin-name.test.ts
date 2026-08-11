@@ -40,8 +40,8 @@ describe("pluginImportIdentifier", () => {
     expect(pluginImportIdentifier("@kamod-ch/otok-oauth")).toBe("oauth");
   });
 
-  it("derives hello from @otok/plugin-hello", () => {
-    expect(pluginImportIdentifier("@otok/plugin-hello")).toBe("hello");
+  it("derives hello from @kamod-ch/otok-plugin-hello", () => {
+    expect(pluginImportIdentifier("@kamod-ch/otok-plugin-hello")).toBe("hello");
   });
 
   it("derives customPlugin from scoped kebab-case", () => {

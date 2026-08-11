@@ -1,8 +1,8 @@
 import { mkdir, readFile, writeFile, appendFile, access, constants } from "node:fs/promises";
 import { dirname, join } from "node:path";
 import { pathToFileURL } from "node:url";
-import type { PluginSetupChange, PluginSetupHook } from "@otok/config";
-import { validateSetupChanges } from "@otok/config";
+import type { PluginSetupChange, PluginSetupHook } from "@kamod-ch/otok-config";
+import { validateSetupChanges } from "@kamod-ch/otok-config";
 import { exists } from "./detect-manager.js";
 import { readJsonFile } from "./utils.js";
 

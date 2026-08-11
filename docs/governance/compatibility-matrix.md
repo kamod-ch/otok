@@ -16,10 +16,10 @@ Update when core or adapter majors change.
 | Package | 1.0 range | Linked |
 |---------|-----------|--------|
 | `otok` | `1.0.x` | Yes |
-| `@otok/vite-plugin` | `1.0.x` | Yes |
+| `@kamod-ch/otok-vite-plugin` | `1.0.x` | Yes |
 | `create-otok` | `1.0.x` | Yes |
-| `@otok/config` | `^0.2.0` → `^1.0.0` at 1.0 | No |
-| `@otok/test` | `^0.4.0` → `^1.0.0` at 1.0 | No |
+| `@kamod-ch/otok-config` | `^0.2.0` → `^1.0.0` at 1.0 | No |
+| `@kamod-ch/otok-test` | `^0.4.0` → `^1.0.0` at 1.0 | No |
 | `otok-cli` | `^0.1.0` → `^1.0.0` at 1.0 | No |
 
 ## Adapters
@@ -32,7 +32,7 @@ Update when core or adapter majors change.
 
 ## Official plugins (registry)
 
-Each extension declares `otokVersion` in `@otok/registry`. At 1.0 launch, registry entries will require `^1.0.0` or document cross-compat ranges.
+Each extension declares `otokVersion` in `@kamod-ch/otok-registry`. At 1.0 launch, registry entries will require `^1.0.0` or document cross-compat ranges.
 
 | Plugin | Current | Otok 1.0 compat (planned) |
 |--------|---------|---------------------------|

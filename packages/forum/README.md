@@ -1,17 +1,17 @@
-# @otok/forum
+# @kamod-ch/otok-forum
 
 Production-ready optional forum extension for [Otok](https://github.com/kamod-ch/otok) — SSR-first, Kysely-backed, permission-based community features.
 
 ## Quick start
 
 ```bash
-pnpm add @otok/forum kysely
+pnpm add @kamod-ch/otok-forum kysely
 ```
 
 ```ts
-import { createForum } from "@otok/forum";
-import { createKyselyForumStorage, migrateForumSchema } from "@otok/forum/kysely";
-import forumPlugin from "@otok/forum/plugin";
+import { createForum } from "@kamod-ch/otok-forum";
+import { createKyselyForumStorage, migrateForumSchema } from "@kamod-ch/otok-forum/kysely";
+import forumPlugin from "@kamod-ch/otok-forum/plugin";
 
 const storage = createKyselyForumStorage(db);
 await migrateForumSchema(db, "sqlite");
@@ -49,10 +49,10 @@ See [docs/](./docs/) for full configuration, adapters, migrations, and deploymen
 
 | Subpath | Purpose |
 |---------|---------|
-| `@otok/forum` | `createForum`, types, services |
-| `@otok/forum/kysely` | Schema, migrations, storage adapter |
-| `@otok/forum/testing` | Test factories, SQLite helpers |
-| `@otok/forum/plugin` | Otok plugin with `registerRoutes` |
+| `@kamod-ch/otok-forum` | `createForum`, types, services |
+| `@kamod-ch/otok-forum/kysely` | Schema, migrations, storage adapter |
+| `@kamod-ch/otok-forum/testing` | Test factories, SQLite helpers |
+| `@kamod-ch/otok-forum/plugin` | Otok plugin with `registerRoutes` |
 
 ## Example
 

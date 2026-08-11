@@ -25,7 +25,7 @@ Prioritized work items derived from [audit.md](./audit.md).
 | P0-3 | No SECURITY.md | Root security policy + disclosure | Governance |
 | P0-4 | No 0.x→1.0 migration guide | [migration-guide-0.4-to-1.0.md](./migration-guide-0.4-to-1.0.md) | Docs |
 | P0-5 | Version skew narrative unclear | Compatibility matrix + semver doc | Governance |
-| P0-6 | No plugin contract package | `@otok/plugin-contract` | Plugins |
+| P0-6 | No plugin contract package | `@kamod-ch/otok-plugin-contract` | Plugins |
 
 ---
 
@@ -77,7 +77,7 @@ These decisions avoid silent breaking changes:
 
 | Topic | Decision | Rationale |
 |-------|----------|-----------|
-| Core semver | `otok@1.0.0` with linked `@otok/vite-plugin`, `create-otok` | Changesets linked group |
+| Core semver | `otok@1.0.0` with linked `@kamod-ch/otok-vite-plugin`, `create-otok` | Changesets linked group |
 | Plugin majors | Keep independent semver; registry `otokVersion` is source of truth | Plugins already at 1.0–3.0 |
 | Adapter API | Stable at 1.0.0 — no breaking changes in 1.0 cycle | Contract tests enforce |
 | `./devtools` export | Remains **Experimental** until 1.1 review | Dev-only surface |

@@ -1,6 +1,6 @@
 import { indexCompany, getSearchIndex } from "@kamod-ch/otok-search";
 import { enrichCompany, workflows } from "@kamod-ch/otok-workflows";
-import type { KyselyCrmRepositoryOptions } from "@otok/kit-crm/db";
+import type { KyselyCrmRepositoryOptions } from "@kamod-ch/otok-kit-crm/db";
 
 function domainFromWebsite(website: string | null | undefined): string | undefined {
   if (!website) return undefined;

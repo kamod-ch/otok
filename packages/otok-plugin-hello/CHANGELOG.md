@@ -1,4 +1,4 @@
-# @otok/plugin-hello
+# @kamod-ch/otok-plugin-hello
 
 ## 1.0.0
 

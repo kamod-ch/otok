@@ -7,11 +7,11 @@ Issues discovered while building the Swiss CRM reference product.
 
 | Issue | Fix | Package |
 |-------|-----|---------|
-| No Zefix/LINDAS import format | `parseZefixJson`, `importZefixRecords`, UID normalization | `@otok/kit-crm` |
+| No Zefix/LINDAS import format | `parseZefixJson`, `importZefixRecords`, UID normalization | `@kamod-ch/otok-kit-crm` |
 | No `otok-search` package | New `@kamod-ch/otok-search` with index + plugin | `@kamod-ch/otok-search` |
-| Company schema missing address/source fields | Extended types + migration `002_extended.sql` | `@otok/kit-crm` |
+| Company schema missing address/source fields | Extended types + migration `002_extended.sql` | `@kamod-ch/otok-kit-crm` |
 | Composable loaders (auth + kysely) | `composeLoader` + `loaderEnhancer` in `otok/route`; `withDb()` in `@kamod-ch/otok-kysely/loader` | `otok`, `@kamod-ch/otok-kysely` |
-| Kit CRM Postgres adapter | `@otok/kit-crm/db` — `KyselyCrmRepository` + types | `@otok/kit-crm` |
+| Kit CRM Postgres adapter | `@kamod-ch/otok-kit-crm/db` — `KyselyCrmRepository` + types | `@kamod-ch/otok-kit-crm` |
 | Workflow enrichment on import | `onCompanyImported` hook + `company.enrich` in `otok.config.ts` | reference app + `@kamod-ch/otok-workflows` |
 | Kamod UI in reference app | `@kamod-ch/otok-kamod`, `@kamod-ch/ui`, `CrmShell` layout | reference app |
 
@@ -25,7 +25,7 @@ Issues discovered while building the Swiss CRM reference product.
 
 ### P1: Kit CRM Postgres adapter
 
-**Status:** Fixed — use `@otok/kit-crm/db` (`KyselyCrmRepository`).
+**Status:** Fixed — use `@kamod-ch/otok-kit-crm/db` (`KyselyCrmRepository`).
 
 ## Open — needs framework work (continued)
 
@@ -53,7 +53,7 @@ Issues discovered while building the Swiss CRM reference product.
 
 **Problem:** Kit CRM routes use hardcoded German strings. i18n plugin loaded but not used in reference routes (plain Preact, no Kamod).
 
-**Proposed fix:** Kit routes use `@kamod-ch/otok-i18n/loader` + `@otok/kit-crm/i18n` messages.
+**Proposed fix:** Kit routes use `@kamod-ch/otok-i18n/loader` + `@kamod-ch/otok-kit-crm/i18n` messages.
 
 ### P3: Validation on actions
 

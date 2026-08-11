@@ -1,7 +1,7 @@
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-import type { MergedKitPlan, MergedPresetPlan, PresetFileEntry } from "@otok/config";
+import type { MergedKitPlan, MergedPresetPlan, PresetFileEntry } from "@kamod-ch/otok-config";
 import { findMonorepoPackagesDir, KNOWN_KIT_PACKAGES, resolveKitPackageRoot } from "./kit-registry.js";
 import { resolveLayerDir } from "./scaffold-utils.js";
 

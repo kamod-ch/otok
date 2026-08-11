@@ -15,7 +15,7 @@
     "preact": "^10.28.2"
   },
   "devDependencies": {
-    "@otok/vite-plugin": "workspace:*",
+    "@kamod-ch/otok-vite-plugin": "workspace:*",
     "typescript": "~6.0.2",
     "vite": "^8.0.10"
   }

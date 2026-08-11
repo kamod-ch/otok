@@ -1,7 +1,7 @@
 import type { OtokContext, OtokActionContext } from "otok/server";
 import { fail, redirect } from "otok/server";
 import { getKitCrm, SWISS_DEMO_ORG_ID } from "../../data/crm-runtime.js";
-import { t } from "@otok/kit-crm";
+import { t } from "@kamod-ch/otok-kit-crm";
 
 export const loader = ({ request }: OtokContext) => {
   const crm = getKitCrm();

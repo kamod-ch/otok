@@ -1,6 +1,6 @@
 import { readFile } from "node:fs/promises";
 import { join } from "node:path";
-import { createRegistryClient, type LoadedRegistry } from "@otok/registry";
+import { createRegistryClient, type LoadedRegistry } from "@kamod-ch/otok-registry";
 import { findOtokConfigFile } from "./project.js";
 import { readJsonFile } from "./utils.js";
 

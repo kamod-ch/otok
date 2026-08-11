@@ -21,7 +21,7 @@ export function createDevtoolsVitePlugin(options: DevtoolsVitePluginOptions): Pl
         return "export function mountDevtoolsPanel() {}";
       }
       return `
-        import { mountDevtoolsPanel } from "@otok/devtools/client";
+        import { mountDevtoolsPanel } from "@kamod-ch/otok-devtools/client";
         if (import.meta.env.DEV) {
           mountDevtoolsPanel(${JSON.stringify({ endpoint: options.endpoint })});
         }

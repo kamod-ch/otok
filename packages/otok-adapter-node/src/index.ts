@@ -5,7 +5,7 @@ import {
   defineAdapter,
   type AdapterBuildContext,
   type OtokAdapterServerEntry,
-} from "@otok/config";
+} from "@kamod-ch/otok-config";
 
 export interface NodeAdapterOptions {
   /** Output root directory. Defaults to `dist`. */

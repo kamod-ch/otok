@@ -51,7 +51,7 @@ declare module "virtual:otok-islands" {
 }
 
 declare module "virtual:otok-config" {
-  import type { OtokRuntimeConfig, ResolvedOtokConfig } from "@otok/config";
+  import type { OtokRuntimeConfig, ResolvedOtokConfig } from "@kamod-ch/otok-config";
 
   export function loadOtokResolvedConfig(): Promise<ResolvedOtokConfig>;
   export type OtokResolvedRuntimeConfig = OtokRuntimeConfig;

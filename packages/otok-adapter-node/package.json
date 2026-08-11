@@ -34,7 +34,7 @@
     "vite": ">=6"
   },
   "dependencies": {
-    "@otok/config": "workspace:*"
+    "@kamod-ch/otok-config": "workspace:*"
   },
   "devDependencies": {
     "@types/node": "^24.12.2",

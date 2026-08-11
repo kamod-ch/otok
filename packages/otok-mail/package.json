@@ -56,7 +56,7 @@
     }
   },
   "devDependencies": {
-    "@otok/test": "workspace:*",
+    "@kamod-ch/otok-test": "workspace:*",
     "@types/node": "^24.12.2",
     "@types/nodemailer": "^6.4.17",
     "hono": "^4.12.25",

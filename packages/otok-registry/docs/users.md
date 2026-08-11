@@ -28,7 +28,7 @@ otok doctor --fix   # optional safe fixes (confirmed interactively)
 
 The CLI resolves registry data in this order:
 
-1. **Bundled** — shipped with `@otok/registry` (always available offline)
+1. **Bundled** — shipped with `@kamod-ch/otok-registry` (always available offline)
 2. **Project cache** — `.otok/cache/registry-v1.json` (24h TTL)
 3. **User cache** — `~/.cache/otok/registry-v1.json`
 4. **Remote** — when `OTOK_REGISTRY_URL` is set (falls back to bundled on failure)

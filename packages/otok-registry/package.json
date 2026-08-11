@@ -1,10 +1,14 @@
 {
-  "name": "@otok/registry",
+  "name": "@kamod-ch/otok-registry",
   "version": "0.1.0",
   "description": "Versioned extension registry for Otok — schema, cache, search, and compatibility checks.",
   "license": "MIT",
   "type": "module",
-  "files": ["dist", "registry", "README.md"],
+  "files": [
+    "dist",
+    "registry",
+    "README.md"
+  ],
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
@@ -30,6 +34,19 @@
     "typescript": "~6.0.2",
     "vitest": "^4.1.2"
   },
-  "engines": { "node": ">=20" },
-  "publishConfig": { "access": "public" }
+  "engines": {
+    "node": ">=20"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "homepage": "https://github.com/kamod-ch/otok/tree/main/packages/otok-registry#readme",
+  "bugs": {
+    "url": "https://github.com/kamod-ch/otok/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kamod-ch/otok.git",
+    "directory": "packages/otok-registry"
+  }
 }

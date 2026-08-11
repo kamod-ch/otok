@@ -39,10 +39,10 @@ Follow [semver rules](../governance/semver.md):
 
 ## Registry
 
-Extension PRs to `@otok/registry`:
+Extension PRs to `@kamod-ch/otok-registry`:
 
 1. Verify publisher ownership
-2. Regenerate checksum (`pnpm --filter @otok/registry registry:checksum`)
+2. Regenerate checksum (`pnpm --filter @kamod-ch/otok-registry registry:checksum`)
 3. Check `otokVersion` accuracy
 
 ## Benchmarks

@@ -1,8 +1,8 @@
-import { defineKit } from "@otok/config";
+import { defineKit } from "@kamod-ch/otok-config";
 
 export default defineKit({
   kind: "kit",
-  name: "@otok/kit-content",
+  name: "@kamod-ch/otok-kit-content",
   version: "0.1.0",
   starter: "minimal",
   recommends: ["@kamod-ch/otok-content"],

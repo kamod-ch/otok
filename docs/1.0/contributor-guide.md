@@ -35,7 +35,7 @@ Check [gap-analysis.md](./gap-analysis.md) and GitHub issues labeled `good first
 ## Plugin development
 
 - Use `definePlugin` from `otok`
-- Run plugin against `@otok/plugin-contract` tests
+- Run plugin against `@kamod-ch/otok-plugin-contract` tests
 - Add registry entry via separate PR
 
 ## Adapter development

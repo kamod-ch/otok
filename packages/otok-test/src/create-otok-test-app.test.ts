@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { h } from "preact";
 import { redirect, validationError, type OtokPageProps } from "otok/server";
-import hello from "@otok/plugin-hello";
+import hello from "@kamod-ch/otok-plugin-hello";
 import {
   authenticatedSession,
   createOtokTestApp,

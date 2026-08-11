@@ -1,11 +1,11 @@
-import { defineKit } from "@otok/config";
+import { defineKit } from "@kamod-ch/otok-config";
 import { CRM_PERMISSIONS } from "./permissions.js";
 
 const KIT_ROOT = "kit-files";
 
 export default defineKit({
   kind: "kit",
-  name: "@otok/kit-crm",
+  name: "@kamod-ch/otok-kit-crm",
   version: "0.1.0",
   starter: "minimal",
   otok: "^0.4.0",
@@ -13,19 +13,19 @@ export default defineKit({
     { package: "otok", range: "^0.4.0" },
     { package: "@kamod-ch/otok-audit", range: ">=0.1.0" },
   ],
-  recommends: ["@otok/kit-admin"],
+  recommends: ["@kamod-ch/otok-kit-admin"],
   permissions: Object.values(CRM_PERMISSIONS),
   migrations: [
     {
       id: "20260803120000_crm_initial",
-      kit: "@otok/kit-crm",
+      kit: "@kamod-ch/otok-kit-crm",
       description: "CRM core tables — organizations, companies, contacts, pipelines",
       up: "src/schema/migrations/001_initial.sql",
     },
   ],
   packageJson: {
     dependencies: {
-      "@otok/kit-crm": "workspace:*",
+      "@kamod-ch/otok-kit-crm": "workspace:*",
     },
   },
   routes: [

@@ -41,6 +41,7 @@ export function resolveExtension(registry: LoadedRegistry, input: string): Exten
     registry.extensionsByName.get(trimmed) ??
     registry.extensionsByName.get(`@kamod-ch/${trimmed}`) ??
     registry.extensionsByName.get(`@kamod-ch/otok-${trimmed}`) ??
+    // Legacy @otok/* package names (pre kamod-ch scope migration)
     registry.extensionsByName.get(`@otok/${trimmed}`)
   );
 }

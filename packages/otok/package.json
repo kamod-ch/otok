@@ -66,7 +66,7 @@
     "test": "vitest run"
   },
   "dependencies": {
-    "@otok/config": "workspace:*",
+    "@kamod-ch/otok-config": "workspace:*",
     "hono": "^4.12.25",
     "preact-render-to-string": "^6.7.0"
   },

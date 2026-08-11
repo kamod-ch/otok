@@ -8,12 +8,12 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@otok/devtools": "workspace:*",
+    "@kamod-ch/otok-devtools": "workspace:*",
     "otok": "workspace:*",
     "preact": "^10.28.2"
   },
   "devDependencies": {
-    "@otok/vite-plugin": "workspace:*",
+    "@kamod-ch/otok-vite-plugin": "workspace:*",
     "@hono/vite-dev-server": "^0.23.0",
     "@types/node": "^24.12.2",
     "hono": "^4.12.25",

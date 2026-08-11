@@ -1,4 +1,4 @@
-# @otok/forum — Phase 2 backlog
+# @kamod-ch/otok-forum — Phase 2 backlog
 
 Items intentionally deferred from the initial release for a clean public API surface.
 
@@ -47,4 +47,4 @@ Items intentionally deferred from the initial release for a clean public API sur
 
 - [ ] Redis-backed rate limiting
 - [ ] Distributed slug uniqueness (cross-region)
-- [ ] `@otok/preset-forum` scaffold for `create otok`
+- [ ] `@kamod-ch/otok-preset-forum` scaffold for `create otok`

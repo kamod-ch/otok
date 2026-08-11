@@ -4,7 +4,7 @@ import {
   formatRouteTree,
   runRouteTypegen,
   scanRoutes,
-} from "@otok/route-typegen";
+} from "@kamod-ch/otok-route-typegen";
 import { loadOtokAppConfig } from "../load-config.js";
 
 const HELP = `Usage: otok typegen [options]

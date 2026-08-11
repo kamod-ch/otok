@@ -34,7 +34,7 @@
     "vitest": ">=2"
   },
   "dependencies": {
-    "@otok/config": "workspace:*"
+    "@kamod-ch/otok-config": "workspace:*"
   },
   "devDependencies": {
     "typescript": "~6.0.2",

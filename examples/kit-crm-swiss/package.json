@@ -26,7 +26,7 @@
     "@kamod-ch/otok-validation": "workspace:*",
     "@kamod-ch/otok-workflows": "workspace:*",
     "@kamod-ch/ui": "^1.0.1",
-    "@otok/kit-crm": "workspace:*",
+    "@kamod-ch/otok-kit-crm": "workspace:*",
     "hono": "^4.12.25",
     "kysely": "^0.29.2",
     "otok": "workspace:*",
@@ -36,7 +36,7 @@
     "zod": "^4.0.0"
   },
   "devDependencies": {
-    "@otok/vite-plugin": "workspace:*",
+    "@kamod-ch/otok-vite-plugin": "workspace:*",
     "@playwright/test": "^1.55.0",
     "@preact/preset-vite": "^2.10.5",
     "@tailwindcss/vite": "^4.2.4",

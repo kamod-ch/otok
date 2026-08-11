@@ -5,7 +5,7 @@ Real Swiss B2B CRM validating Otok against business workflows (not a toy demo).
 ## Stack
 
 - Otok + Preact + PostgreSQL (Kysely)
-- `@otok/kit-crm` domain & Zefix import
+- `@kamod-ch/otok-kit-crm` domain & Zefix import
 - `@kamod-ch/otok-auth` (sessions, roles)
 - `@kamod-ch/otok-i18n`, `@kamod-ch/otok-validation`
 - `@kamod-ch/otok-workflows`, `@kamod-ch/otok-audit`, `@kamod-ch/otok-search`

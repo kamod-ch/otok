@@ -1,5 +1,5 @@
 {
-  "name": "@otok/config",
+  "name": "@kamod-ch/otok-config",
   "version": "0.2.0",
   "description": "Typed plugin API and config resolution for Otok apps.",
   "license": "MIT",

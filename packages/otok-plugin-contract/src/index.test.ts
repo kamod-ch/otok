@@ -1,8 +1,8 @@
 import { describe } from "vitest";
 import { assertPluginContract } from "./index.js";
-import fixture from "@otok/plugin-fixture";
+import fixture from "@kamod-ch/otok-plugin-fixture";
 
-describe("@otok/plugin-fixture contract", () => {
+describe("@kamod-ch/otok-plugin-fixture contract", () => {
   assertPluginContract({
     plugin: fixture,
     expected: {

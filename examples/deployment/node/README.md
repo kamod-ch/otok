@@ -24,7 +24,7 @@ curl http://localhost:3000/api/health
 
 - Node.js 22 runtime compatible with Otok's Node 20+ requirement
 - pnpm via Corepack
-- separate package builds for `otok`, `@otok/vite-plugin`, and the playground
+- separate package builds for `otok`, `@kamod-ch/otok-vite-plugin`, and the playground
 - Vite client manifest and hashed assets
 - production server start via `node dist/server/server.js`
 - `PORT`, `HOST`, and `NODE_ENV`

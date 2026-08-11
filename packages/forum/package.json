@@ -1,10 +1,14 @@
 {
-  "name": "@otok/forum",
+  "name": "@kamod-ch/otok-forum",
   "version": "0.1.0",
   "description": "Production-ready optional forum extension for Otok — SSR, Kysely, permissions, moderation.",
   "license": "MIT",
   "type": "module",
-  "files": ["dist", "README.md", "docs"],
+  "files": [
+    "dist",
+    "README.md",
+    "docs"
+  ],
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
@@ -30,7 +34,7 @@
     "test": "vitest run"
   },
   "dependencies": {
-    "@otok/config": "workspace:*",
+    "@kamod-ch/otok-config": "workspace:*",
     "markdown-it": "^14.1.0",
     "zod": "^3.24.0"
   },
@@ -41,12 +45,18 @@
     "preact": ">=10.26.0"
   },
   "peerDependenciesMeta": {
-    "kysely": { "optional": true },
-    "hono": { "optional": true },
-    "preact": { "optional": true }
+    "kysely": {
+      "optional": true
+    },
+    "hono": {
+      "optional": true
+    },
+    "preact": {
+      "optional": true
+    }
   },
   "devDependencies": {
-    "@otok/test": "workspace:*",
+    "@kamod-ch/otok-test": "workspace:*",
     "@types/better-sqlite3": "^7.6.13",
     "@types/markdown-it": "^14.1.2",
     "@types/node": "^24.12.2",
@@ -58,6 +68,19 @@
     "typescript": "~6.0.2",
     "vitest": "^4.1.2"
   },
-  "engines": { "node": ">=20" },
-  "publishConfig": { "access": "public" }
+  "engines": {
+    "node": ">=20"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "homepage": "https://github.com/kamod-ch/otok/tree/main/packages/forum#readme",
+  "bugs": {
+    "url": "https://github.com/kamod-ch/otok/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kamod-ch/otok.git",
+    "directory": "packages/forum"
+  }
 }

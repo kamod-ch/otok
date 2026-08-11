@@ -47,7 +47,7 @@
     "stripe": ">=17"
   },
   "devDependencies": {
-    "@otok/test": "workspace:*",
+    "@kamod-ch/otok-test": "workspace:*",
     "@types/node": "^24.12.2",
     "hono": "^4.12.25",
     "otok": "workspace:*",

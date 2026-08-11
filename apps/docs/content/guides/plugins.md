@@ -18,7 +18,7 @@ Or manually in `otok.config.ts`:
 ```ts
 // otok.config.ts
 import { defineConfig } from "otok";
-import hello from "@otok/plugin-hello";
+import hello from "@kamod-ch/otok-plugin-hello";
 
 export default defineConfig({
   plugins: [hello()],
@@ -75,8 +75,8 @@ Plugins run in declared order:
 
 | Package | Purpose |
 |---------|---------|
-| `@otok/config` | Plugin contract and resolution |
-| `@otok/plugin-hello` | Minimal example plugin |
-| `@otok/plugin-fixture` | Test fixture plugin |
+| `@kamod-ch/otok-config` | Plugin contract and resolution |
+| `@kamod-ch/otok-plugin-hello` | Minimal example plugin |
+| `@kamod-ch/otok-plugin-fixture` | Test fixture plugin |
 
 See also [Create your first Otok plugin](./create-your-first-plugin.md), [CLI — otok add](./cli-add.md), and [Composition Packages](./extensions.md).

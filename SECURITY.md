@@ -48,7 +48,7 @@ In scope:
 
 - `otok` core, adapters, official `@kamod-ch/*` plugins
 - `otok-cli`, `create-otok`
-- Published npm packages under `@otok/*`
+- Published npm packages under `@kamod-ch/otok-*`
 
 Out of scope:
 

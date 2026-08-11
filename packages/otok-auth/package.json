@@ -93,7 +93,7 @@
   },
   "devDependencies": {
     "@node-rs/argon2": "^2.0.2",
-    "@otok/test": "workspace:*",
+    "@kamod-ch/otok-test": "workspace:*",
     "@types/node": "^24.12.2",
     "hono": "^4.12.25",
     "kysely": "^0.29.2",

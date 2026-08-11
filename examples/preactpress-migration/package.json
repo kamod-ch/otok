@@ -18,7 +18,7 @@
     "@kamod-ch/otok-seo": "workspace:*",
     "@kamod-ch/preactpress-compat": "workspace:*",
     "@kamod-ch/ui": "^1.0.1",
-    "@otok/vite-plugin": "workspace:*",
+    "@kamod-ch/otok-vite-plugin": "workspace:*",
     "@preact/preset-vite": "^2.10.5",
     "@preact/signals": "^2.0.0",
     "hono": "^4.12.25",

@@ -1,4 +1,4 @@
-# @otok/plugin-contract
+# @kamod-ch/otok-plugin-contract
 
 Shared contract tests for Otok plugins, mirroring `otok-adapter-contract` for adapters.
 
@@ -6,7 +6,7 @@ Shared contract tests for Otok plugins, mirroring `otok-adapter-contract` for ad
 
 ```ts
 import { describe } from "vitest";
-import { assertPluginContract } from "@otok/plugin-contract";
+import { assertPluginContract } from "@kamod-ch/otok-plugin-contract";
 import myPlugin from "@scope/my-plugin";
 
 describe("my-plugin contract", () => {

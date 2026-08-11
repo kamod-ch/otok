@@ -6,12 +6,12 @@ import { mergePresets } from "./preset-merge.js";
 
 const crmKit = defineKit({
   kind: "kit",
-  name: "@otok/kit-crm",
+  name: "@kamod-ch/otok-kit-crm",
   version: "0.1.0",
   starter: "minimal",
   otok: "^0.4.0",
   routes: [{ from: "routes/crm/index.tsx", to: "src/app/routes/crm/index.tsx" }],
-  migrations: [{ id: "20260801000000_crm_initial", kit: "@otok/kit-crm", description: "CRM schema", up: "migrations/001.sql" }],
+  migrations: [{ id: "20260801000000_crm_initial", kit: "@kamod-ch/otok-kit-crm", description: "CRM schema", up: "migrations/001.sql" }],
   permissions: ["crm:companies:read"],
   modules: {
     pipelines: {
@@ -24,16 +24,16 @@ const crmKit = defineKit({
 
 const adminKit = defineKit({
   kind: "kit",
-  name: "@otok/kit-admin",
+  name: "@kamod-ch/otok-kit-admin",
   version: "0.1.0",
   starter: "minimal",
   routes: [{ from: "routes/admin/index.tsx", to: "src/app/routes/admin/index.tsx" }],
-  conflicts: ["@otok/kit-marketplace"],
+  conflicts: ["@kamod-ch/otok-kit-marketplace"],
 });
 
 const marketplaceKit = defineKit({
   kind: "kit",
-  name: "@otok/kit-marketplace",
+  name: "@kamod-ch/otok-kit-marketplace",
   version: "0.1.0",
   starter: "minimal",
   routes: [{ from: "routes/marketplace/index.tsx", to: "src/app/routes/marketplace/index.tsx" }],
@@ -41,8 +41,8 @@ const marketplaceKit = defineKit({
 
 describe("mergeKits", () => {
   it("composes multiple kits with enabled modules", () => {
-    const plan = mergeKits([crmKit, adminKit], {}, { enabledModules: { "@otok/kit-crm": ["pipelines"] } });
-    expect(plan.kits).toEqual(["@otok/kit-crm", "@otok/kit-admin"]);
+    const plan = mergeKits([crmKit, adminKit], {}, { enabledModules: { "@kamod-ch/otok-kit-crm": ["pipelines"] } });
+    expect(plan.kits).toEqual(["@kamod-ch/otok-kit-crm", "@kamod-ch/otok-kit-admin"]);
     expect(plan.files.some((f) => f.to === "src/app/routes/crm/pipelines.tsx")).toBe(true);
     expect(plan.permissions).toContain("crm:pipelines:read");
     expect(plan.migrations).toHaveLength(1);
@@ -79,13 +79,13 @@ describe("detectKitConflicts duplicate routes", () => {
   it("flags duplicate route targets", () => {
     const a = defineKit({
       kind: "kit",
-      name: "@otok/kit-a",
+      name: "@kamod-ch/otok-kit-a",
       version: "1",
       files: [{ from: "a.tsx", to: "src/app/routes/shared.tsx" }],
     });
     const b = defineKit({
       kind: "kit",
-      name: "@otok/kit-b",
+      name: "@kamod-ch/otok-kit-b",
       version: "1",
       files: [{ from: "b.tsx", to: "src/app/routes/shared.tsx" }],
     });

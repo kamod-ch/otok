@@ -1,30 +1,33 @@
 import fs from "node:fs";
 import path from "node:path";
 import { pathToFileURL } from "node:url";
-import type { OtokKitDefinition } from "@otok/config";
+import type { OtokKitDefinition } from "@kamod-ch/otok-config";
 
 /** Presets that auto-compose business kits during scaffold. */
 export const PRESET_KIT_MAP: Record<
   string,
   { kits: string[]; modules?: Record<string, readonly string[]> }
 > = {
-  "@otok/preset-crm": {
-    kits: ["@otok/kit-crm"],
-    modules: { "@otok/kit-crm": ["pipelines", "import-export"] },
+  "@kamod-ch/otok-preset-crm": {
+    kits: ["@kamod-ch/otok-kit-crm"],
+    modules: { "@kamod-ch/otok-kit-crm": ["pipelines", "import-export"] },
   },
 };
 
 export const KNOWN_KIT_PACKAGES = [
-  "@otok/kit-crm",
-  "@otok/kit-admin",
-  "@otok/kit-saas",
-  "@otok/kit-marketplace",
-  "@otok/kit-content",
+  "@kamod-ch/otok-kit-crm",
+  "@kamod-ch/otok-kit-admin",
+  "@kamod-ch/otok-kit-saas",
+  "@kamod-ch/otok-kit-marketplace",
+  "@kamod-ch/otok-kit-content",
 ] as const;
 
-/** Map npm package name to monorepo folder (e.g. @otok/kit-crm → otok-kit-crm). */
+/** Map npm package name to monorepo folder (e.g. @kamod-ch/otok-kit-crm → otok-kit-crm). */
 export function kitFolderName(packageName: string): string {
-  const short = packageName.replace(/^@otok\//, "");
+  const short = packageName
+    .replace(/^@kamod-ch\/otok-/, "")
+    .replace(/^@otok\//, "");
+  if (short.startsWith("otok-kit-")) return short;
   if (short.startsWith("kit-")) return `otok-${short}`;
   return `otok-kit-${short}`;
 }

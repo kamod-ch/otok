@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { h } from "preact";
-import { createTestApp, renderRoute, requestRoute } from "@otok/test";
+import { createTestApp, renderRoute, requestRoute } from "@kamod-ch/otok-test";
 import type { OtokPageProps } from "otok/server";
 import { CSRF_FIELD } from "../csrf.js";
 import { createApiGuard, createCsrfMiddleware, createRequireAuthMiddleware } from "./index.js";

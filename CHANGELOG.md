@@ -24,11 +24,11 @@
 ### Previously unreleased
 
 - `validationError()` helper with flexible field errors and optional form `values`.
-- `parseHtml` / `renderParsedRoute` in `@otok/test` for SSR HTML assertions.
+- `parseHtml` / `renderParsedRoute` in `@kamod-ch/otok-test` for SSR HTML assertions.
 - Opt-in `streaming: true` on handlers for shell-first HTML responses.
 - `createOtokWorkerApp()` Edge-safe app factory without Node static serving.
 - CSRF double-submit recipe in the minimal template and Flat CMS example.
-- Typed-route compile fixtures for `@otok/vite-plugin`.
+- Typed-route compile fixtures for `@kamod-ch/otok-vite-plugin`.
 - Reference examples CI via `pnpm check:examples`.
 - Multi-browser Playwright projects (Chromium, Firefox, WebKit).
 - Migration guides (Fresh, Remix, plain Hono) and i18n pattern guide.
@@ -51,7 +51,7 @@
 - `readOtokManifest()` helper for production client manifests.
 - `createOtokApp({ configure })` hook for API routes and middleware.
 - `routePaths` / `OtokRoutePath` exports from `virtual:otok-routes`.
-- Island id collision warnings in `@otok/vite-plugin`.
+- Island id collision warnings in `@kamod-ch/otok-vite-plugin`.
 - `client-only` island hydration strategy.
 - Minimal `create-otok` template (default); `full` template retains the dashboard demo.
 - MIT LICENSE, full-stack documentation, and security conventions.
@@ -68,7 +68,7 @@
 
 - Island IDs are now build-time stable and based on island filenames. Runtime fallback to `function.name` was removed to avoid production mismatches after minification.
 - Route conventions now reserve `_layout.tsx`, `_not-found.tsx`, and `_error.tsx`.
-- The default template uses layout routes and imports virtual module types from `@otok/vite-plugin/client`.
+- The default template uses layout routes and imports virtual module types from `@kamod-ch/otok-vite-plugin/client`.
 
 ### Added
 

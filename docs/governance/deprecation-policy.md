@@ -22,7 +22,7 @@ Use <replacement> instead. See <url>
 
 ## Extension packages
 
-Publishers follow [@otok/registry publishers guide](../packages/otok-registry/docs/publishers.md):
+Publishers follow [@kamod-ch/otok-registry publishers guide](../packages/otok-registry/docs/publishers.md):
 
 - Keep deprecated entries in registry for migration tooling
 - Set `maintenanceStatus: "deprecated"` or `"abandoned"`

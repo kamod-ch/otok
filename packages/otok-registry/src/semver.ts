@@ -1,4 +1,4 @@
-/** Minimal semver range check — aligned with @otok/config kit-merge. */
+/** Minimal semver range check — aligned with @kamod-ch/otok-config kit-merge. */
 export function satisfiesRange(version: string, range: string): boolean {
   const normalize = (v: string) => v.replace(/^v/, "").split("-")[0]!.split(".").map(Number);
   const ver = normalize(version);

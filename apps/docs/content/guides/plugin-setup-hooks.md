@@ -9,11 +9,11 @@ When users run `otok add`, the CLI can run a **setup hook** exported by your pac
 
 ## Contract
 
-Define a setup hook with `defineSetup` from `@otok/config` (or `otok`):
+Define a setup hook with `defineSetup` from `@kamod-ch/otok-config` (or `otok`):
 
 ```ts
 // setup.ts
-import { defineSetup } from "@otok/config";
+import { defineSetup } from "@kamod-ch/otok-config";
 
 export default defineSetup(({ root, packageName, dryRun }) => ({
   changes: [
@@ -89,7 +89,7 @@ interface PluginSetupContext {
 }
 ```
 
-## Example: `@otok/plugin-fixture`
+## Example: `@kamod-ch/otok-plugin-fixture`
 
 The test fixture plugin ships a minimal setup hook that appends to `.env.example` and creates `config/fixture/`. See `packages/otok-plugin-fixture/src/setup.ts` in the repository.
 
@@ -98,7 +98,7 @@ The test fixture plugin ships a minimal setup hook that appends to `.env.example
 Unit-test the hook by calling it and passing the result to `validateSetupChanges`:
 
 ```ts
-import { validateSetupChanges } from "@otok/config";
+import { validateSetupChanges } from "@kamod-ch/otok-config";
 import setup from "./setup.js";
 
 const result = await setup({ root: "/tmp/app", packageName: "@scope/pkg", dryRun: true });

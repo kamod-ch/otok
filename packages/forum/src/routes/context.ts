@@ -29,7 +29,7 @@ export function setForumState(hono: OtokContext["hono"], state: ForumContextStat
 
 export function getForumState(hono: OtokContext["hono"]): ForumContextState {
   const state = (hono as { get: (k: string) => unknown }).get(FORUM_CTX_KEY);
-  if (!state) throw new Error("@otok/forum: forum middleware not applied");
+  if (!state) throw new Error("@kamod-ch/otok-forum: forum middleware not applied");
   return state as ForumContextState;
 }
 

@@ -10,7 +10,7 @@
   },
   "dependencies": {
     "@hono/node-server": "^2.0.1",
-    "@otok/vite-plugin": "workspace:*",
+    "@kamod-ch/otok-vite-plugin": "workspace:*",
     "hono": "^4.12.25",
     "otok": "workspace:*",
     "otok-cli": "workspace:*",

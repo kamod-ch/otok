@@ -1,5 +1,5 @@
 import { describe, expect, it, beforeEach } from "vitest";
-import { createOtokTestApp, expectRedirect, expectValidationDocument } from "@otok/test";
+import { createOtokTestApp, expectRedirect, expectValidationDocument } from "@kamod-ch/otok-test";
 import {
   createTestAuthAdapter,
   createTestStorage,

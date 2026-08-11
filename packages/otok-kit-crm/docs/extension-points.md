@@ -1,9 +1,9 @@
-# Extension points — @otok/kit-crm
+# Extension points — @kamod-ch/otok-kit-crm
 
 ## Domain layer (preferred override surface)
 
 ```ts
-import { CrmService, seedSwissDemo, SWISS_DEMO_ORG_ID } from "@otok/kit-crm";
+import { CrmService, seedSwissDemo, SWISS_DEMO_ORG_ID } from "@kamod-ch/otok-kit-crm";
 ```
 
 Replace in-memory store with Kysely adapter in your app — keep `CrmService` API.
@@ -46,4 +46,4 @@ mergeKits([crmKit], registry, {
 
 ## Migrations
 
-`20260803120000_crm_initial` — apply via your migration runner; SQL in `@otok/kit-crm` package.
+`20260803120000_crm_initial` — apply via your migration runner; SQL in `@kamod-ch/otok-kit-crm` package.

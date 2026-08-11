@@ -1,10 +1,13 @@
 {
-  "name": "@otok/plugin-contract",
+  "name": "@kamod-ch/otok-plugin-contract",
   "version": "0.1.0",
   "description": "Shared contract tests for Otok plugins — validates definePlugin hooks and lifecycle.",
   "license": "MIT",
   "type": "module",
-  "files": ["dist", "README.md"],
+  "files": [
+    "dist",
+    "README.md"
+  ],
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
@@ -21,15 +24,28 @@
     "vitest": ">=2"
   },
   "dependencies": {
-    "@otok/config": "workspace:*",
+    "@kamod-ch/otok-config": "workspace:*",
     "otok": "workspace:*"
   },
   "devDependencies": {
-    "@otok/plugin-fixture": "workspace:*",
+    "@kamod-ch/otok-plugin-fixture": "workspace:*",
     "@types/node": "^24.12.2",
     "typescript": "~6.0.2",
     "vitest": "^4.1.2"
   },
-  "engines": { "node": ">=20" },
-  "publishConfig": { "access": "public" }
+  "engines": {
+    "node": ">=20"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "homepage": "https://github.com/kamod-ch/otok/tree/main/packages/otok-plugin-contract#readme",
+  "bugs": {
+    "url": "https://github.com/kamod-ch/otok/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kamod-ch/otok.git",
+    "directory": "packages/otok-plugin-contract"
+  }
 }

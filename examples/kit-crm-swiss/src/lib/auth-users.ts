@@ -5,7 +5,7 @@ import {
   SWISS_DEMO_ORG_ID,
   hasCrmPermission,
   type CrmPermission,
-} from "@otok/kit-crm";
+} from "@kamod-ch/otok-kit-crm";
 
 export interface CrmSessionUser {
   id: string;

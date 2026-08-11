@@ -1,4 +1,4 @@
-# @otok/test
+# @kamod-ch/otok-test
 
 ## 0.4.1
 
@@ -14,7 +14,7 @@
 
 ### Minor Changes
 
-- 2850c95: Add the `@otok/test` package with server-side helpers for creating test apps, route fixtures, requests, and SSR render assertions.
+- 2850c95: Add the `@kamod-ch/otok-test` package with server-side helpers for creating test apps, route fixtures, requests, and SSR render assertions.
 - Complete Phase 1 hardening and Phase 2 foundations: validationError helper, parseHtml testing utilities, Edge-safe createOtokWorkerApp, opt-in streaming SSR shells, CSRF recipes, examples CI, multi-browser Playwright, and docs sync.
 
 ### Patch Changes

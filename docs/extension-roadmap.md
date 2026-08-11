@@ -4,12 +4,12 @@ Optional packages around Otok core. Core stays free of auth, validation, databas
 
 ## Plugin system — shipped
 
-Typed plugin API via `@otok/config`, integrated by `@otok/vite-plugin`:
+Typed plugin API via `@kamod-ch/otok-config`, integrated by `@kamod-ch/otok-vite-plugin`:
 
 - `defineConfig` / `definePlugin` from `otok`
 - `otok.config.ts` with deterministic hook order
 - `virtual:otok-config` runtime bridge
-- Example: `@otok/plugin-hello`
+- Example: `@kamod-ch/otok-plugin-hello`
 
 See `apps/docs/content/guides/plugins.md` and `docs/adr/0006-plugin-system.md`.
 

@@ -51,7 +51,7 @@ Add `.otok/` to `.gitignore` if you prefer CI-only generation, or commit generat
 
 | Trigger | Command / hook |
 |---|---|
-| Dev server | `@otok/vite-plugin` regenerates on route file changes (debounced) |
+| Dev server | `@kamod-ch/otok-vite-plugin` regenerates on route file changes (debounced) |
 | Production build | `buildStart` hook runs typegen in strict mode |
 | CI | `otok typegen --strict` |
 | Inspect tree | `otok routes` |

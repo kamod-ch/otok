@@ -2,7 +2,7 @@ import fs from "node:fs";
 import path from "node:path";
 import type { Plugin, UserConfig, ViteDevServer } from "vite";
 import { normalizePath } from "vite";
-import { runRouteTypegen, formatRouteIssues } from "@otok/route-typegen";
+import { runRouteTypegen, formatRouteIssues } from "@kamod-ch/otok-route-typegen";
 import { generateOtokConfigModule } from "./config-loader.js";
 import { loadResolvedOtokConfig, RESOLVED_OTOK_CONFIG_MODULE_ID } from "./plugin-bridge.js";
 

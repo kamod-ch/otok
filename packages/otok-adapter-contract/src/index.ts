@@ -10,7 +10,7 @@ import {
   type OtokAdapterPrerender,
   type OtokAdapterSsr,
   type OtokRuntime,
-} from "@otok/config";
+} from "@kamod-ch/otok-config";
 
 export interface AdapterContractExpectation {
   name: string;

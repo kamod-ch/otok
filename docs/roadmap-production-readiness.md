@@ -28,7 +28,7 @@ Workspace checks: `pnpm check`, `pnpm test:e2e`, `pnpm check:examples`, `pnpm sm
 
 ### Tests und Qualität
 
-Unit coverage includes handlers, actions, middleware, validation, HTML, hydration, soft nav, Vite plugin, create-otok, and `@otok/test`.
+Unit coverage includes handlers, actions, middleware, validation, HTML, hydration, soft nav, Vite plugin, create-otok, and `@kamod-ch/otok-test`.
 
 Playground E2E covers zero-JS routes, islands, soft nav, forms (with JS disabled), middleware, errors, and production health/assets.
 
@@ -82,7 +82,7 @@ Helpers `redirect`, `notFound`, `fail`, and `validationError` share one failure 
 
 ### P4. Typed Route Builder — **done**
 
-### P5. Testing Utilities — **done** (`@otok/test` + `parseHtml`)
+### P5. Testing Utilities — **done** (`@kamod-ch/otok-test` + `parseHtml`)
 
 ### P6. E2E-Ausbau für Forms, Soft Navigation und Islands — **done** (multi-browser included)
 

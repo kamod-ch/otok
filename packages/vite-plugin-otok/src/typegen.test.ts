@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
-import { runRouteTypegen } from "@otok/route-typegen";
+import { runRouteTypegen } from "@kamod-ch/otok-route-typegen";
 
 describe("vite plugin typegen integration", () => {
   it("generates route types during buildStart hook flow", () => {

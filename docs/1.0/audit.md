@@ -20,7 +20,7 @@ No breaking changes should ship without a migration guide and compatibility deci
 
 | Subpath | Stability (target) | Notes |
 |---------|-------------------|-------|
-| `.` / `./config` | Public | Re-exports `@otok/config` |
+| `.` / `./config` | Public | Re-exports `@kamod-ch/otok-config` |
 | `./server` | Public | `createOtokApp`, handlers, streaming |
 | `./client` | Public | Islands, hydration, soft-nav |
 | `./shared` | Public | Route types, theme, deferred |
@@ -40,10 +40,10 @@ Machine-readable manifest: [`api-stability.json`](../../api-stability.json).
 
 | Area | Location | Risk |
 |------|----------|------|
-| Plugin `__options` marker | `@otok/config` types | Internal — must not be used by plugins |
-| Vite plugin internals | `@otok/vite-plugin` | Internal |
-| Route typegen AST | `@otok/route-typegen` | Internal |
-| Registry checksum scripts | `@otok/registry/scripts` | Internal |
+| Plugin `__options` marker | `@kamod-ch/otok-config` types | Internal — must not be used by plugins |
+| Vite plugin internals | `@kamod-ch/otok-vite-plugin` | Internal |
+| Route typegen AST | `@kamod-ch/otok-route-typegen` | Internal |
+| Registry checksum scripts | `@kamod-ch/otok-registry/scripts` | Internal |
 | Scaffold sync | `scripts/sync-scaffold.mjs` | Internal |
 
 **Recommendation:** Document all Internal surfaces in `docs/governance/api-classification.md` and block new imports of Internal paths from examples.
@@ -68,9 +68,9 @@ Machine-readable manifest: [`api-stability.json`](../../api-stability.json).
 
 ## 4. Plugins
 
-- Contract defined in `@otok/config` (`OtokPlugin` interface, ADR 0006)
-- Fixture coverage: `@otok/plugin-fixture`, `@otok/plugin-hello`
-- **Gap:** No standalone `@otok/plugin-contract` package (adapter-contract pattern exists)
+- Contract defined in `@kamod-ch/otok-config` (`OtokPlugin` interface, ADR 0006)
+- Fixture coverage: `@kamod-ch/otok-plugin-fixture`, `@kamod-ch/otok-plugin-hello`
+- **Gap:** No standalone `@kamod-ch/otok-plugin-contract` package (adapter-contract pattern exists)
 
 ---
 
@@ -100,7 +100,7 @@ Adapter contract package: `otok-adapter-contract@0.1.1`. **Status: adequate for 
 
 ## 7. Generated Types
 
-- Route types via `@otok/route-typegen` → `.otok/types/routes.d.ts`
+- Route types via `@kamod-ch/otok-route-typegen` → `.otok/types/routes.d.ts`
 - `otok doctor` warns when missing
 - **Gap:** No CI check that playground generates clean typegen output
 
@@ -162,9 +162,9 @@ Benchmark example exists but is ad-hoc (`examples/rendering-benchmark`).
 
 ## 13. Version Compatibility
 
-- Changesets linked: `otok`, `@otok/vite-plugin`, `create-otok`
+- Changesets linked: `otok`, `@kamod-ch/otok-vite-plugin`, `create-otok`
 - Registry `otokVersion` ranges per extension
-- Kit merge version checks in `@otok/config`
+- Kit merge version checks in `@kamod-ch/otok-config`
 - **Gap:** Published compatibility matrix document; LTS policy
 
 ---

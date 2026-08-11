@@ -1,13 +1,13 @@
-import { definePreset } from "@otok/config";
+import { definePreset } from "@kamod-ch/otok-config";
 
 export default definePreset({
-  name: "@otok/preset-crm",
-  extends: ["@otok/preset-minimal"],
+  name: "@kamod-ch/otok-preset-crm",
+  extends: ["@kamod-ch/otok-preset-minimal"],
   starter: "minimal",
   otok: "^0.4.0",
   packageJson: {
     dependencies: {
-      "@otok/kit-crm": "workspace:*",
+      "@kamod-ch/otok-kit-crm": "workspace:*",
     },
   },
 });

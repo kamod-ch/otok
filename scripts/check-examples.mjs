@@ -20,9 +20,9 @@ const examples = [
 /** Workspace packages that examples may depend on — packed and rewritten to file: URLs. */
 const packTargets = [
   { filter: "otok", name: "otok", prefix: "otok-" },
-  { filter: "@otok/vite-plugin", name: "@otok/vite-plugin", prefix: "otok-vite-plugin-" },
-  { filter: "@otok/config", name: "@otok/config", prefix: "otok-config-" },
-  { filter: "@otok/route-typegen", name: "@otok/route-typegen", prefix: "otok-route-typegen-" },
+  { filter: "@kamod-ch/otok-vite-plugin", name: "@kamod-ch/otok-vite-plugin", prefix: "otok-vite-plugin-" },
+  { filter: "@kamod-ch/otok-config", name: "@kamod-ch/otok-config", prefix: "otok-config-" },
+  { filter: "@kamod-ch/otok-route-typegen", name: "@kamod-ch/otok-route-typegen", prefix: "otok-route-typegen-" },
   { filter: "otok-cli", name: "otok-cli", prefix: "otok-cli-" },
   { filter: "@kamod-ch/otok-i18n", name: "@kamod-ch/otok-i18n", prefix: "kamod-ch-otok-i18n-" },
   { filter: "@kamod-ch/otok-auth", name: "@kamod-ch/otok-auth", prefix: "kamod-ch-otok-auth-" },
@@ -96,10 +96,10 @@ try {
       {
         ...(packageJson.dependencies ?? {}),
         otok: `file:${packsByName.otok}`,
-        "@otok/vite-plugin":
-          packageJson.dependencies?.["@otok/vite-plugin"] || packageJson.devDependencies?.["@otok/vite-plugin"]
+        "@kamod-ch/otok-vite-plugin":
+          packageJson.dependencies?.["@kamod-ch/otok-vite-plugin"] || packageJson.devDependencies?.["@kamod-ch/otok-vite-plugin"]
             ? undefined
-            : `file:${packsByName["@otok/vite-plugin"]}`,
+            : `file:${packsByName["@kamod-ch/otok-vite-plugin"]}`,
       },
       packsByName,
     );
@@ -111,8 +111,8 @@ try {
     packageJson.devDependencies = rewriteWorkspaceDeps(packageJson.devDependencies ?? {}, packsByName);
 
     // Ensure vite-plugin is always installable
-    if (!packageJson.dependencies["@otok/vite-plugin"] && !packageJson.devDependencies["@otok/vite-plugin"]) {
-      packageJson.devDependencies["@otok/vite-plugin"] = `file:${packsByName["@otok/vite-plugin"]}`;
+    if (!packageJson.dependencies["@kamod-ch/otok-vite-plugin"] && !packageJson.devDependencies["@kamod-ch/otok-vite-plugin"]) {
+      packageJson.devDependencies["@kamod-ch/otok-vite-plugin"] = `file:${packsByName["@kamod-ch/otok-vite-plugin"]}`;
     }
 
     fs.writeFileSync(packageJsonPath, `${JSON.stringify(packageJson, null, 2)}\n`);

@@ -21,7 +21,7 @@
     "zod": "^4.0.0"
   },
   "devDependencies": {
-    "@otok/vite-plugin": "workspace:*",
+    "@kamod-ch/otok-vite-plugin": "workspace:*",
     "otok-cli": "workspace:*",
     "typescript": "~6.0.2",
     "vite": "^8.0.10"

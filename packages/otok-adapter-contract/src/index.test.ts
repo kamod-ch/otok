@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { defineAdapter, resolveAdapter } from "@otok/config";
+import { defineAdapter, resolveAdapter } from "@kamod-ch/otok-config";
 import { assertAdapterContract } from "./index.js";
 
 const stubAdapter = defineAdapter({

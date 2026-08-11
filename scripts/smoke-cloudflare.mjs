@@ -33,7 +33,7 @@ const workDir = fs.mkdtempSync(path.join(os.tmpdir(), "otok-cf-example-"));
 try {
   run("pnpm -r --filter './packages/*' build");
   run(`pnpm --filter otok pack --pack-destination ${JSON.stringify(packDir)}`);
-  run(`pnpm --filter @otok/vite-plugin pack --pack-destination ${JSON.stringify(packDir)}`);
+  run(`pnpm --filter @kamod-ch/otok-vite-plugin pack --pack-destination ${JSON.stringify(packDir)}`);
 
   const otokPack = findPack(packDir, "otok-");
   const pluginPack = findPack(packDir, "otok-vite-plugin-");
@@ -53,7 +53,7 @@ try {
   packageJson.dependencies = {
     ...packageJson.dependencies,
     otok: `file:${otokPack}`,
-    "@otok/vite-plugin": `file:${pluginPack}`,
+    "@kamod-ch/otok-vite-plugin": `file:${pluginPack}`,
   };
   fs.writeFileSync(packageJsonPath, `${JSON.stringify(packageJson, null, 2)}\n`);
 

@@ -4,7 +4,10 @@
   "description": "Typed domain events for Otok — in-process bus, transactional outbox, and Kysely integration.",
   "license": "MIT",
   "type": "module",
-  "files": ["dist", "README.md"],
+  "files": [
+    "dist",
+    "README.md"
+  ],
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
@@ -34,7 +37,7 @@
     "test": "vitest run"
   },
   "dependencies": {
-    "@otok/config": "workspace:*",
+    "@kamod-ch/otok-config": "workspace:*",
     "zod": "^3.24.0"
   },
   "peerDependencies": {
@@ -43,8 +46,12 @@
     "otok": ">=0.4.0"
   },
   "peerDependenciesMeta": {
-    "kysely": { "optional": true },
-    "hono": { "optional": true }
+    "kysely": {
+      "optional": true
+    },
+    "hono": {
+      "optional": true
+    }
   },
   "devDependencies": {
     "@types/better-sqlite3": "^7.6.13",
@@ -56,6 +63,19 @@
     "typescript": "~6.0.2",
     "vitest": "^4.1.2"
   },
-  "engines": { "node": ">=20" },
-  "publishConfig": { "access": "public" }
+  "engines": {
+    "node": ">=20"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "homepage": "https://github.com/kamod-ch/otok/tree/main/packages/otok-events#readme",
+  "bugs": {
+    "url": "https://github.com/kamod-ch/otok/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kamod-ch/otok.git",
+    "directory": "packages/otok-events"
+  }
 }

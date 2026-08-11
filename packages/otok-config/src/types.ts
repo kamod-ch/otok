@@ -150,7 +150,7 @@ export interface ResolvedOtokConfig {
   vitePlugins: Plugin[];
 }
 
-declare module "@otok/config" {
+declare module "@kamod-ch/otok-config" {
   interface OtokUserConfig {}
   interface OtokEnv {}
 }

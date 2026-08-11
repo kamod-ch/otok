@@ -1,10 +1,10 @@
-# @otok/plugin-hello
+# @kamod-ch/otok-plugin-hello
 
 Minimal Otok plugin that registers `GET /api/plugin/hello`.
 
 ```ts
 import { defineConfig } from "otok";
-import hello from "@otok/plugin-hello";
+import hello from "@kamod-ch/otok-plugin-hello";
 
 export default defineConfig({
   plugins: [hello()],

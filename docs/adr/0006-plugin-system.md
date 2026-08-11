@@ -10,10 +10,10 @@ Otok previously shipped optional packages as manual composition (`createOtokApp(
 
 ## Decision
 
-Introduce a typed plugin API in `@otok/config`, integrated by `@otok/vite-plugin`:
+Introduce a typed plugin API in `@kamod-ch/otok-config`, integrated by `@kamod-ch/otok-vite-plugin`:
 
 - `otok.config.ts` with `defineConfig({ plugins: [...] })`
-- Deterministic hook order documented in `@otok/config`
+- Deterministic hook order documented in `@kamod-ch/otok-config`
 - Runtime bridge via `virtual:otok-config`
 - Plugin virtual modules namespaced as `virtual:otok-plugin/<name>/<id>`
 

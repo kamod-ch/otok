@@ -1,4 +1,4 @@
-# @otok/devtools
+# @kamod-ch/otok-devtools
 
 Development-only diagnostics for Otok apps.
 
@@ -9,7 +9,7 @@ The package exposes a stable JSON feed and a minimal floating Preact panel. It n
 Development dependency only:
 
 ```bash
-pnpm add -D @otok/devtools
+pnpm add -D @kamod-ch/otok-devtools
 ```
 
 ## Setup
@@ -17,7 +17,7 @@ pnpm add -D @otok/devtools
 ```ts
 // otok.config.ts
 import { defineConfig } from "otok";
-import devtools from "@otok/devtools";
+import devtools from "@kamod-ch/otok-devtools";
 
 export default defineConfig({
   plugins: [devtools()],
@@ -43,7 +43,7 @@ Run the app with `pnpm dev`. Open the **Otok Devtools** button in the bottom-rig
 - The Vite plugin uses `apply: "serve"`.
 - The client panel mounts only when `import.meta.env.DEV` is true.
 
-Do not import `@otok/devtools/client` from application code that also ships to production. Keep the plugin in `otok.config.ts` and rely on development installs only.
+Do not import `@kamod-ch/otok-devtools/client` from application code that also ships to production. Keep the plugin in `otok.config.ts` and rely on development installs only.
 
 ## Example
 

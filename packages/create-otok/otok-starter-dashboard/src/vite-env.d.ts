@@ -1,2 +1,2 @@
 /// <reference types="vite/client" />
-/// <reference types="@otok/vite-plugin/client" />
+/// <reference types="@kamod-ch/otok-vite-plugin/client" />

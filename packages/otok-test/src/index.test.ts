@@ -15,7 +15,7 @@ const Page = ({ data, params, actionData }: OtokPageProps<any>) =>
 const ErrorPage = ({ data }: OtokPageProps<any>) => h("p", null, `Error: ${(data as { message?: string }).message}`);
 const NotFoundPage = () => h("p", null, "Custom not found");
 
-describe("@otok/test", () => {
+describe("@kamod-ch/otok-test", () => {
   it("renders GET requests with loader data and params", async () => {
     const app = createTestApp({
       routes: [

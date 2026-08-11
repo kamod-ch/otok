@@ -302,7 +302,7 @@ Apps should reference the plugin types once:
 
 ```ts
 /// <reference types="vite/client" />
-/// <reference types="@otok/vite-plugin/client" />
+/// <reference types="@kamod-ch/otok-vite-plugin/client" />
 ```
 
 This declares `virtual:otok-routes`, `virtual:otok-islands`, and exports `routePaths`, `routeFilePatterns`, `OtokRoutePath`, and the typed `route()` URL builder.

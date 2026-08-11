@@ -1,10 +1,10 @@
 import { definePlugin } from "otok";
-import type { ProgrammaticRouteDefinition } from "@otok/config";
+import type { ProgrammaticRouteDefinition } from "@kamod-ch/otok-config";
 import { createForum, type CreateForumOptions } from "./index.js";
 import { injectForumTheme } from "./index.js";
 
 const forumPluginFactory = definePlugin<CreateForumOptions>({
-  name: "@otok/forum",
+  name: "@kamod-ch/otok-forum",
   version: "0.1.0",
   schema: {
     parse(input) {
@@ -24,7 +24,7 @@ const forumPluginFactory = definePlugin<CreateForumOptions>({
  * Otok forum plugin — registers programmatic SSR routes via ADR 0007.
  *
  * ```ts
- * import forum from "@otok/forum/plugin";
+ * import forum from "@kamod-ch/otok-forum/plugin";
  *
  * export default defineConfig({
  *   plugins: [forum({ basePath: "/community", storage, auth })],

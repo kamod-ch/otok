@@ -24,7 +24,7 @@
   },
   "devDependencies": {
     "@hono/vite-dev-server": "^0.21.0",
-    "@otok/vite-plugin": "^0.4.0",
+    "@kamod-ch/otok-vite-plugin": "^0.4.0",
     "@preact/preset-vite": "^2.10.5",
     "@tailwindcss/vite": "^4.2.4",
     "@types/node": "^24.12.2",

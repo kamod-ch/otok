@@ -54,7 +54,7 @@ createOtokApp({
 1. Create `src/app/routes/`.
 2. Export a default Preact page component.
 3. Add `loader` / `action` as needed.
-4. Point Vite at `@otok/vite-plugin`.
+4. Point Vite at `@kamod-ch/otok-vite-plugin`.
 
 ## Middleware
 

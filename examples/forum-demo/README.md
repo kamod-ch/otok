@@ -1,6 +1,6 @@
 # Otok Forum Demo
 
-Minimal example showing `@otok/forum` mounted via the Otok plugin API.
+Minimal example showing `@kamod-ch/otok-forum` mounted via the Otok plugin API.
 
 ## Setup
 
@@ -32,4 +32,4 @@ Switch users by modifying `src/lib/auth.ts`.
 
 ## Kamod UI
 
-See `@otok/forum` docs for overriding `components` with Kamod UI primitives.
+See `@kamod-ch/otok-forum` docs for overriding `components` with Kamod UI primitives.

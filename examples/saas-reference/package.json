@@ -43,7 +43,7 @@
   },
   "devDependencies": {
     "@hono/vite-dev-server": "^0.26.1",
-    "@otok/vite-plugin": "workspace:*",
+    "@kamod-ch/otok-vite-plugin": "workspace:*",
     "@playwright/test": "^1.55.0",
     "@preact/preset-vite": "^2.10.5",
     "@tailwindcss/vite": "^4.2.4",

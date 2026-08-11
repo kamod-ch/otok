@@ -4,7 +4,10 @@
   "description": "Typed content collections for Otok — markdown, MDX, taxonomies, and build-time manifests.",
   "license": "MIT",
   "type": "module",
-  "files": ["dist", "README.md"],
+  "files": [
+    "dist",
+    "README.md"
+  ],
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
@@ -30,7 +33,7 @@
     "test": "vitest run"
   },
   "dependencies": {
-    "@otok/config": "workspace:*",
+    "@kamod-ch/otok-config": "workspace:*",
     "gray-matter": "^4.0.3",
     "markdown-it": "^14.1.0",
     "tinyglobby": "^0.2.15",
@@ -41,7 +44,9 @@
     "vite": ">=6.0.0"
   },
   "peerDependenciesMeta": {
-    "vite": { "optional": true }
+    "vite": {
+      "optional": true
+    }
   },
   "devDependencies": {
     "@types/markdown-it": "^14.1.2",
@@ -50,6 +55,19 @@
     "typescript": "~6.0.2",
     "vitest": "^4.1.2"
   },
-  "engines": { "node": ">=20" },
-  "publishConfig": { "access": "public" }
+  "engines": {
+    "node": ">=20"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "homepage": "https://github.com/kamod-ch/otok/tree/main/packages/otok-content#readme",
+  "bugs": {
+    "url": "https://github.com/kamod-ch/otok/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kamod-ch/otok.git",
+    "directory": "packages/otok-content"
+  }
 }

@@ -25,7 +25,7 @@ src/app/islands/       Interactive Preact components
 
 ## How Rendering Works
 
-1. `@otok/vite-plugin` scans `src/app/routes` and generates `virtual:otok-routes`.
+1. `@kamod-ch/otok-vite-plugin` scans `src/app/routes` and generates `virtual:otok-routes`.
 2. The server uses `createOtokHandler()` or `createOtokApp()` from `otok/server`.
 3. Pages render on the server with Preact.
 4. `<Island>` marks interactive regions in the HTML.
@@ -308,10 +308,10 @@ Node is the Phase 1 reference runtime. The default server entry supports `PORT`,
 
 ## Testing
 
-Use `@otok/test` for server-side unit tests without a browser or Vite dev server:
+Use `@kamod-ch/otok-test` for server-side unit tests without a browser or Vite dev server:
 
 ```ts
-import { createTestApp, renderRoute } from "@otok/test";
+import { createTestApp, renderRoute } from "@kamod-ch/otok-test";
 
 const app = createTestApp({
   routes: [{ path: "/users/:id", component: ({ params }) => <p>User {params.id}</p> }],
@@ -320,7 +320,7 @@ const app = createTestApp({
 const { response, html } = await renderRoute(app, "/users/123");
 ```
 
-`@otok/test` uses Otok's real Hono handler and `app.request()` under the hood, so it is suitable for loaders, actions, middleware, redirects, cookies, headers, error routes, and SSR HTML. Use Playwright for hydration and browser behavior.
+`@kamod-ch/otok-test` uses Otok's real Hono handler and `app.request()` under the hood, so it is suitable for loaders, actions, middleware, redirects, cookies, headers, error routes, and SSR HTML. Use Playwright for hydration and browser behavior.
 
 ## Learn More
 

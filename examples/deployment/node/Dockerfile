@@ -17,7 +17,7 @@ RUN pnpm install --frozen-lockfile
 FROM deps AS build
 COPY . .
 RUN pnpm --filter otok build \
-  && pnpm --filter @otok/vite-plugin build \
+  && pnpm --filter @kamod-ch/otok-vite-plugin build \
   && pnpm --filter playground build
 
 FROM node:22-slim AS runner

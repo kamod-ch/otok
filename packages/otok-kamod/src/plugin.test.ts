@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { PluginContainer } from "@otok/config";
+import { PluginContainer } from "@kamod-ch/otok-config";
 import kamod, { normalizeOptions } from "./plugin.js";
 import { kamodStylesheetContent, kamodCssImports } from "./css.js";
 import { satisfiesMinimum } from "./versions.js";

@@ -4,7 +4,7 @@ import {
   instantiatePlugin,
   type OtokPlugin,
   type OtokPluginFactory,
-} from "@otok/config";
+} from "@kamod-ch/otok-config";
 
 export interface PluginContractExpectation {
   name: string;

@@ -1,4 +1,4 @@
-import { findOutdated, resolveExtension } from "@otok/registry";
+import { findOutdated, resolveExtension } from "@kamod-ch/otok-registry";
 import { loadProjectSnapshot, loadRegistryForProject } from "../registry-context.js";
 import { detectPackageManager, installCommand } from "../detect-manager.js";
 import { findProjectRoot, confirm, fail, ok, runCommand, warn } from "../utils.js";
@@ -50,7 +50,7 @@ export async function buildUpgradePlan(root: string, coreOnly = false): Promise<
   const installed = { ...project.dependencies, ...project.devDependencies };
   const plans: UpgradePlan[] = [];
 
-  const corePackages = ["otok", "@otok/vite-plugin", "otok-cli"];
+  const corePackages = ["otok", "@kamod-ch/otok-vite-plugin", "otok-cli"];
   const adapterPackages = ["otok-adapter-node", "otok-adapter-cloudflare", "otok-adapter-static"];
 
   for (const pkg of corePackages) {

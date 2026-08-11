@@ -175,14 +175,14 @@ Variants (--template / --variant):
   minimal, content, saas, dashboard, api, kamod, crm
 
 Options:
-  --preset <name>           Use a named preset (e.g. @otok/preset-saas)
+  --preset <name>           Use a named preset (e.g. @kamod-ch/otok-preset-saas)
   --adapter node|cloudflare|static
   --database none|sqlite|postgres   (with --kysely)
   --typescript true|false
   --kamod-ui true|false
   --auth --i18n --kysely --validation --testing --docker --github-actions --ai-json
   --layer <name>            Additional layer (repeatable)
-  --kit <name>              Additional business kit (repeatable, e.g. @otok/kit-admin)
+  --kit <name>              Additional business kit (repeatable, e.g. @kamod-ch/otok-kit-admin)
   --install true|false      Run package manager install (default: true)
   --no-install              Skip install
   --git true|false          Initialize git repository

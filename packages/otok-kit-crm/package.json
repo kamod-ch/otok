@@ -1,10 +1,14 @@
 {
-  "name": "@otok/kit-crm",
+  "name": "@kamod-ch/otok-kit-crm",
   "version": "0.1.0",
   "description": "Composable Swiss B2B CRM kit for Otok — organizations, companies, contacts, pipelines, audit, search, import/export.",
   "license": "MIT",
   "type": "module",
-  "files": ["dist", "kit-files", "README.md"],
+  "files": [
+    "dist",
+    "kit-files",
+    "README.md"
+  ],
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
@@ -34,7 +38,7 @@
     "test": "vitest run"
   },
   "dependencies": {
-    "@otok/config": "workspace:*"
+    "@kamod-ch/otok-config": "workspace:*"
   },
   "peerDependencies": {
     "kysely": ">=0.27.0",
@@ -48,15 +52,28 @@
   "devDependencies": {
     "better-sqlite3": "^11.10.0",
     "kysely": "^0.29.2",
-    "@otok/kit-admin": "workspace:*",
-    "@otok/kit-saas": "workspace:*",
-    "@otok/kit-marketplace": "workspace:*",
+    "@kamod-ch/otok-kit-admin": "workspace:*",
+    "@kamod-ch/otok-kit-saas": "workspace:*",
+    "@kamod-ch/otok-kit-marketplace": "workspace:*",
     "@types/better-sqlite3": "^7.6.13",
     "@types/node": "^24.12.2",
     "otok": "workspace:*",
     "typescript": "~6.0.2",
     "vitest": "^4.1.2"
   },
-  "engines": { "node": ">=20" },
-  "publishConfig": { "access": "public" }
+  "engines": {
+    "node": ">=20"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "homepage": "https://github.com/kamod-ch/otok/tree/main/packages/otok-kit-crm#readme",
+  "bugs": {
+    "url": "https://github.com/kamod-ch/otok/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kamod-ch/otok.git",
+    "directory": "packages/otok-kit-crm"
+  }
 }
