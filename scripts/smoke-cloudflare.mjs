@@ -34,9 +34,13 @@ try {
   run("pnpm -r --filter './packages/*' build");
   run(`pnpm --filter otok pack --pack-destination ${JSON.stringify(packDir)}`);
   run(`pnpm --filter @kamod-ch/otok-vite-plugin pack --pack-destination ${JSON.stringify(packDir)}`);
+  run(`pnpm --filter @kamod-ch/otok-config pack --pack-destination ${JSON.stringify(packDir)}`);
+  run(`pnpm --filter @kamod-ch/otok-route-typegen pack --pack-destination ${JSON.stringify(packDir)}`);
 
   const otokPack = findPack(packDir, "otok-");
-  const pluginPack = findPack(packDir, "otok-vite-plugin-");
+  const pluginPack = findPack(packDir, "kamod-ch-otok-vite-plugin-");
+  const configPack = findPack(packDir, "kamod-ch-otok-config-");
+  const routeTypegenPack = findPack(packDir, "kamod-ch-otok-route-typegen-");
 
   const source = path.join(repoRoot, "examples", exampleName);
   const exampleDir = path.join(workDir, "cloudflare");
@@ -50,10 +54,15 @@ try {
 
   const packageJsonPath = path.join(exampleDir, "package.json");
   const packageJson = JSON.parse(fs.readFileSync(packageJsonPath, "utf8"));
+  for (const [name, script] of Object.entries(packageJson.scripts ?? {})) {
+    packageJson.scripts[name] = script.replace(/\bpnpm run\b/g, "npm run");
+  }
   packageJson.dependencies = {
     ...packageJson.dependencies,
     otok: `file:${otokPack}`,
     "@kamod-ch/otok-vite-plugin": `file:${pluginPack}`,
+    "@kamod-ch/otok-config": `file:${configPack}`,
+    "@kamod-ch/otok-route-typegen": `file:${routeTypegenPack}`,
   };
   fs.writeFileSync(packageJsonPath, `${JSON.stringify(packageJson, null, 2)}\n`);
 
