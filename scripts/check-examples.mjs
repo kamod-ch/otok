@@ -20,10 +20,13 @@ const examples = [
 /** Workspace packages that examples may depend on — packed and rewritten to file: URLs. */
 const packTargets = [
   { filter: "otok", name: "otok", prefix: "otok-" },
-  { filter: "@kamod-ch/otok-vite-plugin", name: "@kamod-ch/otok-vite-plugin", prefix: "otok-vite-plugin-" },
-  { filter: "@kamod-ch/otok-config", name: "@kamod-ch/otok-config", prefix: "otok-config-" },
-  { filter: "@kamod-ch/otok-route-typegen", name: "@kamod-ch/otok-route-typegen", prefix: "otok-route-typegen-" },
+  { filter: "@kamod-ch/otok-vite-plugin", name: "@kamod-ch/otok-vite-plugin", prefix: "kamod-ch-otok-vite-plugin-" },
+  { filter: "@kamod-ch/otok-config", name: "@kamod-ch/otok-config", prefix: "kamod-ch-otok-config-" },
+  { filter: "@kamod-ch/otok-route-typegen", name: "@kamod-ch/otok-route-typegen", prefix: "kamod-ch-otok-route-typegen-" },
   { filter: "otok-cli", name: "otok-cli", prefix: "otok-cli-" },
+  { filter: "@kamod-ch/otok-ai", name: "@kamod-ch/otok-ai", prefix: "kamod-ch-otok-ai-" },
+  { filter: "@kamod-ch/otok-kysely", name: "@kamod-ch/otok-kysely", prefix: "kamod-ch-otok-kysely-" },
+  { filter: "@kamod-ch/otok-registry", name: "@kamod-ch/otok-registry", prefix: "kamod-ch-otok-registry-" },
   { filter: "@kamod-ch/otok-i18n", name: "@kamod-ch/otok-i18n", prefix: "kamod-ch-otok-i18n-" },
   { filter: "@kamod-ch/otok-auth", name: "@kamod-ch/otok-auth", prefix: "kamod-ch-otok-auth-" },
   { filter: "@kamod-ch/otok-oauth", name: "@kamod-ch/otok-oauth", prefix: "kamod-ch-otok-oauth-" },
@@ -31,7 +34,11 @@ const packTargets = [
 
 function run(command, options = {}) {
   console.log(`\n$ ${command}`);
-  execSync(command, { stdio: "inherit", cwd: options.cwd ?? repoRoot, env: process.env });
+  execSync(command, {
+    stdio: "inherit",
+    cwd: options.cwd ?? repoRoot,
+    env: { AUTH_SECRET: "check-examples-local-secret-32-bytes", ...process.env },
+  });
 }
 
 function findPack(dir, prefix) {
@@ -57,6 +64,22 @@ function copyExample(name, destRoot) {
       return base !== "node_modules" && base !== "dist" && base !== ".otok";
     },
   });
+
+  const tsconfigPath = path.join(dest, "tsconfig.json");
+  if (fs.existsSync(tsconfigPath)) {
+    const tsconfig = JSON.parse(fs.readFileSync(tsconfigPath, "utf8"));
+    if (tsconfig.extends === "../../tsconfig.base.json") {
+      const baseTsconfig = JSON.parse(fs.readFileSync(path.join(repoRoot, "tsconfig.base.json"), "utf8"));
+      tsconfig.compilerOptions = {
+        ...(baseTsconfig.compilerOptions ?? {}),
+        ...(tsconfig.compilerOptions ?? {}),
+      };
+      delete tsconfig.compilerOptions.paths;
+      delete tsconfig.extends;
+      fs.writeFileSync(tsconfigPath, `${JSON.stringify(tsconfig, null, 2)}\n`);
+    }
+  }
+
   return dest;
 }
 
@@ -109,11 +132,17 @@ try {
     }
 
     packageJson.devDependencies = rewriteWorkspaceDeps(packageJson.devDependencies ?? {}, packsByName);
+    packageJson.devDependencies["@types/node"] ??= "^24.12.2";
 
-    // Ensure vite-plugin is always installable
+    // Ensure vite-plugin and its local workspace dependencies are always installable.
     if (!packageJson.dependencies["@kamod-ch/otok-vite-plugin"] && !packageJson.devDependencies["@kamod-ch/otok-vite-plugin"]) {
       packageJson.devDependencies["@kamod-ch/otok-vite-plugin"] = `file:${packsByName["@kamod-ch/otok-vite-plugin"]}`;
     }
+    packageJson.dependencies["@kamod-ch/otok-config"] = `file:${packsByName["@kamod-ch/otok-config"]}`;
+    packageJson.dependencies["@kamod-ch/otok-route-typegen"] = `file:${packsByName["@kamod-ch/otok-route-typegen"]}`;
+    packageJson.dependencies["@kamod-ch/otok-ai"] = `file:${packsByName["@kamod-ch/otok-ai"]}`;
+    packageJson.dependencies["@kamod-ch/otok-kysely"] = `file:${packsByName["@kamod-ch/otok-kysely"]}`;
+    packageJson.dependencies["@kamod-ch/otok-registry"] = `file:${packsByName["@kamod-ch/otok-registry"]}`;
 
     fs.writeFileSync(packageJsonPath, `${JSON.stringify(packageJson, null, 2)}\n`);
 

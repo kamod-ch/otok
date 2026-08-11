@@ -40,6 +40,10 @@ jobs:
 
       - name: Setup GitHub Pages
         uses: actions/configure-pages@v5
+        env:
+          NODE_OPTIONS: --use-system-ca
+        with:
+          enablement: true
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
@@ -64,6 +68,8 @@ jobs:
 
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v4
+        env:
+          NODE_OPTIONS: --use-system-ca
         with:
           path: apps/docs/dist
 
@@ -77,3 +83,5 @@ jobs:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
+        env:
+          NODE_OPTIONS: --use-system-ca
