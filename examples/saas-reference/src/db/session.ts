@@ -23,7 +23,7 @@ export function createSaasSessionAdapter(options: {
           expires_at: input.expiresAt.toISOString(),
           user_agent: input.userAgent,
           ip_address: input.ipAddress,
-        })
+        } as any)
         .execute();
     },
     async revokeRecord(tokenHash) {

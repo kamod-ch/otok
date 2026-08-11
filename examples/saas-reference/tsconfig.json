@@ -11,7 +11,7 @@
     "noEmit": true,
     "isolatedModules": true,
     "resolveJsonModule": true,
-    "types": ["vite/client"]
+    "types": ["vite/client", "@kamod-ch/otok-vite-plugin/client"]
   },
   "include": ["src", "seeds", "e2e", "vitest.config.ts", "playwright.config.ts"]
 }

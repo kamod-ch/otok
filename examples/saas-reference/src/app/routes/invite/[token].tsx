@@ -13,7 +13,7 @@ import { getAuditRuntime } from "@kamod-ch/otok-audit";
 import type { SaasDatabase } from "../../../db/types.js";
 import { Button } from "@kamod-ch/ui/button";
 
-export const loader = defineLoader(async ({ params, db, hono, i18n }) => {
+export const loader = defineLoader(async ({ params, db, hono }: any) => {
   const token = String(params.token ?? "");
   const invite = await findValidInvitation(db as import("kysely").Kysely<SaasDatabase>, token);
   if (!invite) {
@@ -73,7 +73,7 @@ export const action = defineDbAction(async ({ params, db, hono, formData }) => {
   redirect("/dashboard", 303);
 });
 
-export default function InvitePage({ data }: OtokPageProps<typeof loader>) {
+export default function InvitePage({ data }: OtokPageProps<any>) {
   if (data.invalid) {
     return (
       <AppShell title="Invitation" i18n={data.i18n}>

@@ -23,7 +23,7 @@ export const loader = defineLoader(({ i18n, hono }) => ({
   },
 }));
 
-export const head = defineMeta(({ data }) => ({
+export const head = defineMeta(({ data }: { data: any }) => ({
   title: data.copy.title,
   robots: "noindex",
 }));
@@ -58,7 +58,7 @@ export const action = defineAction({
   },
 });
 
-export default function RegisterPage({ data, actionData }: OtokPageProps<typeof loader>) {
+export default function RegisterPage({ data, actionData }: OtokPageProps<any>) {
   const failure = readFormFailure(actionData);
 
   return (

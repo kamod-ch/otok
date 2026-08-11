@@ -9,6 +9,9 @@
     "skipLibCheck": true,
     "noEmit": true,
     "isolatedModules": true,
+    "paths": {
+      "@kamod-ch/otok-vite-plugin": ["../../packages/vite-plugin-otok/src/index.ts"]
+    },
     "types": ["node", "vite/client", "@kamod-ch/otok-vite-plugin/client"]
   },
   "include": ["src", "otok.config.ts", "vite.config.ts"]

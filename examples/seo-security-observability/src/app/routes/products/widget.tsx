@@ -9,8 +9,10 @@ export const loader = defineLoader(async () => ({
   },
 }));
 
+type LoaderData = Awaited<ReturnType<typeof loader>>;
+
 export const head = defineMeta(
-  ({ data }) => ({
+  ({ data }: { data: any }) => ({
     title: data.product.name,
     description: data.product.description,
     canonical: `/products/${data.product.slug}`,
@@ -25,7 +27,7 @@ export const head = defineMeta(
   { origin: "http://localhost:3010", titleTemplate: "%s | Otok Demo" },
 );
 
-export default function ProductPage({ data }: { data: Awaited<ReturnType<typeof loader>> }) {
+export default function ProductPage({ data }: { data: LoaderData }) {
   return (
     <main>
       <h1>{data.product.name}</h1>

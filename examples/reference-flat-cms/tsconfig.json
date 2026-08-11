@@ -13,6 +13,9 @@
     "allowSyntheticDefaultImports": true,
     "resolveJsonModule": true,
     "noEmit": true,
+    "paths": {
+      "@kamod-ch/otok-vite-plugin": ["../../packages/vite-plugin-otok/src/index.ts"]
+    },
     "types": ["vite/client", "@kamod-ch/otok-vite-plugin/client", "node"]
   },
   "include": ["src", "vite.config.ts"]

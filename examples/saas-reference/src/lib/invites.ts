@@ -31,7 +31,7 @@ export async function createInvitation(
       expires_at: expiresAt,
       accepted_at: null,
       invited_by: input.invitedBy,
-    })
+    } as any)
     .execute();
 
   return { id, token, email: input.email, role: input.role, expiresAt };

@@ -92,7 +92,7 @@ export default function TeamPage({
   actionData?: unknown;
 }) {
   const failure = readFormFailure(actionData);
-  const success = actionData && "success" in actionData ? actionData : null;
+  const success = actionData && typeof actionData === "object" && "success" in actionData ? (actionData as { link?: string }) : null;
 
   return (
     <DashboardShell i18n={data.i18n} user={data.user}>

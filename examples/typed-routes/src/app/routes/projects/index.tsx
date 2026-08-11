@@ -1,4 +1,4 @@
-import { defineLoader, defineMeta } from "otok/route";
+import { defineLoader, defineMeta, type RouteComponentProps } from "otok/route";
 import { route } from "virtual:otok-routes";
 
 export const loader = defineLoader(async () => ({
@@ -8,11 +8,13 @@ export const loader = defineLoader(async () => ({
   ],
 }));
 
-export const head = defineMeta(({ data }) => ({
+type LoaderData = Awaited<ReturnType<typeof loader>>;
+
+export const head = defineMeta<LoaderData>(() => ({
   title: "Projects",
 }));
 
-export default function ProjectsIndex({ loaderData }: Route.ComponentProps) {
+export default function ProjectsIndex({ loaderData }: RouteComponentProps<LoaderData>) {
   return (
     <main>
       <h1>Projects</h1>

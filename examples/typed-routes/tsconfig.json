@@ -2,7 +2,7 @@
   "extends": "../../tsconfig.base.json",
   "compilerOptions": {
     "noEmit": true,
-    "types": ["vite/client", "node"],
+    "types": ["vite/client", "@kamod-ch/otok-vite-plugin/client", "node"],
     "paths": {
       "otok/client": ["../../packages/otok/src/client/index.tsx"],
       "otok/server": ["../../packages/otok/src/server/index.tsx"],

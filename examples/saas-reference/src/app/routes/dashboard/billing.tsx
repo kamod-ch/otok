@@ -68,7 +68,7 @@ export default function BillingPage({
 }: {
   data: {
     user: import("../../../db/types.js").SaasContextUser;
-    status: import("@kamod-ch/otok-stripe").BillingStatusDto<import("../../../db/types.js").SaasPlan> | null;
+    status: any;
     canManage: boolean;
     copy: { title: string; checkout: string; portal: string };
     i18n: import("@kamod-ch/otok-i18n").I18nClientPayload;

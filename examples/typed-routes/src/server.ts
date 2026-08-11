@@ -1,7 +1,7 @@
-import { createOtokHandler } from "otok/server";
+import { createOtokApp } from "otok/server";
 import { serve } from "@hono/node-server";
 import { routes, notFoundRoute, errorRoute } from "virtual:otok-routes";
 
-const handler = createOtokHandler({ routes, notFoundRoute, errorRoute });
+const app = createOtokApp({ routes, notFoundRoute, errorRoute });
 
-serve({ fetch: handler.fetch, port: Number(process.env.PORT ?? 3000) });
+serve({ fetch: app.fetch, port: Number(process.env.PORT ?? 3000) });

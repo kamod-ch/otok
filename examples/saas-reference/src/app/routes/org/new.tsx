@@ -23,7 +23,7 @@ export const loader = defineLoader(async ({ i18n, hono }) => {
   };
 });
 
-export const head = defineMeta(({ data }) => ({ title: data.copy.title, robots: "noindex" }));
+export const head = defineMeta(({ data }: { data: any }) => ({ title: data.copy.title, robots: "noindex" }));
 
 export const action = defineAction({
   schema: createOrgSchema,
@@ -68,7 +68,7 @@ export const action = defineAction({
   },
 });
 
-export default function NewOrgPage({ data, actionData }: OtokPageProps<typeof loader>) {
+export default function NewOrgPage({ data, actionData }: OtokPageProps<any>) {
   const failure = readFormFailure(actionData);
   return (
     <AppShell title={data.copy.title} i18n={data.i18n} user={data.user}>

@@ -24,12 +24,12 @@ export const loader = defineLoader(async ({ i18n, hono }) => {
   };
 });
 
-export const head = defineMeta(({ data }) => ({
+export const head = defineMeta(({ data }: { data: any }) => ({
   title: data.copy.title,
   description: data.copy.lead,
 }));
 
-export default function HomePage({ data }: OtokPageProps<typeof loader>) {
+export default function HomePage({ data }: OtokPageProps<any>) {
   return (
     <AppShell title={data.copy.title} i18n={data.i18n} user={data.user}>
       <section class="mx-auto grid max-w-3xl gap-8 px-6 py-20">
