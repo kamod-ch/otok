@@ -17,6 +17,7 @@ describe("composeLoader", () => {
       request: new Request("http://localhost/"),
       params: {},
       route: "/",
+      signal: AbortSignal.timeout(30_000),
     });
 
     expect(result).toEqual({ a: 1, b: 2 });
