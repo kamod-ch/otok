@@ -1,6 +1,7 @@
 import { defineLoader } from "@kamod-ch/otok-kysely/loader";
+import type { ContactsDatabase, Contact } from "../../../db/types.js";
 
-export const loader = defineLoader(async ({ db }) => {
+export const loader = defineLoader<{ contacts: Contact[] }, ContactsDatabase>(async ({ db }) => {
   const contacts = await db.selectFrom("contacts").selectAll().orderBy("id", "desc").execute();
   return { contacts };
 });

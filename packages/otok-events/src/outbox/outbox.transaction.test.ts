@@ -71,7 +71,7 @@ describe("kysely outbox (integration)", () => {
     // Run with KYSELY_SQLITE_TESTS=1 after native better-sqlite3 build
     const { default: Database } = await import("better-sqlite3");
     const { Kysely, SqliteDialect } = await import("kysely");
-    const { migrateEventsSchema, createKyselyOutboxStore } = await import("./store.js");
+    const { migrateEventsSchema, createKyselyOutboxStore } = await import("./kysely/store.js");
 
     const sqlite = new Database(":memory:");
     const db = new Kysely({ dialect: new SqliteDialect({ database: sqlite }) });

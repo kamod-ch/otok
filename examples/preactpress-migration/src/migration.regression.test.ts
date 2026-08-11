@@ -27,7 +27,8 @@ describe("preactpress-migration example", () => {
     expect(routes.some((r) => r.includes("markdown-examples"))).toBe(true);
 
     const entry = getEntryByRoute("/docs/getting-started");
-    expect(entry?.data.title).toBe("Getting started");
+    const data = entry?.data as { title?: unknown } | undefined;
+    expect(data?.title).toBe("Getting started");
     expect(entry?.html).toContain("pnpm install");
   });
 

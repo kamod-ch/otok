@@ -1,6 +1,6 @@
 import { notFound, type OtokActionContext } from "otok/server";
 import { FormAlert, FormField, readFormFailure } from "@kamod-ch/otok-kamod/forms";
-import { Island } from "otok/client";
+import { Island, type IslandProps } from "otok/client";
 import CompanyEditor from "../../../islands/crm-company-editor";
 import ActivityPanel from "../../../islands/crm-activity-panel";
 import { addActivityAction, getActivities, getCompany, updateCompanyAction } from "../../../data/crm";
@@ -38,6 +38,9 @@ export default function CrmCompanyPage({
   params: { id: string };
 }) {
   const failure = readFormFailure(actionData);
+  const fieldErrors = Object.fromEntries(
+    Object.entries(failure?.fieldErrors ?? {}).filter((entry): entry is [string, string[]] => Array.isArray(entry[1])),
+  );
 
   return (
     <section class="space-y-8">
@@ -88,8 +91,8 @@ export default function CrmCompanyPage({
       </form>
 
       <Island
-        component={CompanyEditor}
-        props={{ company: data.company, fieldErrors: failure?.fieldErrors }}
+        component={CompanyEditor as never}
+        props={{ company: data.company, fieldErrors } satisfies IslandProps}
         strategy="load"
       />
 

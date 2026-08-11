@@ -1,3 +1,4 @@
-import { hydrate } from "otok/client";
+import { createOtokClient } from "otok/client";
+import { islandModules } from "virtual:otok-islands";
 
-hydrate();
+createOtokClient({ registry: islandModules });

@@ -33,7 +33,7 @@ export default defineConfig({
       origin,
       titleTemplate: "%s | PreactPress on Otok",
       sitemapPaths: ["/", "/docs/getting-started", "/docs/markdown-examples", "/de/docs/getting-started"],
-      robotsEnabled: true,
+      robots: true,
     }),
   ],
 });

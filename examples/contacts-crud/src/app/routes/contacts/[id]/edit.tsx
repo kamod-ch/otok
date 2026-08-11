@@ -11,7 +11,7 @@ type FormFailure = {
   values?: Record<string, string>;
 };
 
-export const loader = defineLoader(async ({ db, params }) => {
+export const loader = defineLoader<{ contact: import("../../../../db/types.js").Contact }, ContactsDatabase>(async ({ db, params }) => {
   const { id } = await parseParams(params, contactIdSchema);
   const contact = await db.selectFrom("contacts").selectAll().where("id", "=", id).executeTakeFirst();
   if (!contact) notFound("Contact not found");
@@ -21,16 +21,20 @@ export const loader = defineLoader(async ({ db, params }) => {
 export const action = defineAction({
   schema: contactUpdateSchema,
   handler: async ({ input, db, params }) => {
-    const database = db as import("kysely").Kysely<ContactsDatabase>;
+    if (!db) throw new Error("db required");
     const { id } = await parseParams(params, contactIdSchema);
-    await database
+    await db
       .updateTable("contacts")
       .set({ name: input.name, email: input.email })
       .where("id", "=", id)
       .execute();
     redirect(`/contacts/${id}`, 303);
   },
-});
+} satisfies import("@kamod-ch/otok-validation/loader").ActionDefinition<
+  typeof contactUpdateSchema,
+  import("kysely").Kysely<ContactsDatabase>,
+  void
+>);
 
 export default function EditContact({ data, actionData }: OtokPageProps<{ contact: { id: number; name: string; email: string } }>) {
   const failure = actionData as FormFailure | undefined;

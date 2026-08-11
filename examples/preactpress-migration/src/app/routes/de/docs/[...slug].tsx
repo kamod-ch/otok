@@ -1,18 +1,18 @@
 import { defineRendering } from "otok/rendering";
-import { setContentManifest, getEntryByRoute, listDocRoutes } from "../../../lib/content.js";
-import { DocsLayout } from "../../components/docs-layout.js";
-import { docsTheme, siteTitle } from "../../../site/docs-theme.js";
+import { setContentManifest, getEntryByRoute, listDocRoutes } from "../../../../lib/content.js";
+import { DocsLayout } from "../../../components/docs-layout.js";
+import { docsTheme, siteTitle } from "../../../../site/docs-theme.js";
 import { contentManifest } from "virtual:otok-plugin/@kamod-ch/otok-content/manifest";
 
 setContentManifest(contentManifest);
 
-const deRoutes = listDocRoutes().filter((r) => r.startsWith("/de/docs"));
+const deRoutes = listDocRoutes().filter((r: string) => r.startsWith("/de/docs"));
 
 export const rendering = defineRendering({
   mode: "ssg",
   prerender: {
     paths: deRoutes,
-    params: { slug: deRoutes.map((r) => r.replace(/^\/de\/docs\//, "")).filter(Boolean) },
+    params: { slug: deRoutes.map((r: string) => r.replace(/^\/de\/docs\//, "")).filter(Boolean) },
   },
 });
 
@@ -33,8 +33,8 @@ export default function DeDocPage({ params }: PageProps) {
         route: entry.route,
         title: String(entry.data.title),
         description: typeof entry.data.description === "string" ? entry.data.description : undefined,
-        html: entry.html,
-        toc: entry.toc,
+        html: entry.html ?? "",
+        toc: entry.toc ?? [],
       }}
     />
   );

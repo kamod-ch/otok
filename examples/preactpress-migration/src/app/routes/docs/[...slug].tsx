@@ -1,19 +1,19 @@
 import { defineRendering } from "otok/rendering";
-import { setContentManifest, getEntryByRoute, listDocRoutes } from "../../lib/content.js";
+import { setContentManifest, getEntryByRoute, listDocRoutes } from "../../../lib/content.js";
 import { DocsLayout } from "../../components/docs-layout.js";
-import { docsTheme, siteTitle } from "../../site/docs-theme.js";
+import { docsTheme, siteTitle } from "../../../site/docs-theme.js";
 import { contentManifest } from "virtual:otok-plugin/@kamod-ch/otok-content/manifest";
 
 setContentManifest(contentManifest);
 
-const routes = listDocRoutes().filter((r) => r.startsWith("/docs"));
+const routes = listDocRoutes().filter((r: string) => r.startsWith("/docs"));
 
 export const rendering = defineRendering({
   mode: "ssg",
   prerender: {
     paths: routes,
     params: {
-      slug: routes.map((r) => r.replace(/^\/docs\//, "")).filter(Boolean),
+      slug: routes.map((r: string) => r.replace(/^\/docs\//, "")).filter(Boolean),
     },
   },
 });
@@ -44,8 +44,8 @@ export default function DocPage({ params }: PageProps) {
         route: entry.route,
         title: String(entry.data.title),
         description: typeof entry.data.description === "string" ? entry.data.description : undefined,
-        html: entry.html,
-        toc: entry.toc,
+        html: entry.html ?? "",
+        toc: entry.toc ?? [],
       }}
     />
   );

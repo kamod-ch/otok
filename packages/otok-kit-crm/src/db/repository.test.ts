@@ -99,7 +99,9 @@ describe("KyselyCrmRepository", () => {
     const imported: string[] = [];
     const repo = new KyselyCrmRepository(db, {
       onCompanyIndexed: (_orgId, company) => indexed.push(company.id),
-      onCompanyImported: (company) => imported.push(company.id),
+      onCompanyImported: (company) => {
+        imported.push(company.id);
+      },
     });
 
     const json = JSON.stringify([

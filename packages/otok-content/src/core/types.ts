@@ -60,9 +60,9 @@ export interface CollectionDefinition<TSchema extends ZodType = ZodType> {
   cacheTag?: string;
 }
 
-export type ComputedField<TSchema extends ZodType> = (
-  entry: ContentEntry<output<TSchema>>,
-) => unknown | Promise<unknown>;
+export type ComputedField<TSchema extends ZodType> = {
+  bivarianceHack(entry: ContentEntry<output<TSchema>>): unknown | Promise<unknown>;
+}["bivarianceHack"];
 
 export interface ContentCollectionsConfig {
   root?: string;

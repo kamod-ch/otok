@@ -1,9 +1,10 @@
 import { defineLoader } from "@kamod-ch/otok-kysely/loader";
 import { parseParams } from "@kamod-ch/otok-validation";
 import { notFound } from "otok/server";
-import { contactIdSchema } from "../../../schemas/contact.js";
+import { contactIdSchema } from "../../../../schemas/contact.js";
+import type { ContactsDatabase, Contact } from "../../../../db/types.js";
 
-export const loader = defineLoader(async ({ db, params }) => {
+export const loader = defineLoader<{ contact: Contact }, ContactsDatabase>(async ({ db, params }) => {
   const { id } = await parseParams(params, contactIdSchema);
   const contact = await db.selectFrom("contacts").selectAll().where("id", "=", id).executeTakeFirst();
   if (!contact) notFound("Contact not found");

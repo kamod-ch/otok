@@ -1,9 +1,9 @@
 import { defineLoader, serializeI18n } from "@kamod-ch/otok-i18n/loader";
 import { i18nHead } from "@kamod-ch/otok-i18n";
 import { stripLocaleParam } from "@kamod-ch/otok-i18n/routes";
-import type { OtokPageProps } from "otok/server";
+import type { InferLoaderData, OtokPageProps } from "otok/server";
 import { Island } from "otok/client";
-import Welcome from "../islands/welcome.js";
+import Welcome from "../../islands/welcome.js";
 
 const LOCALES = ["de", "en", "fr"] as const;
 const ORIGIN = process.env.APP_URL ?? "http://localhost:5173";
@@ -18,7 +18,7 @@ export const loader = defineLoader(({ i18n, hono, request }) => {
   };
 });
 
-export const head = ({ data }) =>
+export const head = ({ data }: OtokPageProps<InferLoaderData<typeof loader>>) =>
   i18nHead({
     locale: data.i18n.locale,
     locales: LOCALES,
@@ -31,7 +31,7 @@ export const head = ({ data }) =>
     },
   });
 
-export default function HomePage({ data }: OtokPageProps<typeof loader>) {
+export default function HomePage({ data }: OtokPageProps<InferLoaderData<typeof loader>>) {
   return (
     <main class="card">
       <Island component={Welcome} props={{ itemCount: data.itemCount }} />

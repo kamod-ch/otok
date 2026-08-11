@@ -3,7 +3,8 @@
   "compilerOptions": {
     "jsx": "react-jsx",
     "jsxImportSource": "preact",
-    "noEmit": true
+    "noEmit": true,
+    "types": ["node", "vite/client", "@kamod-ch/otok-vite-plugin/client"]
   },
   "include": ["src", "otok.config.ts"]
 }

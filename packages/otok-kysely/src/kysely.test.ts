@@ -100,6 +100,7 @@ describe("defineLoader integration", () => {
       request: new Request("http://localhost/"),
       params: {},
       route: "/",
+      signal: AbortSignal.timeout(10_000),
     });
 
     expect(result).toEqual([{ id: 1, name: "Ada" }]);

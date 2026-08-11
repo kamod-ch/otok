@@ -60,6 +60,7 @@ describe("kysely + validation integration", () => {
       request: new Request("http://localhost/contacts", { method: "POST" }),
       params: {},
       route: "/contacts",
+      signal: AbortSignal.timeout(10_000),
       method: "POST",
       formData,
     });

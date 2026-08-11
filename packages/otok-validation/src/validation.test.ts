@@ -128,6 +128,7 @@ describe("defineAction", () => {
       request: new Request("http://localhost/", { method: "POST" }),
       params: {},
       route: "/",
+      signal: AbortSignal.timeout(10_000),
       method: "POST",
       formData,
     });
@@ -153,6 +154,7 @@ describe("defineAction", () => {
       }),
       params: {},
       route: "/",
+      signal: AbortSignal.timeout(10_000),
       method: "POST",
     });
 

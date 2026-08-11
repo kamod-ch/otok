@@ -41,7 +41,7 @@ export default defineConfig({
       session: { cookieName: "otok_session" },
       adapter: sessionAdapter,
       redirectAllowlist: ["/", "/dashboard"],
-      getRole: (user) => user.role,
+      getRole: (user) => user.role ?? "user",
     }),
     oauth({
       providers: {

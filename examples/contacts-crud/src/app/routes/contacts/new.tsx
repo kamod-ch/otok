@@ -12,15 +12,19 @@ type FormFailure = {
 export const action = defineAction({
   schema: contactSchema,
   handler: async ({ input, db }) => {
-    const database = db as import("kysely").Kysely<ContactsDatabase>;
-    await database
+    if (!db) throw new Error("db required");
+    await db
       .insertInto("contacts")
       .values({ name: input.name, email: input.email })
       .execute();
 
     redirect("/contacts", 303);
   },
-});
+} satisfies import("@kamod-ch/otok-validation/loader").ActionDefinition<
+  typeof contactSchema,
+  import("kysely").Kysely<ContactsDatabase>,
+  void
+>);
 
 export default function NewContact({ actionData }: OtokPageProps) {
   const failure = actionData as FormFailure | undefined;

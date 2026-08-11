@@ -1,8 +1,9 @@
 {
   "extends": "../../tsconfig.base.json",
   "compilerOptions": {
-    "rootDir": "src",
-    "types": ["vite/client"]
+    "rootDir": ".",
+    "allowImportingTsExtensions": true,
+    "types": ["node", "vite/client", "@kamod-ch/otok-vite-plugin/client"]
   },
   "include": ["src/**/*.ts", "src/**/*.tsx", "otok.config.ts", "vite.config.ts"]
 }
