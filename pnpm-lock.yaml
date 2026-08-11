@@ -86,6 +86,9 @@ importers:
       '@kamod-ch/otok-oauth':
         specifier: workspace:*
         version: link:../../packages/otok-oauth
+      '@node-rs/argon2':
+        specifier: ^2.0.2
+        version: 2.0.2
       hono:
         specifier: ^4.12.25
         version: 4.12.25
