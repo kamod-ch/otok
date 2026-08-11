@@ -48,6 +48,7 @@ export async function runCli(argv: string[]): Promise<number> {
         testing: parsed.options.testing ?? false,
         docker: parsed.options.docker ?? false,
         githubActions: parsed.options.githubActions ?? false,
+        aiJson: parsed.options.aiJson ?? false,
         adapter: parsed.options.adapter ?? "node",
         install: parsed.options.install ?? true,
         git: parsed.options.git ?? false,

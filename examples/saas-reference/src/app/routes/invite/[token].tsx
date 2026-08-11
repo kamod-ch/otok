@@ -23,7 +23,7 @@ export const loader = defineLoader(async ({ params, db, hono, i18n }) => {
   const runtime = tryGetAuthRuntime();
   let user = null;
   if (runtime) {
-    user = await authFromOtokContext(hono, runtime.helpers).getUser();
+    user = await authFromOtokContext(hono, runtime.helpers).getSession();
   }
 
   return {

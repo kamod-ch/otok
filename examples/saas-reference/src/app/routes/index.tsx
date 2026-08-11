@@ -10,7 +10,7 @@ export const loader = defineLoader(async ({ i18n, hono }) => {
   let user = null;
   if (runtime) {
     const auth = authFromOtokContext(hono, runtime.helpers);
-    user = await auth.getUser();
+    user = await auth.getSession();
     if (user) redirect("/dashboard", 303);
   }
   return {

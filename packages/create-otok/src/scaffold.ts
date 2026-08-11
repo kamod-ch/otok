@@ -1,6 +1,7 @@
 import { mergeKits, mergePresets, type MergedKitPlan, type MergedPresetPlan } from "@otok/config";
 import fs from "node:fs";
 import path from "node:path";
+import { writeAiJsonSupport } from "./ai-json.js";
 import { layerPresets, presetRegistry } from "./registry.js";
 import {
   applyPresetFiles,
@@ -148,6 +149,10 @@ export async function scaffoldProject(options: ScaffoldOptions): Promise<Scaffol
         options.targetDir,
         Object.keys(combined.envSchema).map((key) => `${key}=`),
       );
+    }
+
+    if (options.aiJson) {
+      filesWritten.push(...writeAiJsonSupport(options.targetDir, packageName));
     }
   }
 

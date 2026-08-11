@@ -158,7 +158,7 @@ async function benchmarkOtok() {
 
   const buildTimeMs = await runCommand(otokRoot, "pnpm", [
     "--filter",
-    "otok-example-preactpress-migration",
+    "preactpress-migration",
     "build",
   ]);
 

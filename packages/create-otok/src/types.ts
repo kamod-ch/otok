@@ -23,6 +23,7 @@ export interface ScaffoldOptions {
   testing: boolean;
   docker: boolean;
   githubActions: boolean;
+  aiJson: boolean;
   adapter: AdapterTarget;
   install: boolean;
   git: boolean;

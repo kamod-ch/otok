@@ -1,5 +1,5 @@
 {
-  "name": "otok-example-auth-github",
+  "name": "auth-github",
   "private": true,
   "type": "module",
   "scripts": {

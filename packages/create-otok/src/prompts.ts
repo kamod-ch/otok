@@ -64,6 +64,7 @@ export async function promptScaffoldOptions(
   const addTesting = partial.testing ?? (await confirmOr(false, "Add Vitest testing?"));
   const addDocker = partial.docker ?? (await confirmOr(false, "Add Docker files?"));
   const addCi = partial.githubActions ?? (await confirmOr(false, "Add GitHub Actions CI?"));
+  const addAiJson = partial.aiJson ?? (await confirmOr(false, "Add ai.json for AI coding agents?"));
 
   let auth = partial.auth ?? false;
   let i18n = partial.i18n ?? false;
@@ -129,6 +130,7 @@ export async function promptScaffoldOptions(
     testing: addTesting,
     docker: addDocker,
     githubActions: addCi,
+    aiJson: addAiJson,
     adapter,
     install,
     git,

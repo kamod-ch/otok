@@ -2,8 +2,17 @@
 
 @theme {
   --font-sans: ui-sans-serif, system-ui, sans-serif;
+  --color-background: #ffffff;
+  --color-foreground: #0f172a;
+  --color-card: #ffffff;
+  --color-border: #e2e8f0;
+  --color-input: #cbd5e1;
+  --color-muted: #64748b;
+  --color-destructive: #dc2626;
 }
 
 body {
-  @apply bg-background text-foreground antialiased;
+  background: var(--color-background);
+  color: var(--color-foreground);
+  @apply antialiased;
 }

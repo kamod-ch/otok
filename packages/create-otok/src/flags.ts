@@ -26,6 +26,7 @@ export function parseArgv(argv: string[]): ParsedCli {
     testing: false,
     docker: false,
     githubActions: false,
+    aiJson: false,
     adapter: "node",
     install: true,
     git: false,
@@ -109,6 +110,10 @@ export function parseArgv(argv: string[]): ParsedCli {
         options.githubActions = parseBoolean(next, true);
         i += 1;
         break;
+      case "--ai-json":
+        options.aiJson = parseBoolean(next, true);
+        i += 1;
+        break;
       case "--install":
         options.install = parseBoolean(next, true);
         i += 1;
@@ -175,7 +180,7 @@ Options:
   --database none|sqlite|postgres   (with --kysely)
   --typescript true|false
   --kamod-ui true|false
-  --auth --i18n --kysely --validation --testing --docker --github-actions
+  --auth --i18n --kysely --validation --testing --docker --github-actions --ai-json
   --layer <name>            Additional layer (repeatable)
   --kit <name>              Additional business kit (repeatable, e.g. @otok/kit-admin)
   --install true|false      Run package manager install (default: true)

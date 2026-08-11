@@ -54,7 +54,6 @@ export default defineConfig({
     security({
       trustedHosts: ["localhost", "127.0.0.1"],
       strict: false,
-      rateLimit: { windowMs: 60_000, max: 120 },
       csrf: true,
     }),
     observability(),
@@ -100,6 +99,7 @@ export default defineConfig({
       getRole: (user) => user.id,
     }),
     oauth({
+      secret: process.env.AUTH_SECRET ?? "dev-secret-at-least-32-characters-long-for-saas-ref!!",
       adapter: oauthAdapter,
       redirectAllowlist: ["/", "/dashboard", "/org/new"],
       providers: oauthProviders,

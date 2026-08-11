@@ -52,6 +52,42 @@ test("scaffolds an app from the packaged minimal template", () => {
   });
 });
 
+test("optionally generates ai.json support", () => {
+  withTempDir((tempDir) => {
+    const target = path.join(tempDir, "ai-app");
+    const result = runCli([target, "--yes", "--ai-json", "true", "--testing", "true", "--no-install"], tempDir);
+    assert.equal(result.status, 0, result.stderr || result.stdout);
+
+    assert.ok(fs.existsSync(path.join(target, "ai.json")));
+    assert.ok(fs.existsSync(path.join(target, "AGENTS.md")));
+    assert.ok(fs.existsSync(path.join(target, "docs/architecture.md")));
+
+    const manifest = readJson(path.join(target, "ai.json"));
+    assert.deepEqual(Object.keys(manifest).sort(), [
+      "$schema",
+      "commands",
+      "context",
+      "permissions",
+      "project",
+      "quality",
+      "version",
+    ]);
+    assert.equal(manifest.$schema, "https://ai-json.org/schema/v1.json");
+    assert.equal(manifest.version, 1);
+    assert.deepEqual(manifest.project, { name: "ai-app", type: "web-app" });
+    assert.equal(manifest.commands.dev, "pnpm dev");
+    assert.equal(manifest.commands.build, "pnpm build");
+    assert.equal(manifest.commands.test, "pnpm test");
+    assert.equal(manifest.commands.typecheck, "pnpm typecheck");
+    assert.equal(manifest.context.agents, "AGENTS.md");
+    assert.equal(manifest.context.architecture, "docs/architecture.md");
+    assert.equal(manifest.context.docs, "docs/");
+    assert.equal(manifest.context.source, "src/");
+    assert.deepEqual(manifest.permissions, { filesystem: "workspace", network: false });
+    assert.ok(manifest.quality.required.every((gate) => manifest.commands[gate]));
+  });
+});
+
 test("scaffolds kamod variant non-interactively", () => {
   withTempDir((tempDir) => {
     const target = path.join(tempDir, "kamod-app");

@@ -1,5 +1,5 @@
 {
-  "name": "otok-example-extensions-demo",
+  "name": "extensions-demo",
   "private": true,
   "type": "module",
   "scripts": {

@@ -115,7 +115,7 @@ export interface CreateOtokAppOptions extends CreateOtokHandlerOptions {
   assetCacheControl?: string;
   health?: boolean | Record<string, unknown>;
   /** Register API routes, middleware, or other Hono handlers before SSR. */
-  configure?: (app: Hono) => void;
+  configure?: (app: Hono) => void | Promise<void>;
 }
 
 async function resolveHead(route: OtokRoute, data: LoaderResult, params: Record<string, string>): Promise<OtokHead> {
@@ -692,11 +692,7 @@ async function renderFallbackRoute(
   }
 }
 
-export function createOtokApp(options: CreateOtokAppOptions): Hono {
-  const app = new Hono();
-
-  options.configure?.(app);
-
+function finalizeOtokApp(app: Hono, options: CreateOtokAppOptions): Hono {
   if (options.health) {
     const payload = typeof options.health === "object" ? options.health : { ok: true, framework: "otok" };
     app.get("/api/health", (c) => c.json(payload));
@@ -715,6 +711,21 @@ export function createOtokApp(options: CreateOtokAppOptions): Hono {
 
   app.all("*", createOtokHandler(options));
   return app;
+}
+
+export function createOtokApp(options: CreateOtokAppOptions): Hono {
+  const app = new Hono();
+  const configured = options.configure?.(app);
+  if (configured && typeof (configured as Promise<void>).then === "function") {
+    throw new Error("otok: createOtokApp() configure hook returned a Promise. Use createOtokAppAsync() instead.");
+  }
+  return finalizeOtokApp(app, options);
+}
+
+export async function createOtokAppAsync(options: CreateOtokAppOptions): Promise<Hono> {
+  const app = new Hono();
+  await options.configure?.(app);
+  return finalizeOtokApp(app, options);
 }
 
 function loadServeStatic() {

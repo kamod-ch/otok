@@ -171,7 +171,10 @@ export class PluginContainer {
   async runConfigureApp(app: Hono): Promise<void> {
     const ctx = { ...this.resolvedContext(), app };
     for (const plugin of this.plugins) {
-      await plugin.configureApp?.(ctx);
+      const result = plugin.configureApp?.(ctx);
+      if (result && typeof (result as Promise<void>).then === "function") {
+        await result;
+      }
     }
   }
 

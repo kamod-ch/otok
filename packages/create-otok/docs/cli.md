@@ -40,6 +40,7 @@ pnpm create otok@latest my-saas \
 | `--database` | `none`, `sqlite`, `postgres` (with `--kysely`) |
 | `--auth`, `--i18n`, `--kysely`, `--validation`, `--testing` | Optional layers |
 | `--docker`, `--github-actions` | Deployment / CI layers |
+| `--ai-json` | Generate public-schema `ai.json`, `AGENTS.md`, and architecture docs for AI coding agents |
 | `--layer <name>` | Repeatable extra layer preset |
 | `--install` / `--no-install` | Run package manager install |
 | `--git` | `git init` after scaffold |

@@ -1,5 +1,5 @@
 {
-  "name": "otok-example-preactpress-migration",
+  "name": "preactpress-migration",
   "private": true,
   "version": "0.1.0",
   "description": "Representative PreactPress docs page migrated to Otok + otok-content.",

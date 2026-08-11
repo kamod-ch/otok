@@ -72,14 +72,14 @@ if (redisUrl && redisToken) {
     : "";
 
   return `import { serve } from "@hono/node-server";
-import { createOtokApp, readOtokManifest } from "otok/server";
+import { createOtokAppAsync, readOtokManifest } from "otok/server";
 import { loadOtokResolvedConfig } from "virtual:otok-config";
 import { errorRoute, notFoundRoute, routes } from "virtual:otok-routes";
 ${redisBootstrap}
 const { runtime, applyAppPlugins, collectPluginRoutes, transformHtml } = await loadOtokResolvedConfig();
 const pluginRoutes = await collectPluginRoutes();
 
-const app = createOtokApp({
+const app = await createOtokAppAsync({
   routes: [...routes, ...(pluginRoutes as typeof routes)],
   notFoundRoute,
   errorRoute,
@@ -87,14 +87,12 @@ const app = createOtokApp({
   manifest: readOtokManifest(import.meta.url),
   clientEntry: ${JSON.stringify("src/client.ts")},
   devClientEntry: "/src/client.ts",
-  devStylesheets: ["/src/style.css"],
+  devStylesheets: ["/src/styles.css"],
   staticDir: ${JSON.stringify(`./${outDirs.client}`)},
   assetCacheControl: ${JSON.stringify(cacheControl)},
   health: { ok: true, runtime: "node", adapter: "otok-adapter-node" },
   transformHtml,
-  configure: (app) => {
-    void applyAppPlugins(app);
-  },
+  configure: (app) => applyAppPlugins(app),
   theme: runtime.theme ?? true,
 });
 
