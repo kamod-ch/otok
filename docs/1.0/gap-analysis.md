@@ -1,6 +1,6 @@
 # Otok 1.0 Gap Analysis
 
-Prioritized work items derived from [audit.md](./audit.md).  
+Prioritized work items derived from [audit.md](./audit.md).
 **Principle:** No breaking change without migration guide + compatibility decision.
 
 ---

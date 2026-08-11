@@ -47,7 +47,7 @@ export default defineConfig({
 
 ## Transmission
 
-When enabled, events POST to `https://telemetry.otok.dev/v1/events` (placeholder — not active until 1.0 GA).  
+When enabled, events POST to `https://telemetry.otok.dev/v1/events` (placeholder — not active until 1.0 GA).
 Until then, events log to stderr in debug mode only:
 
 ```bash
@@ -64,5 +64,5 @@ Telemetry hooks live in `packages/otok-cli/src/telemetry.ts` (no-op unless opted
 
 ## GDPR / privacy
 
-Telemetry ID is random UUID stored in `~/.config/otok/telemetry-id`. Delete the file to reset.  
+Telemetry ID is random UUID stored in `~/.config/otok/telemetry-id`. Delete the file to reset.
 No personal data processed.

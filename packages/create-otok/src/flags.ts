@@ -164,7 +164,7 @@ export function parseArgv(argv: string[]): ParsedCli {
 }
 
 export function printHelp(): void {
-  console.log(`create-otok — scaffold a new Otok application
+  process.stdout.write(`create-otok — scaffold a new Otok application
 
 Usage:
   pnpm create otok@latest [app-name] [options]

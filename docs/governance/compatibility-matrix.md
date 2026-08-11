@@ -1,6 +1,6 @@
 # Compatibility Matrix
 
-Supported combinations for Otok **1.0** (draft).  
+Supported combinations for Otok **1.0** (draft).
 Update when core or adapter majors change.
 
 ## Runtime

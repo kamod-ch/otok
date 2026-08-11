@@ -66,7 +66,7 @@ async function measureThroughput(url, durationS = 10) {
 async function main() {
   mkdirSync(resultsDir, { recursive: true });
 
-  console.log("Building playground (production)...");
+  process.stdout.write("Building playground (production)...\n");
   const distDir = join(playground, "dist");
   if (existsSync(distDir)) rmSync(distDir, { recursive: true, force: true });
 
@@ -84,12 +84,12 @@ async function main() {
 
   const baseUrl = process.env.BENCH_URL;
   if (baseUrl) {
-    console.log(`Measuring SSR at ${baseUrl}...`);
+    process.stdout.write(`Measuring SSR at ${baseUrl}...\n`);
     metrics.ssrLatencyP50Ms = Math.round(await measureSsrLatency(baseUrl));
     const rps = await measureThroughput(baseUrl);
     if (rps) metrics.ssrThroughputRps = Math.round(rps);
   } else {
-    console.log("Set BENCH_URL to measure SSR latency/throughput (dev/preview server must be running).");
+    process.stdout.write("Set BENCH_URL to measure SSR latency/throughput (dev/preview server must be running).\n");
   }
 
   const clientAssets = join(playground, "dist/client");
@@ -118,8 +118,8 @@ async function main() {
   };
 
   writeFileSync(outFile, JSON.stringify(report, null, 2));
-  console.log(`\nWrote ${outFile}`);
-  console.log(JSON.stringify(metrics, null, 2));
+  process.stdout.write(`\nWrote ${outFile}\n`);
+  process.stdout.write(`${JSON.stringify(metrics, null, 2)}\n`);
 }
 
 main().catch((err) => {

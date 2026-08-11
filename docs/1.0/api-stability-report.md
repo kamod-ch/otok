@@ -1,6 +1,6 @@
 # API Stability Report — Otok 1.0 (Draft)
 
-**Generated:** 2026-08-03  
+**Generated:** 2026-08-03
 **Manifest:** [`api-stability.json`](../../api-stability.json)
 
 ## Summary

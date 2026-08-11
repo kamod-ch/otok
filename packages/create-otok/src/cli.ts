@@ -69,15 +69,15 @@ export async function runCli(argv: string[]): Promise<number> {
     const manager = await detectPackageManager(process.cwd());
 
     if (options.dryRun) {
-      console.log(`Dry run: would create ${result.packageName} (${result.variant})`);
-      console.log(`Presets: ${result.presetChain.join(" → ")}`);
+      process.stdout.write(`Dry run: would create ${result.packageName} (${result.variant})\n`);
+      process.stdout.write(`Presets: ${result.presetChain.join(" → ")}\n`);
       if (result.kitsApplied.length) {
-        console.log(`Kits: ${result.kitsApplied.join(", ")}`);
+        process.stdout.write(`Kits: ${result.kitsApplied.join(", ")}\n`);
       }
       return 0;
     }
 
-    console.log(`
+    process.stdout.write(`
 Created ${result.packageName} (${result.variant})
 
 Presets applied:

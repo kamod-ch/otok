@@ -1,7 +1,7 @@
 # Otok 1.0 Readiness Audit
 
-**Date:** 2026-08-03  
-**Scope:** Full monorepo audit before Otok 1.0  
+**Date:** 2026-08-03
+**Scope:** Full monorepo audit before Otok 1.0
 **Current core version:** 0.4.0
 
 ---
@@ -123,7 +123,7 @@ Adapter contract package: `otok-adapter-contract@0.1.1`. **Status: adequate for 
 
 ## 9. Examples
 
-14 examples with `package.json`; validated via `pnpm check:examples`.  
+14 examples with `package.json`; validated via `pnpm check:examples`.
 Benchmark example exists but is ad-hoc (`examples/rendering-benchmark`).
 
 **Gap:** No cross-framework minimal benchmark suite.

@@ -1,6 +1,6 @@
 # Framework Friction Log
 
-Issues discovered while building the Swiss CRM reference product.  
+Issues discovered while building the Swiss CRM reference product.
 **Rule:** Fix in Otok packages where possible; avoid app-only workarounds.
 
 ## Fixed in Otok packages

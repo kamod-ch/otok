@@ -30,17 +30,17 @@ async function runVerify(projectDir) {
 }
 
 async function main() {
-  console.log("Cross-framework benchmark comparison\n");
-  console.log("Spec: benchmarks/specs/minimal-ssr.md\n");
+  process.stdout.write("Cross-framework benchmark comparison\n\n");
+  process.stdout.write("Spec: benchmarks/specs/minimal-ssr.md\n\n");
 
   const available = existsSync(projectsDir)
     ? readdirSync(projectsDir).filter((d) => FRAMEWORKS.includes(d))
     : [];
 
   if (available.length === 0) {
-    console.log("No benchmark projects installed yet.");
-    console.log("Scaffold projects under benchmarks/projects/ per specs/minimal-ssr.md");
-    console.log("\nExpected frameworks:", FRAMEWORKS.join(", "));
+    process.stdout.write("No benchmark projects installed yet.\n");
+    process.stdout.write("Scaffold projects under benchmarks/projects/ per specs/minimal-ssr.md\n");
+    process.stdout.write(`\nExpected frameworks: ${FRAMEWORKS.join(", ")}\n`);
     process.exit(0);
   }
 
@@ -48,12 +48,12 @@ async function main() {
   for (const name of FRAMEWORKS) {
     const dir = join(projectsDir, name);
     if (!existsSync(dir)) {
-      console.log(`⏭  ${name} — not scaffolded`);
+      process.stdout.write(`⏭  ${name} — not scaffolded\n`);
       continue;
     }
     process.stdout.write(`▶ ${name}... `);
     const result = await runVerify(dir);
-    console.log(result.ok ? "✓" : "✗");
+    process.stdout.write(`${result.ok ? "✓" : "✗"}\n`);
     results.push({ name, ...result });
   }
 

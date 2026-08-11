@@ -52,7 +52,7 @@ See [`specs/minimal-ssr.md`](./specs/minimal-ssr.md) for equivalence rules.
 
 ## CI
 
-Benchmark workflow runs on `workflow_dispatch` and weekly schedule.  
+Benchmark workflow runs on `workflow_dispatch` and weekly schedule.
 PR CI runs `budget:check` only when `benchmarks/results/latest.json` exists (optional artifact).
 
 ## Environment variables

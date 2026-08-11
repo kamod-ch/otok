@@ -1,6 +1,6 @@
 # Performance Budgets
 
-Otok 1.0 defines performance budgets for **minimal reference apps**.  
+Otok 1.0 defines performance budgets for **minimal reference apps**.
 Budgets are checked in CI against Otok self-benchmarks; cross-framework comparison is informational.
 
 ## Budget file
@@ -33,7 +33,7 @@ Budgets apply to `benchmarks/projects/otok-minimal` — a single-route SSR app w
 
 ## Cross-framework comparison
 
-Benchmarks against Hono, Astro, React Router, Next.js, and SvelteKit use **equivalent minimal SSR pages** (see `benchmarks/specs/minimal-ssr.md`).  
+Benchmarks against Hono, Astro, React Router, Next.js, and SvelteKit use **equivalent minimal SSR pages** (see `benchmarks/specs/minimal-ssr.md`).
 Otok budgets are **not** compared directly to other frameworks in CI — only tracked in reports.
 
 ## Local run

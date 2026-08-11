@@ -8,4 +8,4 @@ if (!res.ok) throw new Error(`HTTP ${res.status}`);
 if (!html.includes("<title>Benchmark</title>")) throw new Error("Missing title");
 if (!html.includes("<h1>Hello, Benchmark</h1>")) throw new Error("Missing h1");
 
-console.log("✓ otok-minimal verify passed");
+process.stdout.write("✓ otok-minimal verify passed\n");
