@@ -22,7 +22,7 @@
     "smoke:node": "node ./scripts/production-smoke.mjs",
     "smoke:cloudflare": "node ./scripts/smoke-cloudflare.mjs",
     "sync:scaffold": "node ./scripts/sync-scaffold.mjs",
-    "typecheck": "pnpm -r typecheck",
+    "typecheck": "pnpm -r --filter './packages/*' build && pnpm -r typecheck",
     "test": "pnpm -r test",
     "test:e2e": "pnpm --filter playground test:e2e",
     "version-packages": "pnpm dlx @changesets/cli version",

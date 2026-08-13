@@ -711,6 +711,10 @@ importers:
       '@kamod-ch/otok-config':
         specifier: workspace:*
         version: link:../otok-config
+    devDependencies:
+      '@types/node':
+        specifier: ^24.12.2
+        version: 24.13.1
 
   packages/otok:
     dependencies:

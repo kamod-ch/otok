@@ -15,7 +15,7 @@ declare module "virtual:otok-route-redirect" {
 }
 
 export interface OtokRouteManifest {
-  root: "/home/runner/work/otok/otok/apps/playground";
+  root: "/home/watzak/master/kamod/otok/apps/playground";
   routesDir: "src/app/routes";
   patterns: readonly import("virtual:otok-routes").OtokRouteFilePattern[];
   paths: readonly import("virtual:otok-routes").OtokRoutePath[];
