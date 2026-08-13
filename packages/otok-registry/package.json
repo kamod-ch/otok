@@ -21,7 +21,6 @@
   },
   "scripts": {
     "build": "rm -rf dist && tsc -p tsconfig.build.json && node ./scripts/copy-registry.mjs",
-    "prepare": "npm run build",
     "typecheck": "tsc -p tsconfig.json --noEmit",
     "test": "vitest run",
     "registry:checksum": "node ./scripts/update-checksum.mjs"

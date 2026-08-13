@@ -25,7 +25,6 @@
   },
   "scripts": {
     "build": "rm -rf dist && tsc -p tsconfig.build.json",
-    "prepare": "npm run build",
     "typecheck": "tsc -p tsconfig.json --noEmit && pnpm typecheck:route-types",
     "typecheck:route-types": "tsc -p fixtures/tsconfig.json --noEmit",
     "test": "vitest run"

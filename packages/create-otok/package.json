@@ -45,7 +45,6 @@
   ],
   "scripts": {
     "build": "rm -rf dist && tsc -p tsconfig.build.json",
-    "prepare": "npm run build",
     "generate:versions": "node ./scripts/generate-versions.mjs",
     "typecheck": "tsc -p tsconfig.json --noEmit",
     "test": "pnpm --filter @kamod-ch/otok-kit-crm build && pnpm build && node --test ./test/create-otok.test.mjs ./test/preset-matrix.test.mjs"
