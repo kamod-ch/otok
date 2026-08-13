@@ -78,14 +78,22 @@ jobs:
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
-      - name: Create release PR or publish
-        uses: changesets/action@v1
-        with:
-          version: pnpm version-packages
-          publish: pnpm release:publish
-          createGithubReleases: true
-          commit: "chore: version packages"
-          title: "chore: version packages"
+      - name: Version packages and publish
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          if find .changeset -maxdepth 1 -name "*.md" | grep -q .; then
+            pnpm version-packages
+
+            if ! git diff --quiet; then
+              git add .
+              git commit -m "chore: version packages"
+              git push origin HEAD:${{ github.ref_name }}
+            fi
+          fi
+
+          pnpm release:publish
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
