@@ -80,6 +80,18 @@ function compareSemver(a: number[], b: number[]): number {
   return 0;
 }
 
+function resolveInstalledVersion(packageName: string, installed: Record<string, string>): string | undefined {
+  const exact = installed[packageName];
+  if (exact) return exact;
+
+  // Historical kit metadata/documentation used `otok` for the core package,
+  // while published packages are now scoped as `@kamod-ch/otok`.
+  if (packageName === "@kamod-ch/otok") return installed.otok;
+  if (packageName === "otok") return installed["@kamod-ch/otok"];
+
+  return undefined;
+}
+
 export function checkKitVersions(
   kits: OtokKitDefinition[],
   installed: Record<string, string>,
@@ -87,7 +99,7 @@ export function checkKitVersions(
   const mismatches: KitVersionMismatch[] = [];
   for (const kit of kits) {
     for (const req of kit.requires ?? []) {
-      const actual = installed[req.package];
+      const actual = resolveInstalledVersion(req.package, installed);
       if (!actual) continue;
       if (!satisfiesRange(actual, req.range)) {
         mismatches.push({ package: req.package, required: req.range, actual });
