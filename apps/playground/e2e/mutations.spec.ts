@@ -28,11 +28,13 @@ test("CRM save and return redirects without JavaScript", async ({ browser }) => 
 });
 
 test("useFetcher adds activity without full navigation", async ({ page }) => {
+  const note = `Follow-up email sent ${Date.now()}`;
+
   await page.goto("/crm/companies/acme");
-  await page.getByPlaceholder("Log an activity…").fill("Follow-up email sent");
+  await page.getByPlaceholder("Log an activity…").fill(note);
   await page.getByRole("button", { name: "Add" }).click();
 
-  await expect(page.getByText("Follow-up email sent")).toBeVisible();
+  await expect(page.getByText(note)).toBeVisible();
   await expect(page).toHaveURL("/crm/companies/acme");
 });
 
