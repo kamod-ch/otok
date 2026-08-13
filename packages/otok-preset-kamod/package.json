@@ -1,6 +1,6 @@
 {
   "name": "@kamod-ch/otok-preset-kamod",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Official Otok kamod preset.",
   "license": "MIT",
   "type": "module",

@@ -1,6 +1,6 @@
 {
   "name": "@kamod-ch/preactpress-compat",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Compatibility layer for migrating PreactPress sites to Otok and @kamod-ch/otok-content.",
   "license": "MIT",
   "type": "module",
@@ -24,7 +24,7 @@
     "@kamod-ch/otok-content": "workspace:*"
   },
   "peerDependencies": {
-    "otok": ">=0.4.0"
+    "otok": ">=0.6.0"
   },
   "devDependencies": {
     "@types/node": "^24.12.2",

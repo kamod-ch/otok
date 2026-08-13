@@ -1,6 +1,6 @@
 {
   "name": "@kamod-ch/otok-route-typegen",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Route tree parsing, conflict detection, and TypeScript type generation for Otok apps.",
   "license": "MIT",
   "homepage": "https://github.com/kamod-ch/otok/tree/main/packages/otok-route-typegen#readme",

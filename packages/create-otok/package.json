@@ -1,6 +1,6 @@
 {
   "name": "create-otok",
-  "version": "0.5.0",
+  "version": "0.6.0",
   "description": "Scaffold a new Otok app with presets, layers, and reproducible versions.",
   "license": "MIT",
   "homepage": "https://github.com/kamod-ch/otok/tree/main/packages/create-otok#readme",

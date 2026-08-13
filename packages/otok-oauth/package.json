@@ -61,7 +61,7 @@
     "@kamod-ch/otok-auth": ">=2.0.0",
     "arctic": ">=3.0.0",
     "hono": ">=4",
-    "otok": ">=0.4.0"
+    "otok": ">=0.6.0"
   },
   "peerDependenciesMeta": {
     "otok": {

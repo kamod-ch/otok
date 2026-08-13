@@ -1,6 +1,6 @@
 {
   "name": "@kamod-ch/otok-forum",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Production-ready optional forum extension for Otok — SSR, Kysely, permissions, moderation.",
   "license": "MIT",
   "type": "module",
@@ -41,7 +41,7 @@
   "peerDependencies": {
     "hono": ">=4",
     "kysely": ">=0.27.0",
-    "otok": ">=0.4.0",
+    "otok": ">=0.6.0",
     "preact": ">=10.26.0"
   },
   "peerDependenciesMeta": {

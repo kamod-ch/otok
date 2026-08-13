@@ -1,6 +1,6 @@
 {
   "name": "@kamod-ch/otok-events",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Typed domain events for Otok — in-process bus, transactional outbox, and Kysely integration.",
   "license": "MIT",
   "type": "module",
@@ -43,7 +43,7 @@
   "peerDependencies": {
     "hono": ">=4",
     "kysely": ">=0.27.0",
-    "otok": ">=0.4.0"
+    "otok": ">=0.6.0"
   },
   "peerDependenciesMeta": {
     "kysely": {

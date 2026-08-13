@@ -1,6 +1,6 @@
 {
   "name": "@kamod-ch/otok-test",
-  "version": "0.4.1",
+  "version": "0.5.0",
   "description": "Official server-side and client testing utilities for Otok apps.",
   "license": "MIT",
   "homepage": "https://github.com/kamod-ch/otok/tree/main/packages/otok-test#readme",

@@ -55,7 +55,7 @@
   },
   "peerDependencies": {
     "hono": ">=4",
-    "otok": ">=0.4.0",
+    "otok": ">=0.6.0",
     "preact": ">=10"
   },
   "peerDependenciesMeta": {

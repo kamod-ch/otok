@@ -1,6 +1,6 @@
 {
   "name": "otok-cli",
-  "version": "0.1.1",
+  "version": "0.2.0",
   "description": "CLI for Otok apps — add plugins, manage configuration.",
   "license": "MIT",
   "homepage": "https://github.com/kamod-ch/otok/tree/main/packages/otok-cli#readme",
