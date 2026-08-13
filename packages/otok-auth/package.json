@@ -81,7 +81,7 @@
     "@node-rs/argon2": ">=2.0.0",
     "hono": ">=4",
     "kysely": ">=0.27.0",
-    "otok": ">=0.4.0"
+    "otok": ">=0.6.0"
   },
   "peerDependenciesMeta": {
     "@node-rs/argon2": {

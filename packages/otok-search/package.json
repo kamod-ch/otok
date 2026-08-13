@@ -1,6 +1,6 @@
 {
   "name": "@kamod-ch/otok-search",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Lightweight full-text search index for Otok apps — CRM company indexing.",
   "license": "MIT",
   "type": "module",
@@ -24,7 +24,7 @@
     "@kamod-ch/otok-config": "workspace:*"
   },
   "peerDependencies": {
-    "otok": ">=0.4.0",
+    "otok": ">=0.6.0",
     "hono": "^4.0.0"
   },
   "devDependencies": {

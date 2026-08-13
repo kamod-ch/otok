@@ -1,6 +1,6 @@
 {
   "name": "otok",
-  "version": "0.4.0",
+  "version": "0.6.0",
   "description": "Hono + Preact Islands framework runtime.",
   "license": "MIT",
   "homepage": "https://github.com/kamod-ch/otok/tree/main/packages/otok#readme",

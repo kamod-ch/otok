@@ -1,6 +1,6 @@
 {
   "name": "@kamod-ch/otok-config",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "Typed plugin API and config resolution for Otok apps.",
   "license": "MIT",
   "homepage": "https://github.com/kamod-ch/otok/tree/main/packages/otok-config#readme",

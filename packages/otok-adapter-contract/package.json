@@ -1,6 +1,6 @@
 {
   "name": "otok-adapter-contract",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Shared contract tests and fixtures for Otok deployment adapters.",
   "license": "MIT",
   "homepage": "https://github.com/kamod-ch/otok/tree/main/packages/otok-adapter-contract#readme",
