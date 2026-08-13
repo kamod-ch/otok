@@ -1,4 +1,4 @@
-import { defineMiddleware } from "otok/server";
+import { defineMiddleware } from "@kamod-ch/otok/server";
 import { assertCsrf, ensureCsrfCookie } from "../../lib/csrf";
 
 /**

@@ -1,4 +1,4 @@
-import type { ActionResult, LoaderResult, OtokActionContext, OtokContext, OtokLoader } from "otok/server";
+import type { ActionResult, LoaderResult, OtokActionContext, OtokContext, OtokLoader } from "@kamod-ch/otok/server";
 import type { FormParseOptions, ValidationSchema } from "./types.js";
 import { parseFormData } from "./parse/form-data.js";
 import { parseJson } from "./parse/json.js";

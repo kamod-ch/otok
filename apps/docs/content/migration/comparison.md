@@ -11,7 +11,7 @@ Plain Hono is excellent for HTTP APIs and custom servers. Otok adds file routes,
 
 ```ts
 import { Hono } from "hono";
-import { createOtokHandler, readOtokManifest } from "otok/server";
+import { createOtokHandler, readOtokManifest } from "@kamod-ch/otok/server";
 import { errorRoute, notFoundRoute, routes } from "virtual:otok-routes";
 
 const app = new Hono();

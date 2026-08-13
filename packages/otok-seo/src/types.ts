@@ -1,4 +1,4 @@
-import type { LoaderResult, RouteParams } from "otok/server";
+import type { LoaderResult, RouteParams } from "@kamod-ch/otok/server";
 
 export type JsonLdValue = string | number | boolean | null | JsonLdValue[] | { [key: string]: JsonLdValue };
 

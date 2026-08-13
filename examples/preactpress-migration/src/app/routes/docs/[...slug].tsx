@@ -1,4 +1,4 @@
-import { defineRendering } from "otok/rendering";
+import { defineRendering } from "@kamod-ch/otok/rendering";
 import { setContentManifest, getEntryByRoute, listDocRoutes } from "../../../lib/content.js";
 import { DocsLayout } from "../../components/docs-layout.js";
 import { docsTheme, siteTitle } from "../../../site/docs-theme.js";

@@ -1,4 +1,4 @@
-import type { OtokFailure } from "otok/server";
+import type { OtokFailure } from "@kamod-ch/otok/server";
 import type { ParsedHtml } from "./html.js";
 
 export interface RedirectExpectation {

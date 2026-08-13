@@ -1,4 +1,4 @@
-import { fail, redirect, type OtokActionContext, type OtokPageProps } from "otok/server";
+import { fail, redirect, type OtokActionContext, type OtokPageProps } from "@kamod-ch/otok/server";
 
 type Project = {
   id: string;

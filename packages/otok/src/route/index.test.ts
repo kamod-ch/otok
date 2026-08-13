@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { defineAction, defineLoader, defineMeta } from "./index.js";
 
-describe("otok/route helpers", () => {
+describe("@kamod-ch/otok/route helpers", () => {
   it("preserves loader return types", () => {
     const loader = defineLoader(async () => ({ count: 1 }));
     expect(typeof loader).toBe("function");

@@ -5,7 +5,7 @@ Cloudflare Workers deployment adapter for [Otok](https://github.com/kamod-ch/oto
 ## Usage
 
 ```ts
-import { defineConfig } from "otok";
+import { defineConfig } from "@kamod-ch/otok";
 import cloudflare from "otok-adapter-cloudflare";
 
 export default defineConfig({

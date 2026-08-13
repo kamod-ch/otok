@@ -22,7 +22,7 @@ Static routes rank above dynamic routes, and catch-all routes rank last. This ke
 A route module exports a default Preact component and may export `loader` and `head`.
 
 ```tsx
-import type { OtokContext } from "otok/server";
+import type { OtokContext } from "@kamod-ch/otok/server";
 
 export const loader = ({ params }: OtokContext) => ({
   userId: params.id,
@@ -44,7 +44,7 @@ export default function UserPage({ data }: { data: { userId: string } }) {
 `_layout.tsx` wraps every page in its directory and child directories.
 
 ```tsx
-import type { OtokLayoutProps } from "otok/server";
+import type { OtokLayoutProps } from "@kamod-ch/otok/server";
 
 export default function Layout({ children }: OtokLayoutProps) {
   return <main>{children}</main>;
@@ -82,7 +82,7 @@ _error.tsx        Rendered for thrown errors and `fail()`
 Use helpers from `otok/server` or `otok/shared` inside loaders. Loaders can return normal serializable data, a native `Response`, or one of Otok's controlled response helpers:
 
 ```ts
-import { fail, json, notFound, redirect } from "otok/server";
+import { fail, json, notFound, redirect } from "@kamod-ch/otok/server";
 
 export const loader = ({ params }) => {
   if (!params.id) notFound();
@@ -115,7 +115,7 @@ interface OtokFailure<T = JsonValue> {
 For form validation prefer `validationError()`, which defaults to HTTP 400, accepts `string | string[]` field errors, and supports optional redisplays via `values`:
 
 ```ts
-import { validationError } from "otok/server";
+import { validationError } from "@kamod-ch/otok/server";
 
 validationError({
   fieldErrors: { email: "Enter a valid email address" },
@@ -132,7 +132,7 @@ Controlled failures render `_error.tsx` when present and preserve the intended s
 Route modules can export `action` for server-side mutations. Actions run for `POST`, `PUT`, `PATCH`, and `DELETE` requests that match the route.
 
 ```tsx
-import { fail, redirect, type OtokActionContext, type OtokPageProps } from "otok/server";
+import { fail, redirect, type OtokActionContext, type OtokPageProps } from "@kamod-ch/otok/server";
 
 export async function action({ formData, method }: OtokActionContext) {
   const name = String(formData?.get("name") ?? "").trim();
@@ -210,7 +210,7 @@ root middleware -> admin middleware -> loader/action -> render
 ```
 
 ```ts
-import { defineMiddleware, redirect } from "otok/server";
+import { defineMiddleware, redirect } from "@kamod-ch/otok/server";
 
 export default defineMiddleware(async (c, next) => {
   const user = c.get("user");
@@ -251,7 +251,7 @@ export const head = () => ({
 Interactive components live in `src/app/islands` by default. Files in `src/app/routes` whose basename starts with `$` are also treated as islands, which allows colocating route-specific interactive components.
 
 ```tsx
-import { Island } from "otok/client";
+import { Island } from "@kamod-ch/otok/client";
 import Counter from "../islands/counter";
 
 export default function Page() {

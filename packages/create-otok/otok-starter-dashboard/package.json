@@ -15,11 +15,11 @@
   },
   "dependencies": {
     "@hono/node-server": "^2.0.1",
+    "@kamod-ch/otok": "^0.4.0",
     "@kamod-ch/otok-kamod": "^1.0.0",
     "@kamod-ch/ui": "^1.0.1",
     "@preact/signals": "^2.0.0",
     "hono": "^4.12.25",
-    "otok": "^0.4.0",
     "preact": "^10.28.2"
   },
   "devDependencies": {

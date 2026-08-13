@@ -1,4 +1,4 @@
-import { defineConfig } from "otok";
+import { defineConfig } from "@kamod-ch/otok";
 import node from "otok-adapter-node";
 import forum from "@kamod-ch/otok-forum/plugin";
 import { forumStorage } from "./src/lib/db.js";

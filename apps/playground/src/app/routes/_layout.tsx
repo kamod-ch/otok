@@ -1,4 +1,4 @@
-import type { OtokChrome, OtokLayoutProps } from "otok/server";
+import type { OtokChrome, OtokLayoutProps } from "@kamod-ch/otok/server";
 import { DashboardShell } from "../components/dashboard-shell";
 
 const defaultChrome: OtokChrome = {

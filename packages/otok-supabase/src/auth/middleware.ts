@@ -1,6 +1,6 @@
 import { createMiddleware } from "hono/factory";
 import type { Context, MiddlewareHandler } from "hono";
-import { isDataRequest } from "otok/shared";
+import { isDataRequest } from "@kamod-ch/otok/shared";
 import type {
   RequireSupabaseAuthOptions,
   RequireSupabaseUserOptions,

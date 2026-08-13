@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { h } from "preact";
-import { fail, redirect, type OtokPageProps } from "otok/server";
+import { fail, redirect, type OtokPageProps } from "@kamod-ch/otok/server";
 import { createTestApp, createTestRoute, parseHtml, renderParsedRoute, renderRoute, requestRoute } from "./index.js";
 
 const Page = ({ data, params, actionData }: OtokPageProps<any>) =>

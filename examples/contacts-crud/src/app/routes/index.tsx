@@ -1,4 +1,4 @@
-import { redirect } from "otok/server";
+import { redirect } from "@kamod-ch/otok/server";
 
 export function loader() {
   redirect("/contacts");

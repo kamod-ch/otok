@@ -59,7 +59,7 @@ function generatedServerSource(options: NodeAdapterOptions): string {
 
   const redisBootstrap = redisCache
     ? `
-import { setCacheProvider, RedisCacheProvider, createRedisRestClient } from "otok/cache";
+import { setCacheProvider, RedisCacheProvider, createRedisRestClient } from "@kamod-ch/otok/cache";
 
 const redisUrl = process.env.UPSTASH_REDIS_REST_URL ?? process.env.OTOK_REDIS_REST_URL;
 const redisToken = process.env.UPSTASH_REDIS_REST_TOKEN ?? process.env.OTOK_REDIS_REST_TOKEN;
@@ -72,7 +72,7 @@ if (redisUrl && redisToken) {
     : "";
 
   return `import { serve } from "@hono/node-server";
-import { createOtokAppAsync, readOtokManifest } from "otok/server";
+import { createOtokAppAsync, readOtokManifest } from "@kamod-ch/otok/server";
 import { loadOtokResolvedConfig } from "virtual:otok-config";
 import { errorRoute, notFoundRoute, routes } from "virtual:otok-routes";
 ${redisBootstrap}

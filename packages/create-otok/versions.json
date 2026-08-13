@@ -1,8 +1,8 @@
 {
-  "generatedAt": "2026-08-03T14:17:16.230Z",
-  "otok": "^0.4.0",
-  "@kamod-ch/otok-vite-plugin": "^0.4.0",
-  "@kamod-ch/otok-config": "^0.2.0",
+  "generatedAt": "2026-08-13T11:40:36.020Z",
+  "@kamod-ch/otok": "^0.6.0",
+  "@kamod-ch/otok-vite-plugin": "^0.6.0",
+  "@kamod-ch/otok-config": "^0.3.0",
   "@kamod-ch/otok-kamod": "^1.0.0",
   "@kamod-ch/otok-auth": "^1.1.0",
   "@kamod-ch/otok-i18n": "^2.0.0",

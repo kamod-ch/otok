@@ -1,7 +1,7 @@
 {
   "name": "@kamod-ch/otok-storage",
   "version": "1.0.0",
-  "description": "Provider-based object storage for Otok — local filesystem, S3, R2, and MinIO.",
+  "description": "Provider-based object storage for Otok \u2014 local filesystem, S3, R2, and MinIO.",
   "license": "MIT",
   "homepage": "https://github.com/kamod-ch/otok/tree/main/packages/otok-storage#readme",
   "bugs": {
@@ -41,8 +41,8 @@
     "test": "vitest run"
   },
   "peerDependencies": {
-    "hono": ">=4",
-    "otok": ">=0.6.0"
+    "@kamod-ch/otok": ">=0.6.0",
+    "hono": ">=4"
   },
   "peerDependenciesMeta": {
     "@aws-sdk/client-s3": {
@@ -55,10 +55,10 @@
   "devDependencies": {
     "@aws-sdk/client-s3": "^3.876.0",
     "@aws-sdk/s3-request-presigner": "^3.876.0",
+    "@kamod-ch/otok": "workspace:*",
     "@kamod-ch/otok-test": "workspace:*",
     "@types/node": "^24.12.2",
     "hono": "^4.12.25",
-    "otok": "workspace:*",
     "typescript": "~6.0.2",
     "vitest": "^4.1.2"
   },

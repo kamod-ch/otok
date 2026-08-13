@@ -32,12 +32,12 @@ const workDir = fs.mkdtempSync(path.join(os.tmpdir(), "otok-cf-example-"));
 
 try {
   run("pnpm -r --filter './packages/*' build");
-  run(`pnpm --filter otok pack --pack-destination ${JSON.stringify(packDir)}`);
+  run(`pnpm --filter @kamod-ch/otok pack --pack-destination ${JSON.stringify(packDir)}`);
   run(`pnpm --filter @kamod-ch/otok-vite-plugin pack --pack-destination ${JSON.stringify(packDir)}`);
   run(`pnpm --filter @kamod-ch/otok-config pack --pack-destination ${JSON.stringify(packDir)}`);
   run(`pnpm --filter @kamod-ch/otok-route-typegen pack --pack-destination ${JSON.stringify(packDir)}`);
 
-  const otokPack = findPack(packDir, "otok-");
+  const otokPack = findPack(packDir, "kamod-ch-otok-");
   const pluginPack = findPack(packDir, "kamod-ch-otok-vite-plugin-");
   const configPack = findPack(packDir, "kamod-ch-otok-config-");
   const routeTypegenPack = findPack(packDir, "kamod-ch-otok-route-typegen-");
@@ -59,7 +59,7 @@ try {
   }
   packageJson.dependencies = {
     ...packageJson.dependencies,
-    otok: `file:${otokPack}`,
+    "@kamod-ch/otok": `file:${otokPack}`,
     "@kamod-ch/otok-vite-plugin": `file:${pluginPack}`,
     "@kamod-ch/otok-config": `file:${configPack}`,
     "@kamod-ch/otok-route-typegen": `file:${routeTypegenPack}`,

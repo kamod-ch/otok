@@ -1,4 +1,4 @@
-import type { OtokLayoutProps } from "otok/server";
+import type { OtokLayoutProps } from "@kamod-ch/otok/server";
 import { I18nProvider } from "@kamod-ch/otok-i18n/client";
 import { LocaleSwitcher } from "@kamod-ch/otok-i18n/switcher";
 import { localizePath } from "@kamod-ch/otok-i18n/routes";

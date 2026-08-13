@@ -2,14 +2,14 @@ import { describe, expect, it } from "vitest";
 import { h } from "preact";
 import type { Context } from "hono";
 import { createTestApp, renderRoute, requestRoute } from "@kamod-ch/otok-test";
-import type { OtokPageProps } from "otok/server";
+import type { OtokPageProps } from "@kamod-ch/otok/server";
 import {
   composeMiddleware,
   createRequireRoleMiddleware,
   createTenantMiddleware,
 } from "./rbac.js";
 import { createRequireAuthMiddleware } from "./require-auth.js";
-import { defineMiddleware } from "otok/server";
+import { defineMiddleware } from "@kamod-ch/otok/server";
 
 type User = {
   id: string;

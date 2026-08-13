@@ -1,5 +1,5 @@
 import type { Context } from "hono";
-import { defineMiddleware, type OtokMiddleware } from "otok/server";
+import { defineMiddleware, type OtokMiddleware } from "@kamod-ch/otok/server";
 import type { OpenRedirectOptions } from "./types.js";
 
 const DEFAULT_PARAMS = ["redirect", "returnTo", "next", "url", "return", "continue"];

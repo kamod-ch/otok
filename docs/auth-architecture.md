@@ -25,7 +25,7 @@ After reviewing the existing implementation, **OAuth protocol handling stays del
 ## Plugin usage
 
 ```ts
-import { defineConfig } from "otok";
+import { defineConfig } from "@kamod-ch/otok";
 import auth from "@kamod-ch/otok-auth";
 import oauth from "@kamod-ch/otok-oauth";
 import { createMemorySessionAdapter } from "@kamod-ch/otok-auth/adapters/memory";

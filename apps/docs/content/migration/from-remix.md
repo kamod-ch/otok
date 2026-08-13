@@ -23,7 +23,7 @@ Remix-style loaders, actions, and progressive forms map closely onto Otok. The b
 ## Actions and PRG
 
 ```tsx
-import { redirect, validationError, type OtokActionContext, type OtokPageProps } from "otok/server";
+import { redirect, validationError, type OtokActionContext, type OtokPageProps } from "@kamod-ch/otok/server";
 
 export async function action({ formData }: OtokActionContext) {
   const name = String(formData?.get("name") ?? "").trim();

@@ -1,4 +1,4 @@
-import { defineConfig } from "otok";
+import { defineConfig } from "@kamod-ch/otok";
 import auth from "@kamod-ch/otok-auth";
 import { createKyselySessionAdapter } from "@kamod-ch/otok-auth/adapters/kysely";
 import i18n from "@kamod-ch/otok-i18n";

@@ -16,7 +16,7 @@ pnpm add -D @kamod-ch/otok-devtools
 
 ```ts
 // otok.config.ts
-import { defineConfig } from "otok";
+import { defineConfig } from "@kamod-ch/otok";
 import devtools from "@kamod-ch/otok-devtools";
 
 export default defineConfig({

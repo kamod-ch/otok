@@ -1,5 +1,5 @@
-import type { OtokContext, OtokActionContext } from "otok/server";
-import { fail, redirect } from "otok/server";
+import type { OtokContext, OtokActionContext } from "@kamod-ch/otok/server";
+import { fail, redirect } from "@kamod-ch/otok/server";
 import { getKitCrm, SWISS_DEMO_ORG_ID } from "../../data/crm-runtime.js";
 import { t } from "@kamod-ch/otok-kit-crm";
 

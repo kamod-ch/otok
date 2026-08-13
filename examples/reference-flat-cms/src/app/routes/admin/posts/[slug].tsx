@@ -1,5 +1,5 @@
-import { Island } from "otok/client";
-import { fail, notFound, redirect, type OtokActionContext, type OtokPageProps } from "otok/server";
+import { Island } from "@kamod-ch/otok/client";
+import { fail, notFound, redirect, type OtokActionContext, type OtokPageProps } from "@kamod-ch/otok/server";
 import { posts, type Post } from "../../../data/posts";
 import LivePreview from "../../../islands/live-preview";
 

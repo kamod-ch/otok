@@ -1,7 +1,7 @@
 import { defineSaasLoader, requirePermission } from "../../../../lib/saas-loader.js";
 import { createBillingAdapter } from "../../../../lib/billing-adapter.js";
 import { stripePortalAction } from "@kamod-ch/otok-stripe";
-import { redirect } from "otok/server";
+import { redirect } from "@kamod-ch/otok/server";
 
 export const loader = defineSaasLoader(async ({ user, db }) => {
   requirePermission(user, "billing:manage");

@@ -5,9 +5,9 @@ declare module "virtual:otok-routes" {
   export type OtokRouteFilePattern = "/crm/companies/[id]" | "/about" | "/admin" | "/boom" | "/crash" | "/crm" | "/deferred-demo" | "/demo" | "/projects" | "/strategies" | "/users/[id]" | "/" | "/docs/[...slug]";
   export type OtokRoutePath = "/crm/companies/:id" | "/about" | "/admin" | "/boom" | "/crash" | "/crm" | "/deferred-demo" | "/demo" | "/projects" | "/strategies" | "/users/:id" | "/" | "/docs/:slug*";
   export type OtokRouteParams<Path extends OtokRouteFilePattern> = Path extends infer P extends string
-    ? import("otok/route").RouteParamsFromPattern<P>
+    ? import("@kamod-ch/otok/route").RouteParamsFromPattern<P>
     : never;
-  export type OtokRouteOptions<Path extends OtokRouteFilePattern> = import("otok/route").RouteBuildOptionsFor<Path>;
+  export type OtokRouteOptions<Path extends OtokRouteFilePattern> = import("@kamod-ch/otok/route").RouteBuildOptionsFor<Path>;
 }
 
 declare module "virtual:otok-route-redirect" {

@@ -2,7 +2,7 @@ import { DashboardShell } from "../../components/dashboard-shell.js";
 import { defineSaasSchemaAction, defineSaasLoader, requirePermission } from "../../../lib/saas-loader.js";
 import { serializeI18n } from "@kamod-ch/otok-i18n/loader";
 import { defineMeta } from "@kamod-ch/otok-seo";
-import { redirect } from "otok/server";
+import { redirect } from "@kamod-ch/otok/server";
 import { FormActions, FormAlert, readFormFailure } from "@kamod-ch/otok-kamod/forms";
 import { checkoutSchema } from "../../../schemas/billing.js";
 import { stripeBillingStatusAction, stripeCheckoutAction } from "@kamod-ch/otok-stripe";

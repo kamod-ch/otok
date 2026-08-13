@@ -5,7 +5,7 @@ Full i18n integration for [Otok](https://github.com/kamod-ch/otok): routing, SSR
 ## Install
 
 ```bash
-pnpm add @kamod-ch/otok-i18n hono otok
+pnpm add @kamod-ch/otok-i18n hono @kamod-ch/otok
 pnpm add preact   # for islands / client hooks
 ```
 
@@ -13,7 +13,7 @@ pnpm add preact   # for islands / client hooks
 
 ```ts
 // otok.config.ts
-import { defineConfig } from "otok";
+import { defineConfig } from "@kamod-ch/otok";
 import i18n from "@kamod-ch/otok-i18n";
 
 export default defineConfig({

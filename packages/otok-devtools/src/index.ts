@@ -1,10 +1,10 @@
-import { definePlugin } from "otok";
+import { definePlugin } from "@kamod-ch/otok";
 import {
   createOtokDevtoolsBridge,
   getOtokDevtoolsBridge,
   setOtokDevtoolsBridge,
   type OtokDevtoolsSnapshot,
-} from "otok/devtools";
+} from "@kamod-ch/otok/devtools";
 import { registerDevtoolsApiRoutes } from "./server/api.js";
 import { createDevtoolsVitePlugin } from "./vite/plugin.js";
 

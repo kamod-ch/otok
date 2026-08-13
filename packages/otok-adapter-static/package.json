@@ -29,15 +29,15 @@
     "test": "vitest run"
   },
   "peerDependencies": {
-    "otok": ">=0.6.0",
+    "@kamod-ch/otok": ">=0.6.0",
     "vite": ">=6"
   },
   "dependencies": {
     "@kamod-ch/otok-config": "workspace:*"
   },
   "devDependencies": {
+    "@kamod-ch/otok": "workspace:*",
     "@types/node": "^24.12.2",
-    "otok": "workspace:*",
     "otok-adapter-contract": "workspace:*",
     "typescript": "~6.0.2",
     "vite": "^8.0.10",

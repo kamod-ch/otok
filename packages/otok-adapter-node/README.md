@@ -5,7 +5,7 @@ Node.js deployment adapter for [Otok](https://github.com/kamod-ch/otok).
 ## Usage
 
 ```ts
-import { defineConfig } from "otok";
+import { defineConfig } from "@kamod-ch/otok";
 import node from "otok-adapter-node";
 
 export default defineConfig({

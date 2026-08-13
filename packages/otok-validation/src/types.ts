@@ -1,4 +1,4 @@
-import type { JsonValue, ValidationErrorInput } from "otok/shared";
+import type { JsonValue, ValidationErrorInput } from "@kamod-ch/otok/shared";
 
 /** Standard Schema V1 — cross-library validation interface. */
 export interface StandardSchemaV1<Input = unknown, Output = Input> {

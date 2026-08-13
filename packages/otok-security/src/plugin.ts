@@ -1,4 +1,4 @@
-import { definePlugin } from "otok";
+import { definePlugin } from "@kamod-ch/otok";
 import { configureSecurityApp } from "./middleware.js";
 import type { SecurityPluginOptions } from "./types.js";
 

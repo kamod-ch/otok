@@ -1,4 +1,4 @@
-import { defineLoader, defineMeta, type RouteComponentProps } from "otok/route";
+import { defineLoader, defineMeta, type RouteComponentProps } from "@kamod-ch/otok/route";
 
 export const loader = defineLoader(async ({ params }) => ({
   project: { id: params.projectId, name: `Project ${params.projectId}` },

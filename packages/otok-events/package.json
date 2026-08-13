@@ -1,7 +1,7 @@
 {
   "name": "@kamod-ch/otok-events",
   "version": "0.1.1",
-  "description": "Typed domain events for Otok — in-process bus, transactional outbox, and Kysely integration.",
+  "description": "Typed domain events for Otok \u2014 in-process bus, transactional outbox, and Kysely integration.",
   "license": "MIT",
   "type": "module",
   "files": [
@@ -40,9 +40,9 @@
     "zod": "^3.24.0"
   },
   "peerDependencies": {
+    "@kamod-ch/otok": ">=0.6.0",
     "hono": ">=4",
-    "kysely": ">=0.27.0",
-    "otok": ">=0.6.0"
+    "kysely": ">=0.27.0"
   },
   "peerDependenciesMeta": {
     "kysely": {
@@ -53,12 +53,12 @@
     }
   },
   "devDependencies": {
+    "@kamod-ch/otok": "workspace:*",
     "@types/better-sqlite3": "^7.6.13",
     "@types/node": "^24.12.2",
     "better-sqlite3": "^12.6.2",
     "hono": "^4.12.25",
     "kysely": "^0.29.3",
-    "otok": "workspace:*",
     "typescript": "~6.0.2",
     "vitest": "^4.1.2"
   },

@@ -1,7 +1,7 @@
 {
   "name": "@kamod-ch/otok-validation",
   "version": "2.0.0",
-  "description": "Standard Schema validation for Otok — typed inputs, field errors, and defineAction integration.",
+  "description": "Standard Schema validation for Otok \u2014 typed inputs, field errors, and defineAction integration.",
   "license": "MIT",
   "homepage": "https://github.com/kamod-ch/otok/tree/main/packages/otok-validation#readme",
   "bugs": {
@@ -61,7 +61,7 @@
     "test": "vitest run"
   },
   "peerDependencies": {
-    "otok": ">=0.6.0"
+    "@kamod-ch/otok": ">=0.6.0"
   },
   "peerDependenciesMeta": {
     "zod": {
@@ -75,11 +75,11 @@
     }
   },
   "devDependencies": {
+    "@kamod-ch/otok": "workspace:*",
     "@kamod-ch/otok-kysely": "workspace:*",
     "@kamod-ch/otok-test": "workspace:*",
     "@types/node": "^24.12.2",
     "arktype": "^2.1.29",
-    "otok": "workspace:*",
     "preact": "^10.28.2",
     "typescript": "~6.0.2",
     "valibot": "^1.0.0",

@@ -1,5 +1,5 @@
 import type { Context } from "hono";
-import { defineMiddleware, fail, redirect, type OtokMiddleware } from "otok/server";
+import { defineMiddleware, fail, redirect, type OtokMiddleware } from "@kamod-ch/otok/server";
 
 function readUser<TUser>(c: Context, getUser?: (c: Context) => TUser | undefined): TUser | undefined {
   if (getUser) return getUser(c);

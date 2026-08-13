@@ -1,4 +1,4 @@
-import { defineConfig } from "otok";
+import { defineConfig } from "@kamod-ch/otok";
 import node from "otok-adapter-node";
 
 export default defineConfig({

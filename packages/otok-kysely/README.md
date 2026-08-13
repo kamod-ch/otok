@@ -5,7 +5,7 @@ Kysely database integration for [Otok](https://github.com/kamod-ch/otok) — typ
 ## Setup
 
 ```ts
-import { defineConfig } from "otok";
+import { defineConfig } from "@kamod-ch/otok";
 import kysely from "@kamod-ch/otok-kysely";
 
 export default defineConfig({

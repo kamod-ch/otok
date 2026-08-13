@@ -1,5 +1,5 @@
 import { describe, expect, it, beforeEach } from "vitest";
-import { PluginContainer } from "otok";
+import { PluginContainer } from "@kamod-ch/otok";
 import fixture, { readFixtureHookLog, resetFixtureHookLog } from "./index.js";
 
 const env = {

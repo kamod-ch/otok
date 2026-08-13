@@ -68,7 +68,7 @@ export async function resolveScaffoldPlan(options: ScaffoldOptions): Promise<{
         enabledModules: modulesForPreset(presetName, options.kitModules ?? {}),
         overrides: options.kitOverrides,
       },
-      { otok: matrix.otok },
+      { "@kamod-ch/otok": matrix["@kamod-ch/otok"] },
     );
     assertNoBlockingConflicts(kitPlan);
   }

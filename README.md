@@ -122,7 +122,7 @@ Unexpected errors render `_error.tsx` with a generic `Internal server error` mes
 Loaders can return normal serializable data or a native `Response`. Otok also exports small response helpers that share one model for loaders, actions, and middleware:
 
 ```ts
-import { fail, json, notFound, redirect, validationError } from "otok/server";
+import { fail, json, notFound, redirect, validationError } from "@kamod-ch/otok/server";
 
 export const loader = ({ params }) => {
   if (!params.id) notFound();
@@ -146,7 +146,7 @@ export const loader = ({ params }) => {
 Route modules can export `action` for server-side mutations. Native HTML forms work without JavaScript; with `softNav: { forms: true }`, same-origin forms are progressively enhanced through the existing page swap runtime.
 
 ```tsx
-import { fail, redirect, type OtokActionContext, type OtokPageProps } from "otok/server";
+import { fail, redirect, type OtokActionContext, type OtokPageProps } from "@kamod-ch/otok/server";
 
 export async function action({ formData }: OtokActionContext) {
   const name = String(formData?.get("name") ?? "").trim();
@@ -180,7 +180,7 @@ Colocate server middleware in `_middleware.ts` files under `src/app/routes`. Par
 
 ```ts
 // src/app/routes/admin/_middleware.ts
-import { defineMiddleware, redirect } from "otok/server";
+import { defineMiddleware, redirect } from "@kamod-ch/otok/server";
 
 export default defineMiddleware(async (c, next) => {
   if (!c.get("user")) redirect("/login", 303);
@@ -207,7 +207,7 @@ The builder accepts file-route patterns, omits route groups from the final URL, 
 Islands are Preact components rendered on the server and hydrated later in the browser.
 
 ```tsx
-import { Island } from "otok/client";
+import { Island } from "@kamod-ch/otok/client";
 import Counter from "../islands/counter";
 
 export default function Page() {
@@ -233,7 +233,7 @@ Island props must be JSON-serializable. Small payloads are stored in a base64url
 
 ```ts
 import { serve } from "@hono/node-server";
-import { createOtokApp, readOtokManifest } from "otok/server";
+import { createOtokApp, readOtokManifest } from "@kamod-ch/otok/server";
 import { errorRoute, notFoundRoute, routes } from "virtual:otok-routes";
 
 const app = createOtokApp({
@@ -259,7 +259,7 @@ Use `createOtokHandler()` when the app needs custom API routes, auth middleware,
 
 ```ts
 import { Hono } from "hono";
-import { createOtokHandler, readOtokManifest } from "otok/server";
+import { createOtokHandler, readOtokManifest } from "@kamod-ch/otok/server";
 import { errorRoute, notFoundRoute, routes } from "virtual:otok-routes";
 
 const app = new Hono();

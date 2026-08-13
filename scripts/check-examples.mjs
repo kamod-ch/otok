@@ -20,7 +20,7 @@ const examples = [
 
 /** Workspace packages that examples may depend on — packed and rewritten to file: URLs. */
 const packTargets = [
-  { filter: "otok", name: "otok", prefix: "otok-" },
+  { filter: "@kamod-ch/otok", name: "@kamod-ch/otok", prefix: "kamod-ch-otok-" },
   { filter: "@kamod-ch/otok-vite-plugin", name: "@kamod-ch/otok-vite-plugin", prefix: "kamod-ch-otok-vite-plugin-" },
   { filter: "@kamod-ch/otok-config", name: "@kamod-ch/otok-config", prefix: "kamod-ch-otok-config-" },
   { filter: "@kamod-ch/otok-route-typegen", name: "@kamod-ch/otok-route-typegen", prefix: "kamod-ch-otok-route-typegen-" },
@@ -120,7 +120,7 @@ try {
     packageJson.dependencies = rewriteWorkspaceDeps(
       {
         ...(packageJson.dependencies ?? {}),
-        otok: `file:${packsByName.otok}`,
+        "@kamod-ch/otok": `file:${packsByName["@kamod-ch/otok"]}`,
         "@kamod-ch/otok-vite-plugin":
           packageJson.dependencies?.["@kamod-ch/otok-vite-plugin"] || packageJson.devDependencies?.["@kamod-ch/otok-vite-plugin"]
             ? undefined

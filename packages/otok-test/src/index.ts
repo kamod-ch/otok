@@ -97,4 +97,4 @@ export async function renderParsedRoute(
   return { ...result, document: parseHtml(result.html) };
 }
 
-export type { OtokRoute } from "otok/server";
+export type { OtokRoute } from "@kamod-ch/otok/server";

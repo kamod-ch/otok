@@ -1,4 +1,4 @@
-import type { OtokPageProps } from "otok/server";
+import type { OtokPageProps } from "@kamod-ch/otok/server";
 import { PostCard } from "../components/post-card";
 import { posts, type Post } from "../data/posts";
 

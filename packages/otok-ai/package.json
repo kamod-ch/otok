@@ -1,7 +1,7 @@
 {
   "name": "@kamod-ch/otok-ai",
   "version": "0.1.0",
-  "description": "Framework-wide AI integration for Otok — streaming, tools, agents, RAG, budgets, MCP.",
+  "description": "Framework-wide AI integration for Otok \u2014 streaming, tools, agents, RAG, budgets, MCP.",
   "license": "MIT",
   "homepage": "https://github.com/kamod-ch/otok/tree/main/packages/otok-ai#readme",
   "bugs": {
@@ -62,20 +62,24 @@
     "test": "vitest run"
   },
   "peerDependencies": {
-    "hono": ">=4",
-    "otok": ">=0.6.0",
-    "@kamod-ch/otok-workflows": ">=0.1.1"
+    "@kamod-ch/otok": ">=0.6.0",
+    "@kamod-ch/otok-workflows": ">=0.1.1",
+    "hono": ">=4"
   },
   "peerDependenciesMeta": {
-    "hono": { "optional": true },
-    "@kamod-ch/otok-workflows": { "optional": true }
+    "hono": {
+      "optional": true
+    },
+    "@kamod-ch/otok-workflows": {
+      "optional": true
+    }
   },
   "devDependencies": {
-    "@kamod-ch/otok-workflows": "workspace:*",
+    "@kamod-ch/otok": "workspace:*",
     "@kamod-ch/otok-test": "workspace:*",
+    "@kamod-ch/otok-workflows": "workspace:*",
     "@types/node": "^24.12.2",
     "hono": "^4.12.25",
-    "otok": "workspace:*",
     "typescript": "~6.0.2",
     "vitest": "^4.1.2",
     "zod": "^4.0.0"

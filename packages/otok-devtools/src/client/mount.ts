@@ -61,5 +61,5 @@ function DevtoolsShell({ endpoint }: { endpoint: string }) {
 
 interface DevtoolsSnapshotResponse {
   enabled: boolean;
-  snapshot: import("otok/devtools").OtokDevtoolsSnapshot | null;
+  snapshot: import("@kamod-ch/otok/devtools").OtokDevtoolsSnapshot | null;
 }

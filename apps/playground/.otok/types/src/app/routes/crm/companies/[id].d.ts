@@ -10,7 +10,7 @@ import type {
   ExtractSearchParams,
   RouteComponentProps,
   RouteErrorProps,
-} from "otok/route";
+} from "@kamod-ch/otok/route";
 
 declare module "./src/app/routes/crm/companies/[id]" {
   export namespace Route {

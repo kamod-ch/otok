@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { createTestApp } from "@kamod-ch/otok-test";
-import { resolveOtokConfig } from "otok";
+import { resolveOtokConfig } from "@kamod-ch/otok";
 import hello from "./index.js";
 
 describe("otok-plugin-hello", () => {

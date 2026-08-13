@@ -1,4 +1,4 @@
-import { defineAction, defineLoader, defineMeta, type RouteComponentProps } from "otok/route";
+import { defineAction, defineLoader, defineMeta, type RouteComponentProps } from "@kamod-ch/otok/route";
 
 type Company = {
   id: string;

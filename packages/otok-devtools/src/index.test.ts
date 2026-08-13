@@ -5,7 +5,7 @@ import {
   createOtokDevtoolsBridge,
   getOtokDevtoolsBridge,
   setOtokDevtoolsBridge,
-} from "otok/devtools";
+} from "@kamod-ch/otok/devtools";
 import devtools from "./index.js";
 
 describe("@kamod-ch/otok-devtools", () => {
@@ -16,7 +16,7 @@ describe("@kamod-ch/otok-devtools", () => {
   it("registers the devtools API route in development mode", async () => {
     setOtokDevtoolsBridge(createOtokDevtoolsBridge());
 
-    const resolved = await import("otok").then(({ resolveOtokConfig }) =>
+    const resolved = await import("@kamod-ch/otok").then(({ resolveOtokConfig }) =>
       resolveOtokConfig(
         { plugins: [devtools()] },
         { root: "/tmp/otok-devtools-test", mode: "development", command: "serve" },
@@ -51,7 +51,7 @@ describe("@kamod-ch/otok-devtools", () => {
   });
 
   it("does not register routes in production mode", async () => {
-    const resolved = await import("otok").then(({ resolveOtokConfig }) =>
+    const resolved = await import("@kamod-ch/otok").then(({ resolveOtokConfig }) =>
       resolveOtokConfig(
         { plugins: [devtools()] },
         { root: "/tmp/otok-devtools-test", mode: "production", command: "build" },

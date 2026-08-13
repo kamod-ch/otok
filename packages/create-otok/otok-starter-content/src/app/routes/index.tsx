@@ -1,4 +1,4 @@
-import type { OtokPageProps } from "otok/server";
+import type { OtokPageProps } from "@kamod-ch/otok/server";
 
 export const loader = () => ({
   posts: [

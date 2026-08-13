@@ -49,7 +49,7 @@ Never expose the service role key to the browser.
 ### Otok plugin (recommended)
 
 ```typescript
-import { defineConfig } from "otok";
+import { defineConfig } from "@kamod-ch/otok";
 import supabase from "@kamod-ch/otok-supabase";
 
 export default defineConfig({

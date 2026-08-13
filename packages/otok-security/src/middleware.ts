@@ -2,7 +2,7 @@ import type { Hono } from "hono";
 import { cors } from "hono/cors";
 import { bodyLimit } from "hono/body-limit";
 import { secureHeaders } from "hono/secure-headers";
-import { defineMiddleware, type OtokMiddleware } from "otok/server";
+import { defineMiddleware, type OtokMiddleware } from "@kamod-ch/otok/server";
 import { attachSecureCookieDefaults, resolveSecureCookieDefaults } from "./cookies.js";
 import { createSecurityCsrfMiddleware } from "./csrf.js";
 import { createOpenRedirectGuard } from "./redirect.js";

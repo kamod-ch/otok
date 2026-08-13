@@ -47,7 +47,7 @@ function generatedWorkerSource(options: CloudflareAdapterOptions): string {
   const kvBinding = options.cacheKvBinding;
 
   const cacheImports = kvBinding
-    ? `\nimport { setCacheProvider, EdgeKvCacheProvider } from "otok/cache";`
+    ? `\nimport { setCacheProvider, EdgeKvCacheProvider } from "@kamod-ch/otok/cache";`
     : "";
 
   const fetchWrapper = kvBinding
@@ -72,7 +72,7 @@ export default {
 export default app;
 `;
 
-  return `import { createOtokWorkerApp, resolveOtokManifest, type ViteManifest } from "otok/server";
+  return `import { createOtokWorkerApp, resolveOtokManifest, type ViteManifest } from "@kamod-ch/otok/server";
 import { errorRoute, notFoundRoute, routes } from "virtual:otok-routes";
 import clientManifest from "../dist/client/.vite/manifest.json";${cacheImports}
 

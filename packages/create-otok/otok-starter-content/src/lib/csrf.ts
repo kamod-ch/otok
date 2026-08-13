@@ -5,7 +5,7 @@
 import { createHash, randomBytes } from "node:crypto";
 import type { Context } from "hono";
 import { getCookie, setCookie } from "hono/cookie";
-import { fail } from "otok/server";
+import { fail } from "@kamod-ch/otok/server";
 
 export const CSRF_COOKIE = "otok_csrf";
 export const CSRF_FIELD = "_csrf";

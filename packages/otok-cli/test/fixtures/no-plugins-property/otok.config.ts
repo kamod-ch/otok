@@ -1,4 +1,4 @@
-import { defineConfig } from "otok";
+import { defineConfig } from "@kamod-ch/otok";
 
 export default defineConfig({
   theme: true,

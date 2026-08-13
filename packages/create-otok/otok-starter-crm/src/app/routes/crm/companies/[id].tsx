@@ -1,6 +1,6 @@
-import { notFound, type OtokActionContext } from "otok/server";
+import { notFound, type OtokActionContext } from "@kamod-ch/otok/server";
 import { FormAlert, FormField, readFormFailure } from "@kamod-ch/otok-kamod/forms";
-import { Island } from "otok/client";
+import { Island } from "@kamod-ch/otok/client";
 import CompanyEditor from "../../../islands/crm-company-editor";
 import ActivityPanel from "../../../islands/crm-activity-panel";
 import { addActivityAction, getActivities, getCompany, updateCompanyAction } from "../../../data/crm";

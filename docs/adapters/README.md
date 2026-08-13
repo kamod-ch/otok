@@ -5,7 +5,7 @@ Otok ships explicit deployment adapters comparable to SvelteKit's adapter model,
 ## Configuration
 
 ```ts
-import { defineConfig } from "otok";
+import { defineConfig } from "@kamod-ch/otok";
 import node from "otok-adapter-node";
 
 export default defineConfig({
@@ -28,7 +28,7 @@ export default defineConfig({
 Plugins can assert runtime capabilities and emit readable errors:
 
 ```ts
-import { definePlugin, assertAdapterCapability } from "otok";
+import { definePlugin, assertAdapterCapability } from "@kamod-ch/otok";
 
 export default definePlugin({
   name: "my-node-cache",

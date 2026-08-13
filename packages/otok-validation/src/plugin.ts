@@ -1,4 +1,4 @@
-import { definePlugin } from "otok";
+import { definePlugin } from "@kamod-ch/otok";
 
 export type ValidationPluginOptions = Record<string, never> | void;
 

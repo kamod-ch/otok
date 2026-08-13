@@ -1,7 +1,7 @@
 {
   "name": "@kamod-ch/otok-search",
   "version": "0.1.1",
-  "description": "Lightweight full-text search index for Otok apps — CRM company indexing.",
+  "description": "Lightweight full-text search index for Otok apps \u2014 CRM company indexing.",
   "license": "MIT",
   "type": "module",
   "files": [
@@ -23,13 +23,13 @@
     "@kamod-ch/otok-config": "workspace:*"
   },
   "peerDependencies": {
-    "otok": ">=0.6.0",
+    "@kamod-ch/otok": ">=0.6.0",
     "hono": "^4.0.0"
   },
   "devDependencies": {
+    "@kamod-ch/otok": "workspace:*",
     "@types/node": "^24.12.2",
     "hono": "^4.12.25",
-    "otok": "workspace:*",
     "typescript": "~6.0.2",
     "vitest": "^4.1.2"
   },

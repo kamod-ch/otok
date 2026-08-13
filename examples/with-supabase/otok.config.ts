@@ -1,4 +1,4 @@
-import { defineConfig } from "otok";
+import { defineConfig } from "@kamod-ch/otok";
 import supabase from "@kamod-ch/otok-supabase";
 
 const supabaseUrl = process.env.SUPABASE_URL ?? "https://your-project.supabase.co";

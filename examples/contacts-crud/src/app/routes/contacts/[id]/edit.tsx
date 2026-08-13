@@ -1,7 +1,7 @@
 import { defineLoader } from "@kamod-ch/otok-kysely/loader";
 import { defineAction } from "@kamod-ch/otok-validation/loader";
 import { parseParams } from "@kamod-ch/otok-validation";
-import { notFound, redirect, type OtokPageProps } from "otok/server";
+import { notFound, redirect, type OtokPageProps } from "@kamod-ch/otok/server";
 import { contactIdSchema, contactUpdateSchema } from "../../../../schemas/contact.js";
 import type { ContactsDatabase } from "../../../../db/types.js";
 

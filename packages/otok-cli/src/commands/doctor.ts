@@ -51,7 +51,7 @@ async function scanClientLeaks(root: string): Promise<DoctorFinding[]> {
   const findings: DoctorFinding[] = [];
   const clientDirs = ["src/client", "src/app/client"].map((d) => join(root, d));
   const leakPatterns = [
-    { re: /from\s+["']otok\/server["']/, label: "otok/server" },
+    { re: /from\s+["']otok\/server["']/, label: "@kamod-ch/otok/server" },
     { re: /from\s+["']@kamod-ch\/otok-kysely["']/, label: "@kamod-ch/otok-kysely" },
     { re: /process\.env\.[A-Z0-9_]+/, label: "process.env" },
   ];

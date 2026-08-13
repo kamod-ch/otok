@@ -7,13 +7,13 @@ Uses Hono's `secure-headers`, `cors`, and `body-limit` with Otok-specific host v
 ## Install
 
 ```bash
-pnpm add @kamod-ch/otok-security hono otok
+pnpm add @kamod-ch/otok-security hono @kamod-ch/otok
 ```
 
 ## Plugin setup
 
 ```ts
-import { defineConfig } from "otok";
+import { defineConfig } from "@kamod-ch/otok";
 import security from "@kamod-ch/otok-security";
 
 export default defineConfig({

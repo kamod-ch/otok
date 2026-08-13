@@ -1,5 +1,5 @@
 import type { Hono } from "hono";
-import { getOtokDevtoolsBridge } from "otok/devtools";
+import { getOtokDevtoolsBridge } from "@kamod-ch/otok/devtools";
 
 export function registerDevtoolsApiRoutes(app: Hono, endpoint = "/__otok_devtools"): void {
   app.get(endpoint, (c) => {

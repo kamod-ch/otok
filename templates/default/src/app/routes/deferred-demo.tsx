@@ -1,5 +1,5 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@kamod-ui/core";
-import { defineRendering, createDeferredSlot, DeferredBoundary } from "otok/rendering";
+import { defineRendering, createDeferredSlot, DeferredBoundary } from "@kamod-ch/otok/rendering";
 
 export const rendering = defineRendering({
   mode: "ssr",

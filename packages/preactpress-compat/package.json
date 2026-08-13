@@ -23,11 +23,11 @@
     "@kamod-ch/otok-content": "workspace:*"
   },
   "peerDependencies": {
-    "otok": ">=0.6.0"
+    "@kamod-ch/otok": ">=0.6.0"
   },
   "devDependencies": {
+    "@kamod-ch/otok": "workspace:*",
     "@types/node": "^24.12.2",
-    "otok": "workspace:*",
     "typescript": "~6.0.2",
     "vitest": "^4.1.2"
   },

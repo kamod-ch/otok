@@ -57,10 +57,10 @@
     "test": "vitest run"
   },
   "peerDependencies": {
+    "@kamod-ch/otok": ">=0.6.0",
     "@kamod-ch/otok-auth": ">=2.0.0",
     "arctic": ">=3.0.0",
-    "hono": ">=4",
-    "otok": ">=0.6.0"
+    "hono": ">=4"
   },
   "peerDependenciesMeta": {
     "otok": {
@@ -71,11 +71,11 @@
     }
   },
   "devDependencies": {
+    "@kamod-ch/otok": "workspace:*",
     "@kamod-ch/otok-auth": "workspace:*",
     "@types/node": "^24.12.2",
     "arctic": "^3.7.0",
     "hono": "^4.12.25",
-    "otok": "workspace:*",
     "typescript": "~6.0.2",
     "vitest": "^4.1.2"
   },

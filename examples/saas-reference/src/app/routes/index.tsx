@@ -2,7 +2,7 @@ import { AppShell } from "../components/app-shell.js";
 import { defineLoader, serializeI18n } from "@kamod-ch/otok-i18n/loader";
 import { defineMeta } from "@kamod-ch/otok-seo";
 import { authFromOtokContext, tryGetAuthRuntime } from "@kamod-ch/otok-auth";
-import { redirect, type OtokPageProps } from "otok/server";
+import { redirect, type OtokPageProps } from "@kamod-ch/otok/server";
 import { Button } from "@kamod-ch/ui/button";
 
 export const loader = defineLoader(async ({ i18n, hono }) => {

@@ -17,7 +17,7 @@ Add an optional route-module export named `action` handled by `otok/server` for 
 Proposed public API:
 
 ```ts
-import type { OtokAction, OtokActionResult } from "otok/server";
+import type { OtokAction, OtokActionResult } from "@kamod-ch/otok/server";
 
 export const action: OtokAction = async ({ request, params, formData, hono }) => {
   const name = String(formData.get("name") ?? "").trim();

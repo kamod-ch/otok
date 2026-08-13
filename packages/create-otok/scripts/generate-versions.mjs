@@ -23,7 +23,7 @@ function caret(version) {
 
 const matrix = {
   generatedAt: new Date().toISOString(),
-  otok: caret(readVersion("packages/otok")),
+  "@kamod-ch/otok": caret(readVersion("packages/otok")),
   "@kamod-ch/otok-vite-plugin": caret(readVersion("packages/vite-plugin-otok")),
   "@kamod-ch/otok-config": caret(readVersion("packages/otok-config")),
   "@kamod-ch/otok-kamod": "^1.0.0",

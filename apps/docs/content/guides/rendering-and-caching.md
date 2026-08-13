@@ -5,7 +5,7 @@ Otok routes declare rendering mode, streaming, and cache policy with `defineRend
 ## Route configuration
 
 ```ts
-import { defineRendering } from "otok/rendering";
+import { defineRendering } from "@kamod-ch/otok/rendering";
 
 export const rendering = defineRendering({
   mode: "ssr",
@@ -39,7 +39,7 @@ When `streaming: true`, Otok emits the HTML shell (`<!doctype>`, `<head>`, `<bod
 Slow loader regions can stream after the critical HTML without blocking TTFB:
 
 ```ts
-import { defineRendering, createDeferredSlot, DeferredBoundary } from "otok/rendering";
+import { defineRendering, createDeferredSlot, DeferredBoundary } from "@kamod-ch/otok/rendering";
 
 export const rendering = defineRendering({
   mode: "ssr",
@@ -96,7 +96,7 @@ Generated automatically from route cache config:
 ### On-demand revalidation
 
 ```ts
-import { revalidatePath, revalidateTag } from "otok/server";
+import { revalidatePath, revalidateTag } from "@kamod-ch/otok/server";
 
 await revalidateTag("companies");
 await revalidatePath("/companies/acme");
@@ -127,7 +127,7 @@ import {
   RedisCacheProvider,
   createRedisRestClient,
   EdgeKvCacheProvider,
-} from "otok/cache";
+} from "@kamod-ch/otok/cache";
 
 // Single process
 setCacheProvider(new MemoryCacheProvider());

@@ -8,7 +8,7 @@ import {
   ensureCsrfCookie,
   verifyCsrf,
 } from "./csrf.js";
-import { isOtokHttpError } from "otok/server";
+import { isOtokHttpError } from "@kamod-ch/otok/server";
 
 function withContext(handler: (c: Context) => void | Promise<void>, init?: RequestInit) {
   const app = new Hono();

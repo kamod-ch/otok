@@ -30,7 +30,7 @@ export async function findOtokConfigFile(root: string): Promise<string | undefin
 }
 
 export function defaultConfigTemplate(): string {
-  return `import { defineConfig } from "otok";
+  return `import { defineConfig } from "@kamod-ch/otok";
 
 export default defineConfig({});
 `;

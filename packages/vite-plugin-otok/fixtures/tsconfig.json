@@ -7,8 +7,8 @@
     "noEmit": true,
     "skipLibCheck": true,
     "paths": {
-      "otok/server": ["../../otok/dist/server/index.d.ts"],
-      "otok/client": ["../../otok/dist/client/index.d.ts"]
+      "@kamod-ch/otok/server": ["../../otok/dist/server/index.d.ts"],
+      "@kamod-ch/otok/client": ["../../otok/dist/client/index.d.ts"]
     }
   },
   "files": ["./typed-routes.ts", "../client.d.ts"]

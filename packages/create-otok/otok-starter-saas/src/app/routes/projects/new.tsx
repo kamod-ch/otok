@@ -5,7 +5,7 @@ import { getAuthRuntime } from "@kamod-ch/otok-auth/registry";
 import { readI18n } from "@kamod-ch/otok-i18n";
 import { defineAction } from "@kamod-ch/otok-validation/loader";
 import { defineMeta } from "@kamod-ch/otok-seo";
-import { redirect, type OtokPageProps } from "otok/server";
+import { redirect, type OtokPageProps } from "@kamod-ch/otok/server";
 import { projectSchema } from "../../../schemas/auth.js";
 import type { SaasDatabase } from "../../../db/types.js";
 

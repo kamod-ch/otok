@@ -1,4 +1,4 @@
-import { json } from "otok/server";
+import { json } from "@kamod-ch/otok/server";
 
 export const loader = () => ({
   service: "otok-api-starter",

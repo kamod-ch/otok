@@ -1,6 +1,6 @@
 import type { I18nHeadOptions } from "@kamod-ch/otok-i18n";
 import { i18nHead } from "@kamod-ch/otok-i18n";
-import type { OtokHead } from "otok/server";
+import type { OtokHead } from "@kamod-ch/otok/server";
 import { resolveMetaToHead } from "./resolve.js";
 import type { RouteMeta } from "./types.js";
 

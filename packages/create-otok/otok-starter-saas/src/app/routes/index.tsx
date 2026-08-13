@@ -2,7 +2,7 @@ import { AppShell } from "../components/app-shell.js";
 import { Button } from "@kamod-ch/ui/button";
 import { defineLoader, serializeI18n } from "@kamod-ch/otok-i18n/loader";
 import { defineMeta } from "@kamod-ch/otok-seo";
-import type { OtokPageProps } from "otok/server";
+import type { OtokPageProps } from "@kamod-ch/otok/server";
 
 export const loader = defineLoader(({ i18n, hono }) => ({
   copy: {

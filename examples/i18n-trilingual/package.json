@@ -8,9 +8,9 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
+    "@kamod-ch/otok": "workspace:*",
     "@kamod-ch/otok-i18n": "workspace:*",
     "hono": "^4.12.25",
-    "otok": "workspace:*",
     "preact": "^10.28.2"
   },
   "devDependencies": {

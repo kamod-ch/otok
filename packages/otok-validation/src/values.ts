@@ -1,4 +1,4 @@
-import type { JsonValue } from "otok/shared";
+import type { JsonValue } from "@kamod-ch/otok/shared";
 
 export function toJsonValues(record: Record<string, unknown>): Record<string, JsonValue> {
   const values: Record<string, JsonValue> = {};

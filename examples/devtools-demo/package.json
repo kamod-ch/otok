@@ -8,8 +8,8 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
+    "@kamod-ch/otok": "workspace:*",
     "@kamod-ch/otok-devtools": "workspace:*",
-    "otok": "workspace:*",
     "preact": "^10.28.2"
   },
   "devDependencies": {

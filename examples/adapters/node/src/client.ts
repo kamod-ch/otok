@@ -1,3 +1,3 @@
-import { createOtokClient } from "otok/client";
+import { createOtokClient } from "@kamod-ch/otok/client";
 
 createOtokClient();

@@ -1,5 +1,5 @@
 import type { Plugin } from "vite";
-import { definePlugin } from "otok";
+import { definePlugin } from "@kamod-ch/otok";
 import { readFixtureHookLog, recordFixtureHook, resetFixtureHookLog } from "./hooks.js";
 
 export interface FixturePluginOptions {

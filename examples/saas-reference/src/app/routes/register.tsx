@@ -4,7 +4,7 @@ import { defineAction } from "@kamod-ch/otok-validation/loader";
 import { defineLoader, serializeI18n } from "@kamod-ch/otok-i18n/loader";
 import { getAuthRuntime } from "@kamod-ch/otok-auth/registry";
 import { defineMeta } from "@kamod-ch/otok-seo";
-import { redirect, type OtokPageProps } from "otok/server";
+import { redirect, type OtokPageProps } from "@kamod-ch/otok/server";
 import { registerSchema } from "../../schemas/auth.js";
 import { hashPassword } from "../../lib/password.js";
 import { newId } from "../../lib/ids.js";

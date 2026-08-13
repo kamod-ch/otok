@@ -1,6 +1,6 @@
 import { defineLoader } from "@kamod-ch/otok-kysely/loader";
 import { parseParams } from "@kamod-ch/otok-validation";
-import { notFound } from "otok/server";
+import { notFound } from "@kamod-ch/otok/server";
 import { contactIdSchema } from "../../../../schemas/contact.js";
 import type { ContactsDatabase, Contact } from "../../../../db/types.js";
 

@@ -1,8 +1,8 @@
 import { defineLoader, serializeI18n } from "@kamod-ch/otok-i18n/loader";
 import { i18nHead } from "@kamod-ch/otok-i18n";
 import { stripLocaleParam } from "@kamod-ch/otok-i18n/routes";
-import type { InferLoaderData, OtokPageProps } from "otok/server";
-import { Island } from "otok/client";
+import type { InferLoaderData, OtokPageProps } from "@kamod-ch/otok/server";
+import { Island } from "@kamod-ch/otok/client";
 import Welcome from "../../islands/welcome.js";
 
 const LOCALES = ["de", "en", "fr"] as const;

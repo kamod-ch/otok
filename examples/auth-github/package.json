@@ -8,11 +8,11 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
+    "@kamod-ch/otok": "workspace:*",
     "@kamod-ch/otok-auth": "workspace:*",
     "@kamod-ch/otok-oauth": "workspace:*",
     "@node-rs/argon2": "^2.0.2",
     "hono": "^4.12.25",
-    "otok": "workspace:*",
     "preact": "^10.28.2"
   },
   "devDependencies": {

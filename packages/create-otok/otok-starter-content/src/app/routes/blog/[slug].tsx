@@ -1,4 +1,4 @@
-import { notFound, type OtokPageProps } from "otok/server";
+import { notFound, type OtokPageProps } from "@kamod-ch/otok/server";
 
 const posts: Record<string, { title: string; body: string }> = {
   "hello-otok": {

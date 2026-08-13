@@ -1,4 +1,4 @@
-import { defineLoader, type RouteComponentProps } from "otok/route";
+import { defineLoader, type RouteComponentProps } from "@kamod-ch/otok/route";
 
 export const loader = defineLoader(async ({ params }) => ({
   locale: params.lang ?? "default",

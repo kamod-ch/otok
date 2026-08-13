@@ -7,7 +7,7 @@ Show SSR toasts after `redirect()` without client JavaScript or session storage.
 ## Install
 
 ```bash
-pnpm add @kamod-ch/otok-flash hono otok
+pnpm add @kamod-ch/otok-flash hono @kamod-ch/otok
 ```
 
 ## Action → redirect

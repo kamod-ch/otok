@@ -96,7 +96,8 @@ function createTemplatePackageJson() {
   pkg.scripts.check = "pnpm typecheck && pnpm build";
 
   pkg.dependencies["@kamod-ui/core"] = "^0.1.5";
-  pkg.dependencies.otok = `^${runtimePkg.version}`;
+  pkg.dependencies["@kamod-ch/otok"] = `^${runtimePkg.version}`;
+  delete pkg.dependencies.otok;
   delete pkg.dependencies["@kamod-ch/otok-plugin-hello"];
 
   pkg.devDependencies["@kamod-ch/otok-vite-plugin"] = `^${pluginPkg.version}`;
@@ -116,7 +117,7 @@ function buildTemplateFiles() {
   files.set("vite.config.ts", fs.readFileSync(path.join(sourceRoot, "vite.config.ts"), "utf8"));
   files.set(
     "otok.config.ts",
-    'import { defineConfig } from "otok";\n\nexport default defineConfig({});\n',
+    'import { defineConfig } from "@kamod-ch/otok";\n\nexport default defineConfig({});\n',
   );
   files.set("tsconfig.json", templateTsconfig);
   files.set("package.json", createTemplatePackageJson());

@@ -1,4 +1,4 @@
-import { defineMiddleware, type MiddlewareModule, type OtokRoute } from "otok/server";
+import { defineMiddleware, type MiddlewareModule, type OtokRoute } from "@kamod-ch/otok/server";
 import type {
   ForumConfig,
   ForumExtension,

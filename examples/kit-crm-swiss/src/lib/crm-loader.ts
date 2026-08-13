@@ -1,8 +1,8 @@
-import { composeLoader, loaderEnhancer, type LoaderResult } from "otok/route";
+import { composeLoader, loaderEnhancer, type LoaderResult } from "@kamod-ch/otok/route";
 import { defineAction as defineDbAction, withDb } from "@kamod-ch/otok-kysely/loader";
 import { authFromOtokContext, tryGetAuthRuntime } from "@kamod-ch/otok-auth";
 import type { Kysely } from "kysely";
-import type { OtokContext } from "otok/server";
+import type { OtokContext } from "@kamod-ch/otok/server";
 import { KyselyCrmRepository, type CrmDatabase } from "@kamod-ch/otok-kit-crm/db";
 import type { CrmSessionUser } from "./auth-users.js";
 import { resolveCrmSessionUser } from "./auth-users.js";

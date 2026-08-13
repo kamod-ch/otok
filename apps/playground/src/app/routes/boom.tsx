@@ -1,4 +1,4 @@
-import { fail } from "otok/server";
+import { fail } from "@kamod-ch/otok/server";
 
 export const loader = () => {
   fail("Boom from loader");

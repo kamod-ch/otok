@@ -1,7 +1,7 @@
 {
   "name": "@kamod-ch/otok-realtime",
   "version": "0.1.1",
-  "description": "Typed SSE and WebSocket realtime for Otok — channels, rooms, presence, and scalable providers.",
+  "description": "Typed SSE and WebSocket realtime for Otok \u2014 channels, rooms, presence, and scalable providers.",
   "license": "MIT",
   "type": "module",
   "files": [
@@ -48,8 +48,8 @@
     "zod": "^3.24.0"
   },
   "peerDependencies": {
-    "hono": ">=4",
-    "otok": ">=0.6.0"
+    "@kamod-ch/otok": ">=0.6.0",
+    "hono": ">=4"
   },
   "peerDependenciesMeta": {
     "hono": {
@@ -66,10 +66,10 @@
     }
   },
   "devDependencies": {
+    "@kamod-ch/otok": "workspace:*",
     "@types/node": "^24.12.2",
     "@types/ws": "^8.18.1",
     "hono": "^4.12.25",
-    "otok": "workspace:*",
     "typescript": "~6.0.2",
     "vitest": "^4.1.2",
     "ws": "^8.19.0"

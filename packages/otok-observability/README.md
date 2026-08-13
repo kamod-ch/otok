@@ -7,7 +7,7 @@ Privacy-safe by default: no form data, cookies, tokens, or secrets in logs.
 ## Install
 
 ```bash
-pnpm add @kamod-ch/otok-observability hono otok
+pnpm add @kamod-ch/otok-observability hono @kamod-ch/otok
 ```
 
 Optional OpenTelemetry bridge:
@@ -19,7 +19,7 @@ pnpm add @opentelemetry/api
 ## Plugin setup
 
 ```ts
-import { defineConfig } from "otok";
+import { defineConfig } from "@kamod-ch/otok";
 import observability from "@kamod-ch/otok-observability";
 
 export default defineConfig({

@@ -53,7 +53,7 @@ export async function importOtokConfigFile(configFile: string): Promise<unknown>
 
 export function generateOtokConfigModule(configFile: string | undefined, root: string): string {
   if (!configFile) {
-    return `import { resolveOtokConfig } from "otok";
+    return `import { resolveOtokConfig } from "@kamod-ch/otok";
 
 const env = {
   root: ${JSON.stringify(root)},
@@ -74,7 +74,7 @@ export async function loadOtokResolvedConfig() {
 
   const normalized = configFile.replace(/\\/g, "/");
   return `import userConfig from ${JSON.stringify(normalized)};
-import { resolveOtokConfig } from "otok";
+import { resolveOtokConfig } from "@kamod-ch/otok";
 
 const env = {
   root: ${JSON.stringify(root)},

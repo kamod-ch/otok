@@ -10,10 +10,10 @@
     "db:seed": "node --experimental-strip-types src/seed.ts"
   },
   "dependencies": {
+    "@kamod-ch/otok": "workspace:*",
     "@kamod-ch/otok-forum": "workspace:*",
     "better-sqlite3": "^12.6.2",
     "kysely": "^0.29.3",
-    "otok": "workspace:*",
     "otok-adapter-node": "workspace:*",
     "preact": "^10.28.2"
   },

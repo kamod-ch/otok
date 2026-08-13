@@ -1,6 +1,6 @@
 import { defineCrmLoader, defineCrmAction } from "../../../lib/crm-loader.js";
 import { requirePermission, CRM_PERMISSIONS } from "../../../lib/auth-users.js";
-import { fail } from "otok/server";
+import { fail } from "@kamod-ch/otok/server";
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import { CrmShell } from "../../components/crm-shell.js";

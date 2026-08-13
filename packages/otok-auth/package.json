@@ -77,10 +77,10 @@
     "test": "vitest run"
   },
   "peerDependencies": {
+    "@kamod-ch/otok": ">=0.6.0",
     "@node-rs/argon2": ">=2.0.0",
     "hono": ">=4",
-    "kysely": ">=0.27.0",
-    "otok": ">=0.6.0"
+    "kysely": ">=0.27.0"
   },
   "peerDependenciesMeta": {
     "@node-rs/argon2": {
@@ -91,12 +91,12 @@
     }
   },
   "devDependencies": {
-    "@node-rs/argon2": "^2.0.2",
+    "@kamod-ch/otok": "workspace:*",
     "@kamod-ch/otok-test": "workspace:*",
+    "@node-rs/argon2": "^2.0.2",
     "@types/node": "^24.12.2",
     "hono": "^4.12.25",
     "kysely": "^0.29.2",
-    "otok": "workspace:*",
     "preact": "^10.28.2",
     "typescript": "~6.0.2",
     "vitest": "^4.1.2"

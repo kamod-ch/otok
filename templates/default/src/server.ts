@@ -1,5 +1,5 @@
 import { serve } from "@hono/node-server";
-import { createOtokApp, readOtokManifest } from "otok/server";
+import { createOtokApp, readOtokManifest } from "@kamod-ch/otok/server";
 import { loadOtokResolvedConfig } from "virtual:otok-config";
 import { errorRoute, notFoundRoute, routes } from "virtual:otok-routes";
 import "./style.css";

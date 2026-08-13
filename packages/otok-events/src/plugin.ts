@@ -1,4 +1,4 @@
-import { definePlugin } from "otok";
+import { definePlugin } from "@kamod-ch/otok";
 import { createEventBus, InProcessEventBus } from "./bus/event-bus.js";
 import { registerEventsRuntime } from "./registry.js";
 import type { InProcessEventBusOptions } from "./bus/event-bus.js";

@@ -1,4 +1,4 @@
-import { definePlugin } from "otok";
+import { definePlugin } from "@kamod-ch/otok";
 import { createConsoleErrorReporter } from "./error-reporting.js";
 import { configureObservabilityApp } from "./middleware.js";
 import { resolveLogger } from "./logger.js";

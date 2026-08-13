@@ -1,4 +1,4 @@
-import type { LoaderResult, OtokActionContext, OtokContext, OtokLoader } from "otok/server";
+import type { LoaderResult, OtokActionContext, OtokContext, OtokLoader } from "@kamod-ch/otok/server";
 import type { AuthBoundHelpers } from "./context.js";
 import { authFromOtokContext } from "./context.js";
 import { tryGetAuthRuntime } from "./registry.js";

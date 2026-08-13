@@ -18,7 +18,7 @@ If you already have a Hono API or custom server, Otok adds file routes, Preact S
 
 ```ts
 import { Hono } from "hono";
-import { createOtokHandler, readOtokManifest } from "otok/server";
+import { createOtokHandler, readOtokManifest } from "@kamod-ch/otok/server";
 import { errorRoute, notFoundRoute, routes } from "virtual:otok-routes";
 
 const app = new Hono();

@@ -1,7 +1,7 @@
 {
   "name": "@kamod-ch/otok-mail",
   "version": "1.0.0",
-  "description": "Provider-based mail integration for Otok — SMTP, Resend, Mailpit, and test providers.",
+  "description": "Provider-based mail integration for Otok \u2014 SMTP, Resend, Mailpit, and test providers.",
   "license": "MIT",
   "homepage": "https://github.com/kamod-ch/otok/tree/main/packages/otok-mail#readme",
   "bugs": {
@@ -45,8 +45,8 @@
     "test": "vitest run"
   },
   "peerDependencies": {
+    "@kamod-ch/otok": ">=0.6.0",
     "hono": ">=4",
-    "otok": ">=0.6.0",
     "preact": ">=10"
   },
   "peerDependenciesMeta": {
@@ -55,12 +55,12 @@
     }
   },
   "devDependencies": {
+    "@kamod-ch/otok": "workspace:*",
     "@kamod-ch/otok-test": "workspace:*",
     "@types/node": "^24.12.2",
     "@types/nodemailer": "^6.4.17",
     "hono": "^4.12.25",
     "nodemailer": "^7.0.5",
-    "otok": "workspace:*",
     "preact": "^10.28.2",
     "preact-render-to-string": "^6.7.0",
     "typescript": "~6.0.2",

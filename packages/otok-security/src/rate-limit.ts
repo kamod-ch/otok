@@ -1,5 +1,5 @@
 import type { Context } from "hono";
-import { defineMiddleware, type OtokMiddleware } from "otok/server";
+import { defineMiddleware, type OtokMiddleware } from "@kamod-ch/otok/server";
 import type { RateLimitProvider } from "./types.js";
 
 export function createRateLimitMiddleware(provider: RateLimitProvider, ipHeader = "x-forwarded-for"): OtokMiddleware {

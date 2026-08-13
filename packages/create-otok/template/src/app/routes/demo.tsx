@@ -1,5 +1,5 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@kamod-ui/core";
-import { Island } from "otok/client";
+import { Island } from "@kamod-ch/otok/client";
 import DemoDialog from "../islands/demo-dialog";
 import DashboardToolbar from "../islands/dashboard-toolbar";
 import ThemeIsland from "../islands/theme-island";

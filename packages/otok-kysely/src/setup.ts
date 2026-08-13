@@ -1,4 +1,4 @@
-import { defineSetup, type PluginSetupContext } from "otok";
+import { defineSetup, type PluginSetupContext } from "@kamod-ch/otok";
 import { mkdir, access } from "node:fs/promises";
 import { join } from "node:path";
 import { constants } from "node:fs";

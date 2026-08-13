@@ -1,5 +1,5 @@
 import { defineCrmLoader, defineCrmAction } from "../../../../lib/crm-loader.js";
-import { fail, redirect } from "otok/server";
+import { fail, redirect } from "@kamod-ch/otok/server";
 import { triggerCompanyEnrichment } from "../../../../lib/crm-repository-options.js";
 import { CrmShell } from "../../../components/crm-shell.js";
 import { Button } from "@kamod-ch/ui/button";

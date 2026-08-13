@@ -1,7 +1,7 @@
 import { timingSafeEqual } from "node:crypto";
 import type { Context } from "hono";
 import { getCookie, setCookie } from "hono/cookie";
-import { fail } from "otok/server";
+import { fail } from "@kamod-ch/otok/server";
 import { randomToken } from "./crypto.js";
 
 export const CSRF_FIELD = "_csrf";

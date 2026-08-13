@@ -7,13 +7,13 @@ Provider-based integration with a typed Otok plugin, safe client DTOs, idempoten
 ## Install
 
 ```bash
-pnpm add @kamod-ch/otok-stripe stripe hono otok
+pnpm add @kamod-ch/otok-stripe stripe hono @kamod-ch/otok
 ```
 
 ## Plugin
 
 ```ts
-import { defineConfig } from "otok";
+import { defineConfig } from "@kamod-ch/otok";
 import stripe from "@kamod-ch/otok-stripe";
 
 export default defineConfig({

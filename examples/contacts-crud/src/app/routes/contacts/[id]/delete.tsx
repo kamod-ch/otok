@@ -1,6 +1,6 @@
 import { defineAction } from "@kamod-ch/otok-validation/loader";
 import { parseParams } from "@kamod-ch/otok-validation";
-import { redirect } from "otok/server";
+import { redirect } from "@kamod-ch/otok/server";
 import { contactIdSchema } from "../../../../schemas/contact.js";
 import type { ContactsDatabase } from "../../../../db/types.js";
 

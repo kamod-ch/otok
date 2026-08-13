@@ -1,4 +1,4 @@
-import type { LoaderResult, OtokActionContext, OtokContext, OtokLoader } from "otok/server";
+import type { LoaderResult, OtokActionContext, OtokContext, OtokLoader } from "@kamod-ch/otok/server";
 import { readI18n } from "./middleware.js";
 import type { I18nContext } from "./types.js";
 

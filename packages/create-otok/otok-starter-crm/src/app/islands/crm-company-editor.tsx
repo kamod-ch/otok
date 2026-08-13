@@ -1,5 +1,5 @@
 import { useState } from "preact/hooks";
-import { useAction, useNavigationBlocker, LoadingBoundary } from "otok/client";
+import { useAction, useNavigationBlocker, LoadingBoundary } from "@kamod-ch/otok/client";
 import { Input } from "@kamod-ch/ui/input";
 import type { Company } from "../data/crm";
 

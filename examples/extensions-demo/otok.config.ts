@@ -1,4 +1,4 @@
-import { defineConfig } from "otok";
+import { defineConfig } from "@kamod-ch/otok";
 import mail from "@kamod-ch/otok-mail";
 import storage from "@kamod-ch/otok-storage";
 import queue from "@kamod-ch/otok-queue";

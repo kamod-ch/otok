@@ -18,7 +18,7 @@ function readJson(filePath) {
 function expectedPackageVersions() {
   const matrix = readJson(path.join(__dirname, "../versions.json"));
   return {
-    otok: matrix.otok,
+    otok: matrix["@kamod-ch/otok"],
     plugin: matrix["@kamod-ch/otok-vite-plugin"],
   };
 }
@@ -47,7 +47,7 @@ test("scaffolds an app from the packaged minimal template", () => {
     const pkg = readJson(path.join(target, "package.json"));
     const versions = expectedPackageVersions();
     assert.equal(pkg.name, "my-app");
-    assert.equal(pkg.dependencies.otok, versions.otok);
+    assert.equal(pkg.dependencies["@kamod-ch/otok"], versions.otok);
     assert.equal(pkg.devDependencies["@kamod-ch/otok-vite-plugin"], versions.plugin);
   });
 });

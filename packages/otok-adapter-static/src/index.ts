@@ -1,7 +1,7 @@
 import fs from "node:fs";
 import path from "node:path";
 import { adapterError, createDualBuildVitePlugin, defineAdapter, type AdapterBuildContext } from "@kamod-ch/otok-config";
-import { collectPrerenderEntries, scanRenderingFromSource } from "otok/rendering";
+import { collectPrerenderEntries, scanRenderingFromSource } from "@kamod-ch/otok/rendering";
 
 export interface StaticAdapterOptions {
   outDir?: string;
@@ -75,7 +75,7 @@ function validateStaticRoutes(ctx: AdapterBuildContext, options: StaticAdapterOp
 }
 
 function generatedPrerenderServerSource(): string {
-  return `import { createOtokApp, readOtokManifest } from "otok/server";
+  return `import { createOtokApp, readOtokManifest } from "@kamod-ch/otok/server";
 import { loadOtokResolvedConfig } from "virtual:otok-config";
 import { errorRoute, notFoundRoute, routes } from "virtual:otok-routes";
 

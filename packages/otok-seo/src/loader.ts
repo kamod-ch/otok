@@ -1,5 +1,5 @@
 import type { Context } from "hono";
-import type { LoaderResult, OtokContext, OtokLoader } from "otok/server";
+import type { LoaderResult, OtokContext, OtokLoader } from "@kamod-ch/otok/server";
 import { getSeoRuntime, readSeoOrigin } from "./registry.js";
 import type { MetaContext } from "./types.js";
 

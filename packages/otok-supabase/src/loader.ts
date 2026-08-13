@@ -1,4 +1,4 @@
-import type { LoaderResult, OtokActionContext, OtokContext, OtokLoader } from "otok/server";
+import type { LoaderResult, OtokActionContext, OtokContext, OtokLoader } from "@kamod-ch/otok/server";
 import type { SupabaseClient } from "@supabase/supabase-js";
 import { supabaseFromHono } from "./context.js";
 

@@ -1,5 +1,5 @@
-import { Island } from "otok/client";
-import { notFound, type OtokPageProps } from "otok/server";
+import { Island } from "@kamod-ch/otok/client";
+import { notFound, type OtokPageProps } from "@kamod-ch/otok/server";
 import { SeverityBadge } from "../../components/severity-badge";
 import { audits, type Audit } from "../../data/audits";
 import FindingFilter from "../../islands/finding-filter";

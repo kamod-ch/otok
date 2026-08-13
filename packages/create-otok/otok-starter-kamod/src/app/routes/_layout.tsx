@@ -1,4 +1,4 @@
-import type { OtokLayoutProps } from "otok/server";
+import type { OtokLayoutProps } from "@kamod-ch/otok/server";
 
 export default function Layout({ children, chrome }: OtokLayoutProps) {
   return (

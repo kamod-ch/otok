@@ -1,4 +1,4 @@
-import { definePlugin } from "otok";
+import { definePlugin } from "@kamod-ch/otok";
 import { configureAuditApp } from "@kamod-ch/otok-audit/plugin";
 import { createKyselyAuditStore } from "@kamod-ch/otok-audit/providers/kysely";
 import { getKyselyRuntime } from "@kamod-ch/otok-kysely/registry";

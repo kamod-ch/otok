@@ -1,6 +1,6 @@
 import type { Context } from "hono";
 import { getCookie, setCookie } from "hono/cookie";
-import { redirect } from "otok/server";
+import { redirect } from "@kamod-ch/otok/server";
 import { seal, unseal } from "./sign.js";
 import {
   DEFAULT_FLASH_COOKIE,

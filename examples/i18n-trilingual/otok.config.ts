@@ -1,4 +1,4 @@
-import { defineConfig } from "otok";
+import { defineConfig } from "@kamod-ch/otok";
 import i18n from "@kamod-ch/otok-i18n";
 
 export default defineConfig({

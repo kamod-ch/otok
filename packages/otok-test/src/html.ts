@@ -134,7 +134,7 @@ type SelectorPart = {
 
 function parseSelector(selector: string): SelectorPart {
   const trimmed = selector.trim();
-  if (!trimmed) throw new Error("otok/test: selector must not be empty.");
+  if (!trimmed) throw new Error("@kamod-ch/otok/test: selector must not be empty.");
 
   const part: SelectorPart = { classes: [], attrs: [] };
   const re = /([.#]?[A-Za-z_][\w-]*)|\[([^\]]+)\]/g;

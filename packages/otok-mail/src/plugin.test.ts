@@ -1,7 +1,7 @@
 import { describe, expect, it, beforeEach } from "vitest";
 import { Hono } from "hono";
 import { h } from "preact";
-import type { AppContext } from "otok";
+import type { AppContext } from "@kamod-ch/otok";
 import mail, { configureMailApp, getMailClient, resetMailClientForTests } from "./plugin.js";
 import { resetMailRuntimeForTests } from "./registry.js";
 import { resetTestMailProvider } from "./providers/test.js";

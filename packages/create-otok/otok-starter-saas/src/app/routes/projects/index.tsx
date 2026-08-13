@@ -3,7 +3,7 @@ import { Button } from "@kamod-ch/ui/button";
 import { defineLoader as defineAuthLoader } from "@kamod-ch/otok-auth/loader";
 import { readI18n } from "@kamod-ch/otok-i18n";
 import { defineMeta } from "@kamod-ch/otok-seo";
-import type { OtokPageProps } from "otok/server";
+import type { OtokPageProps } from "@kamod-ch/otok/server";
 import type { SaasDatabase } from "../../db/types.js";
 
 export const loader = defineAuthLoader(async ({ auth, hono }) => {

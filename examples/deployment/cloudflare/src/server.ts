@@ -1,4 +1,4 @@
-import { createOtokWorkerApp, resolveOtokManifest, type ViteManifest } from "otok/server";
+import { createOtokWorkerApp, resolveOtokManifest, type ViteManifest } from "@kamod-ch/otok/server";
 import { errorRoute, notFoundRoute, routes } from "virtual:otok-routes";
 import clientManifest from "../dist/client/.vite/manifest.json";
 import "./style.css";

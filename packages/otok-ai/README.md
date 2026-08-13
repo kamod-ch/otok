@@ -28,7 +28,7 @@ pnpm add @kamod-ch/otok-ai
 
 ```ts
 import ai from "@kamod-ch/otok-ai";
-import { defineConfig } from "otok";
+import { defineConfig } from "@kamod-ch/otok";
 
 export default defineConfig({
   plugins: [

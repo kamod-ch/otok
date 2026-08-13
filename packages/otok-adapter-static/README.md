@@ -5,7 +5,7 @@ Static hosting adapter for [Otok](https://github.com/kamod-ch/otok).
 ## Usage
 
 ```ts
-import { defineConfig } from "otok";
+import { defineConfig } from "@kamod-ch/otok";
 import staticAdapter from "otok-adapter-static";
 
 export default defineConfig({

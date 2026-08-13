@@ -7,13 +7,13 @@ Ships as an **Otok plugin** (`auth()`) and as **composition helpers** for manual
 ## Install
 
 ```bash
-pnpm add @kamod-ch/otok-auth hono otok
+pnpm add @kamod-ch/otok-auth hono @kamod-ch/otok
 ```
 
 ## Plugin (recommended)
 
 ```ts
-import { defineConfig } from "otok";
+import { defineConfig } from "@kamod-ch/otok";
 import auth from "@kamod-ch/otok-auth";
 import { createMemorySessionAdapter } from "@kamod-ch/otok-auth/adapters/memory";
 

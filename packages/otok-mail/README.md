@@ -15,7 +15,7 @@ pnpm add nodemailer
 ## Plugin
 
 ```ts
-import { defineConfig } from "otok";
+import { defineConfig } from "@kamod-ch/otok";
 import mail from "@kamod-ch/otok-mail";
 
 export default defineConfig({

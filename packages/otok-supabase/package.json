@@ -70,16 +70,16 @@
     "@supabase/ssr": "^0.12.4"
   },
   "peerDependencies": {
+    "@kamod-ch/otok": ">=0.6.0",
     "@supabase/supabase-js": ">=2.49.0",
-    "hono": ">=4",
-    "otok": ">=0.6.0"
+    "hono": ">=4"
   },
   "devDependencies": {
+    "@kamod-ch/otok": "workspace:*",
     "@kamod-ch/otok-test": "workspace:*",
     "@supabase/supabase-js": "^2.99.0",
     "@types/node": "^24.12.2",
     "hono": "^4.12.25",
-    "otok": "workspace:*",
     "typescript": "~6.0.2",
     "vitest": "^4.1.2"
   },

@@ -15,7 +15,7 @@ Otok should reuse Hono concepts where possible and avoid inventing a general plu
 Add optional route-level middleware exports to route modules and layout modules:
 
 ```ts
-import type { OtokMiddleware } from "otok/server";
+import type { OtokMiddleware } from "@kamod-ch/otok/server";
 
 export const middleware: OtokMiddleware[] = [async (c, next) => {
   if (!c.get("user")) return c.redirect("/login");

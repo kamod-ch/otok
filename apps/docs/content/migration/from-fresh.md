@@ -37,7 +37,7 @@ export default function Page({ data, actionData }) {
 ## Islands
 
 ```tsx
-import { Island } from "otok/client";
+import { Island } from "@kamod-ch/otok/client";
 import Counter from "../islands/counter";
 
 <Island component={Counter} props={{ init: 0 }} strategy="visible" />

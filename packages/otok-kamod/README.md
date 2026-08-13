@@ -18,7 +18,7 @@ pnpm add -D tailwindcss @tailwindcss/vite
 ## Configure
 
 ```ts
-import { defineConfig } from "otok";
+import { defineConfig } from "@kamod-ch/otok";
 import kamod from "@kamod-ch/otok-kamod";
 
 export default defineConfig({

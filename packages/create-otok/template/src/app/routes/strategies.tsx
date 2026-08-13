@@ -1,4 +1,4 @@
-import { Island } from "otok/client";
+import { Island } from "@kamod-ch/otok/client";
 import StrategyLab from "../islands/strategy-lab";
 
 const largePayload = Array.from({ length: 2600 }, (_, index) => (index % 10).toString()).join("");

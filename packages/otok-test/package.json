@@ -37,7 +37,7 @@
     "test": "vitest run"
   },
   "dependencies": {
-    "otok": "workspace:*",
+    "@kamod-ch/otok": "workspace:*",
     "otok-adapter-contract": "workspace:*"
   },
   "peerDependencies": {

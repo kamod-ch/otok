@@ -41,15 +41,15 @@
     "test": "vitest run"
   },
   "peerDependencies": {
+    "@kamod-ch/otok": ">=0.6.0",
     "hono": ">=4",
-    "otok": ">=0.6.0",
     "stripe": ">=17"
   },
   "devDependencies": {
+    "@kamod-ch/otok": "workspace:*",
     "@kamod-ch/otok-test": "workspace:*",
     "@types/node": "^24.12.2",
     "hono": "^4.12.25",
-    "otok": "workspace:*",
     "stripe": "^18.5.0",
     "typescript": "~6.0.2",
     "vitest": "^4.1.2"

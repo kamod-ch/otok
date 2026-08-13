@@ -4,7 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@kamod-ch/ui/card";
 import { defineLoader } from "@kamod-ch/otok-auth/loader";
 import { readI18n } from "@kamod-ch/otok-i18n";
 import { defineMeta } from "@kamod-ch/otok-seo";
-import type { OtokPageProps } from "otok/server";
+import type { OtokPageProps } from "@kamod-ch/otok/server";
 
 export const loader = defineLoader(async ({ auth, hono }) => {
   const user = await auth.requireUser();

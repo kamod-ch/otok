@@ -5,13 +5,13 @@ Typed route metadata, sitemaps, feeds, and SEO helpers for [Otok](https://github
 ## Install
 
 ```bash
-pnpm add @kamod-ch/otok-seo hono otok
+pnpm add @kamod-ch/otok-seo hono @kamod-ch/otok
 ```
 
 ## Plugin setup
 
 ```ts
-import { defineConfig } from "otok";
+import { defineConfig } from "@kamod-ch/otok";
 import seo from "@kamod-ch/otok-seo";
 
 export default defineConfig({

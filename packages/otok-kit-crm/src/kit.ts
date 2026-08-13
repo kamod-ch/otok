@@ -10,7 +10,7 @@ export default defineKit({
   starter: "minimal",
   otok: "^0.4.0",
   requires: [
-    { package: "otok", range: "^0.4.0" },
+    { package: "@kamod-ch/otok", range: "^0.4.0" },
     { package: "@kamod-ch/otok-audit", range: ">=0.1.0" },
   ],
   recommends: ["@kamod-ch/otok-kit-admin"],

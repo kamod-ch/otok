@@ -1,5 +1,5 @@
 import { defineAction } from "@kamod-ch/otok-validation/loader";
-import { redirect, type OtokPageProps } from "otok/server";
+import { redirect, type OtokPageProps } from "@kamod-ch/otok/server";
 import { contactSchema } from "../../../schemas/contact.js";
 import type { ContactsDatabase } from "../../../db/types.js";
 

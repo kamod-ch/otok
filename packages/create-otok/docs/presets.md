@@ -5,7 +5,7 @@ Presets compose starters, optional layers, configuration patches, and file copie
 ## Authoring API
 
 ```ts
-import { definePreset } from "otok";
+import { definePreset } from "@kamod-ch/otok";
 
 export default definePreset({
   name: "@kamod-ch/otok-preset-saas",

@@ -1,5 +1,5 @@
 import { useEffect, useState } from "preact/hooks";
-import { useFetcher, LoadingBoundary } from "otok/client";
+import { useFetcher, LoadingBoundary } from "@kamod-ch/otok/client";
 import { Input, Button } from "@kamod-ui/core";
 import type { Activity } from "../data/crm";
 

@@ -13,7 +13,7 @@ pnpm add @kamod-ch/otok-queue
 ## Plugin
 
 ```ts
-import { defineConfig } from "otok";
+import { defineConfig } from "@kamod-ch/otok";
 import queue from "@kamod-ch/otok-queue";
 
 type Jobs = {

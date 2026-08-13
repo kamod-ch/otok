@@ -8,12 +8,12 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
+    "@kamod-ch/otok": "workspace:*",
     "@kamod-ch/otok-mail": "workspace:*",
     "@kamod-ch/otok-queue": "workspace:*",
     "@kamod-ch/otok-storage": "workspace:*",
     "@kamod-ch/otok-stripe": "workspace:*",
     "hono": "^4.12.25",
-    "otok": "workspace:*",
     "preact": "^10.28.2"
   },
   "devDependencies": {

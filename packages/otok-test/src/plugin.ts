@@ -1,5 +1,5 @@
 import type { Hono } from "hono";
-import { resolveOtokConfig, type OtokConfigEnv, type OtokPluginInput, type OtokUserConfig } from "otok";
+import { resolveOtokConfig, type OtokConfigEnv, type OtokPluginInput, type OtokUserConfig } from "@kamod-ch/otok";
 import { createTestApp, type CreateTestAppOptions } from "./index.js";
 
 export interface PluginTestAppOptions extends Omit<CreateTestAppOptions, "configure"> {

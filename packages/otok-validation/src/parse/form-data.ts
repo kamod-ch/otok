@@ -1,4 +1,4 @@
-import { validationError } from "otok/shared";
+import { validationError } from "@kamod-ch/otok/shared";
 import type { FormParseOptions, ValidationSchema } from "../types.js";
 import { validateSchema } from "../standard.js";
 import { resolveSubmittedValues } from "../values.js";

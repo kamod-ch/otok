@@ -82,8 +82,8 @@ const ROUTE_CONVENTIONS = [
 
 const IMPORT_PATHS = [
   "otok",
-  "otok/server",
-  "otok/route",
+  "@kamod-ch/otok/server",
+  "@kamod-ch/otok/route",
   "@kamod-ch/otok-ai",
   "@kamod-ch/otok-ai/loader",
   "@kamod-ch/otok-ai/tools (defineAiTool)",

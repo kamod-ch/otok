@@ -1,4 +1,4 @@
-import { definePlugin } from "otok";
+import { definePlugin } from "@kamod-ch/otok";
 import type { Hono, Context } from "hono";
 import { getSearchIndex, type SearchQuery } from "./index.js";
 

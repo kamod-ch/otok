@@ -8,7 +8,7 @@ order: 12
 Loaders return data for SSR. Actions handle mutations from `POST`, `PUT`, `PATCH`, and `DELETE` requests.
 
 ```tsx
-import { fail, redirect, type OtokActionContext, type OtokPageProps } from "otok/server";
+import { fail, redirect, type OtokActionContext, type OtokPageProps } from "@kamod-ch/otok/server";
 
 export const loader = () => ({ projects: [] });
 

@@ -1,4 +1,4 @@
-import { definePlugin } from "otok";
+import { definePlugin } from "@kamod-ch/otok";
 import { getAuthRuntime, tryGetAuthRuntime } from "@kamod-ch/otok-auth/registry";
 import type { OAuthAdapter } from "./adapter/types.js";
 import { createOAuthFlow, type OAuthFlowOptions } from "./flow.js";

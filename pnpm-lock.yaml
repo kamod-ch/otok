@@ -25,6 +25,9 @@ importers:
       '@hono/node-server':
         specifier: ^2.0.1
         version: 2.0.4(hono@4.12.25)
+      '@kamod-ch/otok':
+        specifier: workspace:*
+        version: link:../../packages/otok
       '@kamod-ch/otok-kamod':
         specifier: workspace:*
         version: link:../../packages/otok-kamod
@@ -40,9 +43,6 @@ importers:
       hono:
         specifier: ^4.12.25
         version: 4.12.25
-      otok:
-        specifier: workspace:*
-        version: link:../../packages/otok
       preact:
         specifier: ^10.28.2
         version: 10.29.2
@@ -80,6 +80,9 @@ importers:
 
   examples/auth-github:
     dependencies:
+      '@kamod-ch/otok':
+        specifier: workspace:*
+        version: link:../../packages/otok
       '@kamod-ch/otok-auth':
         specifier: workspace:*
         version: link:../../packages/otok-auth
@@ -92,9 +95,6 @@ importers:
       hono:
         specifier: ^4.12.25
         version: 4.12.25
-      otok:
-        specifier: workspace:*
-        version: link:../../packages/otok
       preact:
         specifier: ^10.28.2
         version: 10.29.2
@@ -111,6 +111,9 @@ importers:
 
   examples/contacts-crud:
     dependencies:
+      '@kamod-ch/otok':
+        specifier: workspace:*
+        version: link:../../packages/otok
       '@kamod-ch/otok-kysely':
         specifier: workspace:*
         version: link:../../packages/otok-kysely
@@ -126,9 +129,6 @@ importers:
       kysely:
         specifier: ^0.29.2
         version: 0.29.3
-      otok:
-        specifier: workspace:*
-        version: link:../../packages/otok
       preact:
         specifier: ^10.28.2
         version: 10.29.2
@@ -151,12 +151,12 @@ importers:
 
   examples/devtools-demo:
     dependencies:
+      '@kamod-ch/otok':
+        specifier: workspace:*
+        version: link:../../packages/otok
       '@kamod-ch/otok-devtools':
         specifier: workspace:*
         version: link:../../packages/otok-devtools
-      otok:
-        specifier: workspace:*
-        version: link:../../packages/otok
       preact:
         specifier: ^10.28.2
         version: 10.29.2
@@ -182,6 +182,9 @@ importers:
 
   examples/extensions-demo:
     dependencies:
+      '@kamod-ch/otok':
+        specifier: workspace:*
+        version: link:../../packages/otok
       '@kamod-ch/otok-mail':
         specifier: workspace:*
         version: link:../../packages/otok-mail
@@ -197,9 +200,6 @@ importers:
       hono:
         specifier: ^4.12.25
         version: 4.12.25
-      otok:
-        specifier: workspace:*
-        version: link:../../packages/otok
       preact:
         specifier: ^10.28.2
         version: 10.29.2
@@ -222,6 +222,9 @@ importers:
 
   examples/forum-demo:
     dependencies:
+      '@kamod-ch/otok':
+        specifier: workspace:*
+        version: link:../../packages/otok
       '@kamod-ch/otok-forum':
         specifier: workspace:*
         version: link:../../packages/otok-forum
@@ -231,9 +234,6 @@ importers:
       kysely:
         specifier: ^0.29.3
         version: 0.29.3
-      otok:
-        specifier: workspace:*
-        version: link:../../packages/otok
       otok-adapter-node:
         specifier: workspace:*
         version: link:../../packages/otok-adapter-node
@@ -259,15 +259,15 @@ importers:
 
   examples/i18n-trilingual:
     dependencies:
+      '@kamod-ch/otok':
+        specifier: workspace:*
+        version: link:../../packages/otok
       '@kamod-ch/otok-i18n':
         specifier: workspace:*
         version: link:../../packages/otok-i18n
       hono:
         specifier: ^4.12.25
         version: 4.12.25
-      otok:
-        specifier: workspace:*
-        version: link:../../packages/otok
       preact:
         specifier: ^10.28.2
         version: 10.29.2
@@ -284,6 +284,9 @@ importers:
 
   examples/kit-crm-swiss:
     dependencies:
+      '@kamod-ch/otok':
+        specifier: workspace:*
+        version: link:../../packages/otok
       '@kamod-ch/otok-audit':
         specifier: workspace:*
         version: link:../../packages/otok-audit
@@ -320,9 +323,6 @@ importers:
       kysely:
         specifier: ^0.29.2
         version: 0.29.3
-      otok:
-        specifier: workspace:*
-        version: link:../../packages/otok
       otok-adapter-node:
         specifier: workspace:*
         version: link:../../packages/otok-adapter-node
@@ -366,6 +366,9 @@ importers:
 
   examples/preactpress-migration:
     dependencies:
+      '@kamod-ch/otok':
+        specifier: workspace:*
+        version: link:../../packages/otok
       '@kamod-ch/otok-content':
         specifier: workspace:*
         version: link:../../packages/otok-content
@@ -396,9 +399,6 @@ importers:
       hono:
         specifier: ^4.12.25
         version: 4.12.25
-      otok:
-        specifier: workspace:*
-        version: link:../../packages/otok
       otok-adapter-static:
         specifier: workspace:*
         version: link:../../packages/otok-adapter-static
@@ -433,6 +433,9 @@ importers:
       '@hono/node-server':
         specifier: ^2.0.1
         version: 2.0.4(hono@4.12.25)
+      '@kamod-ch/otok':
+        specifier: workspace:*
+        version: link:../../packages/otok
       '@kamod-ch/otok-vite-plugin':
         specifier: workspace:*
         version: link:../../packages/vite-plugin-otok
@@ -442,9 +445,6 @@ importers:
       hono:
         specifier: ^4.12.25
         version: 4.12.25
-      otok:
-        specifier: workspace:*
-        version: link:../../packages/otok
       preact:
         specifier: ^10.28.2
         version: 10.29.2
@@ -467,6 +467,9 @@ importers:
       '@hono/vite-dev-server':
         specifier: ^0.26.1
         version: 0.26.1(hono@4.12.25)(miniflare@4.20260722.0)(wrangler@4.114.0)
+      '@kamod-ch/otok':
+        specifier: workspace:*
+        version: link:../../packages/otok
       '@kamod-ch/otok-vite-plugin':
         specifier: workspace:*
         version: link:../../packages/vite-plugin-otok
@@ -476,9 +479,6 @@ importers:
       hono:
         specifier: ^4.12.25
         version: 4.12.25
-      otok:
-        specifier: workspace:*
-        version: link:../../packages/otok
       preact:
         specifier: ^10.28.2
         version: 10.29.2
@@ -500,6 +500,9 @@ importers:
       '@hono/node-server':
         specifier: ^2.0.4
         version: 2.0.4(hono@4.12.25)
+      '@kamod-ch/otok':
+        specifier: workspace:*
+        version: link:../../packages/otok
       '@kamod-ch/otok-audit':
         specifier: workspace:*
         version: link:../../packages/otok-audit
@@ -548,9 +551,6 @@ importers:
       kysely:
         specifier: ^0.29.2
         version: 0.29.3
-      otok:
-        specifier: workspace:*
-        version: link:../../packages/otok
       otok-adapter-node:
         specifier: workspace:*
         version: link:../../packages/otok-adapter-node
@@ -606,6 +606,9 @@ importers:
       '@hono/node-server':
         specifier: ^2.0.1
         version: 2.0.4(hono@4.12.25)
+      '@kamod-ch/otok':
+        specifier: workspace:*
+        version: link:../../packages/otok
       '@kamod-ch/otok-observability':
         specifier: workspace:*
         version: link:../../packages/otok-observability
@@ -624,9 +627,6 @@ importers:
       hono:
         specifier: ^4.12.25
         version: 4.12.25
-      otok:
-        specifier: workspace:*
-        version: link:../../packages/otok
       otok-adapter-node:
         specifier: workspace:*
         version: link:../../packages/otok-adapter-node
@@ -649,15 +649,15 @@ importers:
       '@hono/node-server':
         specifier: ^2.0.1
         version: 2.0.4(hono@4.12.25)
+      '@kamod-ch/otok':
+        specifier: workspace:*
+        version: link:../../packages/otok
       '@kamod-ch/otok-vite-plugin':
         specifier: workspace:*
         version: link:../../packages/vite-plugin-otok
       hono:
         specifier: ^4.12.25
         version: 4.12.25
-      otok:
-        specifier: workspace:*
-        version: link:../../packages/otok
       otok-cli:
         specifier: workspace:*
         version: link:../../packages/otok-cli
@@ -680,15 +680,15 @@ importers:
 
   examples/with-supabase:
     dependencies:
+      '@kamod-ch/otok':
+        specifier: workspace:*
+        version: link:../../packages/otok
       '@kamod-ch/otok-supabase':
         specifier: workspace:*
         version: link:../../packages/otok-supabase
       hono:
         specifier: ^4.12.25
         version: 4.12.25
-      otok:
-        specifier: workspace:*
-        version: link:../../packages/otok
       preact:
         specifier: ^10.28.2
         version: 10.29.2
@@ -747,12 +747,12 @@ importers:
         specifier: workspace:*
         version: link:../otok-config
     devDependencies:
+      '@kamod-ch/otok':
+        specifier: workspace:*
+        version: link:../otok
       '@types/node':
         specifier: ^24.12.2
         version: 24.13.1
-      otok:
-        specifier: workspace:*
-        version: link:../otok
       otok-adapter-contract:
         specifier: workspace:*
         version: link:../otok-adapter-contract
@@ -785,12 +785,12 @@ importers:
         specifier: workspace:*
         version: link:../otok-config
     devDependencies:
+      '@kamod-ch/otok':
+        specifier: workspace:*
+        version: link:../otok
       '@types/node':
         specifier: ^24.12.2
         version: 24.13.1
-      otok:
-        specifier: workspace:*
-        version: link:../otok
       otok-adapter-contract:
         specifier: workspace:*
         version: link:../otok-adapter-contract
@@ -810,12 +810,12 @@ importers:
         specifier: workspace:*
         version: link:../otok-config
     devDependencies:
+      '@kamod-ch/otok':
+        specifier: workspace:*
+        version: link:../otok
       '@types/node':
         specifier: ^24.12.2
         version: 24.13.1
-      otok:
-        specifier: workspace:*
-        version: link:../otok
       otok-adapter-contract:
         specifier: workspace:*
         version: link:../otok-adapter-contract
@@ -831,6 +831,9 @@ importers:
 
   packages/otok-ai:
     devDependencies:
+      '@kamod-ch/otok':
+        specifier: workspace:*
+        version: link:../otok
       '@kamod-ch/otok-test':
         specifier: workspace:*
         version: link:../otok-test
@@ -843,9 +846,6 @@ importers:
       hono:
         specifier: ^4.12.25
         version: 4.12.25
-      otok:
-        specifier: workspace:*
-        version: link:../otok
       typescript:
         specifier: ~6.0.2
         version: 6.0.3
@@ -865,6 +865,9 @@ importers:
         specifier: ^3.24.0
         version: 3.25.76
     devDependencies:
+      '@kamod-ch/otok':
+        specifier: workspace:*
+        version: link:../otok
       '@types/better-sqlite3':
         specifier: ^7.6.13
         version: 7.6.13
@@ -880,9 +883,6 @@ importers:
       kysely:
         specifier: ^0.29.3
         version: 0.29.3
-      otok:
-        specifier: workspace:*
-        version: link:../otok
       typescript:
         specifier: ~6.0.2
         version: 6.0.3
@@ -892,6 +892,9 @@ importers:
 
   packages/otok-auth:
     devDependencies:
+      '@kamod-ch/otok':
+        specifier: workspace:*
+        version: link:../otok
       '@kamod-ch/otok-test':
         specifier: workspace:*
         version: link:../otok-test
@@ -907,9 +910,6 @@ importers:
       kysely:
         specifier: ^0.29.2
         version: 0.29.3
-      otok:
-        specifier: workspace:*
-        version: link:../otok
       preact:
         specifier: ^10.28.2
         version: 10.29.2
@@ -987,15 +987,15 @@ importers:
         specifier: ^3.24.0
         version: 3.25.76
     devDependencies:
+      '@kamod-ch/otok':
+        specifier: workspace:*
+        version: link:../otok
       '@types/markdown-it':
         specifier: ^14.1.2
         version: 14.1.2
       '@types/node':
         specifier: ^24.12.2
         version: 24.13.1
-      otok:
-        specifier: workspace:*
-        version: link:../otok
       typescript:
         specifier: ~6.0.2
         version: 6.0.3
@@ -1005,6 +1005,9 @@ importers:
 
   packages/otok-devtools:
     devDependencies:
+      '@kamod-ch/otok':
+        specifier: workspace:*
+        version: link:../otok
       '@kamod-ch/otok-test':
         specifier: workspace:*
         version: link:../otok-test
@@ -1014,9 +1017,6 @@ importers:
       hono:
         specifier: ^4.12.25
         version: 4.12.25
-      otok:
-        specifier: workspace:*
-        version: link:../otok
       preact:
         specifier: ^10.28.2
         version: 10.29.2
@@ -1039,6 +1039,9 @@ importers:
         specifier: ^3.24.0
         version: 3.25.76
     devDependencies:
+      '@kamod-ch/otok':
+        specifier: workspace:*
+        version: link:../otok
       '@types/better-sqlite3':
         specifier: ^7.6.13
         version: 7.6.13
@@ -1054,9 +1057,6 @@ importers:
       kysely:
         specifier: ^0.29.3
         version: 0.29.3
-      otok:
-        specifier: workspace:*
-        version: link:../otok
       typescript:
         specifier: ~6.0.2
         version: 6.0.3
@@ -1066,6 +1066,9 @@ importers:
 
   packages/otok-flash:
     devDependencies:
+      '@kamod-ch/otok':
+        specifier: workspace:*
+        version: link:../otok
       '@kamod-ch/otok-test':
         specifier: workspace:*
         version: link:../otok-test
@@ -1075,9 +1078,6 @@ importers:
       hono:
         specifier: ^4.12.25
         version: 4.12.25
-      otok:
-        specifier: workspace:*
-        version: link:../otok
       preact:
         specifier: ^10.28.2
         version: 10.29.2
@@ -1100,6 +1100,9 @@ importers:
         specifier: ^3.24.0
         version: 3.25.76
     devDependencies:
+      '@kamod-ch/otok':
+        specifier: workspace:*
+        version: link:../otok
       '@kamod-ch/otok-test':
         specifier: workspace:*
         version: link:../otok-test
@@ -1121,9 +1124,6 @@ importers:
       kysely:
         specifier: ^0.29.3
         version: 0.29.3
-      otok:
-        specifier: workspace:*
-        version: link:../otok
       preact:
         specifier: ^10.28.2
         version: 10.29.2
@@ -1136,6 +1136,9 @@ importers:
 
   packages/otok-i18n:
     devDependencies:
+      '@kamod-ch/otok':
+        specifier: workspace:*
+        version: link:../otok
       '@kamod-ch/otok-test':
         specifier: workspace:*
         version: link:../otok-test
@@ -1145,9 +1148,6 @@ importers:
       hono:
         specifier: ^4.12.25
         version: 4.12.25
-      otok:
-        specifier: workspace:*
-        version: link:../otok
       preact:
         specifier: ^10.28.2
         version: 10.29.2
@@ -1170,6 +1170,9 @@ importers:
         specifier: '>=1.0.0'
         version: 1.0.3(preact@10.29.2)
     devDependencies:
+      '@kamod-ch/otok':
+        specifier: workspace:*
+        version: link:../otok
       '@kamod-ch/otok-config':
         specifier: workspace:*
         version: link:../otok-config
@@ -1197,9 +1200,6 @@ importers:
       hono:
         specifier: ^4.12.25
         version: 4.12.25
-      otok:
-        specifier: workspace:*
-        version: link:../otok
       preact:
         specifier: ^10.28.2
         version: 10.29.2
@@ -1245,6 +1245,9 @@ importers:
         specifier: workspace:*
         version: link:../otok-config
     devDependencies:
+      '@kamod-ch/otok':
+        specifier: workspace:*
+        version: link:../otok
       '@kamod-ch/otok-kit-admin':
         specifier: workspace:*
         version: link:../otok-kit-admin
@@ -1266,9 +1269,6 @@ importers:
       kysely:
         specifier: ^0.29.2
         version: 0.29.3
-      otok:
-        specifier: workspace:*
-        version: link:../otok
       typescript:
         specifier: ~6.0.2
         version: 6.0.3
@@ -1301,6 +1301,9 @@ importers:
 
   packages/otok-kysely:
     devDependencies:
+      '@kamod-ch/otok':
+        specifier: workspace:*
+        version: link:../otok
       '@kamod-ch/otok-test':
         specifier: workspace:*
         version: link:../otok-test
@@ -1322,9 +1325,6 @@ importers:
       kysely:
         specifier: ^0.29.2
         version: 0.29.3
-      otok:
-        specifier: workspace:*
-        version: link:../otok
       pg:
         specifier: ^8.16.3
         version: 8.22.0
@@ -1340,6 +1340,9 @@ importers:
 
   packages/otok-mail:
     devDependencies:
+      '@kamod-ch/otok':
+        specifier: workspace:*
+        version: link:../otok
       '@kamod-ch/otok-test':
         specifier: workspace:*
         version: link:../otok-test
@@ -1355,9 +1358,6 @@ importers:
       nodemailer:
         specifier: ^7.0.5
         version: 7.0.13
-      otok:
-        specifier: workspace:*
-        version: link:../otok
       preact:
         specifier: ^10.28.2
         version: 10.29.2
@@ -1373,6 +1373,9 @@ importers:
 
   packages/otok-oauth:
     devDependencies:
+      '@kamod-ch/otok':
+        specifier: workspace:*
+        version: link:../otok
       '@kamod-ch/otok-auth':
         specifier: workspace:*
         version: link:../otok-auth
@@ -1385,9 +1388,6 @@ importers:
       hono:
         specifier: ^4.12.25
         version: 4.12.25
-      otok:
-        specifier: workspace:*
-        version: link:../otok
       typescript:
         specifier: ~6.0.2
         version: 6.0.3
@@ -1397,6 +1397,9 @@ importers:
 
   packages/otok-observability:
     devDependencies:
+      '@kamod-ch/otok':
+        specifier: workspace:*
+        version: link:../otok
       '@kamod-ch/otok-test':
         specifier: workspace:*
         version: link:../otok-test
@@ -1409,9 +1412,6 @@ importers:
       hono:
         specifier: ^4.12.25
         version: 4.12.25
-      otok:
-        specifier: workspace:*
-        version: link:../otok
       typescript:
         specifier: ~6.0.2
         version: 6.0.3
@@ -1421,12 +1421,12 @@ importers:
 
   packages/otok-plugin-contract:
     dependencies:
+      '@kamod-ch/otok':
+        specifier: workspace:*
+        version: link:../otok
       '@kamod-ch/otok-config':
         specifier: workspace:*
         version: link:../otok-config
-      otok:
-        specifier: workspace:*
-        version: link:../otok
     devDependencies:
       '@kamod-ch/otok-plugin-fixture':
         specifier: workspace:*
@@ -1443,15 +1443,15 @@ importers:
 
   packages/otok-plugin-fixture:
     devDependencies:
+      '@kamod-ch/otok':
+        specifier: workspace:*
+        version: link:../otok
       '@types/node':
         specifier: ^24.12.2
         version: 24.13.1
       hono:
         specifier: ^4.12.25
         version: 4.12.25
-      otok:
-        specifier: workspace:*
-        version: link:../otok
       typescript:
         specifier: ~6.0.2
         version: 6.0.3
@@ -1464,6 +1464,9 @@ importers:
 
   packages/otok-plugin-hello:
     devDependencies:
+      '@kamod-ch/otok':
+        specifier: workspace:*
+        version: link:../otok
       '@kamod-ch/otok-test':
         specifier: workspace:*
         version: link:../otok-test
@@ -1473,9 +1476,6 @@ importers:
       hono:
         specifier: ^4.12.25
         version: 4.12.25
-      otok:
-        specifier: workspace:*
-        version: link:../otok
       typescript:
         specifier: ~6.0.2
         version: 6.0.3
@@ -1515,6 +1515,9 @@ importers:
 
   packages/otok-queue:
     devDependencies:
+      '@kamod-ch/otok':
+        specifier: workspace:*
+        version: link:../otok
       '@kamod-ch/otok-test':
         specifier: workspace:*
         version: link:../otok-test
@@ -1524,9 +1527,6 @@ importers:
       hono:
         specifier: ^4.12.25
         version: 4.12.25
-      otok:
-        specifier: workspace:*
-        version: link:../otok
       typescript:
         specifier: ~6.0.2
         version: 6.0.3
@@ -1543,6 +1543,9 @@ importers:
         specifier: ^3.24.0
         version: 3.25.76
     devDependencies:
+      '@kamod-ch/otok':
+        specifier: workspace:*
+        version: link:../otok
       '@types/node':
         specifier: ^24.12.2
         version: 24.13.1
@@ -1552,9 +1555,6 @@ importers:
       hono:
         specifier: ^4.12.25
         version: 4.12.25
-      otok:
-        specifier: workspace:*
-        version: link:../otok
       typescript:
         specifier: ~6.0.2
         version: 6.0.3
@@ -1600,15 +1600,15 @@ importers:
         specifier: workspace:*
         version: link:../otok-config
     devDependencies:
+      '@kamod-ch/otok':
+        specifier: workspace:*
+        version: link:../otok
       '@types/node':
         specifier: ^24.12.2
         version: 24.13.1
       hono:
         specifier: ^4.12.25
         version: 4.12.25
-      otok:
-        specifier: workspace:*
-        version: link:../otok
       typescript:
         specifier: ~6.0.2
         version: 6.0.3
@@ -1618,6 +1618,9 @@ importers:
 
   packages/otok-security:
     devDependencies:
+      '@kamod-ch/otok':
+        specifier: workspace:*
+        version: link:../otok
       '@kamod-ch/otok-test':
         specifier: workspace:*
         version: link:../otok-test
@@ -1627,9 +1630,6 @@ importers:
       hono:
         specifier: ^4.12.25
         version: 4.12.25
-      otok:
-        specifier: workspace:*
-        version: link:../otok
       typescript:
         specifier: ~6.0.2
         version: 6.0.3
@@ -1639,6 +1639,9 @@ importers:
 
   packages/otok-seo:
     devDependencies:
+      '@kamod-ch/otok':
+        specifier: workspace:*
+        version: link:../otok
       '@kamod-ch/otok-i18n':
         specifier: workspace:*
         version: link:../otok-i18n
@@ -1651,9 +1654,6 @@ importers:
       hono:
         specifier: ^4.12.25
         version: 4.12.25
-      otok:
-        specifier: workspace:*
-        version: link:../otok
       preact:
         specifier: ^10.28.2
         version: 10.29.2
@@ -1672,6 +1672,9 @@ importers:
       '@aws-sdk/s3-request-presigner':
         specifier: ^3.876.0
         version: 3.1095.0
+      '@kamod-ch/otok':
+        specifier: workspace:*
+        version: link:../otok
       '@kamod-ch/otok-test':
         specifier: workspace:*
         version: link:../otok-test
@@ -1681,9 +1684,6 @@ importers:
       hono:
         specifier: ^4.12.25
         version: 4.12.25
-      otok:
-        specifier: workspace:*
-        version: link:../otok
       typescript:
         specifier: ~6.0.2
         version: 6.0.3
@@ -1693,6 +1693,9 @@ importers:
 
   packages/otok-stripe:
     devDependencies:
+      '@kamod-ch/otok':
+        specifier: workspace:*
+        version: link:../otok
       '@kamod-ch/otok-test':
         specifier: workspace:*
         version: link:../otok-test
@@ -1702,9 +1705,6 @@ importers:
       hono:
         specifier: ^4.12.25
         version: 4.12.25
-      otok:
-        specifier: workspace:*
-        version: link:../otok
       stripe:
         specifier: ^18.5.0
         version: 18.5.0(@types/node@24.13.1)
@@ -1721,6 +1721,9 @@ importers:
         specifier: ^0.12.4
         version: 0.12.4(@supabase/supabase-js@2.112.3(@opentelemetry/api@1.9.1))
     devDependencies:
+      '@kamod-ch/otok':
+        specifier: workspace:*
+        version: link:../otok
       '@kamod-ch/otok-test':
         specifier: workspace:*
         version: link:../otok-test
@@ -1733,9 +1736,6 @@ importers:
       hono:
         specifier: ^4.12.25
         version: 4.12.25
-      otok:
-        specifier: workspace:*
-        version: link:../otok
       typescript:
         specifier: ~6.0.2
         version: 6.0.3
@@ -1745,7 +1745,7 @@ importers:
 
   packages/otok-test:
     dependencies:
-      otok:
+      '@kamod-ch/otok':
         specifier: workspace:*
         version: link:../otok
       otok-adapter-contract:
@@ -1776,6 +1776,9 @@ importers:
 
   packages/otok-validation:
     devDependencies:
+      '@kamod-ch/otok':
+        specifier: workspace:*
+        version: link:../otok
       '@kamod-ch/otok-kysely':
         specifier: workspace:*
         version: link:../otok-kysely
@@ -1788,9 +1791,6 @@ importers:
       arktype:
         specifier: ^2.1.29
         version: 2.2.3
-      otok:
-        specifier: workspace:*
-        version: link:../otok
       preact:
         specifier: ^10.28.2
         version: 10.29.2
@@ -1816,6 +1816,9 @@ importers:
         specifier: ^3.24.0
         version: 3.25.76
     devDependencies:
+      '@kamod-ch/otok':
+        specifier: workspace:*
+        version: link:../otok
       '@types/better-sqlite3':
         specifier: ^7.6.13
         version: 7.6.13
@@ -1831,9 +1834,6 @@ importers:
       kysely:
         specifier: ^0.29.3
         version: 0.29.3
-      otok:
-        specifier: workspace:*
-        version: link:../otok
       typescript:
         specifier: ~6.0.2
         version: 6.0.3
@@ -1847,12 +1847,12 @@ importers:
         specifier: workspace:*
         version: link:../otok-content
     devDependencies:
+      '@kamod-ch/otok':
+        specifier: workspace:*
+        version: link:../otok
       '@types/node':
         specifier: ^24.12.2
         version: 24.13.1
-      otok:
-        specifier: workspace:*
-        version: link:../otok
       typescript:
         specifier: ~6.0.2
         version: 6.0.3
@@ -1875,12 +1875,12 @@ importers:
         specifier: ^8.0.10
         version: 8.0.16(@types/node@24.13.1)(esbuild@0.28.1)(jiti@2.7.0)(tsx@4.23.5)
     devDependencies:
+      '@kamod-ch/otok':
+        specifier: workspace:*
+        version: link:../otok
       '@types/node':
         specifier: ^24.12.2
         version: 24.13.1
-      otok:
-        specifier: workspace:*
-        version: link:../otok
       typescript:
         specifier: ~6.0.2
         version: 6.0.3

@@ -1,4 +1,4 @@
-import { createOtokApp } from "otok/server";
+import { createOtokApp } from "@kamod-ch/otok/server";
 import { serve } from "@hono/node-server";
 import { routes, notFoundRoute, errorRoute } from "virtual:otok-routes";
 

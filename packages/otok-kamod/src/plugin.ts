@@ -1,4 +1,4 @@
-import { definePlugin } from "otok";
+import { definePlugin } from "@kamod-ch/otok";
 import { kamodStylesheetContent } from "./css.js";
 import { DEFAULT_KAMOD_OPTIONS, type KamodPluginOptions, type KamodThemePreset } from "./types.js";
 import { checkKamodVersions, formatVersionIssues, readInstalledVersion } from "./versions.js";

@@ -3,7 +3,7 @@
   "compilerOptions": {
     "noEmit": true,
     "paths": {
-      "otok/route": ["../../otok/src/route/index.ts"]
+      "@kamod-ch/otok/route": ["../../otok/src/route/index.ts"]
     }
   },
   "include": ["route-types.ts"]

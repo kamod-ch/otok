@@ -56,7 +56,7 @@ describe("mergeKits", () => {
   it("checks version requirements", () => {
     const kit = defineKit({
       ...crmKit,
-      requires: [{ package: "otok", range: "^0.4.0" }],
+      requires: [{ package: "@kamod-ch/otok", range: "^0.4.0" }],
     });
     const plan = mergeKits([kit], {}, {}, { otok: "0.4.5" });
     expect(plan.versionMismatches).toHaveLength(0);

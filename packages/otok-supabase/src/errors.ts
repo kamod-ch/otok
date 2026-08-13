@@ -1,5 +1,5 @@
 import type { AuthError as SupabaseAuthApiError, PostgrestError } from "@supabase/supabase-js";
-import type { OtokFailure } from "otok/server";
+import type { OtokFailure } from "@kamod-ch/otok/server";
 
 export type SupabaseIntegrationErrorCode =
   | "configuration"

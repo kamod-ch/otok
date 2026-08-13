@@ -6,4 +6,3 @@ node_modules/
 /plans
 *.tsbuildinfo
 /docs
-.changeset/

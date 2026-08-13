@@ -43,7 +43,7 @@ export interface ScaffoldOptions {
 
 export interface VersionMatrix extends Record<string, string> {
   generatedAt: string;
-  otok: string;
+  "@kamod-ch/otok": string;
   "@kamod-ch/otok-vite-plugin": string;
 }
 

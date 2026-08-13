@@ -1,5 +1,5 @@
 import type { Context } from "hono";
-import { redirect } from "otok/server";
+import { redirect } from "@kamod-ch/otok/server";
 import { AuthError } from "./errors.js";
 import { safeRedirectPath } from "./redirect.js";
 import type { SessionManager } from "./session/types.js";

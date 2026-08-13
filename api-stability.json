@@ -3,36 +3,6 @@
   "version": "1.0.0-draft",
   "updatedAt": "2026-08-03",
   "packages": {
-    "otok": {
-      "exports": {
-        ".": "public",
-        "./config": "public",
-        "./server": "public",
-        "./client": "public",
-        "./shared": "public",
-        "./route": "public",
-        "./rendering": "public",
-        "./cache": "public",
-        "./client/mutations": "public",
-        "./devtools": "experimental"
-      },
-      "symbols": {
-        "defineConfig": "public",
-        "definePlugin": "public",
-        "defineAdapter": "public",
-        "definePreset": "experimental",
-        "defineKit": "experimental",
-        "createOtokApp": "public",
-        "createOtokHandler": "public",
-        "createOtokWorkerApp": "public",
-        "defineLoader": "public",
-        "defineAction": "public",
-        "defineMeta": "public",
-        "defineRendering": "public",
-        "Island": "public",
-        "createOtokClient": "public"
-      }
-    },
     "@kamod-ch/otok-config": {
       "exports": {
         ".": "public"
@@ -87,6 +57,36 @@
       },
       "symbols": {
         "assertPluginContract": "public"
+      }
+    },
+    "@kamod-ch/otok": {
+      "exports": {
+        ".": "public",
+        "./config": "public",
+        "./server": "public",
+        "./client": "public",
+        "./shared": "public",
+        "./route": "public",
+        "./rendering": "public",
+        "./cache": "public",
+        "./client/mutations": "public",
+        "./devtools": "experimental"
+      },
+      "symbols": {
+        "defineConfig": "public",
+        "definePlugin": "public",
+        "defineAdapter": "public",
+        "definePreset": "experimental",
+        "defineKit": "experimental",
+        "createOtokApp": "public",
+        "createOtokHandler": "public",
+        "createOtokWorkerApp": "public",
+        "defineLoader": "public",
+        "defineAction": "public",
+        "defineMeta": "public",
+        "defineRendering": "public",
+        "Island": "public",
+        "createOtokClient": "public"
       }
     }
   },

@@ -12,17 +12,17 @@
     "test:e2e": "playwright test"
   },
   "dependencies": {
+    "@kamod-ch/otok": "workspace:*",
     "@kamod-ch/otok-content": "workspace:*",
     "@kamod-ch/otok-i18n": "workspace:*",
     "@kamod-ch/otok-kamod": "workspace:*",
     "@kamod-ch/otok-seo": "workspace:*",
+    "@kamod-ch/otok-vite-plugin": "workspace:*",
     "@kamod-ch/preactpress-compat": "workspace:*",
     "@kamod-ch/ui": "^1.0.1",
-    "@kamod-ch/otok-vite-plugin": "workspace:*",
     "@preact/preset-vite": "^2.10.5",
     "@preact/signals": "^2.0.0",
     "hono": "^4.12.25",
-    "otok": "workspace:*",
     "otok-adapter-static": "workspace:*",
     "preact": "^10.28.2",
     "vite": "^8.0.10"

@@ -1,4 +1,4 @@
-import type { ValidationErrorInput } from "otok/shared";
+import type { ValidationErrorInput } from "@kamod-ch/otok/shared";
 import type {
   LegacyParseableError,
   StandardSchemaIssue,
@@ -50,7 +50,7 @@ function isFailure(result: StandardSchemaResult<unknown>): result is { issues: R
 
 export function issuesToValidationInput(
   issues: ReadonlyArray<StandardSchemaIssue>,
-  values?: Record<string, import("otok/shared").JsonValue>,
+  values?: Record<string, import("@kamod-ch/otok/shared").JsonValue>,
 ): ValidationErrorInput {
   const fieldErrors: Record<string, string[]> = {};
   const formErrors: string[] = [];
@@ -74,7 +74,7 @@ export function issuesToValidationInput(
 
 export function legacyErrorToValidationInput(
   error: LegacyParseableError,
-  values?: Record<string, import("otok/shared").JsonValue>,
+  values?: Record<string, import("@kamod-ch/otok/shared").JsonValue>,
 ): ValidationErrorInput {
   if (typeof error.flatten === "function") {
     const flattened = error.flatten();

@@ -42,7 +42,7 @@ examples/deployment/cloudflare/
 `readOtokManifest()` uses Node `fs` and must **not** run in a Worker. Import the Vite client manifest JSON and pass it through `resolveOtokManifest()`:
 
 ```ts
-import { createOtokWorkerApp, resolveOtokManifest, type ViteManifest } from "otok/server";
+import { createOtokWorkerApp, resolveOtokManifest, type ViteManifest } from "@kamod-ch/otok/server";
 import { errorRoute, notFoundRoute, routes } from "virtual:otok-routes";
 import clientManifest from "../dist/client/.vite/manifest.json";
 

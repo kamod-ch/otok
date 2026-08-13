@@ -1,5 +1,5 @@
-import { Island } from "otok/client";
-import type { OtokPageProps } from "otok/server";
+import { Island } from "@kamod-ch/otok/client";
+import type { OtokPageProps } from "@kamod-ch/otok/server";
 import Counter from "../islands/counter";
 
 export const head = () => ({

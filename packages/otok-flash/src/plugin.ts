@@ -1,4 +1,4 @@
-import { definePlugin } from "otok";
+import { definePlugin } from "@kamod-ch/otok";
 import { createFlashMiddleware, type FlashMiddlewareOptions } from "./middleware.js";
 
 export type FlashPluginOptions = FlashMiddlewareOptions;

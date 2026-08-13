@@ -5,7 +5,7 @@ Otok route modules can export typed loaders, actions, metadata, and page compone
 ## Route module API
 
 ```tsx
-import { defineLoader, defineAction, defineMeta, defineSearchParams } from "otok/route";
+import { defineLoader, defineAction, defineMeta, defineSearchParams } from "@kamod-ch/otok/route";
 
 export const searchParams = defineSearchParams(mySearchSchema);
 

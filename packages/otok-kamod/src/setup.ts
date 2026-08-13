@@ -1,4 +1,4 @@
-import { defineSetup, type PluginSetupContext } from "otok";
+import { defineSetup, type PluginSetupContext } from "@kamod-ch/otok";
 import { kamodStylesheetContent } from "./css.js";
 import { DEFAULT_KAMOD_OPTIONS } from "./types.js";
 

@@ -1,4 +1,4 @@
-import { definePlugin } from "otok";
+import { definePlugin } from "@kamod-ch/otok";
 import type { Hono } from "hono";
 import { createMailClient } from "./client.js";
 import { createMailProvider } from "./factory.js";

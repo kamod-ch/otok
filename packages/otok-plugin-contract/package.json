@@ -1,7 +1,7 @@
 {
   "name": "@kamod-ch/otok-plugin-contract",
   "version": "0.2.0",
-  "description": "Shared contract tests for Otok plugins — validates definePlugin hooks and lifecycle.",
+  "description": "Shared contract tests for Otok plugins \u2014 validates definePlugin hooks and lifecycle.",
   "license": "MIT",
   "type": "module",
   "files": [
@@ -23,8 +23,8 @@
     "vitest": ">=2"
   },
   "dependencies": {
-    "@kamod-ch/otok-config": "workspace:*",
-    "otok": "workspace:*"
+    "@kamod-ch/otok": "workspace:*",
+    "@kamod-ch/otok-config": "workspace:*"
   },
   "devDependencies": {
     "@kamod-ch/otok-plugin-fixture": "workspace:*",

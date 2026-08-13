@@ -1,4 +1,4 @@
-import type { OtokHead, OtokHeadLink } from "otok/server";
+import type { OtokHead, OtokHeadLink } from "@kamod-ch/otok/server";
 import { localizePath } from "./routes.js";
 import type { RoutingMode } from "./types.js";
 

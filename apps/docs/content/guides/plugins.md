@@ -17,7 +17,7 @@ Or manually in `otok.config.ts`:
 
 ```ts
 // otok.config.ts
-import { defineConfig } from "otok";
+import { defineConfig } from "@kamod-ch/otok";
 import hello from "@kamod-ch/otok-plugin-hello";
 
 export default defineConfig({
@@ -28,7 +28,7 @@ export default defineConfig({
 Wire resolved runtime config in `src/server.ts`:
 
 ```ts
-import { createOtokApp, readOtokManifest } from "otok/server";
+import { createOtokApp, readOtokManifest } from "@kamod-ch/otok/server";
 import { loadOtokResolvedConfig } from "virtual:otok-config";
 import { routes, notFoundRoute, errorRoute } from "virtual:otok-routes";
 

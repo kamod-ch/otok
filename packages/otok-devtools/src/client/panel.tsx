@@ -1,5 +1,5 @@
 import { h, type ComponentChildren } from "preact";
-import type { OtokDevtoolsSnapshot } from "otok/devtools";
+import type { OtokDevtoolsSnapshot } from "@kamod-ch/otok/devtools";
 
 export interface DevtoolsPanelProps {
   open: boolean;

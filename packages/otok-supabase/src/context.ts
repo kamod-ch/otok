@@ -1,6 +1,6 @@
 import type { Context } from "hono";
 import type { SupabaseClient } from "@supabase/supabase-js";
-import type { OtokContext } from "otok/server";
+import type { OtokContext } from "@kamod-ch/otok/server";
 import { getSupabaseRuntime, tryGetSupabaseRuntime } from "./registry.js";
 
 export function supabaseFromHono<Database = unknown>(

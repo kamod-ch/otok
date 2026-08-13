@@ -1,7 +1,7 @@
-import { validationError } from "otok/shared";
+import { validationError } from "@kamod-ch/otok/shared";
 import type { ParseOptions, ValidationSchema } from "../types.js";
 import { validateSchema } from "../standard.js";
-import type { RouteParams } from "otok/server";
+import type { RouteParams } from "@kamod-ch/otok/server";
 
 export type ParseParamsOptions = ParseOptions;
 

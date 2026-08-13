@@ -1,4 +1,4 @@
-import { defineLoader, type RouteComponentProps } from "otok/route";
+import { defineLoader, type RouteComponentProps } from "@kamod-ch/otok/route";
 
 export const loader = defineLoader(async ({ params }) => ({
   slug: Array.isArray(params.slug) ? params.slug : String(params.slug ?? "").split("/"),

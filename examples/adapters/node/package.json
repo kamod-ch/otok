@@ -13,10 +13,10 @@
   },
   "dependencies": {
     "@hono/node-server": "^2.0.1",
+    "@kamod-ch/otok": "workspace:*",
     "@kamod-ch/otok-vite-plugin": "workspace:*",
     "@preact/preset-vite": "^2.10.2",
     "hono": "^4.12.25",
-    "otok": "workspace:*",
     "otok-adapter-node": "workspace:*",
     "preact": "^10.28.2",
     "vite": "^8.0.10"

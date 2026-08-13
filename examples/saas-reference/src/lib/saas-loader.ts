@@ -1,11 +1,11 @@
-import { composeLoader, loaderEnhancer, type LoaderResult } from "otok/route";
+import { composeLoader, loaderEnhancer, type LoaderResult } from "@kamod-ch/otok/route";
 import { defineAction as defineDbAction, withDb } from "@kamod-ch/otok-kysely/loader";
 import { getKyselyRuntime } from "@kamod-ch/otok-kysely/registry";
 import { defineAction as defineValidatedAction } from "@kamod-ch/otok-validation/loader";
 import type { ValidationSchema } from "@kamod-ch/otok-validation";
 import { authFromOtokContext, tryGetAuthRuntime } from "@kamod-ch/otok-auth";
 import type { Kysely } from "kysely";
-import type { ActionResult, OtokActionContext, OtokContext } from "otok/server";
+import type { ActionResult, OtokActionContext, OtokContext } from "@kamod-ch/otok/server";
 import type { SaasContextUser, SaasDatabase, SaasUser } from "../db/types.js";
 import { resolveOrgContext } from "./tenant.js";
 import { can, type SaasPermission } from "./permissions.js";

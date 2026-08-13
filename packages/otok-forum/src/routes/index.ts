@@ -1,4 +1,4 @@
-import type { OtokRoute, RouteModule } from "otok/server";
+import type { OtokRoute, RouteModule } from "@kamod-ch/otok/server";
 import type { ForumConfig, ForumRuntimeContext } from "../types.js";
 import type { ForumServices } from "../types.js";
 import {

@@ -1,4 +1,4 @@
-import { definePlugin } from "otok";
+import { definePlugin } from "@kamod-ch/otok";
 import type { ProgrammaticRouteDefinition } from "@kamod-ch/otok-config";
 import { createForum, type CreateForumOptions } from "./index.js";
 import { injectForumTheme } from "./index.js";

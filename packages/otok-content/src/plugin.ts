@@ -1,6 +1,6 @@
 import path from "node:path";
 import { pathToFileURL } from "node:url";
-import { definePlugin } from "otok";
+import { definePlugin } from "@kamod-ch/otok";
 import { buildContentManifest } from "./core/load-entries.js";
 import { createRegistry } from "./core/registry.js";
 import type { CollectionDefinition, ContentManifest } from "./core/types.js";

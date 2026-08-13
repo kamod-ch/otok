@@ -2,7 +2,7 @@
   "name": "saas-reference",
   "private": true,
   "version": "0.1.0",
-  "description": "Full-stack Otok SaaS reference application — auth, orgs, billing, audit.",
+  "description": "Full-stack Otok SaaS reference application \u2014 auth, orgs, billing, audit.",
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -19,6 +19,7 @@
   },
   "dependencies": {
     "@hono/node-server": "^2.0.4",
+    "@kamod-ch/otok": "workspace:*",
     "@kamod-ch/otok-audit": "workspace:*",
     "@kamod-ch/otok-auth": "workspace:*",
     "@kamod-ch/otok-i18n": "workspace:*",
@@ -35,7 +36,6 @@
     "@preact/signals": "^2.9.1",
     "hono": "^4.12.25",
     "kysely": "^0.29.2",
-    "otok": "workspace:*",
     "otok-adapter-node": "workspace:*",
     "pg": "^8.16.0",
     "preact": "^10.28.2",

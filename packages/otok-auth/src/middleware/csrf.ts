@@ -1,4 +1,4 @@
-import { defineMiddleware, type OtokMiddleware } from "otok/server";
+import { defineMiddleware, type OtokMiddleware } from "@kamod-ch/otok/server";
 import { assertCsrf, ensureCsrfCookie, type CsrfOptions } from "../csrf.js";
 
 export function createCsrfMiddleware(options: CsrfOptions = {}): OtokMiddleware {

@@ -12,7 +12,7 @@ describe("vite plugin typegen integration", () => {
       const files = {
         "src/app/routes/index.tsx": "export default function Home() { return null; }",
         "src/app/routes/users/[id].tsx": `
-          import { defineLoader } from "otok/route";
+          import { defineLoader } from "@kamod-ch/otok/route";
           export const loader = defineLoader(async ({ params }) => ({ user: params.id }));
           export default function UserPage({ loaderData }: Route.ComponentProps) {
             return loaderData.user;

@@ -8,7 +8,7 @@ order: 10
 Otok renders Preact pages on the server through Hono. The Vite plugin scans route files and emits `virtual:otok-routes`; `createOtokApp()` or `createOtokHandler()` consumes that manifest.
 
 ```ts
-import { createOtokApp, readOtokManifest } from "otok/server";
+import { createOtokApp, readOtokManifest } from "@kamod-ch/otok/server";
 import { errorRoute, notFoundRoute, routes } from "virtual:otok-routes";
 
 export default createOtokApp({

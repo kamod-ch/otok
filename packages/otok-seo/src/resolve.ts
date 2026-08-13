@@ -1,4 +1,4 @@
-import type { OtokHead } from "otok/server";
+import type { OtokHead } from "@kamod-ch/otok/server";
 import type { RouteMeta, SeoPluginOptions } from "./types.js";
 
 function joinOrigin(origin: string | undefined, path: string): string {

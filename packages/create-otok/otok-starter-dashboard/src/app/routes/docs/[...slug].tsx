@@ -1,5 +1,5 @@
 import { Badge, Card, CardContent, CardHeader, CardTitle } from "@kamod-ch/ui";
-import type { OtokContext } from "otok/server";
+import type { OtokContext } from "@kamod-ch/otok/server";
 
 export const loader = ({ params }: OtokContext) => ({
   slug: params.slug,

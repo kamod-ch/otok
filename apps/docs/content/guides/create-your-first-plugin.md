@@ -20,7 +20,7 @@ Use `@kamod-ch/otok-plugin-hello` as a reference implementation.
 ## 2. Define the plugin
 
 ```ts
-import { definePlugin } from "otok";
+import { definePlugin } from "@kamod-ch/otok";
 
 export interface MyPluginOptions {
   greeting?: string;
@@ -54,7 +54,7 @@ export default definePlugin<MyPluginOptions>({
 
 ```ts
 // otok.config.ts
-import { defineConfig } from "otok";
+import { defineConfig } from "@kamod-ch/otok";
 import myPlugin from "my-otok-plugin";
 
 export default defineConfig({
@@ -84,7 +84,7 @@ Use `@kamod-ch/otok-test` with `resolveOtokConfig()`:
 
 ```ts
 import { createTestApp } from "@kamod-ch/otok-test";
-import { resolveOtokConfig } from "otok";
+import { resolveOtokConfig } from "@kamod-ch/otok";
 import myPlugin from "my-otok-plugin";
 
 const resolved = await resolveOtokConfig(

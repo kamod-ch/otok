@@ -1,4 +1,4 @@
-import { defineLoader, defineMeta, type RouteComponentProps } from "otok/route";
+import { defineLoader, defineMeta, type RouteComponentProps } from "@kamod-ch/otok/route";
 import { route } from "virtual:otok-routes";
 
 export const loader = defineLoader(async () => ({

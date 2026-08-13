@@ -1,5 +1,5 @@
 // @vitest-environment jsdom
-import { hydrateIslands, softNavigate, type IslandRegistry } from "otok/client";
+import { hydrateIslands, softNavigate, type IslandRegistry } from "@kamod-ch/otok/client";
 import type { OtokTestApp } from "./app.js";
 
 export interface HydrationTestResult {

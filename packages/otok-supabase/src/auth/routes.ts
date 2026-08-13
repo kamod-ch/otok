@@ -1,7 +1,7 @@
 import type { EmailOtpType } from "@supabase/supabase-js";
 import type { Context, Hono } from "hono";
 import { getCookie } from "hono/cookie";
-import { isDataRequest, OTOK_CSRF_FIELD } from "otok/shared";
+import { isDataRequest, OTOK_CSRF_FIELD } from "@kamod-ch/otok/shared";
 import type { SupabaseAuthRoutesOptions } from "../types.js";
 import { mapSupabaseError } from "../errors.js";
 import { resolveAuthRedirect, safeRedirectPath } from "./redirects.js";

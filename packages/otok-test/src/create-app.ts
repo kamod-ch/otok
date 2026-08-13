@@ -11,7 +11,7 @@ import {
   type OtokPageProps,
   type OtokRoute,
   type RouteModule,
-} from "otok/server";
+} from "@kamod-ch/otok/server";
 
 export interface TestRouteInput<Data extends LoaderResult = LoaderResult> {
   /** Route manifest path, e.g. "/", "/users/:id", or "/docs/:slug*". */

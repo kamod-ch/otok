@@ -1,4 +1,4 @@
-import { defineMiddleware, redirect } from "otok/server";
+import { defineMiddleware, redirect } from "@kamod-ch/otok/server";
 
 export default defineMiddleware(async (c, next) => {
   if (c.req.query("demoUser") !== "1") redirect("/projects", 303);

@@ -1,5 +1,5 @@
 import { useState } from "preact/hooks";
-import { useAction, LoadingBoundary, ErrorBoundary } from "otok/client";
+import { useAction, LoadingBoundary, ErrorBoundary } from "@kamod-ch/otok/client";
 import type { Company } from "../data/crm";
 
 export interface CompaniesTableProps {

@@ -31,7 +31,7 @@ Link local workspace packages during monorepo development:
 # from otok repo root
 pnpm -r --filter './packages/*' build
 cd examples/deployment/cloudflare
-pnpm add otok@file:../../../packages/otok @kamod-ch/otok-vite-plugin@file:../../../packages/vite-plugin-otok
+pnpm add @kamod-ch/otok@file:../../../packages/otok @kamod-ch/otok-vite-plugin@file:../../../packages/vite-plugin-otok
 ```
 
 ## Build and dry-run

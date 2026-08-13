@@ -6,7 +6,7 @@ import type {
   OtokHead,
   OtokPageProps,
   OtokRoute,
-} from "otok/server";
+} from "@kamod-ch/otok/server";
 
 // ─── Permissions ───────────────────────────────────────────────────────────
 

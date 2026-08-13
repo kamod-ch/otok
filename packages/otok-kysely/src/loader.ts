@@ -1,5 +1,5 @@
-import type { LoaderResult, OtokActionContext, OtokContext, OtokLoader } from "otok/server";
-import type { LoaderEnhancer } from "otok/route";
+import type { LoaderResult, OtokActionContext, OtokContext, OtokLoader } from "@kamod-ch/otok/server";
+import type { LoaderEnhancer } from "@kamod-ch/otok/route";
 import type { Kysely } from "kysely";
 import { dbFromHono } from "./context.js";
 import { tryGetKyselyRuntime } from "./registry.js";

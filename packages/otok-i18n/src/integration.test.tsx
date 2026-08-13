@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { renderParsedRoute, createTestApp, createTestRoute } from "@kamod-ch/otok-test";
-import { defineMiddleware } from "otok/server";
+import { defineMiddleware } from "@kamod-ch/otok/server";
 import { createI18nMiddleware, readI18n, toRouteMiddleware } from "./middleware.js";
 import { i18nHead } from "./head.js";
 import { defineLoader } from "./loader.js";

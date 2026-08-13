@@ -1,4 +1,4 @@
-import { defineSetup, type PluginSetupHook } from "otok";
+import { defineSetup, type PluginSetupHook } from "@kamod-ch/otok";
 
 const setup: PluginSetupHook = defineSetup(() => ({
   changes: [

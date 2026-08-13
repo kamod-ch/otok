@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { Hono } from "hono";
-import { isOtokHttpError } from "otok/server";
+import { isOtokHttpError } from "@kamod-ch/otok/server";
 import { createAuthHelpers } from "./context.js";
 import { AuthError } from "./errors.js";
 import { sha256 } from "./crypto.js";

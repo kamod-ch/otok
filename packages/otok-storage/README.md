@@ -15,7 +15,7 @@ pnpm add @aws-sdk/client-s3 @aws-sdk/s3-request-presigner
 ## Plugin
 
 ```ts
-import { defineConfig } from "otok";
+import { defineConfig } from "@kamod-ch/otok";
 import storage from "@kamod-ch/otok-storage";
 
 export default defineConfig({

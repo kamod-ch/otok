@@ -1,5 +1,5 @@
-import type { OtokActionContext, OtokContext, OtokLoader } from "otok/server";
-import type { LoaderResult } from "otok/server";
+import type { OtokActionContext, OtokContext, OtokLoader } from "@kamod-ch/otok/server";
+import type { LoaderResult } from "@kamod-ch/otok/server";
 import { getAiClient, tryGetAiRuntime } from "./registry.js";
 import type { AiClient } from "./client/ai-client.js";
 

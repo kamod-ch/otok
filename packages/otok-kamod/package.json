@@ -1,7 +1,7 @@
 {
   "name": "@kamod-ch/otok-kamod",
   "version": "2.0.0",
-  "description": "Optional Kamod UI integration for Otok — Tailwind, themes, forms, and ecosystem helpers.",
+  "description": "Optional Kamod UI integration for Otok \u2014 Tailwind, themes, forms, and ecosystem helpers.",
   "license": "MIT",
   "homepage": "https://github.com/kamod-ch/otok/tree/main/packages/otok-kamod#readme",
   "bugs": {
@@ -48,13 +48,13 @@
   "peerDependencies": {
     "@kamod-ch/hooks": ">=1.0.0",
     "@kamod-ch/icons": ">=1.0.0",
+    "@kamod-ch/otok": ">=0.6.0",
     "@kamod-ch/signals": ">=1.0.0",
     "@kamod-ch/themes": ">=0.2.0",
     "@kamod-ch/ui": ">=1.0.0",
     "@preact/signals": ">=2.0.0",
     "@tailwindcss/vite": ">=4.0.0",
     "hono": ">=4",
-    "otok": ">=0.6.0",
     "preact": ">=10.26.0",
     "tailwindcss": ">=4.0.0"
   },
@@ -73,16 +73,16 @@
     }
   },
   "devDependencies": {
+    "@kamod-ch/otok": "workspace:*",
+    "@kamod-ch/otok-config": "workspace:*",
+    "@kamod-ch/otok-test": "workspace:*",
     "@kamod-ch/signals": "^1.0.3",
     "@kamod-ch/themes": "^0.2.1",
     "@kamod-ch/ui": "^1.0.1",
-    "@kamod-ch/otok-config": "workspace:*",
-    "@kamod-ch/otok-test": "workspace:*",
     "@preact/signals": "^2.0.0",
     "@tailwindcss/vite": "^4.2.4",
     "@types/node": "^24.12.2",
     "hono": "^4.12.25",
-    "otok": "workspace:*",
     "preact": "^10.28.2",
     "tailwindcss": "^4.2.4",
     "typescript": "~6.0.2",

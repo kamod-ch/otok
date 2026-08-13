@@ -1,4 +1,4 @@
-import type { LoaderResult, OtokActionContext, OtokContext, OtokLoader } from "otok/server";
+import type { LoaderResult, OtokActionContext, OtokContext, OtokLoader } from "@kamod-ch/otok/server";
 import { getObservabilityRuntime, TIMING_CONTEXT_KEY } from "./registry.js";
 import { traceAsync } from "./tracing.js";
 import type { HandlerTiming } from "./types.js";

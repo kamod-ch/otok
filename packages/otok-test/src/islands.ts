@@ -1,4 +1,4 @@
-import { decodeIslandProps } from "otok/shared";
+import { decodeIslandProps } from "@kamod-ch/otok/shared";
 import type { ParsedHtml } from "./html.js";
 
 export interface ParsedIsland {

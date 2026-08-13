@@ -4,9 +4,9 @@
     "noEmit": true,
     "types": ["vite/client", "node", "vitest/globals"],
     "paths": {
-      "otok/client": ["../../packages/otok/src/client/index.tsx"],
-      "otok/server": ["../../packages/otok/src/server/index.tsx"],
-      "otok/shared": ["../../packages/otok/src/shared/index.ts"],
+      "@kamod-ch/otok/client": ["../../packages/otok/src/client/index.tsx"],
+      "@kamod-ch/otok/server": ["../../packages/otok/src/server/index.tsx"],
+      "@kamod-ch/otok/shared": ["../../packages/otok/src/shared/index.ts"],
       "@kamod-ch/otok-vite-plugin": ["../../packages/vite-plugin-otok/src/index.ts"]
     }
   },

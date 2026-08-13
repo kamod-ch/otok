@@ -1,6 +1,6 @@
 import { randomUUID } from "node:crypto";
 import type { Hono } from "hono";
-import { defineMiddleware, type OtokMiddleware } from "otok/server";
+import { defineMiddleware, type OtokMiddleware } from "@kamod-ch/otok/server";
 import { captureError } from "./error-reporting.js";
 import {
   LOGGER_CONTEXT_KEY,

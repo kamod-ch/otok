@@ -1,7 +1,7 @@
 import { defineLoader, serializeI18n } from "@kamod-ch/otok-i18n/loader";
 import { i18nHead } from "@kamod-ch/otok-i18n";
 import { stripLocaleParam } from "@kamod-ch/otok-i18n/routes";
-import type { InferLoaderData, OtokPageProps } from "otok/server";
+import type { InferLoaderData, OtokPageProps } from "@kamod-ch/otok/server";
 
 const LOCALES = ["de", "en", "fr"] as const;
 const ORIGIN = process.env.APP_URL ?? "http://localhost:5173";

@@ -1,6 +1,6 @@
-import type { OtokActionContext } from "otok/server";
-import { fail, redirect, validationError } from "otok/server";
-import { isDataRequest } from "otok/shared";
+import type { OtokActionContext } from "@kamod-ch/otok/server";
+import { fail, redirect, validationError } from "@kamod-ch/otok/server";
+import { isDataRequest } from "@kamod-ch/otok/shared";
 import { supabaseFromHono } from "../context.js";
 import { mapSupabaseError } from "../errors.js";
 import type { SupabaseActionResult } from "../types.js";

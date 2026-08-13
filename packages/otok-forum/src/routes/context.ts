@@ -1,5 +1,5 @@
-import type { OtokActionContext, OtokContext, OtokHead } from "otok/server";
-import { fail, redirect, validationError } from "otok/server";
+import type { OtokActionContext, OtokContext, OtokHead } from "@kamod-ch/otok/server";
+import { fail, redirect, validationError } from "@kamod-ch/otok/server";
 import type {
   ForumAuthAdapter,
   ForumConfig,

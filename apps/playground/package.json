@@ -15,12 +15,12 @@
   },
   "dependencies": {
     "@hono/node-server": "^2.0.1",
+    "@kamod-ch/otok": "workspace:*",
     "@kamod-ch/otok-kamod": "workspace:*",
-    "@kamod-ui/core": "^0.1.5",
     "@kamod-ch/otok-plugin-hello": "workspace:*",
+    "@kamod-ui/core": "^0.1.5",
     "@preact/signals": "^2.0.0",
     "hono": "^4.12.25",
-    "otok": "workspace:*",
     "preact": "^10.28.2"
   },
   "devDependencies": {

@@ -8,7 +8,7 @@ order: 15
 Otok has one response model for loaders, actions, middleware, and server handlers.
 
 ```ts
-import { fail, json, notFound, redirect, validationError } from "otok/server";
+import { fail, json, notFound, redirect, validationError } from "@kamod-ch/otok/server";
 
 export const loader = ({ params }) => {
   if (!params.id) notFound();

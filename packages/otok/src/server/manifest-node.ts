@@ -21,7 +21,7 @@ export interface ReadOtokManifestOptions {
  * @example
  * ```ts
  * // Node
- * import { readOtokManifest } from "otok/server";
+ * import { readOtokManifest } from "@kamod-ch/otok/server";
  * const manifest = readOtokManifest(import.meta.url);
  * ```
  */

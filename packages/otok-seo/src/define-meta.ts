@@ -1,4 +1,4 @@
-import type { LoaderResult, OtokHead, OtokPageProps } from "otok/server";
+import type { LoaderResult, OtokHead, OtokPageProps } from "@kamod-ch/otok/server";
 import { resolveMetaToHead, type ResolveMetaOptions } from "./resolve.js";
 import type { MetaContext, RouteMeta } from "./types.js";
 

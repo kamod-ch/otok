@@ -1,1 +1,1 @@
-import "otok/client";
+import "@kamod-ch/otok/client";

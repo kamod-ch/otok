@@ -9,7 +9,7 @@
     "verify": "node verify.mjs"
   },
   "dependencies": {
-    "otok": "workspace:*",
+    "@kamod-ch/otok": "workspace:*",
     "otok-adapter-node": "workspace:*",
     "preact": "^10.26.0"
   },

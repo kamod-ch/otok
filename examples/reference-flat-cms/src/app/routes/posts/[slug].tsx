@@ -1,4 +1,4 @@
-import { notFound, type OtokPageProps } from "otok/server";
+import { notFound, type OtokPageProps } from "@kamod-ch/otok/server";
 import { posts, type Post } from "../../data/posts";
 
 export const loader = ({ params }: { params: Record<string, string> }) => {

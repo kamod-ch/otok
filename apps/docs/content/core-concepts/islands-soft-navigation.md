@@ -8,7 +8,7 @@ order: 14
 Islands are opt-in Preact components rendered on the server and hydrated in the browser.
 
 ```tsx
-import { Island } from "otok/client";
+import { Island } from "@kamod-ch/otok/client";
 import Counter from "../islands/counter";
 
 export default function Page() {

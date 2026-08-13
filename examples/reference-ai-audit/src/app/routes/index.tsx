@@ -1,4 +1,4 @@
-import { fail, redirect, type OtokActionContext, type OtokPageProps } from "otok/server";
+import { fail, redirect, type OtokActionContext, type OtokPageProps } from "@kamod-ch/otok/server";
 import { audits, type Audit } from "../data/audits";
 
 export const head = () => ({ title: "AI Audit Dashboard" });

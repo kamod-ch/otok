@@ -9,7 +9,7 @@ See [MIGRATION.md](./MIGRATION.md) when upgrading from 1.0.
 ## Install
 
 ```bash
-pnpm add @kamod-ch/otok-oauth @kamod-ch/otok-auth arctic hono otok
+pnpm add @kamod-ch/otok-oauth @kamod-ch/otok-auth arctic hono @kamod-ch/otok
 ```
 
 ## Plugin (recommended)

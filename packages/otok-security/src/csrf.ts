@@ -1,4 +1,4 @@
-import { defineMiddleware, type OtokMiddleware } from "otok/server";
+import { defineMiddleware, type OtokMiddleware } from "@kamod-ch/otok/server";
 import { getCookie, setCookie } from "hono/cookie";
 import { secureCookieOptions } from "./cookies.js";
 import type { CsrfOptions } from "./types.js";

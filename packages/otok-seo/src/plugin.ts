@@ -1,4 +1,4 @@
-import { definePlugin } from "otok";
+import { definePlugin } from "@kamod-ch/otok";
 import { configureSeoApp } from "./middleware.js";
 import { normalizeSeoOptions, registerSeoRuntime } from "./registry.js";
 import type { SeoPluginOptions } from "./types.js";

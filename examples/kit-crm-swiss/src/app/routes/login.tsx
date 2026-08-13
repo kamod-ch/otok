@@ -1,4 +1,4 @@
-import { redirect } from "otok/server";
+import { redirect } from "@kamod-ch/otok/server";
 import { getAuthRuntime } from "@kamod-ch/otok-auth";
 import { CRM_USERS } from "../../lib/auth-users.js";
 import { CrmShell } from "../components/crm-shell.js";

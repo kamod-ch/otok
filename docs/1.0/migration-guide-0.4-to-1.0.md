@@ -62,7 +62,7 @@ Plugins with independent semver may stay on current major if registry range allo
 ### No change required (typical app)
 
 ```ts
-import { defineConfig } from "otok";
+import { defineConfig } from "@kamod-ch/otok";
 import node from "otok-adapter-node";
 
 export default defineConfig({

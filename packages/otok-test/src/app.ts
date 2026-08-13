@@ -1,5 +1,5 @@
 import type { Hono } from "hono";
-import { resolveOtokConfig, type OtokConfigEnv, type OtokPluginInput, type OtokUserConfig } from "otok";
+import { resolveOtokConfig, type OtokConfigEnv, type OtokPluginInput, type OtokUserConfig } from "@kamod-ch/otok";
 import { parseHtml, type ParsedHtml } from "./html.js";
 import { mergeSessionHeaders, type OtokTestSession } from "./session.js";
 import { createTestApp, type CreateTestAppOptions } from "./create-app.js";

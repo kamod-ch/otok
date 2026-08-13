@@ -1,6 +1,6 @@
 import type { Context } from "hono";
 import { getCookie, setCookie } from "hono/cookie";
-import { defineMiddleware, type MiddlewareModule, type OtokMiddleware } from "otok/server";
+import { defineMiddleware, type MiddlewareModule, type OtokMiddleware } from "@kamod-ch/otok/server";
 import type { MessageCatalog } from "./catalog.js";
 import { buildI18nContext, createI18nAsync } from "./i18n.js";
 import { DEFAULT_COOKIE_NAME, resolveLocaleFull } from "./locale.js";

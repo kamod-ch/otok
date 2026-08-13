@@ -1,4 +1,4 @@
-import type { OtokContext, OtokPageProps } from "otok/server";
+import type { OtokContext, OtokPageProps } from "@kamod-ch/otok/server";
 
 export const chrome = () => ({
   title: "Protected admin",

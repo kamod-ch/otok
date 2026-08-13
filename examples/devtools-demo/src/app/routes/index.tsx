@@ -1,4 +1,4 @@
-import { Island } from "otok/client";
+import { Island } from "@kamod-ch/otok/client";
 import Counter from "../islands/counter.tsx";
 
 export default function Home() {

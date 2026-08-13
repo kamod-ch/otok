@@ -8,7 +8,7 @@ order: 13
 Use `_middleware.ts` files to colocate Hono-compatible middleware with routes.
 
 ```ts
-import { defineMiddleware, redirect } from "otok/server";
+import { defineMiddleware, redirect } from "@kamod-ch/otok/server";
 
 export default defineMiddleware(async (c, next) => {
   const user = c.get("user");

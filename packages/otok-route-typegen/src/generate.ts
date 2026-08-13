@@ -101,7 +101,7 @@ import type {
   ExtractSearchParams,
   RouteComponentProps,
   RouteErrorProps,
-} from "otok/route";
+} from "@kamod-ch/otok/route";
 
 declare module "${moduleSpecifier(root, route.file)}" {
   export namespace Route {
@@ -133,9 +133,9 @@ declare module "virtual:otok-routes" {
   export type OtokRouteFilePattern = ${patternLiterals};
   export type OtokRoutePath = ${pathLiterals};
   export type OtokRouteParams<Path extends OtokRouteFilePattern> = Path extends infer P extends string
-    ? import("otok/route").RouteParamsFromPattern<P>
+    ? import("@kamod-ch/otok/route").RouteParamsFromPattern<P>
     : never;
-  export type OtokRouteOptions<Path extends OtokRouteFilePattern> = import("otok/route").RouteBuildOptionsFor<Path>;
+  export type OtokRouteOptions<Path extends OtokRouteFilePattern> = import("@kamod-ch/otok/route").RouteBuildOptionsFor<Path>;
 }
 
 declare module "virtual:otok-route-redirect" {

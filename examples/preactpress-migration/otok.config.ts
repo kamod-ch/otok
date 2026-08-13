@@ -1,4 +1,4 @@
-import { defineConfig } from "otok";
+import { defineConfig } from "@kamod-ch/otok";
 import staticAdapter from "otok-adapter-static";
 import content from "@kamod-ch/otok-content/plugin";
 import seo from "@kamod-ch/otok-seo";

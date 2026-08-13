@@ -1,5 +1,5 @@
 import type { Context } from "hono";
-import { defineMiddleware, redirect, type OtokMiddleware } from "otok/server";
+import { defineMiddleware, redirect, type OtokMiddleware } from "@kamod-ch/otok/server";
 
 export interface RequireAuthOptions<TUser> {
   getUser: (c: Context) => Promise<TUser | null>;

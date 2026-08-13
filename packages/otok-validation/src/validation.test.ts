@@ -3,7 +3,7 @@ import { z } from "zod";
 import * as v from "valibot";
 import { type } from "arktype";
 import { fromArkType } from "./adapters/arktype.js";
-import { isOtokHttpError } from "otok/server";
+import { isOtokHttpError } from "@kamod-ch/otok/server";
 import { parseFormData } from "./parse/form-data.js";
 import { parseJson, parseJsonValue } from "./parse/json.js";
 import { parseParams } from "./parse/params.js";

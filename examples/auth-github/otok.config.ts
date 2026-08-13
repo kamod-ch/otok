@@ -1,4 +1,4 @@
-import { defineConfig } from "otok";
+import { defineConfig } from "@kamod-ch/otok";
 import auth from "@kamod-ch/otok-auth";
 import oauth from "@kamod-ch/otok-oauth";
 import type { OAuthAdapter, OAuthProfile } from "@kamod-ch/otok-oauth/adapter";

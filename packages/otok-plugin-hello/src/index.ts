@@ -1,4 +1,4 @@
-import { definePlugin } from "otok";
+import { definePlugin } from "@kamod-ch/otok";
 
 export interface HelloPluginOptions {
   message?: string;
@@ -17,4 +17,4 @@ export default definePlugin<HelloPluginOptions>({
   },
 });
 
-export { definePlugin } from "otok";
+export { definePlugin } from "@kamod-ch/otok";

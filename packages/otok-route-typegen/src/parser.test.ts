@@ -69,7 +69,7 @@ describe("generateRouteTypes", () => {
     withFixture(
       {
         "src/app/routes/companies/[companyId].tsx": `
-          import { defineLoader } from "otok/route";
+          import { defineLoader } from "@kamod-ch/otok/route";
           export const loader = defineLoader(async ({ params }) => ({ company: { id: params.companyId, name: "Acme" } }));
           export default function CompanyPage({ loaderData }: Route.ComponentProps) {
             return loaderData.company.name;

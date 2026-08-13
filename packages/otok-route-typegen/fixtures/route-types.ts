@@ -2,7 +2,7 @@
  * Type-level fixtures for generated route module types.
  * Run: pnpm typecheck:route-types (from otok-route-typegen)
  */
-import type { RouteBuildOptionsFor, RouteParamsFromPattern } from "otok/route";
+import type { RouteBuildOptionsFor, RouteParamsFromPattern } from "@kamod-ch/otok/route";
 
 type CompanyParams = RouteParamsFromPattern<"companies/[companyId]">;
 const _companyParams: CompanyParams = { companyId: "acme" };
