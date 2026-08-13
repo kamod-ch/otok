@@ -48,7 +48,7 @@
     "zod": "^3.24.0"
   },
   "peerDependencies": {
-    "@kamod-ch/otok": ">=0.6.0",
+    "@kamod-ch/otok": ">=0.6.1",
     "hono": ">=4"
   },
   "peerDependenciesMeta": {

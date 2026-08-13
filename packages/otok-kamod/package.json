@@ -48,7 +48,7 @@
   "peerDependencies": {
     "@kamod-ch/hooks": ">=1.0.0",
     "@kamod-ch/icons": ">=1.0.0",
-    "@kamod-ch/otok": ">=0.6.0",
+    "@kamod-ch/otok": ">=0.6.1",
     "@kamod-ch/signals": ">=1.0.0",
     "@kamod-ch/themes": ">=0.2.0",
     "@kamod-ch/ui": ">=1.0.0",

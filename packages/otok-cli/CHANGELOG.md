@@ -1,5 +1,16 @@
 # otok-cli
 
+## 0.2.1
+
+### Patch Changes
+
+- Updated dependencies [8380ef2]
+- Updated dependencies [8380ef2]
+  - @kamod-ch/otok-registry@0.2.1
+  - @kamod-ch/otok-route-typegen@0.2.1
+  - @kamod-ch/otok-ai@0.1.0
+  - @kamod-ch/otok-kysely@2.0.0
+
 ## 0.2.0
 
 ### Minor Changes

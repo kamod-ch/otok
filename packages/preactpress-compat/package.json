@@ -23,7 +23,7 @@
     "@kamod-ch/otok-content": "workspace:*"
   },
   "peerDependencies": {
-    "@kamod-ch/otok": ">=0.6.0"
+    "@kamod-ch/otok": ">=0.6.1"
   },
   "devDependencies": {
     "@kamod-ch/otok": "workspace:*",

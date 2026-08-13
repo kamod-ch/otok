@@ -1,6 +1,6 @@
 {
   "name": "@kamod-ch/otok-supabase",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Supabase SSR, cookie auth, and middleware integration for Otok apps.",
   "license": "MIT",
   "homepage": "https://github.com/kamod-ch/otok/tree/main/packages/otok-supabase#readme",
@@ -70,7 +70,7 @@
     "@supabase/ssr": "^0.12.4"
   },
   "peerDependencies": {
-    "@kamod-ch/otok": ">=0.6.0",
+    "@kamod-ch/otok": ">=0.6.1",
     "@supabase/supabase-js": ">=2.49.0",
     "hono": ">=4"
   },

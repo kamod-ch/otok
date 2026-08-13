@@ -1,6 +1,6 @@
 {
   "name": "@kamod-ch/otok-plugin-contract",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "Shared contract tests for Otok plugins \u2014 validates definePlugin hooks and lifecycle.",
   "license": "MIT",
   "type": "module",

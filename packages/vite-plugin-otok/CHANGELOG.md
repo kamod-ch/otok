@@ -1,5 +1,13 @@
 # @kamod-ch/otok-vite-plugin
 
+## 0.6.1
+
+### Patch Changes
+
+- 8380ef2: Publish the Otok core runtime as `@kamod-ch/otok` because npm blocks the unscoped `otok` package name. Update generated route types, Vite plugin declarations, and scaffold templates to import the scoped core package.
+- Updated dependencies [8380ef2]
+  - @kamod-ch/otok-route-typegen@0.2.1
+
 ## 0.6.0
 
 ### Minor Changes

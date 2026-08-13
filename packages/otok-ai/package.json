@@ -62,7 +62,7 @@
     "test": "vitest run"
   },
   "peerDependencies": {
-    "@kamod-ch/otok": ">=0.6.0",
+    "@kamod-ch/otok": ">=0.6.1",
     "@kamod-ch/otok-workflows": ">=0.1.1",
     "hono": ">=4"
   },

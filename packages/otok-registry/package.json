@@ -1,6 +1,6 @@
 {
   "name": "@kamod-ch/otok-registry",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "Versioned extension registry for Otok — schema, cache, search, and compatibility checks.",
   "license": "MIT",
   "type": "module",

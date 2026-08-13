@@ -1,5 +1,12 @@
 # @kamod-ch/otok-plugin-contract
 
+## 0.2.1
+
+### Patch Changes
+
+- Updated dependencies [8380ef2]
+  - @kamod-ch/otok@0.6.1
+
 ## 0.2.0
 
 ### Minor Changes
