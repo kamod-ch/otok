@@ -15,6 +15,7 @@ const examples = [
   "typed-routes",
   "i18n-trilingual",
   "auth-github",
+  "with-supabase",
 ];
 
 /** Workspace packages that examples may depend on — packed and rewritten to file: URLs. */
@@ -30,6 +31,7 @@ const packTargets = [
   { filter: "@kamod-ch/otok-i18n", name: "@kamod-ch/otok-i18n", prefix: "kamod-ch-otok-i18n-" },
   { filter: "@kamod-ch/otok-auth", name: "@kamod-ch/otok-auth", prefix: "kamod-ch-otok-auth-" },
   { filter: "@kamod-ch/otok-oauth", name: "@kamod-ch/otok-oauth", prefix: "kamod-ch-otok-oauth-" },
+  { filter: "@kamod-ch/otok-supabase", name: "@kamod-ch/otok-supabase", prefix: "kamod-ch-otok-supabase-" },
 ];
 
 function run(command, options = {}) {

@@ -1,0 +1,21 @@
+{
+  "name": "with-supabase",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build --ssr src/server.ts",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@kamod-ch/otok-supabase": "workspace:*",
+    "hono": "^4.12.25",
+    "otok": "workspace:*",
+    "preact": "^10.28.2"
+  },
+  "devDependencies": {
+    "@kamod-ch/otok-vite-plugin": "workspace:*",
+    "typescript": "~6.0.2",
+    "vite": "^8.0.10"
+  }
+}

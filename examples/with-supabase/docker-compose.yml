@@ -1,0 +1,11 @@
+# Optional local Supabase for integration tests and manual QA.
+# Start: docker compose up -d
+# Stop:  docker compose down
+
+services:
+  supabase-db:
+    image: supabase/postgres:15.8.1.060
+    ports:
+      - "54322:5432"
+    environment:
+      POSTGRES_PASSWORD: postgres

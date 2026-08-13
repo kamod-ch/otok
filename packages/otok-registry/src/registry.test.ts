@@ -73,9 +73,27 @@ describe("compatibility", () => {
     expect(result.compatible).toBe(true);
   });
 
-  it("warns on deprecated packages", async () => {
-    const registry = await loadBundledRegistry();
-    const entry = resolveExtension(registry, "legacy-bridge")!;
+  it("warns on deprecated packages", () => {
+    const entry = ExtensionEntrySchema.parse({
+      name: "@example/deprecated-plugin",
+      description: "Fixture for deprecation warnings.",
+      publisher: "kamod-ch",
+      tier: "community",
+      version: "0.0.1",
+      otokVersion: "^0.4.0",
+      runtime: ["node"],
+      adapters: ["node"],
+      capabilities: [],
+      license: "MIT",
+      maintenanceStatus: "deprecated",
+      qualityStatus: "unverified",
+      securityNotes: [],
+      deprecated: true,
+      deprecationMessage: "Use @kamod-ch/otok-events instead.",
+      successor: "@kamod-ch/otok-events",
+      publishedAt: "2026-01-01T00:00:00.000Z",
+      keywords: [],
+    });
     const result = checkCompatibility(entry, { otokVersion: "0.4.0" });
     expect(result.warnings.some((w) => /deprecated/i.test(w))).toBe(true);
   });

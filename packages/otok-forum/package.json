@@ -74,13 +74,13 @@
   "publishConfig": {
     "access": "public"
   },
-  "homepage": "https://github.com/kamod-ch/otok/tree/main/packages/forum#readme",
+  "homepage": "https://github.com/kamod-ch/otok/tree/main/packages/otok-forum#readme",
   "bugs": {
     "url": "https://github.com/kamod-ch/otok/issues"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/kamod-ch/otok.git",
-    "directory": "packages/forum"
+    "directory": "packages/otok-forum"
   }
 }

@@ -23,11 +23,6 @@ const index = {
       verified: true,
       url: "https://github.com/kamod-ch",
     },
-    {
-      id: "community-example",
-      name: "Community Example",
-      verified: false,
-    },
   ],
   reviewPolicyUrl: "https://github.com/kamod-ch/otok/blob/main/packages/otok-registry/docs/publishers.md",
   abuseContact: "security@kamod.ch",

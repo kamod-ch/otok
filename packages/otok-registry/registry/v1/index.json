@@ -1,7 +1,7 @@
 {
   "schemaVersion": "1.0.0",
-  "generatedAt": "2026-08-11T14:46:36.796Z",
-  "checksum": "sha256:d5ec44984a0e88a56f7ebccc5708e1b8370b186db23f9ee186442afd2126be0f",
+  "generatedAt": "2026-08-13T07:25:40.996Z",
+  "checksum": "sha256:844d5f25bf77453207fa9c21b48bacb6fda15d56d2ea38199e48332995f6309a",
   "extensionsUrl": "./extensions.json",
   "publishers": [
     {
@@ -9,11 +9,6 @@
       "name": "Kamod",
       "verified": true,
       "url": "https://github.com/kamod-ch"
-    },
-    {
-      "id": "community-example",
-      "name": "Community Example",
-      "verified": false
     }
   ],
   "reviewPolicyUrl": "https://github.com/kamod-ch/otok/blob/main/packages/otok-registry/docs/publishers.md",
