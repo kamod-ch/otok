@@ -16,7 +16,6 @@ jobs:
       id-token: write
     uses: kamod-ch/.github/.github/workflows/npm-publish-on-tag.yml@main
     with:
-      pnpm-version: "10.12.4"
       pre-publish: pnpm release:check
       publish: pnpm release:publish
     secrets:
