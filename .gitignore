@@ -5,4 +5,7 @@ node_modules/
 /tmp
 /plans
 *.tsbuildinfo
-/docs
+/docs/*
+!/docs/governance/
+/docs/governance/*
+!/docs/governance/api-export-snapshot.json
