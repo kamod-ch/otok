@@ -2,7 +2,7 @@
 /**
  * Validates package.json exports against api-stability.json (classifications required).
  */
-import { readFileSync, readdirSync, statSync } from "node:fs";
+import { readdirSync, statSync } from "node:fs";
 import { join, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 import { normalizeExports, readJson } from "./lib/scan-package-api.mjs";

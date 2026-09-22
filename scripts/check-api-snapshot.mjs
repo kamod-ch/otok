@@ -2,7 +2,7 @@
 /**
  * Compare current declaration export surfaces to docs/governance/api-export-snapshot.json.
  */
-import { readFileSync, readdirSync, statSync, existsSync } from "node:fs";
+import { readdirSync, statSync, existsSync } from "node:fs";
 import { join, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 import { diffSurfaces, readJson, scanPackageSurface } from "./lib/scan-package-api.mjs";

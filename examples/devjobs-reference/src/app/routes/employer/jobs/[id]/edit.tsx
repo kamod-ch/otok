@@ -10,7 +10,7 @@ import { requireJobOwnership } from "../../../../../lib/tenant.js";
 import { uniqueSlug } from "../../../../../lib/jobs.js";
 import { JobTitlePreview } from "../../../../components/job-title-preview.js";
 
-export const loader = defineEmployerLoader(async ({ db, user, hono, i18n, params }) => {
+export const loader = defineEmployerLoader(async ({ db, user, hono, params }) => {
   const id = params.id as string;
   if (!(await requireJobOwnership(db, id, user.companyId))) notFound();
   const job = await db.selectFrom("job_posting").selectAll().where("id", "=", id).executeTakeFirst();

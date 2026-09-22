@@ -10,9 +10,8 @@ import { canViewJob, resolveCompanyContext } from "../../../lib/tenant.js";
 
 export const loader = composeLoader(
   async (ctx) => {
-    const { db, hono, i18n, params } = ctx as typeof ctx & {
+    const { db, hono, params } = ctx as typeof ctx & {
       db: import("kysely").Kysely<DevjobsDatabase>;
-      i18n: { t: (key: string) => string };
       params: Record<string, string>;
     };
   const slug = params.slug as string;

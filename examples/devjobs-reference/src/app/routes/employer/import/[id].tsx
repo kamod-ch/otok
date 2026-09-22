@@ -7,7 +7,7 @@ import { notFound, redirect, type OtokPageProps } from "@kamod-ch/otok/server";
 import { Button } from "@kamod-ch/ui/button";
 import type { DevjobsQueueJobs } from "../../../../lib/import-worker.js";
 
-export const loader = defineEmployerLoader(async ({ db, user, hono, i18n, params }) => {
+export const loader = defineEmployerLoader(async ({ db, user, hono, params }) => {
   const id = params.id as string;
   const record = await db
     .selectFrom("job_import")
