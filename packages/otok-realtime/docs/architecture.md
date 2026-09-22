@@ -32,11 +32,11 @@ App routes / actions
 
 ## Integrations
 
-| Package | Integration |
-|---------|-------------|
-| otok-auth | Session user via `contextUserKey` / `getSession` |
-| otok-security | Rate limits via hub connection limits + optional middleware |
-| otok-observability | `x-request-id` propagated to authorize context |
+| Package            | Integration                                                 |
+| ------------------ | ----------------------------------------------------------- |
+| otok-auth          | Session user via `contextUserKey` / `getSession`            |
+| otok-security      | Rate limits via hub connection limits + optional middleware |
+| otok-observability | `x-request-id` propagated to authorize context              |
 
 ## Backpressure
 

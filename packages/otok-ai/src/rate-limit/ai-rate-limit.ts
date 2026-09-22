@@ -30,7 +30,11 @@ export function createAiRateLimiter(options: { windowMs: number; max: number }) 
   };
 }
 
-export function resolveAiRateLimitKey(options: Pick<AiPluginOptions, "rateLimit">, userId?: string, ip?: string): string {
+export function resolveAiRateLimitKey(
+  options: Pick<AiPluginOptions, "rateLimit">,
+  userId?: string,
+  ip?: string,
+): string {
   return userId ?? ip ?? "anonymous";
 }
 

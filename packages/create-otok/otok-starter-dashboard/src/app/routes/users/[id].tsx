@@ -14,11 +14,7 @@ export const chrome = ({ params }: { params: { id: string } }) => ({
   description: `Server-rendered route for ${params.id}.`,
 });
 
-export default function UserPage({
-  data,
-}: {
-  data: { userId: string };
-}) {
+export default function UserPage({ data }: { data: { userId: string } }) {
   return (
     <Card>
       <CardHeader>

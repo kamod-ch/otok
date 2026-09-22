@@ -101,11 +101,7 @@ export function forumValidationFail(errors: {
   validationError(errors);
 }
 
-export function checkForumRateLimit(
-  config: ForumConfig,
-  key: string,
-  kind: "post" | "thread",
-): void {
+export function checkForumRateLimit(config: ForumConfig, key: string, kind: "post" | "thread"): void {
   const rl = config.rateLimit;
   if (!rl) return;
   const max = kind === "thread" ? (rl.maxThreads ?? 5) : (rl.maxPosts ?? 20);

@@ -12,10 +12,7 @@ export function createCsrfMiddleware(options: CsrfOptions = {}): OtokMiddleware 
 
     if (method === "POST" || method === "PUT" || method === "PATCH" || method === "DELETE") {
       const contentType = c.req.header("content-type") ?? "";
-      if (
-        contentType.includes("application/x-www-form-urlencoded") ||
-        contentType.includes("multipart/form-data")
-      ) {
+      if (contentType.includes("application/x-www-form-urlencoded") || contentType.includes("multipart/form-data")) {
         const formData = await c.req.raw.clone().formData();
         assertCsrf(c, formData, options);
       }

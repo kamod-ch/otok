@@ -13,9 +13,7 @@ export default function CompaniesTable({ companies: initial }: CompaniesTablePro
   const renameFirst = async () => {
     if (companies.length === 0) return;
     const target = companies[0];
-    const optimistic = companies.map((c, i) =>
-      i === 0 ? { ...c, name: `${c.name} (optimistic)` } : c,
-    );
+    const optimistic = companies.map((c, i) => (i === 0 ? { ...c, name: `${c.name} (optimistic)` } : c));
 
     try {
       await mutation.submit(
@@ -42,12 +40,18 @@ export default function CompaniesTable({ companies: initial }: CompaniesTablePro
                   <th class="px-4 py-3 font-medium">Company</th>
                   <th class="px-4 py-3 font-medium">Industry</th>
                   <th class="px-4 py-3 font-medium">Updated</th>
-                  <th class="px-4 py-3 font-medium"><span class="sr-only">Actions</span></th>
+                  <th class="px-4 py-3 font-medium">
+                    <span class="sr-only">Actions</span>
+                  </th>
                 </tr>
               </thead>
               <tbody>
                 {companies.map((company) => (
-                  <tr key={company.id} class="border-t border-slate-200 dark:border-slate-800" data-company-id={company.id}>
+                  <tr
+                    key={company.id}
+                    class="border-t border-slate-200 dark:border-slate-800"
+                    data-company-id={company.id}
+                  >
                     <td class="px-4 py-3 font-medium text-slate-950 dark:text-white">{company.name}</td>
                     <td class="px-4 py-3 text-slate-600 dark:text-slate-300">{company.industry}</td>
                     <td class="px-4 py-3 text-slate-500">{new Date(company.updatedAt).toLocaleDateString()}</td>

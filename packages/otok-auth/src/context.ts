@@ -23,9 +23,7 @@ export interface AuthHelpers<TUser extends AuthUser = AuthUser> {
   rotateSession(c: Context): Promise<void>;
 }
 
-export function createAuthHelpers<TUser extends AuthUser>(
-  options: AuthHelpersOptions<TUser>,
-): AuthHelpers<TUser> {
+export function createAuthHelpers<TUser extends AuthUser>(options: AuthHelpersOptions<TUser>): AuthHelpers<TUser> {
   const contextKey = options.contextKey ?? "user";
   const loginPath = options.loginPath ?? "/login";
   const redirectAllowlist = options.redirectAllowlist ?? ["/"];
@@ -82,10 +80,7 @@ export function toAuthSession<TUser extends AuthUser>(
 }
 
 /** Read user from Hono context (set by auth middleware or helpers). */
-export function readContextUser<TUser extends AuthUser = AuthUser>(
-  c: Context,
-  contextKey = "user",
-): TUser | undefined {
+export function readContextUser<TUser extends AuthUser = AuthUser>(c: Context, contextKey = "user"): TUser | undefined {
   return c.get(contextKey) as TUser | undefined;
 }
 

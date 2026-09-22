@@ -7,14 +7,11 @@ export async function createSmtpMailProvider(config: SmtpProviderConfig): Promis
   try {
     nodemailer = await import("nodemailer");
   } catch {
-    throw new Error(
-      "otok-mail: SMTP provider requires nodemailer. Install it with: pnpm add nodemailer",
-    );
+    throw new Error("otok-mail: SMTP provider requires nodemailer. Install it with: pnpm add nodemailer");
   }
 
   const pass =
-    config.pass ??
-    (config.user ? resolveEnvValue(config.passEnv ?? "MAIL_SMTP_PASS", "SMTP password") : undefined);
+    config.pass ?? (config.user ? resolveEnvValue(config.passEnv ?? "MAIL_SMTP_PASS", "SMTP password") : undefined);
 
   const transport = nodemailer.createTransport({
     host: config.host,

@@ -2,21 +2,21 @@
   "name": "@kamod-ch/otok-devtools",
   "version": "1.1.0",
   "description": "Development-only diagnostics and inspector UI for Otok apps.",
-  "license": "MIT",
   "homepage": "https://github.com/kamod-ch/otok/tree/main/packages/otok-devtools#readme",
   "bugs": {
     "url": "https://github.com/kamod-ch/otok/issues"
   },
+  "license": "MIT",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/kamod-ch/otok.git",
     "directory": "packages/otok-devtools"
   },
-  "type": "module",
   "files": [
     "dist",
     "README.md"
   ],
+  "type": "module",
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
@@ -27,16 +27,13 @@
       "default": "./dist/client/index.js"
     }
   },
+  "publishConfig": {
+    "access": "public"
+  },
   "scripts": {
     "build": "rm -rf dist && tsc -p tsconfig.build.json",
     "typecheck": "tsc -p tsconfig.json --noEmit",
     "test": "vitest run"
-  },
-  "peerDependencies": {
-    "@kamod-ch/otok": ">=0.6.1",
-    "hono": ">=4",
-    "preact": ">=10.26.0",
-    "vite": ">=6"
   },
   "devDependencies": {
     "@kamod-ch/otok": "workspace:*",
@@ -48,10 +45,13 @@
     "vite": "^8.0.16",
     "vitest": "^4.1.2"
   },
+  "peerDependencies": {
+    "@kamod-ch/otok": ">=0.6.1",
+    "hono": ">=4",
+    "preact": ">=10.26.0",
+    "vite": ">=6"
+  },
   "engines": {
     "node": ">=20"
-  },
-  "publishConfig": {
-    "access": "public"
   }
 }

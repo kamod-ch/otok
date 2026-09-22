@@ -2,35 +2,35 @@
   "name": "otok-adapter-contract",
   "version": "0.1.2",
   "description": "Shared contract tests and fixtures for Otok deployment adapters.",
-  "license": "MIT",
   "homepage": "https://github.com/kamod-ch/otok/tree/main/packages/otok-adapter-contract#readme",
   "bugs": {
     "url": "https://github.com/kamod-ch/otok/issues"
   },
+  "license": "MIT",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/kamod-ch/otok.git",
     "directory": "packages/otok-adapter-contract"
   },
-  "type": "module",
   "files": [
     "dist",
     "fixtures",
     "README.md"
   ],
+  "type": "module",
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
       "default": "./dist/index.js"
     }
   },
+  "publishConfig": {
+    "access": "public"
+  },
   "scripts": {
     "build": "rm -rf dist && tsc -p tsconfig.build.json",
     "typecheck": "tsc -p tsconfig.json --noEmit",
     "test": "vitest run"
-  },
-  "peerDependencies": {
-    "vitest": ">=2"
   },
   "dependencies": {
     "@kamod-ch/otok-config": "workspace:*"
@@ -39,10 +39,10 @@
     "typescript": "~6.0.2",
     "vitest": "^4.1.2"
   },
+  "peerDependencies": {
+    "vitest": ">=2"
+  },
   "engines": {
     "node": ">=20"
-  },
-  "publishConfig": {
-    "access": "public"
   }
 }

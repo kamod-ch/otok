@@ -1,9 +1,9 @@
 {
   "name": "otok-deployment-cloudflare",
-  "private": true,
   "version": "0.1.0",
-  "type": "module",
+  "private": true,
   "description": "Cloudflare Workers deployment example for Otok using createOtokWorkerApp.",
+  "type": "module",
   "scripts": {
     "dev": "vite --host 0.0.0.0",
     "build:client": "vite build --mode client",

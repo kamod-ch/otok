@@ -1,4 +1,3 @@
-import { join } from "node:path";
 import { findOtokConfigFile } from "../project.js";
 
 export interface DbCommandOptions {
@@ -41,9 +40,7 @@ export async function runDbCommand(subcommand: string | undefined, argv: string[
     return 1;
   }
 
-  const { runDbMigrate, runDbRollback, runDbSeed, runDbStatus } = await import(
-    "@kamod-ch/otok-kysely/cli"
-  );
+  const { runDbMigrate, runDbRollback, runDbSeed, runDbStatus } = await import("@kamod-ch/otok-kysely/cli");
 
   const ctx = { root, options: kyselyOptions };
 
@@ -132,9 +129,7 @@ function parseDbArgv(argv: string[]): DbCommandOptions {
   return options;
 }
 
-async function loadKyselyOptions(
-  configPath: string,
-): Promise<import("@kamod-ch/otok-kysely").KyselyPluginOptions> {
+async function loadKyselyOptions(configPath: string): Promise<import("@kamod-ch/otok-kysely").KyselyPluginOptions> {
   const mod = await import(configPath);
   const config = mod.default ?? mod;
   const plugins = config?.plugins ?? [];
@@ -150,9 +145,7 @@ async function loadKyselyOptions(
     }
   }
 
-  throw new Error(
-    "No @kamod-ch/otok-kysely plugin in otok.config.ts. Add kysely() to plugins first.",
-  );
+  throw new Error("No @kamod-ch/otok-kysely plugin in otok.config.ts. Add kysely() to plugins first.");
 }
 
 export { DB_HELP };

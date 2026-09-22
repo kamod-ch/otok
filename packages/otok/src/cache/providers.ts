@@ -20,11 +20,7 @@ export interface RedisCacheProviderOptions {
 /**
  * Upstash-compatible Redis REST client using global fetch (no ioredis dependency).
  */
-export function createRedisRestClient(options: {
-  url: string;
-  token: string;
-  fetch?: typeof fetch;
-}): RedisClient {
+export function createRedisRestClient(options: { url: string; token: string; fetch?: typeof fetch }): RedisClient {
   const fetchFn = options.fetch ?? globalThis.fetch;
   if (!fetchFn) {
     throw new Error("[otok:cache] createRedisRestClient requires fetch (Node 20+ or undici).");
@@ -48,8 +44,7 @@ export function createRedisRestClient(options: {
 
   return {
     get: (key) => cmd<string | null>("GET", key),
-    set: (key, value, opts) =>
-      opts?.px ? cmd("SET", key, value, "PX", opts.px) : cmd("SET", key, value),
+    set: (key, value, opts) => (opts?.px ? cmd("SET", key, value, "PX", opts.px) : cmd("SET", key, value)),
     del: (...keys) => cmd<number>("DEL", ...keys),
     sadd: (key, ...members) => cmd<number>("SADD", key, ...members),
     srem: (key, ...members) => cmd<number>("SREM", key, ...members),
@@ -191,7 +186,11 @@ export class EdgeKvCacheProvider implements CacheProvider {
   async set(key: string, entry: CacheEntry): Promise<void> {
     const full = this.entryKey(key);
     const ttlSeconds = entry.maxAge + entry.staleWhileRevalidate;
-    await this.ns.put(full, JSON.stringify(entry), ttlSeconds > 0 ? { expirationTtl: Math.max(60, ttlSeconds) } : undefined);
+    await this.ns.put(
+      full,
+      JSON.stringify(entry),
+      ttlSeconds > 0 ? { expirationTtl: Math.max(60, ttlSeconds) } : undefined,
+    );
 
     for (const tag of entry.tags) {
       const index = this.tagIndex(tag);
@@ -229,5 +228,3 @@ export class EdgeKvCacheProvider implements CacheProvider {
     return members.length;
   }
 }
-
-

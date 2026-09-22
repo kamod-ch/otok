@@ -33,9 +33,7 @@ async function main() {
   process.stdout.write("Cross-framework benchmark comparison\n\n");
   process.stdout.write("Spec: benchmarks/specs/minimal-ssr.md\n\n");
 
-  const available = existsSync(projectsDir)
-    ? readdirSync(projectsDir).filter((d) => FRAMEWORKS.includes(d))
-    : [];
+  const available = existsSync(projectsDir) ? readdirSync(projectsDir).filter((d) => FRAMEWORKS.includes(d)) : [];
 
   if (available.length === 0) {
     process.stdout.write("No benchmark projects installed yet.\n");

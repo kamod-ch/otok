@@ -41,11 +41,7 @@ export function stripLocaleParam(
 /**
  * Build a localized pathname according to the routing mode.
  */
-export function localizePath(
-  pathname: string,
-  locale: string,
-  options: LocalizePathOptions = {},
-): string {
+export function localizePath(pathname: string, locale: string, options: LocalizePathOptions = {}): string {
   const { defaultLocale, routing = "prefix-except-default" } = options;
   const normalized = pathname.startsWith("/") ? pathname : `/${pathname}`;
   const localeNorm = normalizeLocale(locale) ?? locale;

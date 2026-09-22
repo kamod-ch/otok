@@ -5,9 +5,7 @@ import { registerWorkflowRuntime } from "./registry.js";
 import { createMemoryWorkflowStore } from "./providers/memory.js";
 import type { CronTrigger, EventTrigger, WorkflowDefinition, WorkflowEngineOptions } from "./types.js";
 
-export type WorkflowProviderConfig =
-  | { type: "memory" }
-  | { type: "custom"; store: WorkflowEngineOptions["store"] };
+export type WorkflowProviderConfig = { type: "memory" } | { type: "custom"; store: WorkflowEngineOptions["store"] };
 
 export interface WorkflowsPluginOptions {
   provider?: WorkflowProviderConfig;
@@ -16,6 +14,7 @@ export interface WorkflowsPluginOptions {
   events?: EventTrigger[];
   retry?: WorkflowEngineOptions["retry"];
   webhookPath?: string;
+  /** Poll DB for pending/failed workflows and reclaim expired leases. */
   processIntervalMs?: number;
 }
 
@@ -49,7 +48,15 @@ export function createWorkflowStore(config: WorkflowProviderConfig = { type: "me
 
 export function configureWorkflowsApp(app: Hono, options: WorkflowsPluginOptions): WorkflowEngine {
   const store = createWorkflowStore(options.provider);
-  const engine = new WorkflowEngine({ store, retry: options.retry });
+  const engine = new WorkflowEngine({
+    store,
+    retry: options.retry,
+    observability: {
+      onExecutionError(instanceId, error) {
+        console.error("[otok-workflows] execution error", instanceId, error);
+      },
+    },
+  });
 
   for (const def of Object.values(options.workflows)) {
     engine.register(def);
@@ -91,7 +98,16 @@ export function configureWorkflowsApp(app: Hono, options: WorkflowsPluginOptions
   });
 
   if (options.processIntervalMs) {
-    setInterval(() => void engine.processRunnable(), options.processIntervalMs);
+    setInterval(() => {
+      void engine.processRunnable().catch((error) => {
+        console.error("[otok-workflows] processRunnable failed", error);
+      });
+      if ((options.cron?.length ?? 0) > 0) {
+        void engine.tickCron().catch((error) => {
+          console.error("[otok-workflows] tickCron failed", error);
+        });
+      }
+    }, options.processIntervalMs);
   }
 
   return engine;

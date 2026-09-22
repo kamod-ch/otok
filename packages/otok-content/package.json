@@ -1,13 +1,22 @@
 {
   "name": "@kamod-ch/otok-content",
   "version": "0.1.1",
-  "description": "Typed content collections for Otok \u2014 markdown, MDX, taxonomies, and build-time manifests.",
+  "description": "Typed content collections for Otok — markdown, MDX, taxonomies, and build-time manifests.",
+  "homepage": "https://github.com/kamod-ch/otok/tree/main/packages/otok-content#readme",
+  "bugs": {
+    "url": "https://github.com/kamod-ch/otok/issues"
+  },
   "license": "MIT",
-  "type": "module",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kamod-ch/otok.git",
+    "directory": "packages/otok-content"
+  },
   "files": [
     "dist",
     "README.md"
   ],
+  "type": "module",
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
@@ -26,6 +35,9 @@
       "default": "./dist/presets/index.js"
     }
   },
+  "publishConfig": {
+    "access": "public"
+  },
   "scripts": {
     "build": "rm -rf dist && tsc -p tsconfig.build.json",
     "typecheck": "tsc -p tsconfig.json --noEmit",
@@ -38,6 +50,13 @@
     "tinyglobby": "^0.2.15",
     "zod": "^3.24.0"
   },
+  "devDependencies": {
+    "@kamod-ch/otok": "workspace:*",
+    "@types/markdown-it": "^14.1.2",
+    "@types/node": "^24.12.2",
+    "typescript": "~6.0.2",
+    "vitest": "^4.1.2"
+  },
   "peerDependencies": {
     "@kamod-ch/otok": ">=0.6.1",
     "vite": ">=6.0.0"
@@ -47,26 +66,7 @@
       "optional": true
     }
   },
-  "devDependencies": {
-    "@kamod-ch/otok": "workspace:*",
-    "@types/markdown-it": "^14.1.2",
-    "@types/node": "^24.12.2",
-    "typescript": "~6.0.2",
-    "vitest": "^4.1.2"
-  },
   "engines": {
     "node": ">=20"
-  },
-  "publishConfig": {
-    "access": "public"
-  },
-  "homepage": "https://github.com/kamod-ch/otok/tree/main/packages/otok-content#readme",
-  "bugs": {
-    "url": "https://github.com/kamod-ch/otok/issues"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/kamod-ch/otok.git",
-    "directory": "packages/otok-content"
   }
 }

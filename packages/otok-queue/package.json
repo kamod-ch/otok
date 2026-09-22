@@ -1,22 +1,22 @@
 {
   "name": "@kamod-ch/otok-queue",
   "version": "1.0.0",
-  "description": "Provider-based job queue for Otok \u2014 typed jobs, retry, idempotency, cron, and in-memory dev provider.",
-  "license": "MIT",
+  "description": "Provider-based job queue for Otok — typed jobs, retry, idempotency, cron, and in-memory dev provider.",
   "homepage": "https://github.com/kamod-ch/otok/tree/main/packages/otok-queue#readme",
   "bugs": {
     "url": "https://github.com/kamod-ch/otok/issues"
   },
+  "license": "MIT",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/kamod-ch/otok.git",
     "directory": "packages/otok-queue"
   },
-  "type": "module",
   "files": [
     "dist",
     "README.md"
   ],
+  "type": "module",
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
@@ -25,29 +25,50 @@
     "./providers/memory": {
       "types": "./dist/providers/memory.d.ts",
       "default": "./dist/providers/memory.js"
+    },
+    "./providers/postgres": {
+      "types": "./dist/providers/postgres/index.d.ts",
+      "default": "./dist/providers/postgres/index.js"
+    },
+    "./worker": {
+      "types": "./dist/worker/run-worker.d.ts",
+      "default": "./dist/worker/run-worker.js"
     }
+  },
+  "publishConfig": {
+    "access": "public"
   },
   "scripts": {
     "build": "rm -rf dist && tsc -p tsconfig.build.json",
     "typecheck": "tsc -p tsconfig.json --noEmit",
     "test": "vitest run"
   },
-  "peerDependencies": {
-    "@kamod-ch/otok": ">=0.6.1",
-    "hono": ">=4"
-  },
   "devDependencies": {
     "@kamod-ch/otok": "workspace:*",
     "@kamod-ch/otok-test": "workspace:*",
     "@types/node": "^24.12.2",
+    "@types/pg": "^8.15.5",
     "hono": "^4.12.25",
+    "kysely": "^0.29.3",
+    "pg": "^8.16.3",
     "typescript": "~6.0.2",
     "vitest": "^4.1.2"
   },
+  "peerDependencies": {
+    "@kamod-ch/otok": ">=0.6.1",
+    "hono": ">=4",
+    "kysely": ">=0.27.0",
+    "pg": ">=8.0.0"
+  },
+  "peerDependenciesMeta": {
+    "kysely": {
+      "optional": true
+    },
+    "pg": {
+      "optional": true
+    }
+  },
   "engines": {
     "node": ">=20"
-  },
-  "publishConfig": {
-    "access": "public"
   }
 }

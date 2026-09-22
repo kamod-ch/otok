@@ -3,6 +3,7 @@ title: Create Your First Otok Plugin
 section: Guides
 order: 35
 ---
+
 # Create your first Otok plugin
 
 This guide walks through a minimal plugin that registers a server route.
@@ -87,10 +88,7 @@ import { createTestApp } from "@kamod-ch/otok-test";
 import { resolveOtokConfig } from "@kamod-ch/otok";
 import myPlugin from "my-otok-plugin";
 
-const resolved = await resolveOtokConfig(
-  { plugins: [myPlugin()] },
-  { root: "/tmp", mode: "test", command: "build" },
-);
+const resolved = await resolveOtokConfig({ plugins: [myPlugin()] }, { root: "/tmp", mode: "test", command: "build" });
 
 const app = createTestApp({
   routes: [{ path: "/" }],

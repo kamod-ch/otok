@@ -16,7 +16,9 @@ export default function Index({ data }: OtokPageProps) {
         <p>Public pages render without client JavaScript. Editing screens opt into islands only for live preview.</p>
       </section>
       <section class="post-grid">
-        {list.map((post) => <PostCard key={post.slug} post={post} />)}
+        {list.map((post) => (
+          <PostCard key={post.slug} post={post} />
+        ))}
       </section>
     </>
   );

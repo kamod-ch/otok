@@ -5,4 +5,13 @@ export function defineRendering(config: RenderingConfig): RenderingDefinition {
   return { ...config, __otokRendering: true };
 }
 
-export type { RenderingConfig, RenderingDefinition, RenderMode, ResolvedRenderMode, PrerenderConfig, RenderPlan, RenderContext, RenderingWarning } from "./types.js";
+export type {
+  RenderingConfig,
+  RenderingDefinition,
+  RenderMode,
+  ResolvedRenderMode,
+  PrerenderConfig,
+  RenderPlan,
+  RenderContext,
+  RenderingWarning,
+} from "./types.js";

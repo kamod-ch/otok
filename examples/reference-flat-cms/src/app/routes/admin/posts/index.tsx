@@ -17,10 +17,14 @@ export default function AdminPosts({ data }: OtokPageProps) {
         <p class="eyebrow">Admin</p>
         <h1>Welcome, {page.admin.name}</h1>
         <p>Draft and published posts are visible here. The public index only shows published content.</p>
-        <a class="button" href="/admin/posts/new">Create post</a>
+        <a class="button" href="/admin/posts/new">
+          Create post
+        </a>
       </section>
       <section class="post-grid">
-        {page.posts.map((post) => <PostCard key={post.slug} post={post} admin />)}
+        {page.posts.map((post) => (
+          <PostCard key={post.slug} post={post} admin />
+        ))}
       </section>
     </>
   );

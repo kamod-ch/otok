@@ -35,11 +35,7 @@ export async function readValidationFailure(response: Response): Promise<OtokFai
   return null;
 }
 
-export function expectValidationError(
-  response: Response,
-  html: string,
-  expectation: ValidationExpectation = {},
-): void {
+export function expectValidationError(response: Response, html: string, expectation: ValidationExpectation = {}): void {
   const status = expectation.status ?? 400;
   if (response.status !== status) {
     throw new Error(`Expected validation status ${status} but received ${response.status}.`);

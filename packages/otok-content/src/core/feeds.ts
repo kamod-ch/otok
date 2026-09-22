@@ -94,7 +94,7 @@ export function renderAtomFeed(options: FeedOptions): string {
 <feed xmlns="http://www.w3.org/2005/Atom">
   <title>${escapeXml(options.title)}</title>
   <link href="${escapeXml(feedUrl)}" />
-  <updated>${entryDate(items[0] ?? options.entries[0] ?? { data: {} } as ContentEntry)}</updated>
+  <updated>${entryDate(items[0] ?? options.entries[0] ?? ({ data: {} } as ContentEntry))}</updated>
 ${entryXml}
 </feed>`;
 }
@@ -106,10 +106,7 @@ export interface SitemapUrl {
   priority?: number;
 }
 
-export function contentEntriesToSitemapUrls(
-  origin: string,
-  entries: ContentEntry[],
-): SitemapUrl[] {
+export function contentEntriesToSitemapUrls(origin: string, entries: ContentEntry[]): SitemapUrl[] {
   return entries.map((entry) => {
     const data = entry.data as Record<string, unknown>;
     const raw = data.date ?? data.updatedAt ?? entry.git?.updatedAt;

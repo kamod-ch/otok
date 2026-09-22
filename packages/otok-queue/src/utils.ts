@@ -18,6 +18,13 @@ export function computeBackoff(attempt: number, initialMs: number, maxMs: number
   return Math.min(initialMs * 2 ** Math.max(attempt - 1, 0), maxMs);
 }
 
+/** Exponential backoff capped at maxMs plus up to 20% jitter. */
+export function computeBackoffWithJitter(attempt: number, initialMs: number, maxMs: number): number {
+  const base = computeBackoff(attempt, initialMs, maxMs);
+  const jitter = Math.floor(base * 0.2 * Math.random());
+  return base + jitter;
+}
+
 export async function sleep(ms: number): Promise<void> {
   await new Promise((resolve) => setTimeout(resolve, ms));
 }
@@ -36,7 +43,7 @@ export function cronMatches(expression: string, date: Date): boolean {
   );
 }
 
-function matchField(pattern: string, value: number, min: number, max: number): boolean {
+function matchField(pattern: string, value: number, min: number, _max: number): boolean {
   if (pattern === "*") return true;
   return pattern.split(",").some((segment) => {
     if (segment.includes("/")) {

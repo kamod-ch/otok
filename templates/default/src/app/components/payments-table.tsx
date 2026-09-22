@@ -45,9 +45,7 @@ export function PaymentsTable({ payments }: PaymentsTableProps) {
             {payments.map((payment) => (
               <TableRow key={payment.email}>
                 <TableCell class="font-medium">{payment.customer}</TableCell>
-                <TableCell class="hidden text-muted-foreground sm:table-cell">
-                  {payment.email}
-                </TableCell>
+                <TableCell class="hidden text-muted-foreground sm:table-cell">{payment.email}</TableCell>
                 <TableCell>{payment.amount}</TableCell>
                 <TableCell>
                   <Badge variant={statusVariant(payment.status)}>{payment.status}</Badge>

@@ -8,7 +8,8 @@ import type {
   QueueProvider,
   QueueProviderCapabilities,
 } from "../types.js";
-import { computeBackoff, cronMatches } from "../utils.js";
+import type { QueueRetryDefaults } from "../types.js";
+import { computeBackoffWithJitter, cronMatches, DEFAULT_QUEUE_RETRY } from "../utils.js";
 
 interface StoredJob extends QueueJob {
   retryable: boolean;
@@ -16,6 +17,7 @@ interface StoredJob extends QueueJob {
 
 export function createMemoryQueueProvider<TJobs extends JobPayloadMap = JobPayloadMap>(
   name = "memory",
+  retryDefaults: QueueRetryDefaults = DEFAULT_QUEUE_RETRY,
 ): QueueProvider<TJobs> {
   const jobs = new Map<string, StoredJob>();
   const idempotency = new Map<string, string>();
@@ -44,14 +46,15 @@ export function createMemoryQueueProvider<TJobs extends JobPayloadMap = JobPaylo
       }
 
       const now = new Date();
-      const availableAt = options.runAt?.toISOString() ?? new Date(now.getTime() + (options.delayMs ?? 0)).toISOString();
+      const availableAt =
+        options.runAt?.toISOString() ?? new Date(now.getTime() + (options.delayMs ?? 0)).toISOString();
       const job: StoredJob = {
         id: randomUUID(),
         name,
         payload,
         status: "pending",
         attempts: 0,
-        maxAttempts: options.maxAttempts ?? 5,
+        maxAttempts: options.maxAttempts ?? retryDefaults.maxAttempts,
         idempotencyKey: options.idempotencyKey,
         createdAt: now.toISOString(),
         availableAt,
@@ -71,19 +74,28 @@ export function createMemoryQueueProvider<TJobs extends JobPayloadMap = JobPaylo
       for (const job of pending) {
         job.status = "processing";
         job.attempts += 1;
+        job.leaseToken = "memory";
+        job.leaseOwner = "memory";
+        job.leaseUntil = new Date(now + 86_400_000).toISOString();
       }
       return pending;
     },
-    async complete(jobId) {
+    async complete(jobId, leaseToken) {
       const job = jobs.get(jobId);
       if (!job) throw new OtokQueueJobError(`job not found: ${jobId}`);
+      if (leaseToken && job.leaseToken && leaseToken !== job.leaseToken) {
+        throw new OtokQueueJobError(`lease lost: ${jobId}`);
+      }
       job.status = "completed";
       if (job.idempotencyKey) idempotency.delete(job.idempotencyKey);
       jobs.delete(jobId);
     },
-    async fail(jobId, error, retryable = true) {
+    async fail(jobId, error, retryable = true, leaseToken) {
       const job = jobs.get(jobId);
       if (!job) throw new OtokQueueJobError(`job not found: ${jobId}`);
+      if (leaseToken && job.leaseToken && leaseToken !== job.leaseToken) {
+        throw new OtokQueueJobError(`lease lost: ${jobId}`);
+      }
       job.lastError = error;
       job.retryable = retryable;
       if (!retryable || job.attempts >= job.maxAttempts) {
@@ -94,7 +106,18 @@ export function createMemoryQueueProvider<TJobs extends JobPayloadMap = JobPaylo
         return;
       }
       job.status = "pending";
-      job.availableAt = new Date().toISOString();
+      const delayMs = computeBackoffWithJitter(
+        job.attempts,
+        retryDefaults.initialBackoffMs,
+        retryDefaults.maxBackoffMs,
+      );
+      job.availableAt = new Date(Date.now() + delayMs).toISOString();
+      job.leaseToken = undefined;
+      job.leaseOwner = undefined;
+      job.leaseUntil = undefined;
+    },
+    async heartbeat() {
+      return true;
     },
     async moveToDeadLetter(jobId, error) {
       const job = jobs.get(jobId);
@@ -107,7 +130,7 @@ export function createMemoryQueueProvider<TJobs extends JobPayloadMap = JobPaylo
     },
     async findByIdempotencyKey(key) {
       const id = idempotency.get(key);
-      return id ? jobs.get(id) ?? null : null;
+      return id ? (jobs.get(id) ?? null) : null;
     },
     async registerCron(schedule) {
       cronSchedules.push(schedule);
@@ -133,8 +156,10 @@ export function createMemoryQueueProvider<TJobs extends JobPayloadMap = JobPaylo
 }
 
 /** @internal Test helper */
-export function createTestQueueProvider<TJobs extends JobPayloadMap = JobPayloadMap>(): QueueProvider<TJobs> {
-  return createMemoryQueueProvider<TJobs>("test");
+export function createTestQueueProvider<TJobs extends JobPayloadMap = JobPayloadMap>(
+  retryDefaults?: QueueRetryDefaults,
+): QueueProvider<TJobs> {
+  return createMemoryQueueProvider<TJobs>("test", retryDefaults);
 }
 
 export function getMemoryProviderInternals(provider: QueueProvider) {

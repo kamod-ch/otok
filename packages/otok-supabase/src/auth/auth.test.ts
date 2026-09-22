@@ -1,18 +1,9 @@
 import { describe, expect, it, vi, beforeEach } from "vitest";
 import { Hono } from "hono";
-import {
-  createMockSupabaseClient,
-  TEST_PUBLISHABLE_KEY,
-  TEST_SUPABASE_URL,
-} from "../test/fixtures.js";
+import { createMockSupabaseClient, TEST_PUBLISHABLE_KEY, TEST_SUPABASE_URL } from "../test/fixtures.js";
 import type { SupabaseAuthFullEnv, SupabaseEnv } from "../types.js";
 import { supabase } from "../server/middleware.js";
-import {
-  requireSupabaseAuth,
-  requireSupabaseUser,
-  createSupabaseAuthRoutes,
-  safeRedirectPath,
-} from "../auth/index.js";
+import { requireSupabaseAuth, requireSupabaseUser, createSupabaseAuthRoutes, safeRedirectPath } from "../auth/index.js";
 import { mapSupabaseError } from "../errors.js";
 
 const mockClient = createMockSupabaseClient();
@@ -49,9 +40,7 @@ function createAuthedApp(options?: { claims?: boolean; user?: boolean }) {
   }
   if (options?.user) {
     app.use("/protected-user", requireSupabaseUser({ redirectTo: "/login" }));
-    app.get("/protected-user", (c) =>
-      c.json({ id: (c.var as SupabaseAuthFullEnv["Variables"]).supabaseUser.id }),
-    );
+    app.get("/protected-user", (c) => c.json({ id: (c.var as SupabaseAuthFullEnv["Variables"]).supabaseUser.id }));
   }
   return app;
 }
@@ -129,10 +118,7 @@ describe("createSupabaseAuthRoutes", () => {
 
   it("handles valid callback codes", async () => {
     const app = new Hono();
-    app.use(
-      "*",
-      supabase({ url: TEST_SUPABASE_URL, publishableKey: TEST_PUBLISHABLE_KEY }),
-    );
+    app.use("*", supabase({ url: TEST_SUPABASE_URL, publishableKey: TEST_PUBLISHABLE_KEY }));
     createSupabaseAuthRoutes().mount(app);
 
     const response = await app.request("/auth/callback?code=valid-code", { redirect: "manual" });
@@ -148,10 +134,7 @@ describe("createSupabaseAuthRoutes", () => {
       }).auth,
     );
     const app = new Hono();
-    app.use(
-      "*",
-      supabase({ url: TEST_SUPABASE_URL, publishableKey: TEST_PUBLISHABLE_KEY }),
-    );
+    app.use("*", supabase({ url: TEST_SUPABASE_URL, publishableKey: TEST_PUBLISHABLE_KEY }));
     createSupabaseAuthRoutes().mount(app);
 
     const response = await app.request("/auth/callback?code=bad", { redirect: "manual" });
@@ -164,10 +147,7 @@ describe("createSupabaseAuthRoutes", () => {
     Object.assign(mockClient.auth, createMockSupabaseClient({ verifyOtp }).auth);
 
     const app = new Hono();
-    app.use(
-      "*",
-      supabase({ url: TEST_SUPABASE_URL, publishableKey: TEST_PUBLISHABLE_KEY }),
-    );
+    app.use("*", supabase({ url: TEST_SUPABASE_URL, publishableKey: TEST_PUBLISHABLE_KEY }));
     createSupabaseAuthRoutes().mount(app);
 
     const response = await app.request("/auth/confirm?token_hash=hash&type=signup", {
@@ -182,10 +162,7 @@ describe("createSupabaseAuthRoutes", () => {
     Object.assign(mockClient.auth, createMockSupabaseClient({ signOut }).auth);
 
     const app = new Hono();
-    app.use(
-      "*",
-      supabase({ url: TEST_SUPABASE_URL, publishableKey: TEST_PUBLISHABLE_KEY }),
-    );
+    app.use("*", supabase({ url: TEST_SUPABASE_URL, publishableKey: TEST_PUBLISHABLE_KEY }));
     createSupabaseAuthRoutes().mount(app);
 
     const body = new URLSearchParams({ _csrf: "token-123" });

@@ -4,15 +4,15 @@
 
 Each audit entry captures:
 
-| Field | Description |
-|-------|-------------|
-| `tenantId` | Organization / tenant scope |
-| `actor` | Who performed the action (`user`, `system`, `api_key`, …) |
-| `action` | Dot-notation verb (`company.updated`) |
-| `resource` | What was affected (`type` + `id`) |
-| `changes` | Field-level or before/after snapshot |
-| `occurredAt` | ISO timestamp |
-| `requestId` / `correlationId` | Trace linkage |
+| Field                         | Description                                               |
+| ----------------------------- | --------------------------------------------------------- |
+| `tenantId`                    | Organization / tenant scope                               |
+| `actor`                       | Who performed the action (`user`, `system`, `api_key`, …) |
+| `action`                      | Dot-notation verb (`company.updated`)                     |
+| `resource`                    | What was affected (`type` + `id`)                         |
+| `changes`                     | Field-level or before/after snapshot                      |
+| `occurredAt`                  | ISO timestamp                                             |
+| `requestId` / `correlationId` | Trace linkage                                             |
 
 ## Immutability
 

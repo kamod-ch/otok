@@ -13,16 +13,16 @@ Der Node-Adapter schreibt nach `dist/server/server.js` (Port 5173, konfigurierba
 
 ## Umgebungsvariablen (Production)
 
-| Variable | Beschreibung |
-|----------|--------------|
-| `DATABASE_URL` | PostgreSQL connection string |
-| `AUTH_SECRET` | Min. 32 Zeichen |
-| `APP_URL` | Öffentliche URL (OAuth redirects, Stripe return URLs) |
-| `STRIPE_SECRET_KEY` | Live/Test Secret Key |
-| `STRIPE_WEBHOOK_SECRET` | Webhook signing secret |
-| `STRIPE_PRICE_PRO` / `STRIPE_PRICE_TEAM` | Stripe Price IDs |
-| `MAIL_FROM` | Absender für Transaktions-Mails |
-| `RESEND_API_KEY` oder SMTP | Production Mail (statt Test-Provider) |
+| Variable                                 | Beschreibung                                          |
+| ---------------------------------------- | ----------------------------------------------------- |
+| `DATABASE_URL`                           | PostgreSQL connection string                          |
+| `AUTH_SECRET`                            | Min. 32 Zeichen                                       |
+| `APP_URL`                                | Öffentliche URL (OAuth redirects, Stripe return URLs) |
+| `STRIPE_SECRET_KEY`                      | Live/Test Secret Key                                  |
+| `STRIPE_WEBHOOK_SECRET`                  | Webhook signing secret                                |
+| `STRIPE_PRICE_PRO` / `STRIPE_PRICE_TEAM` | Stripe Price IDs                                      |
+| `MAIL_FROM`                              | Absender für Transaktions-Mails                       |
+| `RESEND_API_KEY` oder SMTP               | Production Mail (statt Test-Provider)                 |
 
 ## Docker Postgres
 

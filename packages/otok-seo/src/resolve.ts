@@ -39,7 +39,7 @@ export function resolveMetaToHead(meta: RouteMeta, options: ResolveMetaOptions =
   const canonicalHref = meta.canonical ? joinOrigin(options.origin ?? meta.canonical, meta.canonical) : undefined;
 
   const propertyMeta: Record<string, string> = {};
-  const nameMeta: Record<string, string> = { ...(meta.meta ?? {}) };
+  const nameMeta: Record<string, string> = { ...meta.meta };
 
   if (meta.robots) nameMeta.robots = meta.robots;
 
@@ -80,11 +80,15 @@ export function resolveMetaToHead(meta: RouteMeta, options: ResolveMetaOptions =
       href: joinOrigin(options.origin, icon.href),
       type: icon.type,
     })),
-    ...(meta.manifest ?? options.globalManifest
+    ...((meta.manifest ?? options.globalManifest)
       ? [{ rel: "manifest", href: joinOrigin(options.origin, (meta.manifest ?? options.globalManifest)!.href) }]
       : []),
-    ...(meta.rss ? [{ rel: "alternate", href: joinOrigin(options.origin, meta.rss), type: "application/rss+xml" }] : []),
-    ...(meta.atom ? [{ rel: "alternate", href: joinOrigin(options.origin, meta.atom), type: "application/atom+xml" }] : []),
+    ...(meta.rss
+      ? [{ rel: "alternate", href: joinOrigin(options.origin, meta.rss), type: "application/rss+xml" }]
+      : []),
+    ...(meta.atom
+      ? [{ rel: "alternate", href: joinOrigin(options.origin, meta.atom), type: "application/atom+xml" }]
+      : []),
   ];
 
   const jsonLd = Array.isArray(meta.jsonLd)

@@ -2,17 +2,12 @@ import { defineLoader as defineDbLoader } from "@kamod-ch/otok-kysely/loader";
 import type { CrmDatabase } from "@kamod-ch/otok-kit-crm/db";
 import { CrmShell } from "../../components/crm-shell.js";
 
-export const loader = defineDbLoader<
-  { pipelines: Array<{ name: string; stages: unknown }> },
-  CrmDatabase
->(async ({ db }) => {
-  const pipelines = await db
-    .selectFrom("crm_pipelines")
-    .selectAll()
-    .where("org_id", "=", "org-swiss-demo")
-    .execute();
-  return { pipelines: pipelines.map((p) => ({ ...p, stages: JSON.parse(p.stages) })) };
-});
+export const loader = defineDbLoader<{ pipelines: Array<{ name: string; stages: unknown }> }, CrmDatabase>(
+  async ({ db }) => {
+    const pipelines = await db.selectFrom("crm_pipelines").selectAll().where("org_id", "=", "org-swiss-demo").execute();
+    return { pipelines: pipelines.map((p) => ({ ...p, stages: JSON.parse(p.stages) })) };
+  },
+);
 
 export default function PipelinesPage({
   data,

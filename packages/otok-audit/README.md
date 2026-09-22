@@ -36,10 +36,10 @@ await withAuditActor({ id: userId, type: "user" }, async () => {
 
 ## Providers
 
-| Provider | Module | Use case |
-|----------|--------|----------|
-| Memory | built-in | Development and tests |
-| Kysely | `@kamod-ch/otok-audit/providers/kysely` | SQLite / PostgreSQL |
+| Provider | Module                                  | Use case              |
+| -------- | --------------------------------------- | --------------------- |
+| Memory   | built-in                                | Development and tests |
+| Kysely   | `@kamod-ch/otok-audit/providers/kysely` | SQLite / PostgreSQL   |
 
 ## CRM example
 

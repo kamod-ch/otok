@@ -3,13 +3,7 @@
   "changelog": "@changesets/cli/changelog",
   "commit": false,
   "fixed": [],
-  "linked": [
-    [
-      "@kamod-ch/otok",
-      "@kamod-ch/otok-vite-plugin",
-      "create-otok"
-    ]
-  ],
+  "linked": [["@kamod-ch/otok", "@kamod-ch/otok-vite-plugin", "create-otok"]],
   "access": "public",
   "baseBranch": "main",
   "updateInternalDependencies": "patch",

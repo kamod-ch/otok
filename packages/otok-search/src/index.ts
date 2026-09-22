@@ -19,7 +19,10 @@ export interface SearchHit {
 }
 
 function tokenize(text: string): string[] {
-  return text.toLowerCase().split(/[\s,.-]+/).filter(Boolean);
+  return text
+    .toLowerCase()
+    .split(/[\s,.-]+/)
+    .filter(Boolean);
 }
 
 /** In-memory search index — swap for OpenSearch/Postgres FTS in production. */
@@ -52,9 +55,7 @@ export class SearchIndex {
       }
     }
 
-    return hits
-      .sort((a, b) => b.score - a.score)
-      .slice(0, query.limit ?? 50);
+    return hits.sort((a, b) => b.score - a.score).slice(0, query.limit ?? 50);
   }
 
   clear(): void {

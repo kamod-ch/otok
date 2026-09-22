@@ -1,11 +1,6 @@
 import { mergePresets, type MergedPresetPlan } from "./preset-merge.js";
 import type { OtokPresetDefinition, PresetFileEntry } from "./preset.js";
-import type {
-  KitComposeOptions,
-  KitConflict,
-  KitVersionMismatch,
-  OtokKitDefinition,
-} from "./kit.js";
+import type { KitComposeOptions, KitConflict, KitVersionMismatch, OtokKitDefinition } from "./kit.js";
 
 export interface MergedKitPlan extends MergedPresetPlan {
   kits: string[];
@@ -16,10 +11,7 @@ export interface MergedKitPlan extends MergedPresetPlan {
   enabledModules: Record<string, string[]>;
 }
 
-function collectModuleFiles(
-  kit: OtokKitDefinition,
-  enabledModuleIds: readonly string[],
-): PresetFileEntry[] {
+function collectModuleFiles(kit: OtokKitDefinition, enabledModuleIds: readonly string[]): PresetFileEntry[] {
   const files: PresetFileEntry[] = [...(kit.files ?? [])];
   if (!kit.modules) return files;
 
@@ -92,10 +84,7 @@ function resolveInstalledVersion(packageName: string, installed: Record<string, 
   return undefined;
 }
 
-export function checkKitVersions(
-  kits: OtokKitDefinition[],
-  installed: Record<string, string>,
-): KitVersionMismatch[] {
+export function checkKitVersions(kits: OtokKitDefinition[], installed: Record<string, string>): KitVersionMismatch[] {
   const mismatches: KitVersionMismatch[] = [];
   for (const kit of kits) {
     for (const req of kit.requires ?? []) {
@@ -171,9 +160,7 @@ export function detectKitConflicts(
     for (const moduleId of moduleIds) {
       const mod = kit.modules?.[moduleId];
       for (const required of mod?.requires ?? []) {
-        const [requiredKit, requiredModule] = required.includes("/")
-          ? required.split("/", 2)
-          : [required, undefined];
+        const [requiredKit, requiredModule] = required.includes("/") ? required.split("/", 2) : [required, undefined];
         if (requiredKit && !names.includes(requiredKit)) {
           conflicts.push({
             type: "missing_module",
@@ -237,9 +224,7 @@ export function mergeKits(
   const conflicts = detectKitConflicts(kits, plan, enabledModules);
   const versionMismatches = checkKitVersions(kits, installedVersions);
 
-  const migrations = kits
-    .flatMap((k) => k.migrations ?? [])
-    .sort((a, b) => a.id.localeCompare(b.id));
+  const migrations = kits.flatMap((k) => k.migrations ?? []).sort((a, b) => a.id.localeCompare(b.id));
 
   const permissions = [
     ...new Set(

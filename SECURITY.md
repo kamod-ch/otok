@@ -2,11 +2,11 @@
 
 ## Supported versions
 
-| Version | Supported |
-|---------|-----------|
-| 1.0.x | Yes |
-| 0.4.x | Security fixes until 2027-02-01 (6 months after 1.0 GA target) |
-| < 0.4 | No |
+| Version | Supported                                                      |
+| ------- | -------------------------------------------------------------- |
+| 1.0.x   | Yes                                                            |
+| 0.4.x   | Security fixes until 2027-02-01 (6 months after 1.0 GA target) |
+| < 0.4   | No                                                             |
 
 ## Reporting a vulnerability
 

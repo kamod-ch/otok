@@ -6,38 +6,38 @@ This document describes how to submit extensions, how review works, and how regi
 
 The registry is versioned static JSON hosted at `registry/v1/`:
 
-| File | Purpose |
-|------|---------|
-| `index.json` | Metadata, publisher list, SHA256 checksum of extensions bundle |
-| `extensions.json` | Array of extension entries |
+| File              | Purpose                                                        |
+| ----------------- | -------------------------------------------------------------- |
+| `index.json`      | Metadata, publisher list, SHA256 checksum of extensions bundle |
+| `extensions.json` | Array of extension entries                                     |
 
 Schema version: `1.0.0` (validated with Zod in `@kamod-ch/otok-registry`).
 
 ### Extension entry fields
 
-| Field | Required | Description |
-|-------|----------|-------------|
-| `name` | yes | npm package name (e.g. `@kamod-ch/otok-kysely`) |
-| `aliases` | no | CLI shortcuts (`kysely`, `otok-kysely`) |
-| `description` | yes | One-line summary |
-| `publisher` | yes | Publisher id from index `publishers` |
-| `tier` | yes | `official` or `community` |
-| `version` | yes | Current published version |
-| `otokVersion` | yes | Supported Otok semver range |
-| `runtime` | yes | `node`, `edge`, `static` |
-| `adapters` | yes | `node`, `cloudflare`, `static` |
-| `capabilities` | no | Tags for search (`database`, `auth`, …) |
-| `docs` | no | Documentation URL |
-| `repository` | no | Source repository URL |
-| `license` | yes | SPDX identifier |
-| `maintenanceStatus` | yes | `active`, `maintenance`, `deprecated`, `abandoned` |
-| `qualityStatus` | yes | `verified`, `unverified`, `experimental` |
-| `securityNotes` | no | User-facing security guidance |
-| `deprecated` | yes | Boolean flag |
-| `deprecationMessage` | no | Human-readable deprecation text |
-| `successor` | no | Recommended replacement package |
-| `publishedAt` | yes | ISO 8601 timestamp |
-| `keywords` | no | Search keywords |
+| Field                | Required | Description                                        |
+| -------------------- | -------- | -------------------------------------------------- |
+| `name`               | yes      | npm package name (e.g. `@kamod-ch/otok-kysely`)    |
+| `aliases`            | no       | CLI shortcuts (`kysely`, `otok-kysely`)            |
+| `description`        | yes      | One-line summary                                   |
+| `publisher`          | yes      | Publisher id from index `publishers`               |
+| `tier`               | yes      | `official` or `community`                          |
+| `version`            | yes      | Current published version                          |
+| `otokVersion`        | yes      | Supported Otok semver range                        |
+| `runtime`            | yes      | `node`, `edge`, `static`                           |
+| `adapters`           | yes      | `node`, `cloudflare`, `static`                     |
+| `capabilities`       | no       | Tags for search (`database`, `auth`, …)            |
+| `docs`               | no       | Documentation URL                                  |
+| `repository`         | no       | Source repository URL                              |
+| `license`            | yes      | SPDX identifier                                    |
+| `maintenanceStatus`  | yes      | `active`, `maintenance`, `deprecated`, `abandoned` |
+| `qualityStatus`      | yes      | `verified`, `unverified`, `experimental`           |
+| `securityNotes`      | no       | User-facing security guidance                      |
+| `deprecated`         | yes      | Boolean flag                                       |
+| `deprecationMessage` | no       | Human-readable deprecation text                    |
+| `successor`          | no       | Recommended replacement package                    |
+| `publishedAt`        | yes      | ISO 8601 timestamp                                 |
+| `keywords`           | no       | Search keywords                                    |
 
 ## Checksum and integrity
 

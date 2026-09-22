@@ -66,11 +66,11 @@ await withTransaction(db, async (trx) => {
 
 ## Dialects
 
-| Dialect  | Config |
-|----------|--------|
-| PostgreSQL | `dialect: "postgres"` + `pg` |
-| SQLite | `dialect: "sqlite"` + `better-sqlite3` |
-| MySQL | `dialect: mysqlDialect()` + `mysql2` |
+| Dialect    | Config                                 |
+| ---------- | -------------------------------------- |
+| PostgreSQL | `dialect: "postgres"` + `pg`           |
+| SQLite     | `dialect: "sqlite"` + `better-sqlite3` |
+| MySQL      | `dialect: mysqlDialect()` + `mysql2`   |
 
 MySQL uses an extensible adapter — bring your own pool configuration via `DialectAdapter`.
 

@@ -18,7 +18,7 @@ Open http://localhost:3010 and inspect:
 ## Middleware order
 
 ```ts
-plugins: [security(), observability(), seo()]
+plugins: [security(), observability(), seo()];
 ```
 
 Security runs first (CSRF, CSP, body limits). Observability wraps every request with IDs and structured logs. SEO serves utility routes after guards are in place.

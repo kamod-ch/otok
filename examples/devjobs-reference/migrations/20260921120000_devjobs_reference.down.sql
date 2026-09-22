@@ -1,0 +1,6 @@
+DROP TABLE IF EXISTS job_import;
+DROP TABLE IF EXISTS job_posting;
+DROP TABLE IF EXISTS company_member;
+DROP TABLE IF EXISTS company;
+DROP TABLE IF EXISTS app_session;
+DROP TABLE IF EXISTS app_user;

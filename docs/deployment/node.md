@@ -70,6 +70,12 @@ Host
 
 Read and trust forwarded headers only according to your deployment boundary. Otok does not automatically trust arbitrary forwarded headers.
 
+## PostgreSQL + background workers
+
+For durable queues and DB-backed apps, run a **separate worker process** alongside the web server (same `DATABASE_URL`, migrate before traffic). Health/readiness, graceful shutdown, backup, and deploy notes:
+
+[docs/1.0/operations-node-postgres.md](../1.0/operations-node-postgres.md) — reference: `examples/devjobs-reference/`.
+
 ## Docker
 
 See `examples/deployment/node/` for a multi-stage Docker example.

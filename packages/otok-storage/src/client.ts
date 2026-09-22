@@ -1,11 +1,5 @@
 import { OtokStorageValidationError } from "./errors.js";
-import type {
-  PresignedUrlInput,
-  PresignedUrlResult,
-  StorageProvider,
-  StoredObjectMeta,
-  UploadInput,
-} from "./types.js";
+import type { PresignedUrlInput, PresignedUrlResult, StorageProvider, StoredObjectMeta, UploadInput } from "./types.js";
 import { bodyToBuffer, resolveBucketConfig, validateUpload } from "./validation.js";
 import type { StorageRuntime, UploadFileInput } from "./types.js";
 
@@ -53,9 +47,7 @@ export class StorageClient {
     const bucketConfig = resolveBucketConfig(this.runtime.buckets, input.bucket);
     const presign = this.runtime.provider.getPresignedUrl;
     if (!presign) {
-      throw new OtokStorageValidationError(
-        `provider "${this.runtime.provider.name}" does not support presigned URLs`,
-      );
+      throw new OtokStorageValidationError(`provider "${this.runtime.provider.name}" does not support presigned URLs`);
     }
     return presign({
       bucket: bucketConfig.name,

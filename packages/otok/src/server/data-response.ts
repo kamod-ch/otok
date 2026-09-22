@@ -32,12 +32,15 @@ export function dataResponseFromActionResult(
 
   const status = isFailure ? (actionData as OtokFailure).status : redirect ? 200 : 200;
 
-  return buildDataResponse({
-    actionData: isFailure ? undefined : actionData,
-    loaderData: serializeLoaderData(loaderData ?? {}),
-    redirect,
-    error: isFailure ? (actionData as OtokFailure) : undefined,
-  }, isFailure ? (actionData as OtokFailure).status : status);
+  return buildDataResponse(
+    {
+      actionData: isFailure ? undefined : actionData,
+      loaderData: serializeLoaderData(loaderData ?? {}),
+      redirect,
+      error: isFailure ? (actionData as OtokFailure) : undefined,
+    },
+    isFailure ? (actionData as OtokFailure).status : status,
+  );
 }
 
 export function dataResponseFromRedirect(location: string, status: number): Response {

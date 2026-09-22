@@ -1,6 +1,5 @@
 import { definePlugin } from "@kamod-ch/otok";
 import type { Hono } from "hono";
-import { dbFromHono } from "./context.js";
 import { createKyselyInstance, destroyKyselyInstance, isEdgeCapable, resolveConnectionString } from "./pool.js";
 import { registerKyselyRuntime } from "./registry.js";
 import type { KyselyPluginOptions, KyselyRuntime } from "./types.js";

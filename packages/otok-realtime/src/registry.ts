@@ -15,9 +15,7 @@ export function registerRealtimeRuntime(
 
 export function getRealtimeRuntime(): { hub: RealtimeHub; channels: Map<string, ChannelDefinition> } {
   if (!runtimeHub) {
-    throw new Error(
-      "otok-realtime: not registered. Add realtime() to otok.config.ts plugins.",
-    );
+    throw new Error("otok-realtime: not registered. Add realtime() to otok.config.ts plugins.");
   }
   return { hub: runtimeHub, channels: runtimeChannels };
 }
@@ -28,12 +26,7 @@ export function resetRealtimeRuntimeForTests(): void {
 }
 
 export const realtime = {
-  async publish<T>(
-    channel: ChannelDefinition<T>,
-    room: string,
-    type: string,
-    data: T,
-  ) {
+  async publish<T>(channel: ChannelDefinition<T>, room: string, type: string, data: T) {
     return getRealtimeRuntime().hub.publish(channel, room, type, data);
   },
   hub(): RealtimeHub {

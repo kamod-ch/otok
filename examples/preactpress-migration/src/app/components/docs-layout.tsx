@@ -1,11 +1,7 @@
 import type { ComponentChildren } from "preact";
 import { useState, useMemo } from "preact/hooks";
 import { Button } from "@kamod-ch/ui/button";
-import {
-  flattenSidebarForPager,
-  resolveSidebarForRoute,
-  type OtokDocsThemeConfig,
-} from "@kamod-ch/preactpress-compat";
+import { flattenSidebarForPager, resolveSidebarForRoute, type OtokDocsThemeConfig } from "@kamod-ch/preactpress-compat";
 
 export type DocsPageView = {
   route: string;
@@ -131,9 +127,7 @@ export function DocsLayout({ siteTitle, theme, page, locale, version }: DocsLayo
       </div>
 
       {theme.footer && (
-        <footer class="border-t border-border py-6 text-center text-sm text-muted-foreground">
-          {theme.footer}
-        </footer>
+        <footer class="border-t border-border py-6 text-center text-sm text-muted-foreground">{theme.footer}</footer>
       )}
     </div>
   );

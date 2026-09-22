@@ -3,13 +3,7 @@ import { Island } from "@kamod-ch/otok/client";
 import { ExerciseChart } from "../components/exercise-chart";
 import { PaymentsTable } from "../components/payments-table";
 import { StatCard } from "../components/stat-card";
-import {
-  chatThread,
-  dashboardStats,
-  exerciseMinutes,
-  payments,
-  teamMembers,
-} from "../data/dashboard";
+import { chatThread, dashboardStats, exerciseMinutes, payments, teamMembers } from "../data/dashboard";
 import ChatCard from "../islands/chat-card";
 import Counter from "../islands/counter";
 import DashboardToolbar from "../islands/dashboard-toolbar";
@@ -47,9 +41,7 @@ type HomeData = Awaited<ReturnType<typeof loader>>;
 export const chrome = ({ data }: { data: HomeData }) => ({
   title: "Dashboard",
   description:
-    data.dateRange?.from && data.dateRange.to
-      ? `${data.dateRange.from} - ${data.dateRange.to}`
-      : "Otok dashboard",
+    data.dateRange?.from && data.dateRange.to ? `${data.dateRange.from} - ${data.dateRange.to}` : "Otok dashboard",
   toolbar: <Island component={DashboardToolbar} props={{}} strategy="load" />,
 });
 

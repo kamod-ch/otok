@@ -4,7 +4,9 @@ import { createCheckoutSession } from "./checkout.js";
 import type { BillingAdapter } from "./adapter/types.js";
 import type { BillingRecord } from "./types.js";
 
-function createMockStripe(createImpl: (params: Stripe.Checkout.SessionCreateParams) => Promise<Stripe.Checkout.Session>) {
+function createMockStripe(
+  createImpl: (params: Stripe.Checkout.SessionCreateParams) => Promise<Stripe.Checkout.Session>,
+) {
   return {
     checkout: {
       sessions: {

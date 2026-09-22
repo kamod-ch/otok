@@ -30,9 +30,7 @@ export interface DurableObjectProviderSpec {
   integrationNotes: string[];
 }
 
-export function defineDurableObjectProvider(
-  options: DurableObjectProviderOptions,
-): DurableObjectProviderSpec {
+export function defineDurableObjectProvider(options: DurableObjectProviderOptions): DurableObjectProviderSpec {
   const contract = options.contract ?? DEFAULT_DURABLE_OBJECT_CONTRACT;
   return {
     contract,

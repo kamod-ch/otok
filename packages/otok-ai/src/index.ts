@@ -2,13 +2,7 @@ export { default } from "./plugin.js";
 export { configureAiApp } from "./plugin.js";
 export { AiClient } from "./client/ai-client.js";
 export type { AiClientOptions, AiAuditEntry } from "./client/ai-client.js";
-export {
-  getAiRuntime,
-  tryGetAiRuntime,
-  getAiClient,
-  registerAiRuntime,
-  resetAiRuntimeForTests,
-} from "./registry.js";
+export { getAiRuntime, tryGetAiRuntime, getAiClient, registerAiRuntime, resetAiRuntimeForTests } from "./registry.js";
 export { createAiProvider } from "./providers/factory.js";
 export { createOpenAiProvider } from "./providers/openai.js";
 export { defineAiTool } from "./tools/define-tool.js";

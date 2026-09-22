@@ -1,11 +1,23 @@
 {
   "name": "@kamod-ch/otok-kit-saas",
   "version": "0.2.0",
-  "type": "module",
+  "description": "Billing kit — Stripe checkout, portal, webhooks, and subscriptions.",
+  "homepage": "https://github.com/kamod-ch/otok/tree/main/packages/otok-kit-saas#readme",
+  "bugs": {
+    "url": "https://github.com/kamod-ch/otok/issues"
+  },
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kamod-ch/otok.git",
+    "directory": "packages/otok-kit-saas"
+  },
   "files": [
     "dist",
-    "kit-files"
+    "kit-files",
+    "README.md"
   ],
+  "type": "module",
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
@@ -15,6 +27,9 @@
       "types": "./dist/kit.d.ts",
       "default": "./dist/kit.js"
     }
+  },
+  "publishConfig": {
+    "access": "public"
   },
   "scripts": {
     "build": "tsc -p tsconfig.build.json",
@@ -28,21 +43,7 @@
     "typescript": "~6.0.2",
     "vitest": "^4.1.2"
   },
-  "homepage": "https://github.com/kamod-ch/otok/tree/main/packages/otok-kit-saas#readme",
-  "bugs": {
-    "url": "https://github.com/kamod-ch/otok/issues"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/kamod-ch/otok.git",
-    "directory": "packages/otok-kit-saas"
-  },
-  "license": "MIT",
   "engines": {
     "node": ">=20"
-  },
-  "publishConfig": {
-    "access": "public"
-  },
-  "description": "Otok package @kamod-ch/otok-kit-saas"
+  }
 }

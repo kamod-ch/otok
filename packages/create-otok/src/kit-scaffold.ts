@@ -61,10 +61,7 @@ export function applyPresetFiles(
   return written;
 }
 
-function resolveSourceRoot(
-  entry: PresetFileEntry,
-  sourceRoots: Record<string, string>,
-): string | undefined {
+function resolveSourceRoot(entry: PresetFileEntry, sourceRoots: Record<string, string>): string | undefined {
   for (const [key, root] of Object.entries(sourceRoots)) {
     if (key.startsWith("__")) continue;
     if (fs.existsSync(path.join(root, entry.from))) return root;

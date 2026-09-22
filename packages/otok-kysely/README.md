@@ -20,17 +20,17 @@ export default defineConfig({
 
 Install dialect drivers in your app:
 
-| Dialect  | Package          |
-|----------|------------------|
-| postgres | `pg`             |
-| sqlite   | `better-sqlite3` |
+| Dialect  | Package            |
+| -------- | ------------------ |
+| postgres | `pg`               |
+| sqlite   | `better-sqlite3`   |
 | mysql    | `mysql2` + adapter |
 
 ```ts
 import kysely from "@kamod-ch/otok-kysely";
 import { mysqlDialect } from "@kamod-ch/otok-kysely/dialects";
 
-kysely({ dialect: mysqlDialect(), connectionString: env.DATABASE_URL })
+kysely({ dialect: mysqlDialect(), connectionString: env.DATABASE_URL });
 ```
 
 ## Route actions

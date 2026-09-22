@@ -1,4 +1,4 @@
-import { describe, expect, it, vi, beforeEach } from "vitest";
+import { describe, expect, it, beforeEach } from "vitest";
 import { defineLoader } from "./loader.js";
 import { registerSupabaseRuntime, resetSupabaseRuntimeForTests } from "./registry.js";
 import { createMockSupabaseClient, TEST_PUBLISHABLE_KEY, TEST_SUPABASE_URL } from "./test/fixtures.js";

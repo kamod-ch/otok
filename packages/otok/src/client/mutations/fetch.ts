@@ -12,7 +12,8 @@ import {
 } from "../../shared/mutations.js";
 import type { IslandRegistry } from "../../shared/islands.js";
 import { applySoftNavigationDocument } from "../soft-nav.js";
-import { hydrateIslands } from "../hydration.js";
+import { invalidateSoftNavPrefetch } from "../soft-nav-prefetch.js";
+import { beginHydrationNavigation, hydrateIslandsDeferred, hydrateIslandsEager } from "../hydration.js";
 import { mutationStore } from "./store.js";
 
 export interface SubmitContext {
@@ -97,14 +98,18 @@ export async function submitMutation<TAction = unknown, TLoader = unknown>(
   try {
     mutationStore.setMutation(ctx.fetcherKey, { key: ctx.fetcherKey, state: "loading" });
 
-    const response = await fetchWithProgress(ctx.action, {
-      method,
-      body,
-      headers,
-      signal: controller.signal,
-      credentials: "same-origin",
-      redirect: "manual",
-    }, options.onUploadProgress);
+    const response = await fetchWithProgress(
+      ctx.action,
+      {
+        method,
+        body,
+        headers,
+        signal: controller.signal,
+        credentials: "same-origin",
+        redirect: "manual",
+      },
+      options.onUploadProgress,
+    );
 
     const payload = (await response.json()) as OtokDataResponse<TAction, TLoader>;
 
@@ -136,6 +141,8 @@ export async function submitMutation<TAction = unknown, TLoader = unknown>(
       data: payload.actionData,
       error: undefined,
     });
+
+    invalidateSoftNavPrefetch({ reason: "mutation" });
 
     if (payload.redirect && options.navigate !== false && ctx.registry) {
       await navigateAfterMutation(payload.redirect, ctx.registry, { replace: options.replace });
@@ -183,10 +190,12 @@ async function fetchWithProgress(
       });
     };
     xhr.onload = () => {
-      resolve(new Response(xhr.responseText, {
-        status: xhr.status,
-        headers: { "content-type": xhr.getResponseHeader("content-type") ?? OTOK_DATA_ACCEPT },
-      }));
+      resolve(
+        new Response(xhr.responseText, {
+          status: xhr.status,
+          headers: { "content-type": xhr.getResponseHeader("content-type") ?? OTOK_DATA_ACCEPT },
+        }),
+      );
     };
     xhr.onerror = () => reject(new Error("otok: upload failed."));
     xhr.onabort = () => reject(new DOMException("Aborted", "AbortError"));
@@ -197,10 +206,7 @@ async function fetchWithProgress(
   });
 }
 
-export async function revalidateLoader(
-  url: string,
-  signal?: AbortSignal,
-): Promise<OtokDataResponse> {
+export async function revalidateLoader(url: string, signal?: AbortSignal): Promise<OtokDataResponse> {
   const response = await fetch(url, {
     signal,
     headers: { Accept: OTOK_DATA_ACCEPT, [OTOK_DATA_HEADER]: "1" },
@@ -225,8 +231,10 @@ async function navigateAfterMutation(
   });
   const html = await response.text();
   const doc = new DOMParser().parseFromString(html, "text/html");
+  const navigationGeneration = beginHydrationNavigation();
   applySoftNavigationDocument(doc);
-  await hydrateIslands(document, registry);
+  await hydrateIslandsEager(document, registry, { navigationGeneration });
+  void hydrateIslandsDeferred(document, registry, { navigationGeneration });
 
   const final = new URL(response.url || url, window.location.href);
   const historyPath = `${final.pathname}${final.search}${final.hash}`;

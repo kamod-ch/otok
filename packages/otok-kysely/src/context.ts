@@ -5,9 +5,7 @@ import { getKyselyRuntime, tryGetKyselyRuntime } from "./registry.js";
 export function dbFromHono<DB = unknown>(hono: Context, contextKey?: string): Kysely<DB> {
   const runtime = tryGetKyselyRuntime<DB>();
   if (!runtime) {
-    throw new Error(
-      "otok-kysely: no database runtime registered. Add kysely() to otok.config.ts plugins.",
-    );
+    throw new Error("otok-kysely: no database runtime registered. Add kysely() to otok.config.ts plugins.");
   }
   const key = contextKey ?? runtime.contextKey;
   const db = hono.get(key) as Kysely<DB> | undefined;

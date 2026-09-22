@@ -61,6 +61,9 @@ describe("DEFERRED_WITHOUT_STREAMING warning", () => {
     const { warnings, plan } = resolveRenderPlan(defineRendering({ mode: "ssr", deferred: true, streaming: false }), {
       method: "GET",
       pathname: "/dashboard",
+      routeId: "dashboard",
+      requestPath: "/dashboard",
+      query: [],
       params: {},
       cookies: null,
       hasAuth: false,

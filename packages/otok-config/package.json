@@ -2,31 +2,41 @@
   "name": "@kamod-ch/otok-config",
   "version": "0.3.0",
   "description": "Typed plugin API and config resolution for Otok apps.",
-  "license": "MIT",
   "homepage": "https://github.com/kamod-ch/otok/tree/main/packages/otok-config#readme",
   "bugs": {
     "url": "https://github.com/kamod-ch/otok/issues"
   },
+  "license": "MIT",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/kamod-ch/otok.git",
     "directory": "packages/otok-config"
   },
-  "type": "module",
   "files": [
     "dist",
     "README.md"
   ],
+  "type": "module",
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
       "default": "./dist/index.js"
     }
   },
+  "publishConfig": {
+    "access": "public"
+  },
   "scripts": {
     "build": "rm -rf dist && tsc -p tsconfig.build.json",
     "typecheck": "tsc -p tsconfig.json --noEmit",
     "test": "vitest run"
+  },
+  "devDependencies": {
+    "@types/node": "^24.12.2",
+    "hono": "^4.12.25",
+    "typescript": "~6.0.2",
+    "vite": "^8.0.10",
+    "vitest": "^4.1.2"
   },
   "peerDependencies": {
     "hono": ">=4",
@@ -40,17 +50,7 @@
       "optional": true
     }
   },
-  "devDependencies": {
-    "@types/node": "^24.12.2",
-    "hono": "^4.12.25",
-    "typescript": "~6.0.2",
-    "vite": "^8.0.10",
-    "vitest": "^4.1.2"
-  },
   "engines": {
     "node": ">=20"
-  },
-  "publishConfig": {
-    "access": "public"
   }
 }

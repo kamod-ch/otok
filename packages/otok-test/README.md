@@ -42,20 +42,20 @@ await app.cleanup();
 
 ## API overview
 
-| Area | Exports |
-| --- | --- |
-| Test client | `createOtokTestApp`, `OtokTestApp`, `OtokTestResponse` |
-| Legacy helpers | `createTestApp`, `requestRoute`, `renderRoute`, `renderParsedRoute` |
-| Routes | `createTestRoute` |
-| Assertions | `expectRedirect`, `expectValidationError`, `expectValidationDocument` |
-| Sessions | `createTestSession`, `authenticatedSession`, `sessionCookieHeader` |
-| Islands / SSR | `getIslands`, `expectIsland`, `expectSsrPageMarker`, `parseHtml` |
-| Plugins | `createPluginTestApp`, `resolvePluginTestConfig` |
-| i18n | `createI18nTestContext`, `expectLocale`, `prefixedLocalePath` |
-| Adapters | `@kamod-ch/otok-test/adapter` → `assertAdapterContract` |
+| Area           | Exports                                                                  |
+| -------------- | ------------------------------------------------------------------------ |
+| Test client    | `createOtokTestApp`, `OtokTestApp`, `OtokTestResponse`                   |
+| Legacy helpers | `createTestApp`, `requestRoute`, `renderRoute`, `renderParsedRoute`      |
+| Routes         | `createTestRoute`                                                        |
+| Assertions     | `expectRedirect`, `expectValidationError`, `expectValidationDocument`    |
+| Sessions       | `createTestSession`, `authenticatedSession`, `sessionCookieHeader`       |
+| Islands / SSR  | `getIslands`, `expectIsland`, `expectSsrPageMarker`, `parseHtml`         |
+| Plugins        | `createPluginTestApp`, `resolvePluginTestConfig`                         |
+| i18n           | `createI18nTestContext`, `expectLocale`, `prefixedLocalePath`            |
+| Adapters       | `@kamod-ch/otok-test/adapter` → `assertAdapterContract`                  |
 | Client (jsdom) | `@kamod-ch/otok-test/client` → `hydrateTestPage`, `softNavigateTestPage` |
-| Database hooks | `withTestDatabase`, `createDatabaseTestHooks` |
-| Type tests | `Expect`, `AssertEqual`, `expectTypeOf` |
+| Database hooks | `withTestDatabase`, `createDatabaseTestHooks`                            |
+| Type tests     | `Expect`, `AssertEqual`, `expectTypeOf`                                  |
 
 ## Subpath exports
 

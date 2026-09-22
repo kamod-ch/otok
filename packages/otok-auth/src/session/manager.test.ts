@@ -80,10 +80,7 @@ describe("createSessionManager", () => {
 
   it("revokeSession clears cookies and revokes the adapter record", async () => {
     const adapter = memoryAdapter();
-    const sessions = createSessionManager(
-      { sessionCookie: "sid", csrfCookie: "csrf", secure: false },
-      adapter,
-    );
+    const sessions = createSessionManager({ sessionCookie: "sid", csrfCookie: "csrf", secure: false }, adapter);
     const app = new Hono();
     app.get("/login", async (c) => {
       await sessions.createSession(c, "user-3");

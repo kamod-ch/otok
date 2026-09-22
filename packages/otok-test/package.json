@@ -2,21 +2,21 @@
   "name": "@kamod-ch/otok-test",
   "version": "0.5.1",
   "description": "Official server-side and client testing utilities for Otok apps.",
-  "license": "MIT",
   "homepage": "https://github.com/kamod-ch/otok/tree/main/packages/otok-test#readme",
   "bugs": {
     "url": "https://github.com/kamod-ch/otok/issues"
   },
+  "license": "MIT",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/kamod-ch/otok.git",
     "directory": "packages/otok-test"
   },
-  "type": "module",
   "files": [
     "dist",
     "README.md"
   ],
+  "type": "module",
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
@@ -31,6 +31,9 @@
       "default": "./dist/adapter.js"
     }
   },
+  "publishConfig": {
+    "access": "public"
+  },
   "scripts": {
     "build": "rm -rf dist && tsc -p tsconfig.build.json",
     "typecheck": "tsc -p tsconfig.json --noEmit",
@@ -39,15 +42,6 @@
   "dependencies": {
     "@kamod-ch/otok": "workspace:*",
     "otok-adapter-contract": "workspace:*"
-  },
-  "peerDependencies": {
-    "hono": ">=4",
-    "preact": ">=10.26.0"
-  },
-  "peerDependenciesMeta": {
-    "jsdom": {
-      "optional": true
-    }
   },
   "devDependencies": {
     "@kamod-ch/otok-plugin-hello": "workspace:*",
@@ -58,10 +52,16 @@
     "typescript": "~6.0.2",
     "vitest": "^4.1.2"
   },
+  "peerDependencies": {
+    "hono": ">=4",
+    "preact": ">=10.26.0"
+  },
+  "peerDependenciesMeta": {
+    "jsdom": {
+      "optional": true
+    }
+  },
   "engines": {
     "node": ">=20"
-  },
-  "publishConfig": {
-    "access": "public"
   }
 }

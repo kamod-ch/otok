@@ -104,11 +104,7 @@ export interface RealtimeProvider {
   readonly name: string;
   readonly capabilities: RealtimeProviderCapabilities;
   publish(input: PublishInput): Promise<RealtimeMessage>;
-  subscribe(
-    channel: string,
-    room: string,
-    handler: (message: RealtimeMessage) => void,
-  ): () => void;
+  subscribe(channel: string, room: string, handler: (message: RealtimeMessage) => void): () => void;
   setPresence?(channel: string, room: string, state: PresenceState): Promise<void>;
   getPresence?(channel: string, room: string): Promise<PresenceState[]>;
   shutdown?(): Promise<void>;

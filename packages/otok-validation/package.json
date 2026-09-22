@@ -1,22 +1,22 @@
 {
   "name": "@kamod-ch/otok-validation",
   "version": "2.0.0",
-  "description": "Standard Schema validation for Otok \u2014 typed inputs, field errors, and defineAction integration.",
-  "license": "MIT",
+  "description": "Standard Schema validation for Otok — typed inputs, field errors, and defineAction integration.",
   "homepage": "https://github.com/kamod-ch/otok/tree/main/packages/otok-validation#readme",
   "bugs": {
     "url": "https://github.com/kamod-ch/otok/issues"
   },
+  "license": "MIT",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/kamod-ch/otok.git",
     "directory": "packages/otok-validation"
   },
-  "type": "module",
   "files": [
     "dist",
     "README.md"
   ],
+  "type": "module",
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
@@ -55,10 +55,25 @@
       "default": "./dist/adapters/arktype.js"
     }
   },
+  "publishConfig": {
+    "access": "public"
+  },
   "scripts": {
     "build": "rm -rf dist && tsc -p tsconfig.build.json",
     "typecheck": "tsc -p tsconfig.json --noEmit",
     "test": "vitest run"
+  },
+  "devDependencies": {
+    "@kamod-ch/otok": "workspace:*",
+    "@kamod-ch/otok-kysely": "workspace:*",
+    "@kamod-ch/otok-test": "workspace:*",
+    "@types/node": "^24.12.2",
+    "arktype": "^2.1.29",
+    "preact": "^10.28.2",
+    "typescript": "~6.0.2",
+    "valibot": "^1.0.0",
+    "vitest": "^4.1.2",
+    "zod": "^4.0.0"
   },
   "peerDependencies": {
     "@kamod-ch/otok": ">=0.6.1"
@@ -74,22 +89,7 @@
       "optional": true
     }
   },
-  "devDependencies": {
-    "@kamod-ch/otok": "workspace:*",
-    "@kamod-ch/otok-kysely": "workspace:*",
-    "@kamod-ch/otok-test": "workspace:*",
-    "@types/node": "^24.12.2",
-    "arktype": "^2.1.29",
-    "preact": "^10.28.2",
-    "typescript": "~6.0.2",
-    "valibot": "^1.0.0",
-    "vitest": "^4.1.2",
-    "zod": "^4.0.0"
-  },
   "engines": {
     "node": ">=20"
-  },
-  "publishConfig": {
-    "access": "public"
   }
 }

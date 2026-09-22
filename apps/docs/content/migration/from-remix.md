@@ -3,22 +3,23 @@ title: Migrate from Remix
 section: Migration
 order: 72
 ---
+
 # Migrate from Remix / React Router
 
 Remix-style loaders, actions, and progressive forms map closely onto Otok. The biggest difference: Otok is HTML-first with soft navigation, not a full client-side router.
 
 ## Concept mapping
 
-| Remix | Otok |
-| --- | --- |
-| `loader` | `loader` |
-| `action` | `action` |
-| `useLoaderData` | `data` page prop |
-| `useActionData` | `actionData` page prop |
-| `<Form method="post">` | native `<form method="post">` |
-| nested routes / outlets | nested `_layout.tsx` + `{children}` |
-| client-side routing | soft navigation HTML swaps |
-| Resource routes | Hono API routes via `configure` / `createOtokHandler` |
+| Remix                   | Otok                                                  |
+| ----------------------- | ----------------------------------------------------- |
+| `loader`                | `loader`                                              |
+| `action`                | `action`                                              |
+| `useLoaderData`         | `data` page prop                                      |
+| `useActionData`         | `actionData` page prop                                |
+| `<Form method="post">`  | native `<form method="post">`                         |
+| nested routes / outlets | nested `_layout.tsx` + `{children}`                   |
+| client-side routing     | soft navigation HTML swaps                            |
+| Resource routes         | Hono API routes via `configure` / `createOtokHandler` |
 
 ## Actions and PRG
 

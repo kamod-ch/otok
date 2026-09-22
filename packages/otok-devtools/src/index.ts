@@ -51,7 +51,8 @@ export default definePlugin<DevtoolsPluginOptions>({
   configureVite(ctx) {
     if (ctx.mode !== "development") return;
     return createDevtoolsVitePlugin({
-      endpoint: String(ctx.config.devtools?.otok && (ctx.config.devtools.otok as { endpoint?: string }).endpoint) ||
+      endpoint:
+        String(ctx.config.devtools?.otok && (ctx.config.devtools.otok as { endpoint?: string }).endpoint) ||
         "/__otok_devtools",
       panel:
         ctx.config.devtools?.otok && (ctx.config.devtools.otok as { panel?: boolean }).panel !== undefined

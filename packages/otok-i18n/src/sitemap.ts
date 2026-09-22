@@ -65,8 +65,7 @@ export function renderSitemapXml(entries: LocalizedSitemapEntry[]): string {
         .join("\n");
       const lastmod = entry.lastmod ? `\n    <lastmod>${escapeXml(entry.lastmod)}</lastmod>` : "";
       const changefreq = entry.changefreq ? `\n    <changefreq>${entry.changefreq}</changefreq>` : "";
-      const priority =
-        entry.priority != null ? `\n    <priority>${entry.priority.toFixed(1)}</priority>` : "";
+      const priority = entry.priority != null ? `\n    <priority>${entry.priority.toFixed(1)}</priority>` : "";
 
       return `  <url>
     <loc>${escapeXml(entry.loc)}</loc>${lastmod}${changefreq}${priority}

@@ -91,11 +91,7 @@ export interface ZefixCompanyInput {
 }
 
 /** Map Zefix record to CRM company fields with UID normalization. */
-export function zefixToCompanyInput(
-  record: ZefixRecord,
-  orgId: string,
-  ownerId?: string,
-): ZefixCompanyInput {
+export function zefixToCompanyInput(record: ZefixRecord, orgId: string, ownerId?: string): ZefixCompanyInput {
   const municipality = parseMunicipalityUri(record.municipality);
   return {
     orgId,

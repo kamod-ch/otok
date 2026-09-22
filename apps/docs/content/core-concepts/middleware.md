@@ -3,6 +3,7 @@ title: Route Middleware
 section: Core Concepts
 order: 13
 ---
+
 # Route Middleware
 
 Use `_middleware.ts` files to colocate Hono-compatible middleware with routes.

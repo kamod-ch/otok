@@ -1,10 +1,5 @@
 import { describe, expect, it, beforeEach } from "vitest";
-import {
-  createTestStorage,
-  createTestUser,
-  seedTestCategory,
-  seedTestThread,
-} from "./testing/index.js";
+import { createTestStorage, createTestUser, seedTestCategory, seedTestThread } from "./testing/index.js";
 import { createForumServices } from "./services/index.js";
 import { FORUM_PERMISSIONS } from "./permissions.js";
 import { permissionsForUser } from "./permissions.js";

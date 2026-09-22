@@ -18,9 +18,7 @@ const BRAND_PRESETS = new Set<KamodThemePreset>([
 function normalizeOptions(input: KamodPluginOptions | undefined): Required<KamodPluginOptions> {
   const theme = input?.theme ?? DEFAULT_KAMOD_OPTIONS.theme;
   if (theme !== "default" && !BRAND_PRESETS.has(theme)) {
-    throw new Error(
-      `kamod() theme "${theme}" is invalid. Use "default" or one of: ${[...BRAND_PRESETS].join(", ")}`,
-    );
+    throw new Error(`kamod() theme "${theme}" is invalid. Use "default" or one of: ${[...BRAND_PRESETS].join(", ")}`);
   }
 
   return {
@@ -85,9 +83,7 @@ export default function kamod(options?: KamodPluginOptions) {
     if (normalized.theme !== "default") {
       const themesVersion = await readInstalledVersion(root, "@kamod-ch/themes");
       if (!themesVersion) {
-        throw new Error(
-          'otok-kamod: theme preset requires @kamod-ch/themes. Install it:\n  pnpm add @kamod-ch/themes',
-        );
+        throw new Error("otok-kamod: theme preset requires @kamod-ch/themes. Install it:\n  pnpm add @kamod-ch/themes");
       }
     }
   };
@@ -96,8 +92,7 @@ export default function kamod(options?: KamodPluginOptions) {
 
   plugin.virtualModules = {
     options: () => `export const kamodOptions = ${JSON.stringify(normalized)};`,
-    stylesheet: () =>
-      `export const kamodStylesheet = ${JSON.stringify(kamodStylesheetContent(normalized.theme))};`,
+    stylesheet: () => `export const kamodStylesheet = ${JSON.stringify(kamodStylesheetContent(normalized.theme))};`,
   };
 
   return plugin;

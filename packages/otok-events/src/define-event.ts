@@ -10,9 +10,7 @@ export interface DefineEventOptions<TPayload> {
 }
 
 /** Declare a typed, versioned domain event. */
-export function defineEvent<TPayload>(
-  options: DefineEventOptions<TPayload>,
-): EventDefinition<TPayload> {
+export function defineEvent<TPayload>(options: DefineEventOptions<TPayload>): EventDefinition<TPayload> {
   if (!options.name.trim()) {
     throw new Error("otok-events: defineEvent requires a non-empty name");
   }

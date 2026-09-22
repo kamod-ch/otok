@@ -2,11 +2,13 @@ import { createForum, type CreateForumOptions } from "../index.js";
 import type { ForumAuthAdapter, ForumStorageAdapter, ForumUser } from "../types.js";
 import { permissionsForUser } from "../permissions.js";
 import { newId, nowUtc } from "../utils.js";
-import type { ForumCategory, ForumPost, ForumThread } from "../types.js";
+import type { ForumPost, ForumThread } from "../types.js";
 import { createMemoryForumStorage } from "./memory-storage.js";
 
 export async function createTestDatabase(): Promise<never> {
-  throw new Error("Use createMemoryForumStorage() or createTestStorage() instead of createTestDatabase() when better-sqlite3 is unavailable");
+  throw new Error(
+    "Use createMemoryForumStorage() or createTestStorage() instead of createTestDatabase() when better-sqlite3 is unavailable",
+  );
 }
 
 export function createTestStorage(_db?: unknown): ForumStorageAdapter {
@@ -57,7 +59,7 @@ export async function seedTestThread(
   const threadId = newId();
   const postId = newId();
   const slug = `${threadId}--${title.toLowerCase().replace(/\s+/g, "-")}`;
-  const thread = await storage.threads.create({
+  const _thread = await storage.threads.create({
     id: threadId,
     categoryId,
     authorId,
@@ -79,10 +81,12 @@ export async function seedTestThread(
   return { thread: (await storage.threads.findById(threadId))!, post };
 }
 
-export function createTestForum(options: Omit<CreateForumOptions, "storage" | "auth"> & {
-  storage?: ForumStorageAdapter;
-  auth?: ForumAuthAdapter;
-}) {
+export function createTestForum(
+  options: Omit<CreateForumOptions, "storage" | "auth"> & {
+    storage?: ForumStorageAdapter;
+    auth?: ForumAuthAdapter;
+  },
+) {
   const storage = options.storage ?? createMemoryForumStorage();
   const auth = options.auth ?? createTestAuthAdapter();
   return createForum({ ...options, storage, auth });

@@ -13,7 +13,24 @@ export function restoreScrollPosition(url?: string, behavior: ScrollBehavior = "
   if (typeof window === "undefined") return;
   const key = url ?? currentPath();
   const pos = scrollPositions.get(key);
-  if (pos) window.scrollTo({ left: pos.x, top: pos.y, behavior });
+  if (!pos) return;
+  const apply = () => window.scrollTo({ left: pos.x, top: pos.y, behavior });
+  if (typeof requestAnimationFrame === "function") {
+    requestAnimationFrame(() => requestAnimationFrame(apply));
+    return;
+  }
+  apply();
+}
+
+/** Scroll to a same-document hash target from a URL string. Returns true when an element was scrolled. */
+export function scrollToHashFromUrl(url: string, behavior: ScrollBehavior = "auto"): boolean {
+  if (typeof window === "undefined" || typeof document === "undefined") return false;
+  const hash = new URL(url, window.location.href).hash;
+  if (!hash || hash === "#") return false;
+  const target = document.getElementById(decodeURIComponent(hash.slice(1))) ?? document.querySelector(hash);
+  if (!(target instanceof HTMLElement)) return false;
+  target.scrollIntoView({ behavior });
+  return true;
 }
 
 export function saveFocusSelector(url: string, selector: string): void {
@@ -34,17 +51,23 @@ function currentPath(): string {
   return `${window.location.pathname}${window.location.search}${window.location.hash}`;
 }
 
+function prefersReducedMotion(): boolean {
+  if (typeof window === "undefined" || !("matchMedia" in window)) return false;
+  return window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+}
+
 export async function withViewTransition(update: () => void | Promise<void>): Promise<void> {
-  if (typeof document !== "undefined" && "startViewTransition" in document) {
+  if (typeof document !== "undefined" && "startViewTransition" in document && !prefersReducedMotion()) {
     let updatePromise: Promise<void> = Promise.resolve();
-    const transition = (document as Document & { startViewTransition: (cb: () => void) => { finished: Promise<void> } })
-      .startViewTransition(() => {
-        try {
-          updatePromise = Promise.resolve(update());
-        } catch (error) {
-          updatePromise = Promise.reject(error);
-        }
-      });
+    const transition = (
+      document as Document & { startViewTransition: (cb: () => void) => { finished: Promise<void> } }
+    ).startViewTransition(() => {
+      try {
+        updatePromise = Promise.resolve(update());
+      } catch (error) {
+        updatePromise = Promise.reject(error);
+      }
+    });
 
     await updatePromise;
 

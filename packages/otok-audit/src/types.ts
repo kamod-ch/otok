@@ -112,9 +112,7 @@ export interface AuditPluginOptions {
   exportPath?: string;
 }
 
-export type AuditProviderConfig =
-  | { type: "memory" }
-  | { type: "custom"; store: AuditStore };
+export type AuditProviderConfig = { type: "memory" } | { type: "custom"; store: AuditStore };
 
 export function serializeJson(value: unknown): string {
   return JSON.stringify(value);
@@ -131,10 +129,7 @@ export function isSnapshotChange(changes: AuditChanges): changes is AuditSnapsho
 export function normalizeChanges(changes?: AuditChanges): AuditFieldChange[] {
   if (!changes) return [];
   if (Array.isArray(changes)) return changes;
-  const fields = new Set([
-    ...Object.keys(changes.before ?? {}),
-    ...Object.keys(changes.after ?? {}),
-  ]);
+  const fields = new Set([...Object.keys(changes.before ?? {}), ...Object.keys(changes.after ?? {})]);
   return [...fields].map((field) => ({
     field,
     before: changes.before?.[field],

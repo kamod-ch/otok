@@ -62,10 +62,10 @@ Plugin webhooks deduplicate by Stripe event ID — retries return `{ received: t
 
 ## Providers
 
-| Provider | Config | Notes |
-|----------|--------|-------|
-| `live` | `{ type: "live", secretKey? }` | Real Stripe SDK. Uses `STRIPE_SECRET_KEY` when omitted. |
-| `test` | `{ type: "test" }` | Deterministic checkout/portal URLs and webhook parsing for tests. |
+| Provider | Config                         | Notes                                                             |
+| -------- | ------------------------------ | ----------------------------------------------------------------- |
+| `live`   | `{ type: "live", secretKey? }` | Real Stripe SDK. Uses `STRIPE_SECRET_KEY` when omitted.           |
+| `test`   | `{ type: "test" }`             | Deterministic checkout/portal URLs and webhook parsing for tests. |
 
 ## Composition API (still supported)
 
@@ -85,9 +85,9 @@ STRIPE_WEBHOOK_SECRET=
 
 ## Exports
 
-| Subpath | Purpose |
-|---------|---------|
-| `@kamod-ch/otok-stripe` | Plugin, actions, DTOs, providers |
-| `@kamod-ch/otok-stripe/adapter` | `BillingAdapter` contract |
-| `@kamod-ch/otok-stripe/webhook` | Low-level webhook handler |
-| `@kamod-ch/otok-stripe/providers/test` | Test provider helpers |
+| Subpath                                | Purpose                          |
+| -------------------------------------- | -------------------------------- |
+| `@kamod-ch/otok-stripe`                | Plugin, actions, DTOs, providers |
+| `@kamod-ch/otok-stripe/adapter`        | `BillingAdapter` contract        |
+| `@kamod-ch/otok-stripe/webhook`        | Low-level webhook handler        |
+| `@kamod-ch/otok-stripe/providers/test` | Test provider helpers            |

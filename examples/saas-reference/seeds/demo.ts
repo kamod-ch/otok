@@ -5,11 +5,7 @@ import { hashPassword } from "../src/lib/password.js";
 import { newId } from "../src/lib/ids.js";
 
 export default async function seed(db: Kysely<SaasDatabase>) {
-  const existing = await db
-    .selectFrom("organization")
-    .select("id")
-    .where("id", "=", DEMO_ORG_ID)
-    .executeTakeFirst();
+  const existing = await db.selectFrom("organization").select("id").where("id", "=", DEMO_ORG_ID).executeTakeFirst();
   if (existing) return;
 
   const now = new Date().toISOString();

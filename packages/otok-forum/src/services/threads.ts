@@ -32,7 +32,7 @@ export class ThreadService {
     const { html } = renderPostContent(input.contentMarkdown, this.deps.markdown);
 
     return this.deps.storage.transaction(async () => {
-      const thread = await this.deps.storage.threads.create({
+      const _thread = await this.deps.storage.threads.create({
         id: threadId,
         categoryId: input.categoryId,
         authorId: input.authorId,
@@ -60,7 +60,10 @@ export class ThreadService {
 
       if (input.tagNames?.length) {
         const tags = await this.deps.storage.tags.findOrCreate(input.tagNames);
-        await this.deps.storage.tags.attachToThread(threadId, tags.map((t) => t.id));
+        await this.deps.storage.tags.attachToThread(
+          threadId,
+          tags.map((t) => t.id),
+        );
       }
 
       const updated = await this.deps.storage.threads.findById(threadId);
@@ -68,12 +71,7 @@ export class ThreadService {
     });
   }
 
-  async rename(
-    threadId: string,
-    title: string,
-    actorId: string,
-    permissions: ForumPermission[],
-  ): Promise<ForumThread> {
+  async rename(threadId: string, title: string, actorId: string, permissions: ForumPermission[]): Promise<ForumThread> {
     const thread = await this.deps.storage.threads.findById(threadId);
     if (!thread) throw new ForumNotFoundError("thread");
     const canUpdate =

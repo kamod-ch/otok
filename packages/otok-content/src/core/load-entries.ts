@@ -45,8 +45,7 @@ function isDraftEntry(data: Record<string, unknown>): boolean {
 function isScheduledEntry(data: Record<string, unknown>, now = Date.now()): boolean {
   const raw = data.date ?? data.publishedAt ?? data.publishDate;
   if (!raw) return false;
-  const time =
-    raw instanceof Date ? raw.getTime() : typeof raw === "string" ? Date.parse(raw) : Number.NaN;
+  const time = raw instanceof Date ? raw.getTime() : typeof raw === "string" ? Date.parse(raw) : Number.NaN;
   return !Number.isNaN(time) && time > now;
 }
 
@@ -65,15 +64,11 @@ function referenceFieldsFromSchema(schema: ZodType): Record<string, string> {
 function mergedReferences(def: CollectionDefinition): Record<string, string> {
   return {
     ...referenceFieldsFromSchema(def.schema),
-    ...(def.references ?? {}),
+    ...def.references,
   };
 }
 
-function validateEntry<TSchema extends ZodType>(
-  schema: TSchema,
-  file: string,
-  frontmatter: Record<string, unknown>,
-) {
+function validateEntry<TSchema extends ZodType>(schema: TSchema, file: string, frontmatter: Record<string, unknown>) {
   const parsed = schema.safeParse(frontmatter);
   if (!parsed.success) throw formatZodError(file, parsed.error);
   return parsed.data;
@@ -90,10 +85,7 @@ function stripLocalePrefix(relativePath: string, locale?: string): string {
   return relativePath.startsWith(`${locale}/`) ? relativePath.slice(locale.length + 1) : relativePath;
 }
 
-async function globCollectionFiles(
-  def: CollectionDefinition,
-  root: string,
-): Promise<string[]> {
+async function globCollectionFiles(def: CollectionDefinition, root: string): Promise<string[]> {
   const matched = new Set<string>();
   for (const pattern of collectionGlobPatterns(def)) {
     const hits = await glob([pattern], {
@@ -120,9 +112,7 @@ function resolveEntryReferences(
     const lookup = registryEntries.get(collectionName);
     const resolved = lookup?.get(raw) ?? lookup?.get(raw.trim());
     if (!resolved) {
-      throw new Error(
-        `otok-content: ${entry.relativePath} references missing ${collectionName} entry "${raw}"`,
-      );
+      throw new Error(`otok-content: ${entry.relativePath} references missing ${collectionName} entry "${raw}"`);
     }
 
     const ref: ResolvedReference = {
@@ -137,10 +127,7 @@ function resolveEntryReferences(
   return { ...entry, data };
 }
 
-async function applyComputedFields(
-  def: CollectionDefinition,
-  entry: ContentEntry,
-): Promise<ContentEntry> {
+async function applyComputedFields(def: CollectionDefinition, entry: ContentEntry): Promise<ContentEntry> {
   if (!def.computed) return entry;
   const data = { ...(entry.data as Record<string, unknown>) };
   for (const [field, fn] of Object.entries(def.computed)) {
@@ -214,9 +201,7 @@ export async function loadCollectionEntries<TData = unknown>(
     return entries;
   }
 
-  return entries.map((entry) =>
-    resolveEntryReferences(entry, references, registryEntries),
-  ) as ContentEntry<TData>[];
+  return entries.map((entry) => resolveEntryReferences(entry, references, registryEntries)) as ContentEntry<TData>[];
 }
 
 function serializeEntry(entry: ContentEntry): SerializedEntry {
@@ -268,9 +253,4 @@ export async function buildContentManifest(
   };
 }
 
-export {
-  collectionGlobPatterns,
-  isDraftEntry,
-  isScheduledEntry,
-  mergedReferences,
-};
+export { collectionGlobPatterns, isDraftEntry, isScheduledEntry, mergedReferences };

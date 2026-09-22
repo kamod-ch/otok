@@ -22,7 +22,7 @@ import oauth from "@kamod-ch/otok-oauth";
 
 export default defineConfig({
   plugins: [
-    auth({ /* … */ }),
+    auth({/* … */}),
     oauth({
       providers: {
         github: {
@@ -90,12 +90,12 @@ configure: (app) => {
 
 Registered routes (default `basePath: "/auth"`):
 
-| Method | Path | Purpose |
-|--------|------|---------|
-| GET | `/auth/github` | Start GitHub login (`?next=/relative/path` optional) |
-| GET | `/auth/github/callback` | GitHub callback |
-| GET | `/auth/google` | Start Google login |
-| GET | `/auth/google/callback` | Google callback |
+| Method | Path                    | Purpose                                              |
+| ------ | ----------------------- | ---------------------------------------------------- |
+| GET    | `/auth/github`          | Start GitHub login (`?next=/relative/path` optional) |
+| GET    | `/auth/github/callback` | GitHub callback                                      |
+| GET    | `/auth/google`          | Start Google login                                   |
+| GET    | `/auth/google/callback` | Google callback                                      |
 
 On success the flow calls `adapter.findOrCreateUser`, then `createSession`, then redirects to a safe relative `next` path (or `/`).
 
@@ -135,13 +135,13 @@ const adapter: OAuthAdapter<User> = {
 
 ## Exports
 
-| Subpath | Purpose |
-|---------|---------|
-| `@kamod-ch/otok-oauth` | `createOAuthFlow`, errors, `OAuthProfile` |
-| `@kamod-ch/otok-oauth/adapter` | `OAuthAdapter`, `OAuthProfile` |
-| `@kamod-ch/otok-oauth/providers/github` | GitHub client helpers |
-| `@kamod-ch/otok-oauth/providers/google` | Google client helpers |
-| `@kamod-ch/otok-oauth/state` | Signed OAuth state cookie helpers |
+| Subpath                                 | Purpose                                   |
+| --------------------------------------- | ----------------------------------------- |
+| `@kamod-ch/otok-oauth`                  | `createOAuthFlow`, errors, `OAuthProfile` |
+| `@kamod-ch/otok-oauth/adapter`          | `OAuthAdapter`, `OAuthProfile`            |
+| `@kamod-ch/otok-oauth/providers/github` | GitHub client helpers                     |
+| `@kamod-ch/otok-oauth/providers/google` | Google client helpers                     |
+| `@kamod-ch/otok-oauth/state`            | Signed OAuth state cookie helpers         |
 
 ## Env vars (app)
 

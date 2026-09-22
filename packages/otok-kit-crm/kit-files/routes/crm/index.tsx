@@ -1,5 +1,4 @@
 import type { OtokContext, OtokActionContext } from "@kamod-ch/otok/server";
-import { fail, redirect } from "@kamod-ch/otok/server";
 import { getKitCrm, SWISS_DEMO_ORG_ID } from "../../data/crm-runtime.js";
 import { t } from "@kamod-ch/otok-kit-crm";
 
@@ -8,9 +7,8 @@ export const loader = ({ request }: OtokContext) => {
   const url = new URL(request.url);
   const q = url.searchParams.get("q") ?? undefined;
   const canton = url.searchParams.get("canton") ?? undefined;
-  const companies = q || canton
-    ? crm.searchCompanies({ orgId: SWISS_DEMO_ORG_ID, q, canton })
-    : crm.listCompanies(SWISS_DEMO_ORG_ID);
+  const companies =
+    q || canton ? crm.searchCompanies({ orgId: SWISS_DEMO_ORG_ID, q, canton }) : crm.listCompanies(SWISS_DEMO_ORG_ID);
   return {
     companies,
     orgId: SWISS_DEMO_ORG_ID,
@@ -37,10 +35,16 @@ export default function CrmIndexPage({ data }: { data: Awaited<ReturnType<typeof
       <form method="get" class="flex flex-wrap gap-2">
         <input name="q" placeholder={t(data.locale, "crm.search.placeholder")} class="rounded border px-3 py-2" />
         <input name="canton" placeholder="ZH, VD, BE…" class="w-24 rounded border px-3 py-2" />
-        <button type="submit" class="rounded bg-sky-600 px-4 py-2 text-white">Suchen</button>
+        <button type="submit" class="rounded bg-sky-600 px-4 py-2 text-white">
+          Suchen
+        </button>
       </form>
 
-      {data.updated ? <p role="status" class="text-emerald-700">Gespeichert.</p> : null}
+      {data.updated ? (
+        <p role="status" class="text-emerald-700">
+          Gespeichert.
+        </p>
+      ) : null}
 
       <table class="w-full text-left text-sm">
         <thead>
@@ -54,7 +58,9 @@ export default function CrmIndexPage({ data }: { data: Awaited<ReturnType<typeof
         <tbody>
           {data.companies.map((c) => (
             <tr key={c.id} class="border-t">
-              <td class="py-2"><a href={`/crm/companies/${c.id}`}>{c.name}</a></td>
+              <td class="py-2">
+                <a href={`/crm/companies/${c.id}`}>{c.name}</a>
+              </td>
               <td>{c.uid ?? "—"}</td>
               <td>{c.canton ?? "—"}</td>
               <td>{c.industry ?? "—"}</td>

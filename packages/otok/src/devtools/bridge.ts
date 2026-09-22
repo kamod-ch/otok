@@ -212,9 +212,7 @@ export function otokDevtoolsRecordLoader(event: OtokDevtoolsLoaderEvent): void {
   activeBridge?.recordLoader(event);
 }
 
-export function otokDevtoolsFinishRequest(
-  input: Parameters<OtokDevtoolsBridge["finishRequest"]>[0],
-): void {
+export function otokDevtoolsFinishRequest(input: Parameters<OtokDevtoolsBridge["finishRequest"]>[0]): void {
   activeBridge?.finishRequest(input);
 }
 
@@ -256,7 +254,4 @@ export function extractIslandIdsFromHtml(html: string): string[] {
   return [...ids];
 }
 
-export type {
-  OtokDevtoolsBridge as DevtoolsBridge,
-  OtokDevtoolsSnapshot as DevtoolsSnapshot,
-};
+export type { OtokDevtoolsBridge as DevtoolsBridge, OtokDevtoolsSnapshot as DevtoolsSnapshot };

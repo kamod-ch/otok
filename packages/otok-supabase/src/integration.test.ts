@@ -1,7 +1,5 @@
 import { describe, expect, it } from "vitest";
 import { createOtokSupabaseServerClient } from "./server/create-server-client.js";
-import { TEST_PUBLISHABLE_KEY, TEST_SUPABASE_URL } from "./test/fixtures.js";
-
 const integrationEnabled = Boolean(process.env.SUPABASE_URL && process.env.SUPABASE_PUBLISHABLE_KEY);
 
 describe.skipIf(!integrationEnabled)("supabase integration", () => {

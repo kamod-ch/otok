@@ -39,24 +39,24 @@ This prevents duplicate side effects (API calls, emails, DB writes) for complete
 
 ## Lifecycle
 
-| Status | Meaning |
-|--------|---------|
-| `pending` | Created, waiting for `availableAt` (delay) |
-| `running` | Actively executing steps |
-| `paused` | Manually paused |
-| `waiting_approval` | Blocked on `step.waitForApproval()` |
-| `completed` | All steps done, output stored |
-| `failed` | Step failed, retryable on next `execute()` |
-| `cancelled` | Cancelled by user |
-| `dead` | Max retries exceeded, dead-letter enqueued |
+| Status             | Meaning                                    |
+| ------------------ | ------------------------------------------ |
+| `pending`          | Created, waiting for `availableAt` (delay) |
+| `running`          | Actively executing steps                   |
+| `paused`           | Manually paused                            |
+| `waiting_approval` | Blocked on `step.waitForApproval()`        |
+| `completed`        | All steps done, output stored              |
+| `failed`           | Step failed, retryable on next `execute()` |
+| `cancelled`        | Cancelled by user                          |
+| `dead`             | Max retries exceeded, dead-letter enqueued |
 
 ## Providers
 
-| Provider | Module | Use case |
-|----------|--------|----------|
-| Memory | `providers/memory` | Dev/tests |
-| Kysely | `providers/kysely` | SQLite/Postgres |
-| Cloud | `providers/cloud` | Contract for AWS/GCP/CF adapters |
+| Provider | Module             | Use case                         |
+| -------- | ------------------ | -------------------------------- |
+| Memory   | `providers/memory` | Dev/tests                        |
+| Kysely   | `providers/kysely` | SQLite/Postgres                  |
+| Cloud    | `providers/cloud`  | Contract for AWS/GCP/CF adapters |
 
 ## Triggers
 
@@ -74,9 +74,15 @@ Pass `observability` hooks to `WorkflowEngine`:
 new WorkflowEngine({
   store,
   observability: {
-    onStepStart(instance, stepName) { /* ... */ },
-    onStepComplete(instance, stepName, output) { /* ... */ },
-    onWorkflowFailed(instance, error) { /* ... */ },
+    onStepStart(instance, stepName) {
+      /* ... */
+    },
+    onStepComplete(instance, stepName, output) {
+      /* ... */
+    },
+    onWorkflowFailed(instance, error) {
+      /* ... */
+    },
   },
 });
 ```

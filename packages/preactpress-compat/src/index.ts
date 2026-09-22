@@ -213,9 +213,7 @@ export function adaptLayoutProps(input: {
   };
 }
 
-export function flattenSidebarForPager(
-  sidebar: OtokDocsNavItem[],
-): Array<{ label: string; href: string }> {
+export function flattenSidebarForPager(sidebar: OtokDocsNavItem[]): Array<{ label: string; href: string }> {
   const flat: Array<{ label: string; href: string }> = [];
   for (const item of sidebar) {
     if (item.href && item.href !== "#") flat.push({ label: item.label, href: item.href });

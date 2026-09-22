@@ -8,7 +8,7 @@ import {
 } from "../shared/islands.js";
 import { registerRenderedIsland } from "../shared/island-context.js";
 import { hydrateIslands } from "./hydration.js";
-import { prefetchSoftNavUrl, setupSoftNavigation, softNavigate, type SoftNavOptions } from "./soft-nav.js";
+import { setupSoftNavigation, type SoftNavOptions } from "./soft-nav.js";
 import { patchHistoryScroll, setMutationRegistry } from "./mutations/index.js";
 
 export interface IslandComponentProps<Props extends IslandProps = IslandProps> {
@@ -124,8 +124,29 @@ export function createOtokClient(options: CreateOtokClientOptions = {}): void {
 export type { InferIslandProps, OtokChrome } from "../shared/routes.js";
 export type { IslandHydrationStrategy, IslandProps, IslandRegistry } from "../shared/islands.js";
 export type { SoftNavOptions } from "./soft-nav.js";
-export { cancelPendingHydration, hydrateIslands } from "./hydration.js";
-export { isSoftNavForm, isSoftNavLink, prefetchSoftNavUrl, setupSoftNavigation, softNavigate } from "./soft-nav.js";
+export {
+  beginHydrationNavigation,
+  cancelPendingHydration,
+  hydrateIslands,
+  hydrateIslandsDeferred,
+  hydrateIslandsEager,
+  unmountHydratedIslands,
+} from "./hydration.js";
+export {
+  invalidateSoftNavPrefetch,
+  isSoftNavForm,
+  isSoftNavLink,
+  prefetchSoftNavUrl,
+  setSoftNavPrefetchScope,
+  setupSoftNavigation,
+  softNavigate,
+  type SoftNavPrefetchInvalidateOptions,
+  type SoftNavPrefetchInvalidateReason,
+  type SoftNavPrefetchScope,
+  submitSoftNavigationForm,
+  submitSoftNavigationFormResult,
+  type SoftFormSubmitResult,
+} from "./soft-nav.js";
 export {
   useAction,
   useFetcher,

@@ -3,18 +3,19 @@ title: Mail Extension
 section: Guides
 order: 34
 ---
+
 # @kamod-ch/otok-mail
 
 Provider-based mail for Otok apps. Otok stays decoupled from any single vendor.
 
 ## Providers
 
-| Provider | Use case |
-|----------|----------|
-| `test` | Unit tests and development preview |
-| `smtp` | Generic SMTP (requires optional `nodemailer`) |
-| `resend` | Resend HTTP API |
-| `mailpit` | Local SMTP to Mailpit (`127.0.0.1:1025`) |
+| Provider  | Use case                                      |
+| --------- | --------------------------------------------- |
+| `test`    | Unit tests and development preview            |
+| `smtp`    | Generic SMTP (requires optional `nodemailer`) |
+| `resend`  | Resend HTTP API                               |
+| `mailpit` | Local SMTP to Mailpit (`127.0.0.1:1025`)      |
 
 ## Plugin
 

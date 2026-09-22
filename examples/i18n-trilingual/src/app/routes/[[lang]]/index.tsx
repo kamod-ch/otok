@@ -8,7 +8,7 @@ import Welcome from "../../islands/welcome.js";
 const LOCALES = ["de", "en", "fr"] as const;
 const ORIGIN = process.env.APP_URL ?? "http://localhost:5173";
 
-export const loader = defineLoader(({ i18n, hono, request }) => {
+export const loader = defineLoader(({ i18n: _i18n, hono, request }) => {
   const url = new URL(request.url);
   const { pathname } = stripLocaleParam(url.pathname, LOCALES);
   return {

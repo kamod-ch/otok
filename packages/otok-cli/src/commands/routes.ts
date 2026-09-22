@@ -1,10 +1,5 @@
 import path from "node:path";
-import {
-  formatRouteIssues,
-  formatRouteTree,
-  runRouteTypegen,
-  scanRoutes,
-} from "@kamod-ch/otok-route-typegen";
+import { formatRouteIssues, formatRouteTree, runRouteTypegen, scanRoutes } from "@kamod-ch/otok-route-typegen";
 import { loadOtokAppConfig } from "../load-config.js";
 
 const HELP = `Usage: otok typegen [options]

@@ -49,12 +49,7 @@ describe("PluginContainer", () => {
     const container = new PluginContainer({ plugins: [first(), second()] }, env);
     await container.resolve();
 
-    expect(order).toEqual([
-      "first:config",
-      "second:config",
-      "first:configResolved",
-      "second:configResolved",
-    ]);
+    expect(order).toEqual(["first:config", "second:config", "first:configResolved", "second:configResolved"]);
   });
 
   it("rejects duplicate plugin names", () => {

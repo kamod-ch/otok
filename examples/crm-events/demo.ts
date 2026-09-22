@@ -26,12 +26,7 @@ registerCrmEventHandlers(bus, {
   },
 });
 
-export async function createCompany(input: {
-  companyId: string;
-  name: string;
-  industry: string;
-  createdBy: string;
-}) {
+export async function createCompany(input: { companyId: string; name: string; industry: string; createdBy: string }) {
   await bus.publish(companyCreated, input, { correlationId: `create-${input.companyId}` });
   return {
     activities: activities.filter((a) => a.companyId === input.companyId),

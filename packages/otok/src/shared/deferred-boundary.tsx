@@ -1,10 +1,7 @@
 import { h, type ComponentChildren } from "preact";
 import type { DeferredRenderResult } from "../rendering/deferred.js";
 import { isDeferredRenderResult } from "../rendering/deferred-resolve.js";
-import {
-  OTOK_DEFERRED_MARKER_ATTR,
-  registerDeferredBoundary,
-} from "../rendering/deferred-context.js";
+import { OTOK_DEFERRED_MARKER_ATTR, registerDeferredBoundary } from "../rendering/deferred-context.js";
 import { OTOK_LOADING_ATTR } from "../rendering/loading.js";
 
 export interface DeferredBoundaryProps<T> {

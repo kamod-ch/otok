@@ -31,7 +31,10 @@ export interface ContentPluginOptions {
 }
 
 export const DEFAULT_CONTENT_OPTIONS: Required<
-  Pick<ContentPluginOptions, "root" | "mdx" | "includeDrafts" | "gitDates" | "incremental" | "live" | "search" | "sitemap">
+  Pick<
+    ContentPluginOptions,
+    "root" | "mdx" | "includeDrafts" | "gitDates" | "incremental" | "live" | "search" | "sitemap"
+  >
 > = {
   root: "content",
   mdx: true,

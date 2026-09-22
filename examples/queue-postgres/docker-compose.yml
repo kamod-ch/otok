@@ -1,0 +1,40 @@
+services:
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: otok
+      POSTGRES_PASSWORD: otok
+      POSTGRES_DB: otok_queue
+    ports:
+      - "54329:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U otok -d otok_queue"]
+      interval: 3s
+      timeout: 3s
+      retries: 10
+
+  web:
+    build:
+      context: ../..
+      dockerfile: examples/queue-postgres/Dockerfile.web
+    environment:
+      DATABASE_URL: postgres://otok:otok@db:5432/otok_queue
+      PORT: "3000"
+    ports:
+      - "3010:3000"
+    depends_on:
+      db:
+        condition: service_healthy
+
+  worker:
+    build:
+      context: ../..
+      dockerfile: examples/queue-postgres/Dockerfile.worker
+    environment:
+      DATABASE_URL: postgres://otok:otok@db:5432/otok_queue
+      WORKER_HEALTH_PORT: "9090"
+    ports:
+      - "9090:9090"
+    depends_on:
+      db:
+        condition: service_healthy

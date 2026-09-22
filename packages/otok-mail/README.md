@@ -63,12 +63,12 @@ await getMailClient().sendTemplate({
 
 ## Providers
 
-| Provider | Config | Notes |
-|----------|--------|-------|
-| `test` | `{ type: "test" }` | Captures messages in memory. Default for tests. |
-| `smtp` | `{ type: "smtp", host, port?, user?, pass? }` | Requires optional `nodemailer` peer. |
-| `resend` | `{ type: "resend", apiKey? }` | Uses `RESEND_API_KEY` when `apiKey` is omitted. |
-| `mailpit` | `{ type: "mailpit" }` | SMTP to `127.0.0.1:1025`. Web UI at `http://127.0.0.1:8025`. |
+| Provider  | Config                                        | Notes                                                        |
+| --------- | --------------------------------------------- | ------------------------------------------------------------ |
+| `test`    | `{ type: "test" }`                            | Captures messages in memory. Default for tests.              |
+| `smtp`    | `{ type: "smtp", host, port?, user?, pass? }` | Requires optional `nodemailer` peer.                         |
+| `resend`  | `{ type: "resend", apiKey? }`                 | Uses `RESEND_API_KEY` when `apiKey` is omitted.              |
+| `mailpit` | `{ type: "mailpit" }`                         | SMTP to `127.0.0.1:1025`. Web UI at `http://127.0.0.1:8025`. |
 
 ## Development preview
 
@@ -87,10 +87,10 @@ MAIL_SMTP_PASS=
 
 ## Exports
 
-| Subpath | Purpose |
-|---------|---------|
-| `@kamod-ch/otok-mail` | Plugin factory, `getMailClient`, types |
-| `@kamod-ch/otok-mail/providers/test` | Test provider helpers |
-| `@kamod-ch/otok-mail/providers/smtp` | SMTP provider factory |
-| `@kamod-ch/otok-mail/providers/resend` | Resend provider factory |
-| `@kamod-ch/otok-mail/providers/mailpit` | Mailpit provider factory |
+| Subpath                                 | Purpose                                |
+| --------------------------------------- | -------------------------------------- |
+| `@kamod-ch/otok-mail`                   | Plugin factory, `getMailClient`, types |
+| `@kamod-ch/otok-mail/providers/test`    | Test provider helpers                  |
+| `@kamod-ch/otok-mail/providers/smtp`    | SMTP provider factory                  |
+| `@kamod-ch/otok-mail/providers/resend`  | Resend provider factory                |
+| `@kamod-ch/otok-mail/providers/mailpit` | Mailpit provider factory               |

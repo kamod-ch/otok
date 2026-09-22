@@ -19,15 +19,15 @@ Results written to `benchmarks/results/latest.json`.
 
 ## Metrics
 
-| Metric | Description |
-|--------|-------------|
-| `devServerStartMs` | Time until dev server accepts HTTP |
-| `productionBuildMs` | `vite build` duration |
-| `ssrLatencyP50Ms` | Median SSR response time (local) |
-| `ssrThroughputRps` | Requests/sec (autocannon, 10s) |
-| `clientJsKb` | Gzipped client JS for home route |
-| `edgeBundleKb` | Worker bundle size (when applicable) |
-| `peakRssMb` | Peak RSS during production build |
+| Metric              | Description                          |
+| ------------------- | ------------------------------------ |
+| `devServerStartMs`  | Time until dev server accepts HTTP   |
+| `productionBuildMs` | `vite build` duration                |
+| `ssrLatencyP50Ms`   | Median SSR response time (local)     |
+| `ssrThroughputRps`  | Requests/sec (autocannon, 10s)       |
+| `clientJsKb`        | Gzipped client JS for home route     |
+| `edgeBundleKb`      | Worker bundle size (when applicable) |
+| `peakRssMb`         | Peak RSS during production build     |
 
 Budgets: [`budgets.json`](./budgets.json). See [performance-budgets.md](../docs/governance/performance-budgets.md).
 
@@ -35,14 +35,14 @@ Budgets: [`budgets.json`](./budgets.json). See [performance-budgets.md](../docs/
 
 Compare against equivalent minimal projects:
 
-| Framework | Project path | Notes |
-|-----------|--------------|-------|
-| **Otok** | `projects/otok-minimal` | Reference |
-| **Hono** | `projects/hono-minimal` | Raw Hono + JSX SSR |
-| **Astro** | `projects/astro-minimal` | Default SSR, no islands |
-| **React Router** | `projects/react-router-minimal` | Framework mode |
-| **Next.js** | `projects/next-minimal` | App router |
-| **SvelteKit** | `projects/sveltekit-minimal` | Adapter-node |
+| Framework        | Project path                    | Notes                   |
+| ---------------- | ------------------------------- | ----------------------- |
+| **Otok**         | `projects/otok-minimal`         | Reference               |
+| **Hono**         | `projects/hono-minimal`         | Raw Hono + JSX SSR      |
+| **Astro**        | `projects/astro-minimal`        | Default SSR, no islands |
+| **React Router** | `projects/react-router-minimal` | Framework mode          |
+| **Next.js**      | `projects/next-minimal`         | App router              |
+| **SvelteKit**    | `projects/sveltekit-minimal`    | Adapter-node            |
 
 ```bash
 pnpm bench:compare
@@ -57,11 +57,11 @@ PR CI runs `budget:check` only when `benchmarks/results/latest.json` exists (opt
 
 ## Environment variables
 
-| Variable | Default | Purpose |
-|----------|---------|---------|
-| `BENCH_GIT_SHA` | `git rev-parse HEAD` | Reproducibility |
-| `BENCH_URL` | `http://127.0.0.1:3000` | SSR target |
-| `BENCH_DURATION_S` | `10` | Throughput test duration |
+| Variable           | Default                 | Purpose                  |
+| ------------------ | ----------------------- | ------------------------ |
+| `BENCH_GIT_SHA`    | `git rev-parse HEAD`    | Reproducibility          |
+| `BENCH_URL`        | `http://127.0.0.1:3000` | SSR target               |
+| `BENCH_DURATION_S` | `10`                    | Throughput test duration |
 
 ## Adding a framework
 

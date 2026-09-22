@@ -37,10 +37,7 @@ export async function createInvitation(
   return { id, token, email: input.email, role: input.role, expiresAt };
 }
 
-export async function findValidInvitation(
-  db: Kysely<SaasDatabase>,
-  token: string,
-) {
+export async function findValidInvitation(db: Kysely<SaasDatabase>, token: string) {
   const tokenHash = hashToken(token);
   return db
     .selectFrom("invitation")

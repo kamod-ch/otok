@@ -1,9 +1,4 @@
-import {
-  FORUM_PERMISSIONS,
-  canDeletePost,
-  canEditPost,
-  requireForumPermission,
-} from "../permissions.js";
+import { FORUM_PERMISSIONS, canDeletePost, canEditPost, requireForumPermission } from "../permissions.js";
 import { renderPostContent } from "../markdown.js";
 import type {
   CreatePostInput,

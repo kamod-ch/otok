@@ -3,6 +3,7 @@ title: Error Handling
 section: Core Concepts
 order: 15
 ---
+
 # Error Handling
 
 Otok has one response model for loaders, actions, middleware, and server handlers.

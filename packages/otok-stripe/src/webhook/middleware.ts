@@ -18,9 +18,7 @@ export interface StripeWebhookHandlerOptions<TPlan extends string = string> {
  * Returns a Hono route handler for Stripe webhooks.
  * Uses the raw request body for signature verification — do not parse JSON first.
  */
-export function createStripeWebhookHandler<TPlan extends string = string>(
-  options: StripeWebhookHandlerOptions<TPlan>,
-) {
+export function createStripeWebhookHandler<TPlan extends string = string>(options: StripeWebhookHandlerOptions<TPlan>) {
   return async (c: Context) => {
     const signature = c.req.header("stripe-signature");
     if (!signature) {

@@ -5,9 +5,7 @@ const root = "/project";
 
 describe("validateSetupChanges", () => {
   it("allows append to .env.example", () => {
-    const changes = validateSetupChanges(root, [
-      { kind: "append-file", path: ".env.example", content: "FOO=bar\n" },
-    ]);
+    const changes = validateSetupChanges(root, [{ kind: "append-file", path: ".env.example", content: "FOO=bar\n" }]);
     expect(changes[0]?.kind).toBe("append-file");
     if (changes[0]?.kind === "append-file") {
       expect(changes[0].path).toBe(".env.example");
@@ -15,15 +13,15 @@ describe("validateSetupChanges", () => {
   });
 
   it("rejects append outside env example files", () => {
-    expect(() =>
-      validateSetupChanges(root, [{ kind: "append-file", path: "package.json", content: "{}" }]),
-    ).toThrow(PluginSetupValidationError);
+    expect(() => validateSetupChanges(root, [{ kind: "append-file", path: "package.json", content: "{}" }])).toThrow(
+      PluginSetupValidationError,
+    );
   });
 
   it("rejects paths that escape the project root", () => {
-    expect(() =>
-      validateSetupChanges(root, [{ kind: "mkdir", path: "../outside" }]),
-    ).toThrow(PluginSetupValidationError);
+    expect(() => validateSetupChanges(root, [{ kind: "mkdir", path: "../outside" }])).toThrow(
+      PluginSetupValidationError,
+    );
   });
 
   it("allows create under config/", () => {

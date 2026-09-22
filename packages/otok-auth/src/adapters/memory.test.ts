@@ -38,8 +38,7 @@ describe("createMemorySessionAdapter", () => {
           stored = sessions.map((session) => ({ ...session }));
         },
       },
-      resolveUser: ({ session }) =>
-        session.userId === "u1" ? { id: "u1", email: "a@example.com" } : null,
+      resolveUser: ({ session }) => (session.userId === "u1" ? { id: "u1", email: "a@example.com" } : null),
     });
 
     await adapter.createRecord({
@@ -57,8 +56,7 @@ describe("createMemorySessionAdapter", () => {
           stored = sessions.map((session) => ({ ...session }));
         },
       },
-      resolveUser: ({ session }) =>
-        session.userId === "u1" ? { id: "u1", email: "a@example.com" } : null,
+      resolveUser: ({ session }) => (session.userId === "u1" ? { id: "u1", email: "a@example.com" } : null),
     });
 
     await expect(reloaded.resolveUser("hash-2")).resolves.toEqual({

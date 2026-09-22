@@ -19,10 +19,7 @@ describe("migrations", () => {
       join(migrationsDir, "20260101000001_create_contacts.up.sql"),
       `CREATE TABLE contacts (id INTEGER PRIMARY KEY, name TEXT NOT NULL);`,
     );
-    await writeFile(
-      join(migrationsDir, "20260101000001_create_contacts.down.sql"),
-      `DROP TABLE contacts;`,
-    );
+    await writeFile(join(migrationsDir, "20260101000001_create_contacts.down.sql"), `DROP TABLE contacts;`);
 
     testDb = await createTestDatabase({
       migrationsDirectory: undefined,

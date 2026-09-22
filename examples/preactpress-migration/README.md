@@ -4,17 +4,17 @@ Representative documentation site migrated from PreactPress patterns to **Otok +
 
 ## Features demonstrated
 
-| Feature | Implementation |
-|---------|----------------|
-| Docs navigation | `@kamod-ch/preactpress-compat` `mapThemeConfig()` + `DocsLayout` |
-| Markdown | `@kamod-ch/otok-content` build manifest |
-| Local search | Sidebar filter (full index via compat `buildPreactPressSearchIndex`) |
-| i18n | `@kamod-ch/otok-i18n` + `content/de/` |
-| Sitemap / robots | `@kamod-ch/otok-seo` |
-| RSS | `renderAtomFeed()` (wire in build hook) |
-| Dark mode | `@kamod-ch/otok-kamod` |
-| Custom theme | PreactPress-styled `DocsLayout` |
-| Versioning | Version switcher + `version` frontmatter |
+| Feature          | Implementation                                                       |
+| ---------------- | -------------------------------------------------------------------- |
+| Docs navigation  | `@kamod-ch/preactpress-compat` `mapThemeConfig()` + `DocsLayout`     |
+| Markdown         | `@kamod-ch/otok-content` build manifest                              |
+| Local search     | Sidebar filter (full index via compat `buildPreactPressSearchIndex`) |
+| i18n             | `@kamod-ch/otok-i18n` + `content/de/`                                |
+| Sitemap / robots | `@kamod-ch/otok-seo`                                                 |
+| RSS              | `renderAtomFeed()` (wire in build hook)                              |
+| Dark mode        | `@kamod-ch/otok-kamod`                                               |
+| Custom theme     | PreactPress-styled `DocsLayout`                                      |
+| Versioning       | Version switcher + `version` frontmatter                             |
 
 ## Commands
 

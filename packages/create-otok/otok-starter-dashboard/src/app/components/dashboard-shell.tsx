@@ -1,9 +1,4 @@
-import {
-  Avatar,
-  AvatarFallback,
-  Button,
-  Separator,
-} from "@kamod-ch/ui";
+import { Avatar, AvatarFallback, Button, Separator } from "@kamod-ch/ui";
 import type { ComponentChildren } from "preact";
 import { dashboardNavGroups, isNavItemActive } from "./dashboard-nav";
 import { dashboardUser } from "../data/dashboard";
@@ -48,13 +43,7 @@ function SidebarNav({ route }: { route: string }) {
   );
 }
 
-export function DashboardShell({
-  route,
-  title,
-  description,
-  toolbar,
-  children,
-}: DashboardShellProps) {
+export function DashboardShell({ route, title, description, toolbar, children }: DashboardShellProps) {
   return (
     <div class="flex min-h-screen bg-background">
       <aside class="hidden w-64 shrink-0 border-r bg-muted/20 lg:flex lg:flex-col">

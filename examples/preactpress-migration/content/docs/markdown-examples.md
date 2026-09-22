@@ -17,9 +17,9 @@ export function greet(name: string) {
 
 ## Tables
 
-| Syntax | Result |
-| ------ | ------ |
-| `# Title` | Heading |
+| Syntax      | Result        |
+| ----------- | ------------- |
+| `# Title`   | Heading       |
 | frontmatter | Page metadata |
 
 ## Lists

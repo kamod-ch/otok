@@ -2,21 +2,21 @@
   "name": "@kamod-ch/otok-i18n",
   "version": "3.0.0",
   "description": "Locale resolution, message catalogs, and i18n helpers for Otok apps.",
-  "license": "MIT",
   "homepage": "https://github.com/kamod-ch/otok/tree/main/packages/otok-i18n#readme",
   "bugs": {
     "url": "https://github.com/kamod-ch/otok/issues"
   },
+  "license": "MIT",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/kamod-ch/otok.git",
     "directory": "packages/otok-i18n"
   },
-  "type": "module",
   "files": [
     "dist",
     "README.md"
   ],
+  "type": "module",
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
@@ -47,20 +47,13 @@
       "default": "./dist/switcher.js"
     }
   },
+  "publishConfig": {
+    "access": "public"
+  },
   "scripts": {
     "build": "rm -rf dist && tsc -p tsconfig.build.json",
     "typecheck": "tsc -p tsconfig.json --noEmit",
     "test": "vitest run"
-  },
-  "peerDependencies": {
-    "@kamod-ch/otok": ">=0.6.1",
-    "hono": ">=4",
-    "preact": ">=10"
-  },
-  "peerDependenciesMeta": {
-    "preact": {
-      "optional": true
-    }
   },
   "devDependencies": {
     "@kamod-ch/otok": "workspace:*",
@@ -72,10 +65,17 @@
     "typescript": "~6.0.2",
     "vitest": "^4.1.2"
   },
+  "peerDependencies": {
+    "@kamod-ch/otok": ">=0.6.1",
+    "hono": ">=4",
+    "preact": ">=10"
+  },
+  "peerDependenciesMeta": {
+    "preact": {
+      "optional": true
+    }
+  },
   "engines": {
     "node": ">=20"
-  },
-  "publishConfig": {
-    "access": "public"
   }
 }

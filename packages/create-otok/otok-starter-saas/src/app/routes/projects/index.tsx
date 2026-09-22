@@ -58,9 +58,7 @@ export default function ProjectsPage({ data }: OtokPageProps<typeof loader>) {
                   <a href={`/projects/${project.id}`} class="font-medium hover:underline">
                     {project.title}
                   </a>
-                  {project.description ? (
-                    <p class="text-sm text-muted-foreground">{project.description}</p>
-                  ) : null}
+                  {project.description ? <p class="text-sm text-muted-foreground">{project.description}</p> : null}
                 </div>
                 <a href={`/projects/${project.id}/edit`} class="text-sm text-muted-foreground hover:text-foreground">
                   Edit

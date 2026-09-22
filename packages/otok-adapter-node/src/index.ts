@@ -1,11 +1,6 @@
 import fs from "node:fs";
 import path from "node:path";
-import {
-  createDualBuildVitePlugin,
-  defineAdapter,
-  type AdapterBuildContext,
-  type OtokAdapterServerEntry,
-} from "@kamod-ch/otok-config";
+import { createDualBuildVitePlugin, defineAdapter, type AdapterBuildContext } from "@kamod-ch/otok-config";
 
 export interface NodeAdapterOptions {
   /** Output root directory. Defaults to `dist`. */

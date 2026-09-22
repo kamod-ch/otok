@@ -3,6 +3,7 @@ title: Migration and Comparison
 section: Migration
 order: 70
 ---
+
 # Migration and Comparison
 
 ## Otok vs plain Hono
@@ -16,13 +17,16 @@ import { errorRoute, notFoundRoute, routes } from "virtual:otok-routes";
 
 const app = new Hono();
 app.get("/api/health", (c) => c.json({ ok: true }));
-app.get("*", createOtokHandler({
-  routes,
-  notFoundRoute,
-  errorRoute,
-  manifest: readOtokManifest(import.meta.url),
-  clientEntry: "src/client.ts",
-}));
+app.get(
+  "*",
+  createOtokHandler({
+    routes,
+    notFoundRoute,
+    errorRoute,
+    manifest: readOtokManifest(import.meta.url),
+    clientEntry: "src/client.ts",
+  }),
+);
 ```
 
 Use `createOtokApp()` when you want static assets, health, and SSR defaults; use `createOtokHandler()` when you own the Hono app.
@@ -35,12 +39,12 @@ HonoX is a broader full-stack framework. Otok intentionally stays smaller and fo
 
 Fresh popularized islands and progressive enhancement. Otok uses Hono, Preact, Vite, and Node as its Phase 1 reference runtime.
 
-| Fresh concept | Otok equivalent |
-| --- | --- |
-| `routes/` file routes | `src/app/routes/` |
-| Islands | `<Island>` + `src/app/islands/` |
-| Handlers | `loader` / `action` exports |
-| Deno Deploy | Node first; Edge/Workers via `createOtokWorkerApp()` and Cloudflare adapter |
+| Fresh concept         | Otok equivalent                                                             |
+| --------------------- | --------------------------------------------------------------------------- |
+| `routes/` file routes | `src/app/routes/`                                                           |
+| Islands               | `<Island>` + `src/app/islands/`                                             |
+| Handlers              | `loader` / `action` exports                                                 |
+| Deno Deploy           | Node first; Edge/Workers via `createOtokWorkerApp()` and Cloudflare adapter |
 
 ## Otok vs Astro
 
@@ -50,13 +54,13 @@ Astro is a mature content and island framework. Otok is smaller, Hono-first, and
 
 Remix-style progressive forms map closely:
 
-| Remix | Otok |
-| --- | --- |
-| `loader` | `loader` |
-| `action` | `action` |
-| `Form` | native `<form method="post">` + optional soft nav |
-| `useActionData` | `actionData` page prop |
-| client router | soft navigation (HTML swap), not SPA routing |
+| Remix           | Otok                                              |
+| --------------- | ------------------------------------------------- |
+| `loader`        | `loader`                                          |
+| `action`        | `action`                                          |
+| `Form`          | native `<form method="post">` + optional soft nav |
+| `useActionData` | `actionData` page prop                            |
+| client router   | soft navigation (HTML swap), not SPA routing      |
 
 ## Upgrade Guide
 

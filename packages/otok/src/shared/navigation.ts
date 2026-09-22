@@ -13,3 +13,12 @@ export const OTOK_HEAD_ATTR = "data-otok-head";
 export const OTOK_CANCEL_HYDRATION = "otok:cancel-hydration";
 
 export const OTOK_HISTORY_STATE_KEY = "otokSoftNav";
+
+/** Progressive form submission state (`idle` | `submitting`). */
+export const OTOK_FORM_STATE_ATTR = "data-otok-form-state";
+
+/** Inline alert region for progressive form network/abort errors. */
+export const OTOK_FORM_ERROR_ATTR = "data-otok-form-error";
+
+/** Retries reuse the same idempotency key for this form element. */
+export const OTOK_FORM_IDEMPOTENCY_ATTR = "data-otok-idempotency-key";

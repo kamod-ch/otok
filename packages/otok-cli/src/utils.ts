@@ -41,9 +41,7 @@ export async function runCommand(
       const actualCode = code ?? 1;
       if (actualCode !== 0 && !options.allowFailure) {
         reject(
-          new Error(
-            `${printable} failed with exit code ${actualCode}${stderr.trim() ? `\n${stderr.trim()}` : ""}`,
-          ),
+          new Error(`${printable} failed with exit code ${actualCode}${stderr.trim() ? `\n${stderr.trim()}` : ""}`),
         );
         return;
       }

@@ -35,7 +35,7 @@ export async function softNavigateTestPage(
   document.documentElement.innerHTML = fromHtml;
 
   const originalFetch = globalThis.fetch.bind(globalThis);
-  globalThis.fetch = async (input: RequestInfo | URL, init?: RequestInit) => {
+  globalThis.fetch = async (input: RequestInfo | URL, _init?: RequestInit) => {
     const url = typeof input === "string" ? input : input instanceof URL ? input.href : input.url;
     const parsed = new URL(url, "http://localhost");
     const response = await app.get(`${parsed.pathname}${parsed.search}`);

@@ -20,16 +20,27 @@ export async function action({ formData }: OtokActionContext) {
 export default function ImportExportPage() {
   return (
     <section class="space-y-4">
-      <a href="/crm" class="text-sm text-sky-600">← CRM</a>
+      <a href="/crm" class="text-sm text-sky-600">
+        ← CRM
+      </a>
       <h1 class="text-xl font-semibold">CSV Import / Export</h1>
       <form method="post" class="space-y-2">
         <input type="hidden" name="intent" value="import" />
-        <textarea name="csv" rows={6} class="w-full rounded border p-2 font-mono text-sm" placeholder="name,uid,canton,city,industry" />
-        <button type="submit" class="rounded bg-sky-600 px-3 py-1 text-white text-sm">Importieren</button>
+        <textarea
+          name="csv"
+          rows={6}
+          class="w-full rounded border p-2 font-mono text-sm"
+          placeholder="name,uid,canton,city,industry"
+        />
+        <button type="submit" class="rounded bg-sky-600 px-3 py-1 text-white text-sm">
+          Importieren
+        </button>
       </form>
       <form method="post">
         <input type="hidden" name="intent" value="export" />
-        <button type="submit" class="rounded border px-3 py-1 text-sm">Export CSV</button>
+        <button type="submit" class="rounded border px-3 py-1 text-sm">
+          Export CSV
+        </button>
       </form>
     </section>
   );

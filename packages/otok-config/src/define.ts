@@ -6,9 +6,7 @@ export function defineConfig(config: OtokUserConfig): OtokUserConfig {
 
 export interface DefinePluginSetup<TOptions> extends Omit<OtokPlugin<TOptions>, "__options"> {}
 
-export function definePlugin<TOptions = void>(
-  setup: DefinePluginSetup<TOptions>,
-): OtokPluginFactory<TOptions> {
+export function definePlugin<TOptions = void>(setup: DefinePluginSetup<TOptions>): OtokPluginFactory<TOptions> {
   const factory = ((options?: TOptions) => ({
     ...setup,
     __options: options as TOptions,

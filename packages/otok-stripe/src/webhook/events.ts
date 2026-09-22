@@ -50,9 +50,7 @@ export async function handleSubscriptionUpdated<TPlan extends string>(
   if (!plan) return null;
 
   const active =
-    subscription.status === "active" ||
-    subscription.status === "trialing" ||
-    subscription.status === "past_due";
+    subscription.status === "active" || subscription.status === "trialing" || subscription.status === "past_due";
 
   const freePlan = (adapter.freePlan ?? ("free" as TPlan)) as TPlan;
   const record: BillingRecord<TPlan> = {

@@ -12,19 +12,10 @@ import { fetchMicrosoftProfile } from "./profile/microsoft.js";
 import { createGitHubClient, githubScopes } from "./providers/github.js";
 import { createGitLabClient, gitlabScopes, type GitLabProviderConfig } from "./providers/gitlab.js";
 import { createGoogleClient, googleScopes } from "./providers/google.js";
-import {
-  createMicrosoftClient,
-  microsoftScopes,
-  type MicrosoftProviderConfig,
-} from "./providers/microsoft.js";
+import { createMicrosoftClient, microsoftScopes, type MicrosoftProviderConfig } from "./providers/microsoft.js";
 import type { OAuthProviderConfig } from "./providers/types.js";
 import { safeNextPath } from "./redirect.js";
-import {
-  DEFAULT_MAX_AGE_MS,
-  sealOAuthState,
-  unsealOAuthState,
-  type OAuthStatePayload,
-} from "./state.js";
+import { DEFAULT_MAX_AGE_MS, sealOAuthState, unsealOAuthState, type OAuthStatePayload } from "./state.js";
 
 const DEFAULT_BASE_PATH = "/auth";
 const DEFAULT_STATE_COOKIE = "otok_oauth_state";
@@ -48,7 +39,7 @@ export type OAuthFlowOptions<TUser> = {
   onError?: (c: Context, code: OAuthErrorCode) => Response | Promise<Response>;
 };
 
-export type OAuthFlow<TUser> = {
+export type OAuthFlow<_TUser> = {
   mount(app: Hono): void;
   authorize(provider: OAuthProviderId): (c: Context) => Promise<Response>;
   callback(provider: OAuthProviderId): (c: Context) => Promise<Response>;
@@ -62,7 +53,10 @@ function resolveSecure(c: Context, secure?: boolean | ((c: Context) => boolean))
 
 function joinPath(base: string, ...parts: string[]): string {
   const normalizedBase = base.endsWith("/") ? base.slice(0, -1) : base || "";
-  const suffix = parts.map((part) => part.replace(/^\/+|\/+$/g, "")).filter(Boolean).join("/");
+  const suffix = parts
+    .map((part) => part.replace(/^\/+|\/+$/g, ""))
+    .filter(Boolean)
+    .join("/");
   return `${normalizedBase}/${suffix}`.replace(/\/{2,}/g, "/");
 }
 
@@ -116,19 +110,11 @@ export function createOAuthFlow<TUser>(options: OAuthFlowOptions<TUser>): OAuthF
         } else if (provider === "google") {
           const client = createGoogleClient(config);
           codeVerifier = generateCodeVerifier();
-          authorizationURL = client.createAuthorizationURL(
-            state,
-            codeVerifier,
-            googleScopes(config),
-          );
+          authorizationURL = client.createAuthorizationURL(state, codeVerifier, googleScopes(config));
         } else if (provider === "microsoft") {
           const client = createMicrosoftClient(config as MicrosoftProviderConfig);
           codeVerifier = generateCodeVerifier();
-          authorizationURL = client.createAuthorizationURL(
-            state,
-            codeVerifier,
-            microsoftScopes(config),
-          );
+          authorizationURL = client.createAuthorizationURL(state, codeVerifier, microsoftScopes(config));
         } else if (provider === "gitlab") {
           const client = createGitLabClient(config as GitLabProviderConfig);
           authorizationURL = client.createAuthorizationURL(state, gitlabScopes(config));

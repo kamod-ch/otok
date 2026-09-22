@@ -20,13 +20,13 @@ export const rendering = defineRendering({
 
 ### Rendering modes
 
-| Mode | Behavior |
-|---|---|
-| `ssr` | Server-render on every request (default) |
-| `ssg` | Static generation at build time via adapter prerender |
-| `hybrid` | SSG for anonymous users, SSR when auth/session cookies are present |
-| `client` | HTML shell + client bundle; loader may still run for metadata |
-| `auto` | Chooses SSR vs SSG from prerender config and personalization signals |
+| Mode     | Behavior                                                             |
+| -------- | -------------------------------------------------------------------- |
+| `ssr`    | Server-render on every request (default)                             |
+| `ssg`    | Static generation at build time via adapter prerender                |
+| `hybrid` | SSG for anonymous users, SSR when auth/session cookies are present   |
+| `client` | HTML shell + client bundle; loader may still run for metadata        |
+| `auto`   | Chooses SSR vs SSG from prerender config and personalization signals |
 
 Layout routes can export their own `rendering` config; child routes inherit merged settings.
 
@@ -164,25 +164,25 @@ Risky configs log warnings: `CACHE_PUBLIC_WITH_AUTH`, `CACHE_SMAXAGE_PERSONALIZE
 
 ## Adapter responsibilities
 
-| Concern | Core | Adapter |
-|---|---|---|
-| Render plan resolution | yes | — |
-| Cache headers + provider API | yes | optional KV/Redis wiring |
-| SSR / streaming runtime | yes | capability flag |
-| Prerender execution | manifest | static adapter crawl + write HTML |
-| Asset CDN headers | helper | node / cloudflare / static |
+| Concern                      | Core     | Adapter                           |
+| ---------------------------- | -------- | --------------------------------- |
+| Render plan resolution       | yes      | —                                 |
+| Cache headers + provider API | yes      | optional KV/Redis wiring          |
+| SSR / streaming runtime      | yes      | capability flag                   |
+| Prerender execution          | manifest | static adapter crawl + write HTML |
+| Asset CDN headers            | helper   | node / cloudflare / static        |
 
 Capability checks: routes requiring `streaming` fail fast when the active adapter lacks support.
 
 ## Decision matrix
 
-| Need | Recommended mode |
-|---|---|
-| Real-time dashboards, auth-gated pages | `ssr`, `cache: false` or `private` |
-| Marketing pages, docs | `ssg` or `hybrid` with tags |
-| Mostly static site + logged-in area | `hybrid` |
-| Heavy client interactivity, minimal SEO | `client` |
-| Unknown auth split at build time | `auto` or `hybrid` |
+| Need                                    | Recommended mode                   |
+| --------------------------------------- | ---------------------------------- |
+| Real-time dashboards, auth-gated pages  | `ssr`, `cache: false` or `private` |
+| Marketing pages, docs                   | `ssg` or `hybrid` with tags        |
+| Mostly static site + logged-in area     | `hybrid`                           |
+| Heavy client interactivity, minimal SEO | `client`                           |
+| Unknown auth split at build time        | `auto` or `hybrid`                 |
 
 ## Benchmark example
 

@@ -66,6 +66,8 @@ describe("kit composition", () => {
     const kit = (await import("./kit.js")).default;
     expect(kit.kind).toBe("kit");
     expect(kit.migrations?.[0]?.id).toBe("20260803120000_crm_initial");
+    expect(kit.migrations?.[1]?.id).toBe("20260803140000_crm_extended");
+    expect(kit.version).toBe("0.2.0");
     expect(kit.modules?.pipelines).toBeTruthy();
   });
 });

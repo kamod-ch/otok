@@ -27,9 +27,7 @@ export interface KyselySessionAdapterOptions<TUser> {
   resolveUser: (tokenHash: string) => Promise<TUser | null> | TUser | null;
 }
 
-export function createKyselySessionAdapter<TUser>(
-  options: KyselySessionAdapterOptions<TUser>,
-): SessionAdapter<TUser> {
+export function createKyselySessionAdapter<TUser>(options: KyselySessionAdapterOptions<TUser>): SessionAdapter<TUser> {
   const { db, table, resolveUser } = options;
 
   return {
@@ -46,21 +44,13 @@ export function createKyselySessionAdapter<TUser>(
         .execute();
     },
     async revokeRecord(tokenHash) {
-      await db
-        .updateTable(table)
-        .set({ revokedAt: new Date() })
-        .where("tokenHash", "=", tokenHash)
-        .execute();
+      await db.updateTable(table).set({ revokedAt: new Date() }).where("tokenHash", "=", tokenHash).execute();
     },
     async resolveUser(tokenHash) {
       return resolveUser(tokenHash);
     },
     async touchRecord(tokenHash) {
-      await db
-        .updateTable(table)
-        .set({ lastSeenAt: new Date() })
-        .where("tokenHash", "=", tokenHash)
-        .execute();
+      await db.updateTable(table).set({ lastSeenAt: new Date() }).where("tokenHash", "=", tokenHash).execute();
     },
   };
 }

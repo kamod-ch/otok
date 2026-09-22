@@ -4,12 +4,7 @@ import { FORUM_PERMISSIONS, requireForumPermission } from "../permissions.js";
 export class ReactionService {
   constructor(private readonly storage: ForumStorageAdapter) {}
 
-  async add(
-    postId: string,
-    userId: string,
-    emoji: string,
-    permissions: ForumPermission[],
-  ): Promise<ForumReaction> {
+  async add(postId: string, userId: string, emoji: string, permissions: ForumPermission[]): Promise<ForumReaction> {
     requireForumPermission(permissions, FORUM_PERMISSIONS.POST_CREATE);
     return this.storage.reactions.upsert(postId, userId, emoji);
   }

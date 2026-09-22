@@ -51,16 +51,21 @@ import { getSession, requireUser, requireRole } from "@kamod-ch/otok-auth/regist
 
 This package remains **composition-friendly**. Database schema and user lookup stay in your app via a `SessionAdapter`.
 
-
 ```ts
 import { createSessionManager, type SessionAdapter } from "@kamod-ch/otok-auth/session";
 
 type User = { id: string; email: string };
 
 const adapter: SessionAdapter<User> = {
-  async createRecord(input) { /* persist tokenHash + userId */ },
-  async revokeRecord(tokenHash) { /* mark revoked */ },
-  async resolveUser(tokenHash) { /* return user or null */ },
+  async createRecord(input) {
+    /* persist tokenHash + userId */
+  },
+  async revokeRecord(tokenHash) {
+    /* mark revoked */
+  },
+  async resolveUser(tokenHash) {
+    /* return user or null */
+  },
 };
 
 const sessions = createSessionManager<User>(
@@ -162,10 +167,7 @@ Requires peer dependency `@node-rs/argon2` (Node / `nodejs_compat` Workers).
 When native Argon2 is unavailable, use PBKDF2 via Web Crypto:
 
 ```ts
-import {
-  hashPasswordWebCrypto,
-  verifyPasswordWebCrypto,
-} from "@kamod-ch/otok-auth/password/webcrypto";
+import { hashPasswordWebCrypto, verifyPasswordWebCrypto } from "@kamod-ch/otok-auth/password/webcrypto";
 
 const hash = await hashPasswordWebCrypto("secret");
 await verifyPasswordWebCrypto(hash, "secret");
@@ -175,16 +177,16 @@ Prefer Argon2 on Node. Do not mix hash formats without a migration path.
 
 ## Exports
 
-| Subpath | Purpose |
-|---------|---------|
-| `@kamod-ch/otok-auth` | Re-exports |
-| `@kamod-ch/otok-auth/session` | Session manager + types |
-| `@kamod-ch/otok-auth/middleware` | Auth, CSRF, tenant context, RBAC, `composeMiddleware` |
-| `@kamod-ch/otok-auth/csrf` | CSRF cookie/field helpers |
-| `@kamod-ch/otok-auth/password` | Argon2 hash/verify |
-| `@kamod-ch/otok-auth/password/webcrypto` | Edge-safe PBKDF2 hash/verify |
-| `@kamod-ch/otok-auth/adapters/memory` | In-memory/file-backed session adapter |
-| `@kamod-ch/otok-auth/adapters/kysely` | Kysely session CRUD adapter |
+| Subpath                                  | Purpose                                               |
+| ---------------------------------------- | ----------------------------------------------------- |
+| `@kamod-ch/otok-auth`                    | Re-exports                                            |
+| `@kamod-ch/otok-auth/session`            | Session manager + types                               |
+| `@kamod-ch/otok-auth/middleware`         | Auth, CSRF, tenant context, RBAC, `composeMiddleware` |
+| `@kamod-ch/otok-auth/csrf`               | CSRF cookie/field helpers                             |
+| `@kamod-ch/otok-auth/password`           | Argon2 hash/verify                                    |
+| `@kamod-ch/otok-auth/password/webcrypto` | Edge-safe PBKDF2 hash/verify                          |
+| `@kamod-ch/otok-auth/adapters/memory`    | In-memory/file-backed session adapter                 |
+| `@kamod-ch/otok-auth/adapters/kysely`    | Kysely session CRUD adapter                           |
 
 ## Memory session adapter
 

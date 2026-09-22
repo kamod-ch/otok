@@ -11,6 +11,7 @@
 /// <reference path="./src/app/routes/deferred-demo.d.ts" />
 /// <reference path="./src/app/routes/demo.d.ts" />
 /// <reference path="./src/app/routes/docs/[...slug].d.ts" />
+/// <reference path="./src/app/routes/hydration-lifecycle.d.ts" />
 /// <reference path="./src/app/routes/projects.d.ts" />
 /// <reference path="./src/app/routes/strategies.d.ts" />
 /// <reference path="./src/app/routes/users/[id].d.ts" />

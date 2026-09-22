@@ -20,9 +20,15 @@ export interface MockDatabase {
 export type MockAuthHandlers = {
   getSession?: () => Promise<{ data: { session: null }; error: null }>;
   getClaims?: () => Promise<{ data: { claims: Record<string, unknown> } | null; error: null | { message: string } }>;
-  getUser?: () => Promise<{ data: { user: { id: string; email?: string } | null }; error: null | { message: string; status?: number } }>;
+  getUser?: () => Promise<{
+    data: { user: { id: string; email?: string } | null };
+    error: null | { message: string; status?: number };
+  }>;
   exchangeCodeForSession?: (code: string) => Promise<{ error: null | { message: string; code?: string } }>;
-  verifyOtp?: (input: { type: string; token_hash: string }) => Promise<{ error: null | { message: string; code?: string } }>;
+  verifyOtp?: (input: {
+    type: string;
+    token_hash: string;
+  }) => Promise<{ error: null | { message: string; code?: string } }>;
   signOut?: () => Promise<{ error: null | { message: string } }>;
 };
 
@@ -39,8 +45,7 @@ export function createMockSupabaseClient(handlers: MockAuthHandlers = {}) {
       getUser:
         handlers.getUser ??
         (async () => ({ data: { user: { id: "user-1", email: "user@example.com" } }, error: null })),
-      exchangeCodeForSession:
-        handlers.exchangeCodeForSession ?? (async () => ({ error: null })),
+      exchangeCodeForSession: handlers.exchangeCodeForSession ?? (async () => ({ error: null })),
       verifyOtp: handlers.verifyOtp ?? (async () => ({ error: null })),
       signOut: handlers.signOut ?? (async () => ({ error: null })),
     },

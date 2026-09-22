@@ -30,11 +30,7 @@ export interface PageHtmlOptions {
 }
 
 function escapeHtml(value: string): string {
-  return value
-    .replaceAll("&", "&amp;")
-    .replaceAll("<", "&lt;")
-    .replaceAll(">", "&gt;")
-    .replaceAll('"', "&quot;");
+  return value.replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll('"', "&quot;");
 }
 
 function escapeScriptJson(value: string): string {
@@ -169,19 +165,10 @@ export function pageHtml({
   return `${shell}${body}${footer}`;
 }
 
-export interface PageHtmlStreamOptions
-  extends Pick<
-    PageHtmlOptions,
-    | "head"
-    | "manifest"
-    | "clientEntry"
-    | "devClientEntry"
-    | "devStylesheets"
-    | "base"
-    | "client"
-    | "darkMode"
-    | "theme"
-  > {
+export interface PageHtmlStreamOptions extends Pick<
+  PageHtmlOptions,
+  "head" | "manifest" | "clientEntry" | "devClientEntry" | "devStylesheets" | "base" | "client" | "darkMode" | "theme"
+> {
   bodyStream: ReadableStream<Uint8Array>;
   /** Invoked after the body stream completes so island discovery can finish. */
   getIslands: () => string[];
@@ -234,19 +221,10 @@ export interface DeferredBodySlot {
   render: (value: unknown) => string;
 }
 
-export interface DeferredHtmlStreamOptions
-  extends Pick<
-    PageHtmlOptions,
-    | "head"
-    | "manifest"
-    | "clientEntry"
-    | "devClientEntry"
-    | "devStylesheets"
-    | "base"
-    | "client"
-    | "darkMode"
-    | "theme"
-  > {
+export interface DeferredHtmlStreamOptions extends Pick<
+  PageHtmlOptions,
+  "head" | "manifest" | "clientEntry" | "devClientEntry" | "devStylesheets" | "base" | "client" | "darkMode" | "theme"
+> {
   /** Critical HTML segments surrounding deferred markers (length = slots.length + 1). */
   segments: string[];
   slots: DeferredBodySlot[];
@@ -388,18 +366,16 @@ function pageFooter({
   devClientEntry = "/src/client.ts",
   base = "/",
   client = false,
-}: Pick<
-  PageHtmlOptions,
-  "islands" | "manifest" | "clientEntry" | "devClientEntry" | "base" | "client"
->): string {
+}: Pick<PageHtmlOptions, "islands" | "manifest" | "clientEntry" | "devClientEntry" | "base" | "client">): string {
   const entry = findEntry(manifest, clientEntry);
   const needsClient = client || islands.length > 0;
   const needsDevClientEntry = !manifest;
-  const clientScript = needsClient || needsDevClientEntry
-    ? entry?.file
-      ? `<script type="module" src="${escapeHtml(publicPath(entry.file, base))}"></script>`
-      : `<script type="module" src="${escapeHtml(devClientEntry)}"></script>`
-    : "";
+  const clientScript =
+    needsClient || needsDevClientEntry
+      ? entry?.file
+        ? `<script type="module" src="${escapeHtml(publicPath(entry.file, base))}"></script>`
+        : `<script type="module" src="${escapeHtml(devClientEntry)}"></script>`
+      : "";
 
   return `
     ${clientScript}

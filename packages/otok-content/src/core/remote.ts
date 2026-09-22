@@ -14,9 +14,7 @@ export class MemoryRemoteSource implements RemoteContentSource {
 
   async list(collection: string): Promise<RemoteContentFile[]> {
     const prefix = `${collection}/`;
-    return [...this.files.entries()]
-      .filter(([path]) => path.startsWith(prefix))
-      .map(([, file]) => file);
+    return [...this.files.entries()].filter(([path]) => path.startsWith(prefix)).map(([, file]) => file);
   }
 }
 

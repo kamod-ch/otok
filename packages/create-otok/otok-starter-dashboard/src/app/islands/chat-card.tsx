@@ -1,13 +1,4 @@
-import {
-  Avatar,
-  AvatarFallback,
-  Button,
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-  Input,
-} from "@kamod-ch/ui";
+import { Avatar, AvatarFallback, Button, Card, CardContent, CardHeader, CardTitle, Input } from "@kamod-ch/ui";
 import { useState } from "preact/hooks";
 import type { ChatMessage } from "../data/dashboard";
 
@@ -49,10 +40,7 @@ export default function ChatCard({
       <CardContent class="space-y-4">
         <div class="max-h-48 space-y-3 overflow-y-auto rounded-md border bg-muted/20 p-3">
           {messages.map((message, index) => (
-            <div
-              key={`${message.author}-${index}`}
-              class={`text-sm ${message.isUser ? "text-end" : "text-start"}`}
-            >
+            <div key={`${message.author}-${index}`} class={`text-sm ${message.isUser ? "text-end" : "text-start"}`}>
               <p
                 class={`inline-block rounded-lg px-3 py-2 ${
                   message.isUser ? "bg-primary text-primary-foreground" : "bg-muted"

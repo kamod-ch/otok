@@ -1,7 +1,30 @@
-import type { CacheConfig, CacheEntry, CacheKeyInput, CacheLookupResult, CacheProvider } from "./types.js";
-import { isFresh, isStale, lookupEntry } from "./lookup.js";
-
+import type { CacheConfig, CacheEntry, CacheLookupResult, CacheProvider } from "./types.js";
+import { lookupEntry } from "./lookup.js";
 export { isFresh, isStale, lookupEntry } from "./lookup.js";
+export {
+  buildCacheKey,
+  buildCacheKeyFromContext,
+  allowsServerHtmlCache,
+  encodeQueryEntries,
+  resolveRequestVaryHeaders,
+  CACHE_KEY_VERSION,
+} from "./key.js";
+export {
+  getOtokCacheScope,
+  resolveOtokCacheScope,
+  setOtokCacheScope,
+  OTOK_CACHE_SCOPE,
+  type OtokCacheScope,
+} from "./scope.js";
+export { isPersonalizedRequest } from "./personalization.js";
+export type {
+  CacheConfig,
+  CacheEntry,
+  CacheKeyInput,
+  CacheLookupResult,
+  CacheProvider,
+  RevalidationResult,
+} from "./types.js";
 export {
   createRedisRestClient,
   EdgeKvCacheProvider,
@@ -11,27 +34,6 @@ export {
   type RedisCacheProviderOptions,
   type RedisClient,
 } from "./providers.js";
-
-export function buildCacheKey(input: CacheKeyInput): string {
-  const parts = [
-    input.method.toUpperCase(),
-    input.pathname,
-    input.private ? "private" : "public",
-    input.locale ?? "-",
-    input.tenant ?? "-",
-  ];
-
-  const paramKeys = Object.keys(input.params).sort();
-  for (const key of paramKeys) parts.push(`${key}=${input.params[key]}`);
-
-  if (input.varyHeaders) {
-    for (const [key, value] of Object.entries(input.varyHeaders).sort(([a], [b]) => a.localeCompare(b))) {
-      if (value !== undefined) parts.push(`${key}:${value}`);
-    }
-  }
-
-  return parts.join("|");
-}
 
 export function buildCacheControlHeader(config: CacheConfig): string {
   if (config.noStore) return "no-store";
@@ -75,16 +77,49 @@ export async function withCacheStampedeProtection<T>(key: string, factory: () =>
   return promise;
 }
 
+export interface MemoryCacheProviderOptions {
+  /** Maximum number of entries retained after pruning expired keys. */
+  maxEntries?: number;
+  now?: () => number;
+}
+
 export class MemoryCacheProvider implements CacheProvider {
   readonly name = "memory";
   private store = new Map<string, CacheEntry>();
+  private readonly maxEntries: number;
+  private readonly now: () => number;
+
+  constructor(options: MemoryCacheProviderOptions = {}) {
+    this.maxEntries = Math.max(1, options.maxEntries ?? 512);
+    this.now = options.now ?? (() => Date.now());
+  }
+
+  private pruneExpired(): void {
+    const now = this.now();
+    for (const [key, entry] of this.store) {
+      if (lookupEntry(entry, now).hit === "miss") this.store.delete(key);
+    }
+  }
+
+  private evictOverflow(): void {
+    while (this.store.size > this.maxEntries) {
+      const oldest = this.store.keys().next().value as string | undefined;
+      if (oldest === undefined) break;
+      this.store.delete(oldest);
+    }
+  }
 
   async get(key: string): Promise<CacheLookupResult | undefined> {
-    return lookupEntry(this.store.get(key));
+    const entry = this.store.get(key);
+    const lookup = lookupEntry(entry, this.now());
+    if (entry && lookup.hit === "miss") this.store.delete(key);
+    return lookup;
   }
 
   async set(key: string, entry: CacheEntry): Promise<void> {
+    this.pruneExpired();
     this.store.set(key, entry);
+    this.evictOverflow();
   }
 
   async delete(key: string): Promise<boolean> {
@@ -131,5 +166,3 @@ export async function revalidateTag(tag: string, provider = getCacheProvider()):
 export async function revalidatePath(path: string, provider = getCacheProvider()): Promise<number> {
   return provider.deleteByPath(path);
 }
-
-export type { CacheConfig, CacheEntry, CacheKeyInput, CacheLookupResult, CacheProvider, RevalidationResult } from "./types.js";

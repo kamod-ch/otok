@@ -47,9 +47,10 @@ export function useAction<TAction = unknown, TLoader = unknown>(
   descriptor?: string | ActionDescriptor,
   options: UseActionOptions = {},
 ): ActionHandle<TAction, TLoader> {
-  const actionPath = typeof descriptor === "string"
-    ? descriptor
-    : descriptor?.action ?? options.action ?? (typeof window !== "undefined" ? window.location.pathname : "/");
+  const actionPath =
+    typeof descriptor === "string"
+      ? descriptor
+      : (descriptor?.action ?? options.action ?? (typeof window !== "undefined" ? window.location.pathname : "/"));
   const method = typeof descriptor === "object" ? descriptor.method : options.method;
   const key = options.key ?? `action:${actionPath}:${method ?? "POST"}`;
 
@@ -96,20 +97,17 @@ export interface FetcherHandle<TAction = unknown, TLoader = unknown> {
   Form: (props: JSX.HTMLAttributes<HTMLFormElement>) => JSX.Element;
 }
 
-export function useFetcher<TAction = unknown, TLoader = unknown>(
-  action?: string,
-): FetcherHandle<TAction, TLoader> {
+export function useFetcher<TAction = unknown, TLoader = unknown>(action?: string): FetcherHandle<TAction, TLoader> {
   const fetcherKey = useMemo(() => `fetcher:${++fetcherCounter}`, []);
   const actionPath = action ?? (typeof window !== "undefined" ? window.location.pathname : "/");
   const entry = useMutationSnapshot(fetcherKey);
 
   const submit = useCallback(
     async (input: FormData | Record<string, unknown> = {}, submitOptions: MutationSubmitOptions = {}) => {
-      return submitMutation<TAction, TLoader>(
-        { fetcherKey, action: actionPath, registry: globalRegistry },
-        input,
-        { navigate: false, ...submitOptions },
-      );
+      return submitMutation<TAction, TLoader>({ fetcherKey, action: actionPath, registry: globalRegistry }, input, {
+        navigate: false,
+        ...submitOptions,
+      });
     },
     [actionPath, fetcherKey],
   );
@@ -120,7 +118,7 @@ export function useFetcher<TAction = unknown, TLoader = unknown>(
   );
 
   const formProps: FetcherFormProps = useMemo(() => {
-    const csrf = readCsrfToken();
+    const _csrf = readCsrfToken();
     return {
       method: "post",
       action: actionPath,

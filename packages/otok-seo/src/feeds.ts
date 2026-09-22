@@ -32,7 +32,9 @@ export async function renderRssFeed(options: RenderFeedOptions): Promise<string>
 
   const itemXml = items
     .map((item) => {
-      const pubDate = item.publishedAt ? `\n      <pubDate>${escapeXml(new Date(item.publishedAt).toUTCString())}</pubDate>` : "";
+      const pubDate = item.publishedAt
+        ? `\n      <pubDate>${escapeXml(new Date(item.publishedAt).toUTCString())}</pubDate>`
+        : "";
       const description = item.description ? `\n      <description>${escapeXml(item.description)}</description>` : "";
       const author = item.author ? `\n      <author>${escapeXml(item.author)}</author>` : "";
       return `    <item>

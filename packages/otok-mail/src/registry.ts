@@ -13,9 +13,7 @@ export function registerMailRuntime(value: MailRuntime): void {
 
 export function getMailRuntime(): MailRuntime {
   if (!runtime) {
-    throw new Error(
-      "otok-mail: no mail runtime registered. Add mail() to otok.config.ts plugins.",
-    );
+    throw new Error("otok-mail: no mail runtime registered. Add mail() to otok.config.ts plugins.");
   }
   return runtime;
 }

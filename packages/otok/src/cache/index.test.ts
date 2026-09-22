@@ -1,4 +1,4 @@
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 import {
   buildCacheControlHeader,
   buildCacheKey,
@@ -26,19 +26,21 @@ describe("cache headers", () => {
 });
 
 describe("cache keys", () => {
-  it("separates locales and tenants", () => {
+  it("separates scope and query", () => {
     const base = buildCacheKey({
       method: "GET",
-      pathname: "/products",
-      params: {},
-      private: false,
+      routeId: "products",
+      requestPath: "/products",
+      query: [],
+      shared: true,
     });
     const localized = buildCacheKey({
       method: "GET",
-      pathname: "/products",
-      params: {},
-      locale: "de",
-      private: false,
+      routeId: "products",
+      requestPath: "/products",
+      query: [],
+      shared: false,
+      userId: "u1",
     });
     expect(base).not.toBe(localized);
   });
@@ -47,7 +49,13 @@ describe("cache keys", () => {
 describe("cache provider", () => {
   it("supports hit, miss, and tag revalidation", async () => {
     const provider = new MemoryCacheProvider();
-    const key = "GET|/about|public|-|-";
+    const key = buildCacheKey({
+      method: "GET",
+      routeId: "about",
+      requestPath: "/about",
+      query: [],
+      shared: true,
+    });
     await provider.set(key, {
       value: "<html></html>",
       tags: ["pages"],
@@ -75,6 +83,25 @@ describe("cache provider", () => {
       private: false,
     });
     expect(await revalidatePath("/contact", provider)).toBe(1);
+  });
+
+  it("drops expired entries on read", async () => {
+    vi.useFakeTimers();
+    vi.setSystemTime(0);
+    const provider = new MemoryCacheProvider({ now: () => Date.now() });
+    const key = "k";
+    await provider.set(key, {
+      value: "html",
+      tags: [],
+      path: "/",
+      createdAt: Date.now(),
+      maxAge: 1,
+      staleWhileRevalidate: 0,
+      private: false,
+    });
+    vi.advanceTimersByTime(2000);
+    expect((await provider.get(key))?.hit).toBe("miss");
+    vi.useRealTimers();
   });
 });
 

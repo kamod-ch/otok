@@ -1,9 +1,4 @@
-import type {
-  PublishInput,
-  RealtimeMessage,
-  RealtimeProvider,
-  RealtimeProviderCapabilities,
-} from "../types.js";
+import type { PublishInput, RealtimeMessage, RealtimeProvider, RealtimeProviderCapabilities } from "../types.js";
 
 export interface RedisRealtimeConfig {
   url: string;
@@ -52,16 +47,18 @@ export function createRedisProvider(
     subscribe(channel, room, handler) {
       let unsubscribe: (() => void) | undefined;
       let active = true;
-      void adapter.subscribe(roomChannel(channel, room), (payload) => {
-        if (!active) return;
-        try {
-          handler(JSON.parse(payload) as RealtimeMessage);
-        } catch {
-          /* ignore malformed */
-        }
-      }).then((fn) => {
-        unsubscribe = fn;
-      });
+      void adapter
+        .subscribe(roomChannel(channel, room), (payload) => {
+          if (!active) return;
+          try {
+            handler(JSON.parse(payload) as RealtimeMessage);
+          } catch {
+            /* ignore malformed */
+          }
+        })
+        .then((fn) => {
+          unsubscribe = fn;
+        });
       return () => {
         active = false;
         unsubscribe?.();

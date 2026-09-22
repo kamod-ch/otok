@@ -9,9 +9,7 @@ export interface DefineChannelOptions<TEvent> {
 }
 
 /** Declare a typed realtime channel with authorization. */
-export function defineChannel<TEvent = unknown>(
-  options: DefineChannelOptions<TEvent>,
-): ChannelDefinition<TEvent> {
+export function defineChannel<TEvent = unknown>(options: DefineChannelOptions<TEvent>): ChannelDefinition<TEvent> {
   if (!options.name.trim()) {
     throw new Error("otok-realtime: defineChannel requires a non-empty name");
   }
@@ -25,9 +23,7 @@ export function defineChannel<TEvent = unknown>(
 }
 
 export function isChannelDefinition(value: unknown): value is ChannelDefinition {
-  return Boolean(
-    value && typeof value === "object" && (value as ChannelDefinition).__kind === "otok-realtime-channel",
-  );
+  return Boolean(value && typeof value === "object" && (value as ChannelDefinition).__kind === "otok-realtime-channel");
 }
 
 export { z } from "zod";

@@ -1,4 +1,5 @@
 import type { CacheConfig } from "../cache/types.js";
+import type { OtokCacheScope } from "../cache/scope.js";
 
 /** Route rendering mode. */
 export type RenderMode = "ssr" | "ssg" | "hybrid" | "client" | "auto";
@@ -10,7 +11,9 @@ export interface PrerenderConfig {
   /** Additional paths to prerender beyond the route's static pattern. */
   paths?: string[] | (() => string[] | Promise<string[]>);
   /** Dynamic param values for prerendering parameterized routes. */
-  params?: Record<string, string | string[]> | (() => Record<string, string | string[]> | Promise<Record<string, string | string[]>>);
+  params?:
+    | Record<string, string | string[]>
+    | (() => Record<string, string | string[]> | Promise<Record<string, string | string[]>>);
 }
 
 export interface RenderingConfig {
@@ -42,13 +45,18 @@ export interface RenderPlan {
 
 export interface RenderContext {
   method: string;
+  /** Matched route pattern (e.g. `/products/:id`). */
   pathname: string;
+  routeId: string;
+  /** Request pathname without query. */
+  requestPath: string;
+  query: ReadonlyArray<readonly [string, string]>;
   params: Record<string, string>;
   cookies: string | null;
   hasAuth: boolean;
   hasSession: boolean;
-  locale?: string;
-  tenant?: string;
+  /** Verified scope for per-user / per-tenant HTML cache entries. */
+  cacheScope?: OtokCacheScope;
   adapterCapabilities?: ReadonlySet<string>;
   globalStreaming?: boolean;
 }

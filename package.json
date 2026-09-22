@@ -2,23 +2,30 @@
   "name": "otok-workspace",
   "version": "0.1.0",
   "private": true,
-  "type": "module",
   "author": "Klaus Zahiragic <watzak>",
+  "type": "module",
   "scripts": {
     "build": "pnpm -r --filter './packages/*' build && pnpm --filter playground build && pnpm --filter docs build",
     "check:examples": "node ./scripts/check-examples.mjs",
     "check:scaffold": "node ./scripts/sync-scaffold.mjs --check",
     "changeset": "pnpm dlx @changesets/cli",
     "dev": "pnpm --filter playground dev",
-    "format:check": "node ./scripts/format-check.mjs",
-    "format": "node ./scripts/format-check.mjs",
-    "lint": "node ./scripts/lint.mjs",
+    "format:check": "oxfmt --check .",
+    "format": "oxfmt --write .",
+    "format:whitespace": "node ./scripts/format-check.mjs",
+    "lint": "pnpm lint:oxlint && pnpm lint:policy",
+    "lint:oxlint": "oxlint .",
+    "lint:fix": "oxlint --fix .",
+    "lint:policy": "node ./scripts/lint.mjs",
     "metadata:check": "node ./scripts/verify-package-metadata.mjs",
     "pack:check": "pnpm metadata:check && pnpm -r --filter './packages/*' build && pnpm -r --filter './packages/*' exec npm pack --dry-run",
     "preview": "pnpm --filter playground preview",
-    "release": "pnpm release:check && pnpm release:publish",
-    "release:check": "pnpm check && pnpm test:e2e && pnpm pack:check",
-    "release:publish": "pnpm dlx @changesets/cli publish",
+    "release:check": "node ./scripts/release-check.mjs",
+    "release:publish": "node ./scripts/publish-packages.mjs",
+    "release": "node ./scripts/release.mjs patch",
+    "release:minor": "node ./scripts/release.mjs minor",
+    "release:major": "node ./scripts/release.mjs major",
+    "release:dry": "node ./scripts/release.mjs patch --dry",
     "smoke:node": "node ./scripts/production-smoke.mjs",
     "smoke:cloudflare": "node ./scripts/smoke-cloudflare.mjs",
     "sync:scaffold": "node ./scripts/sync-scaffold.mjs",
@@ -28,23 +35,25 @@
     "version-packages": "pnpm dlx @changesets/cli version",
     "check": "pnpm check:scaffold && pnpm lint && pnpm format:check && pnpm typecheck && pnpm test && pnpm build",
     "api:check": "node ./scripts/check-api-stability.mjs",
+    "api:snapshot:check": "node ./scripts/check-api-snapshot.mjs",
+    "api:snapshot:update": "node ./scripts/update-api-snapshot.mjs",
     "budget:check": "node ./scripts/check-budgets.mjs",
+    "budget:measure": "node ./scripts/measure-bundle-budgets.mjs",
+    "check:pack-consumer": "node ./scripts/check-pack-consumer.mjs",
+    "test:gates": "node --test scripts/check-gates.test.mjs",
     "bench:otok": "node ./benchmarks/run-otok.mjs",
     "bench:compare": "node ./benchmarks/bench-compare.mjs",
     "reproducible:check": "node ./scripts/reproducible-check.mjs"
   },
   "devDependencies": {
     "@types/node": "^24.12.2",
+    "oxfmt": "0.70.0",
+    "oxlint": "1.85.0",
     "typescript": "~6.0.2",
     "vitest": "^4.1.2"
   },
   "engines": {
     "node": ">=20"
   },
-  "packageManager": "pnpm@10.12.4",
-  "pnpm": {
-    "onlyBuiltDependencies": [
-      "better-sqlite3"
-    ]
-  }
+  "packageManager": "pnpm@12.5.1+sha512.e3f305bc784a2bc89f5ad3b6138889470fae8d2af5f36b61216ec91c2c3d64089775f9de38aac331044ea40f245cb0d5666392dfdf65824e1907ef6a2c62de5f"
 }

@@ -1,5 +1,5 @@
 import type { ForumCategory, ForumPageProps, ForumPost, ForumRuntimeContext, ForumThread } from "../types.js";
-import { EmptyState, ForumError, Pagination, TagList, UserAvatar } from "./primitives.js";
+import { EmptyState, Pagination, TagList, UserAvatar } from "./primitives.js";
 
 export function ForumLayout({ data, children }: ForumPageProps & { children?: preact.ComponentChildren }) {
   const forum = data.forum as ForumRuntimeContext;
@@ -9,9 +9,7 @@ export function ForumLayout({ data, children }: ForumPageProps & { children?: pr
         <a href={forum.basePath}>{forum.t("forum.title")}</a>
         <a href={`${forum.basePath}/tags`}>{forum.t("forum.tags")}</a>
         <a href={`${forum.basePath}/search`}>{forum.t("forum.search")}</a>
-        {forum.can("thread:create") ? (
-          <a href={`${forum.basePath}/new`}>{forum.t("forum.newThread")}</a>
-        ) : null}
+        {forum.can("thread:create") ? <a href={`${forum.basePath}/new`}>{forum.t("forum.newThread")}</a> : null}
         {forum.can("moderation:view") ? (
           <a href={`${forum.basePath}/moderation`}>{forum.t("forum.moderation")}</a>
         ) : null}
@@ -127,7 +125,10 @@ export function ThreadHeader({
           {forum.t("forum.thread.closed")}
         </p>
       ) : null}
-      <TagList tags={(thread as ForumThread & { tags?: Array<{ slug: string; name: string }> }).tags ?? []} basePath={forum.basePath} />
+      <TagList
+        tags={(thread as ForumThread & { tags?: Array<{ slug: string; name: string }> }).tags ?? []}
+        basePath={forum.basePath}
+      />
     </header>
   );
 }
@@ -161,7 +162,10 @@ export function Post({
         <UserAvatar user={author ? { id: post.authorId, displayName: author.displayName, roles: [] } : undefined} />
         <div>
           <strong>{author?.displayName ?? post.authorId}</strong>
-          <time dateTime={post.createdAt} style={{ display: "block", fontSize: "0.75rem", color: "var(--forum-muted)" }}>
+          <time
+            dateTime={post.createdAt}
+            style={{ display: "block", fontSize: "0.75rem", color: "var(--forum-muted)" }}
+          >
             {new Date(post.createdAt).toLocaleString()}
           </time>
         </div>
@@ -179,7 +183,9 @@ export function PostActions({ post, forum }: { post: ForumPost; forum: ForumRunt
         <a href={`${forum.basePath}/report?targetType=post&targetId=${post.id}`}>{forum.t("forum.report")}</a>
       ) : null}
       {forum.user?.id === post.authorId && forum.can("post:update-own") ? (
-        <a href={`${forum.basePath}/t/${(forum as unknown as { threadSlug?: string }).threadSlug ?? ""}/edit?postId=${post.id}`}>
+        <a
+          href={`${forum.basePath}/t/${(forum as unknown as { threadSlug?: string }).threadSlug ?? ""}/edit?postId=${post.id}`}
+        >
           {forum.t("forum.edit")}
         </a>
       ) : null}
@@ -202,9 +208,7 @@ export function PostList({ data }: ForumPageProps) {
           <Post key={p.id} post={p} author={authors[p.authorId]} forum={forum} />
         ))}
       </div>
-      {thread.status !== "closed" && forum.can("post:create") ? (
-        <PostComposer data={data} />
-      ) : null}
+      {thread.status !== "closed" && forum.can("post:create") ? <PostComposer data={data} /> : null}
     </ForumLayout>
   );
 }
@@ -232,7 +236,13 @@ export function PostComposer({ data }: ForumPageProps) {
         rows={5}
         required
         placeholder={forum.t("forum.compose.placeholder")}
-        style={{ width: "100%", marginTop: "0.5rem", borderRadius: "var(--forum-radius)", border: "1px solid var(--forum-border)", padding: "0.5rem" }}
+        style={{
+          width: "100%",
+          marginTop: "0.5rem",
+          borderRadius: "var(--forum-radius)",
+          border: "1px solid var(--forum-border)",
+          padding: "0.5rem",
+        }}
       />
       {actionData?.fieldErrors?.content?.map((e) => (
         <p key={e} class="forum-error">
@@ -310,14 +320,22 @@ export function ModerationQueue({ data }: ForumPageProps) {
 export function NewThreadForm({ data }: ForumPageProps) {
   const forum = data.forum as ForumRuntimeContext;
   const categories = (data.categories as ForumCategory[]) ?? [];
-  const actionData = data.actionData as { fieldErrors?: Record<string, string[]>; values?: Record<string, string> } | undefined;
+  const actionData = data.actionData as
+    | { fieldErrors?: Record<string, string[]>; values?: Record<string, string> }
+    | undefined;
   return (
     <ForumLayout data={data}>
       <h1>{forum.t("forum.thread.create")}</h1>
       <form method="post" class="forum-card">
         <input type="hidden" name="intent" value="create-thread" />
         <label htmlFor="categoryId">{forum.t("forum.thread.category")}</label>
-        <select id="categoryId" name="categoryId" required defaultValue={actionData?.values?.categoryId} style={{ display: "block", width: "100%", margin: "0.5rem 0 1rem" }}>
+        <select
+          id="categoryId"
+          name="categoryId"
+          required
+          defaultValue={actionData?.values?.categoryId}
+          style={{ display: "block", width: "100%", margin: "0.5rem 0 1rem" }}
+        >
           {categories.map((c) => (
             <option key={c.id} value={c.id}>
               {c.name}
@@ -325,11 +343,29 @@ export function NewThreadForm({ data }: ForumPageProps) {
           ))}
         </select>
         <label htmlFor="title">{forum.t("forum.thread.title")}</label>
-        <input id="title" name="title" required defaultValue={actionData?.values?.title} style={{ display: "block", width: "100%", margin: "0.5rem 0 1rem", padding: "0.5rem" }} />
+        <input
+          id="title"
+          name="title"
+          required
+          defaultValue={actionData?.values?.title}
+          style={{ display: "block", width: "100%", margin: "0.5rem 0 1rem", padding: "0.5rem" }}
+        />
         <label htmlFor="content">{forum.t("forum.compose.placeholder")}</label>
-        <textarea id="content" name="content" rows={8} required defaultValue={actionData?.values?.content} style={{ width: "100%", marginTop: "0.5rem" }} />
+        <textarea
+          id="content"
+          name="content"
+          rows={8}
+          required
+          defaultValue={actionData?.values?.content}
+          style={{ width: "100%", marginTop: "0.5rem" }}
+        />
         <label htmlFor="tags">{forum.t("forum.thread.tags")}</label>
-        <input id="tags" name="tags" defaultValue={actionData?.values?.tags} style={{ display: "block", width: "100%", margin: "0.5rem 0 1rem", padding: "0.5rem" }} />
+        <input
+          id="tags"
+          name="tags"
+          defaultValue={actionData?.values?.tags}
+          style={{ display: "block", width: "100%", margin: "0.5rem 0 1rem", padding: "0.5rem" }}
+        />
         {actionData?.fieldErrors &&
           Object.entries(actionData.fieldErrors).map(([k, errs]) =>
             errs.map((e) => (
@@ -338,7 +374,9 @@ export function NewThreadForm({ data }: ForumPageProps) {
               </p>
             )),
           )}
-        <button type="submit" class="forum-btn">{forum.t("forum.thread.create")}</button>
+        <button type="submit" class="forum-btn">
+          {forum.t("forum.thread.create")}
+        </button>
       </form>
     </ForumLayout>
   );
@@ -355,8 +393,16 @@ export function SearchPage({ data }: ForumPageProps) {
         <label htmlFor="q" class="sr-only">
           {forum.t("forum.search")}
         </label>
-        <input id="q" name="q" defaultValue={q} placeholder={forum.t("forum.search.placeholder")} style={{ width: "100%", padding: "0.5rem", marginBottom: "1rem" }} />
-        <button type="submit" class="forum-btn">{forum.t("forum.search")}</button>
+        <input
+          id="q"
+          name="q"
+          defaultValue={q}
+          placeholder={forum.t("forum.search.placeholder")}
+          style={{ width: "100%", padding: "0.5rem", marginBottom: "1rem" }}
+        />
+        <button type="submit" class="forum-btn">
+          {forum.t("forum.search")}
+        </button>
       </form>
       <ul style={{ padding: 0, marginTop: "1.5rem" }}>
         {hits.map((h) => (

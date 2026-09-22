@@ -27,13 +27,15 @@ const seed: Audit[] = [
     branch: "main",
     status: "reviewed",
     createdAt: "2026-07-15T09:30:00.000Z",
-    summary: "Production-readiness audit covering progressive forms, middleware, typed routes, and deployment hardening.",
+    summary:
+      "Production-readiness audit covering progressive forms, middleware, typed routes, and deployment hardening.",
     findings: [
       {
         id: "f-1",
         severity: "medium",
         title: "Document CSRF integration points",
-        detail: "Actions intentionally stay validation-library agnostic. Cookie-authenticated apps should add CSRF middleware.",
+        detail:
+          "Actions intentionally stay validation-library agnostic. Cookie-authenticated apps should add CSRF middleware.",
         file: "src/app/routes/projects.tsx",
       },
       {
@@ -50,7 +52,11 @@ const seed: Audit[] = [
 for (const audit of seed) state.set(audit.id, audit);
 
 function slug(input: string) {
-  const parsed = input.replace(/^https?:\/\//, "").replace(/[^a-z0-9]+/gi, "-").replace(/^-|-$/g, "").toLowerCase();
+  const parsed = input
+    .replace(/^https?:\/\//, "")
+    .replace(/[^a-z0-9]+/gi, "-")
+    .replace(/^-|-$/g, "")
+    .toLowerCase();
   return parsed || `audit-${Date.now()}`;
 }
 

@@ -41,23 +41,23 @@ Import `definePreset` from `otok` or `@kamod-ch/otok-config`. Preset modules sho
 
 ## Conflict rules
 
-| Strategy | Behavior |
-|----------|----------|
+| Strategy            | Behavior                                                   |
+| ------------------- | ---------------------------------------------------------- |
 | `replace` (default) | Later file entry replaces earlier for the same destination |
-| `skip` | Keep the first file written |
-| `merge` | Reserved for JSON merges (package.json uses deep merge) |
+| `skip`              | Keep the first file written                                |
+| `merge`             | Reserved for JSON merges (package.json uses deep merge)    |
 
 `packageJson` patches always deep-merge: dependencies, devDependencies, and scripts combine with later keys winning.
 
 ## Official presets
 
-| Package | Starter key |
-|---------|-------------|
-| `@kamod-ch/otok-preset-minimal` | `minimal` |
-| `@kamod-ch/otok-preset-kamod` | `kamod` |
+| Package                           | Starter key |
+| --------------------------------- | ----------- |
+| `@kamod-ch/otok-preset-minimal`   | `minimal`   |
+| `@kamod-ch/otok-preset-kamod`     | `kamod`     |
 | `@kamod-ch/otok-preset-dashboard` | `dashboard` |
-| `@kamod-ch/otok-preset-saas` | `saas` |
-| `@kamod-ch/otok-preset-crm` | `crm` |
+| `@kamod-ch/otok-preset-saas`      | `saas`      |
+| `@kamod-ch/otok-preset-crm`       | `crm`       |
 
 Built-in registry in `create-otok` mirrors these packages so `pnpm create otok` works without installing preset packages separately.
 
@@ -71,9 +71,16 @@ Built-in registry in `create-otok` mirrors these packages so `pnpm create otok` 
 
 Each preset may declare `otok: "^0.4.0"`. The scaffold CLI pins runtime packages from `versions.json` to match the published create-otok release.
 
-## Update strategy
+## Maintenance workflow (registry is source of truth)
 
-1. Bump otok / plugin versions in the monorepo.
-2. Run `pnpm --filter create-otok generate:versions`.
-3. Update starter templates only when structure changes — avoid duplicating starters; add **layers** for optional features.
-4. Extend `test/preset-matrix.test.mjs` when adding variants or layers.
+`create-otok/src/registry.ts` is **authoritative**. `@kamod-ch/otok-preset-*` npm packages are publish mirrors.
+
+1. Edit the preset in `create-otok/src/registry.ts` (`presetRegistry` or `layerPresets`).
+2. Copy the same `definePreset({ ... })` into `packages/otok-preset-<name>/src/index.ts` (normalize `extends` to an array in the package if you prefer; CI compares after normalizing).
+3. Do **not** add a new preset unless a new `starter` key is required — prefer **layers** or **kits** (`PRESET_KIT_MAP`).
+4. Run `pnpm --filter create-otok test` — includes `test/preset-sync.test.mjs` which fails if registry and published packages drift.
+5. Bump otok / plugin versions in the monorepo, then `pnpm --filter create-otok generate:versions`.
+6. Update starter templates only when structure changes.
+7. Extend `test/preset-matrix.test.mjs` when adding variants or layers.
+
+See [scaffold-decisions.md](../../../docs/scaffold-decisions.md).

@@ -1,0 +1,21 @@
+{
+  "generatedAt": "2026-09-21T21:30:53.641Z",
+  "gitSha": "ref: refs/heads/main",
+  "nodeVersion": "v24.18.0",
+  "lockfileHash": "ac1f4bea6139",
+  "project": "apps/playground",
+  "methodology": {
+    "ssrWarmupRequests": 2,
+    "ssrSampleCount": 7,
+    "note": "Budget check uses configured max + tolerancePercent; small runner noise below tolerance is not a regression."
+  },
+  "metrics": {
+    "productionBuildMs": 3778,
+    "devServerStartMs": null,
+    "ssrLatencyP50Ms": null,
+    "ssrThroughputRps": null,
+    "clientJsKb": 50,
+    "edgeBundleKb": null,
+    "peakRssMb": 50
+  }
+}

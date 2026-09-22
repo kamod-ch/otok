@@ -1,5 +1,1 @@
-export {
-  registerRenderedIsland,
-  withIslandRenderContext,
-  type IslandRenderContext,
-} from "../shared/island-context.js";
+export { registerRenderedIsland, withIslandRenderContext, type IslandRenderContext } from "../shared/island-context.js";

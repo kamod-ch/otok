@@ -6,8 +6,7 @@ export async function safeValidate<TOutput>(
   schema: ValidationSchema<TOutput>,
   input: unknown,
 ): Promise<
-  | { success: true; data: TOutput }
-  | { success: false; fieldErrors?: Record<string, string[]>; formErrors?: string[] }
+  { success: true; data: TOutput } | { success: false; fieldErrors?: Record<string, string[]>; formErrors?: string[] }
 > {
   const result = await validateSchema(schema, input);
   if (result.success) {

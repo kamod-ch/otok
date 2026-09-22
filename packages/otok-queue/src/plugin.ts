@@ -16,9 +16,7 @@ export function resetQueueClientForTests(): void {
 
 export function getQueueClient<TJobs extends JobPayloadMap = JobPayloadMap>() {
   if (!client) {
-    throw new Error(
-      "otok-queue: no queue client registered. Add queue() to otok.config.ts plugins.",
-    );
+    throw new Error("otok-queue: no queue client registered. Add queue() to otok.config.ts plugins.");
   }
   return client as QueueClient<TJobs>;
 }
@@ -27,17 +25,15 @@ export async function configureQueueApp<TJobs extends JobPayloadMap = JobPayload
   _app: Hono,
   options: QueuePluginOptions<TJobs>,
 ): Promise<QueueRuntime<TJobs>> {
-  const provider = createQueueProvider(options.provider);
   const retry = resolveQueueRetry(options.retry);
+  const provider = createQueueProvider(options.provider, retry);
   const cron = options.cron ?? [];
 
   for (const schedule of cron) {
     if (provider.registerCron) {
       await provider.registerCron(schedule);
     } else {
-      throw new OtokQueueConfigError(
-        `queue provider "${provider.name}" does not support cron schedules`,
-      );
+      throw new OtokQueueConfigError(`queue provider "${provider.name}" does not support cron schedules`);
     }
   }
 
@@ -47,6 +43,13 @@ export async function configureQueueApp<TJobs extends JobPayloadMap = JobPayload
     cron,
   };
 
+  return activateQueueRuntime(runtime);
+}
+
+/** Register a pre-built provider (e.g. Postgres + Kysely) and expose the queue client. */
+export function activateQueueRuntime<TJobs extends JobPayloadMap>(
+  runtime: QueueRuntime<TJobs>,
+): QueueRuntime<TJobs> {
   registerQueueRuntime(runtime);
   client = createQueueClient(runtime) as QueueClient<JobPayloadMap>;
   return runtime;
@@ -69,9 +72,7 @@ const queuePluginFactory = definePlugin<QueuePluginOptions>({
   },
 });
 
-export default function queue<TJobs extends JobPayloadMap = JobPayloadMap>(
-  options: QueuePluginOptions<TJobs>,
-) {
+export default function queue<TJobs extends JobPayloadMap = JobPayloadMap>(options: QueuePluginOptions<TJobs>) {
   const plugin = queuePluginFactory(options as QueuePluginOptions);
 
   plugin.configureApp = async ({ app }) => {

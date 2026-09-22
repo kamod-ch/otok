@@ -8,23 +8,17 @@ export interface ProjectContext {
   installedVersion?: string;
 }
 
-export function checkCompatibility(
-  entry: ExtensionEntry,
-  project: ProjectContext,
-): CompatibilityResult {
+export function checkCompatibility(entry: ExtensionEntry, project: ProjectContext): CompatibilityResult {
   const warnings: string[] = [];
   const errors: string[] = [];
 
   if (project.otokVersion && !satisfiesRange(project.otokVersion, entry.otokVersion)) {
-    errors.push(
-      `Requires Otok ${entry.otokVersion}, project has ${project.otokVersion}.`,
-    );
+    errors.push(`Requires Otok ${entry.otokVersion}, project has ${project.otokVersion}.`);
   }
 
   if (entry.deprecated) {
     warnings.push(
-      entry.deprecationMessage ??
-        `Package is deprecated${entry.successor ? ` — use ${entry.successor}` : ""}.`,
+      entry.deprecationMessage ?? `Package is deprecated${entry.successor ? ` — use ${entry.successor}` : ""}.`,
     );
   }
 
@@ -39,15 +33,11 @@ export function checkCompatibility(
   }
 
   if (project.adapter && !entry.adapters.includes(project.adapter)) {
-    errors.push(
-      `Adapter "${project.adapter}" not supported (supports: ${entry.adapters.join(", ")}).`,
-    );
+    errors.push(`Adapter "${project.adapter}" not supported (supports: ${entry.adapters.join(", ")}).`);
   }
 
   if (project.runtime && !entry.runtime.includes(project.runtime)) {
-    errors.push(
-      `Runtime "${project.runtime}" not supported (supports: ${entry.runtime.join(", ")}).`,
-    );
+    errors.push(`Runtime "${project.runtime}" not supported (supports: ${entry.runtime.join(", ")}).`);
   }
 
   if (
@@ -55,9 +45,7 @@ export function checkCompatibility(
     project.installedVersion !== entry.version &&
     !satisfiesRange(project.installedVersion, `^${entry.version.split(".").slice(0, 2).join(".")}.0`)
   ) {
-    warnings.push(
-      `Installed ${project.installedVersion}, registry latest ${entry.version}.`,
-    );
+    warnings.push(`Installed ${project.installedVersion}, registry latest ${entry.version}.`);
   }
 
   for (const note of entry.securityNotes) {

@@ -1,15 +1,8 @@
 import { describe, expect, it, vi, beforeEach } from "vitest";
 import { Hono } from "hono";
-import {
-  createMockSupabaseClient,
-  TEST_PUBLISHABLE_KEY,
-  TEST_SUPABASE_URL,
-} from "./test/fixtures.js";
+import { createMockSupabaseClient, TEST_PUBLISHABLE_KEY, TEST_SUPABASE_URL } from "./test/fixtures.js";
 import supabasePlugin, { configureSupabaseApp } from "./plugin.js";
-import {
-  getSupabaseRuntime,
-  resetSupabaseRuntimeForTests,
-} from "./registry.js";
+import { getSupabaseRuntime, resetSupabaseRuntimeForTests } from "./registry.js";
 
 const mockClient = createMockSupabaseClient();
 

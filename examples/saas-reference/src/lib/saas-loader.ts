@@ -28,9 +28,7 @@ async function resolveSaasContext(ctx: DbContext): Promise<Pick<SaasLoaderContex
   return { user: orgUser };
 }
 
-export function defineSaasLoader<Data extends LoaderResult>(
-  handler: (ctx: SaasLoaderContext) => Data | Promise<Data>,
-) {
+export function defineSaasLoader<Data extends LoaderResult>(handler: (ctx: SaasLoaderContext) => Data | Promise<Data>) {
   return composeLoader(
     async (ctx) => handler(ctx as unknown as SaasLoaderContext),
     loaderEnhancer(async (ctx) => resolveSaasContext(ctx as DbContext)),
@@ -47,17 +45,15 @@ export function defineSaasAction<Result>(
   });
 }
 
-export function defineSaasSchemaAction<TSchema extends ValidationSchema>(
-  definition: {
-    schema: TSchema;
-    handler: (
-      ctx: SaasLoaderContext & {
-        input: TSchema extends ValidationSchema<infer O> ? O : never;
-        formData?: FormData;
-      },
-    ) => ActionResult | Promise<ActionResult>;
-  },
-) {
+export function defineSaasSchemaAction<TSchema extends ValidationSchema>(definition: {
+  schema: TSchema;
+  handler: (
+    ctx: SaasLoaderContext & {
+      input: TSchema extends ValidationSchema<infer O> ? O : never;
+      formData?: FormData;
+    },
+  ) => ActionResult | Promise<ActionResult>;
+}) {
   return defineValidatedAction({
     schema: definition.schema,
     handler: async (ctx: OtokActionContext & { input: unknown; db?: Kysely<SaasDatabase> }) => {

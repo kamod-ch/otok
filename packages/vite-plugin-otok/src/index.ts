@@ -175,9 +175,7 @@ function segmentToVariants(segment: string, variants: RouteVariant[]): RouteVari
 }
 
 function publicRoutePattern(relative: string): string {
-  const segments = relative
-    .split("/")
-    .filter((segment) => segment !== "index" && !/^\(.+\)$/.test(segment));
+  const segments = relative.split("/").filter((segment) => segment !== "index" && !/^\(.+\)$/.test(segment));
   return `/${segments.join("/")}`.replace(/\/$/, "") || "/";
 }
 
@@ -190,10 +188,9 @@ function routeFileToEntries(
   const relative = normalizePath(path.relative(routesDir, stripExtension(file)));
   const routePattern = publicRoutePattern(relative);
   const segments = relative.split("/");
-  const variants = segments.reduce(
-    (current, segment) => segmentToVariants(segment, current),
-    [emptyVariant()] as RouteVariant[],
-  );
+  const variants = segments.reduce((current, segment) => segmentToVariants(segment, current), [
+    emptyVariant(),
+  ] as RouteVariant[]);
   const layouts = layoutFilesForRoute(relative, layoutMap);
   const middleware = middlewareFilesForRoute(relative, middlewareMap);
 
@@ -312,7 +309,10 @@ function modulePath(file: string): string {
 
 export interface RouteBuildOptions {
   params?: Record<string, string | number | boolean | Array<string | number | boolean> | null | undefined>;
-  query?: Record<string, string | number | boolean | Array<string | number | boolean | null | undefined> | null | undefined>;
+  query?: Record<
+    string,
+    string | number | boolean | Array<string | number | boolean | null | undefined> | null | undefined
+  >;
   hash?: string;
 }
 
@@ -480,7 +480,7 @@ function buildRoutePath(pattern, options = {}) {
     const catchAll = /^\\[\\.\\.\\.([^\\]]+)\\]$/.exec(segment);
     if (catchAll) {
       const value = params[catchAll[1]];
-      if (value === undefined || value === null || value === "") throw new Error("otok: Missing route param \\\"" + catchAll[1] + "\\\" for " + pattern + ".");
+      if (value === undefined || value === null || value === "") throw new Error("otok: Missing route param \\"" + catchAll[1] + "\\" for " + pattern + ".");
       const values = Array.isArray(value) ? value : String(value).split("/");
       output.push(...values.map((part) => encodeURIComponent(String(part))));
       continue;
@@ -489,7 +489,7 @@ function buildRoutePath(pattern, options = {}) {
     const dynamic = /^\\[([^\\]]+)\\]$/.exec(segment);
     if (dynamic) {
       const value = params[dynamic[1]];
-      if (value === undefined || value === null || value === "") throw new Error("otok: Missing route param \\\"" + dynamic[1] + "\\\" for " + pattern + ".");
+      if (value === undefined || value === null || value === "") throw new Error("otok: Missing route param \\"" + dynamic[1] + "\\" for " + pattern + ".");
       output.push(encodeURIComponent(String(value)));
       continue;
     }
@@ -502,7 +502,7 @@ function buildRoutePath(pattern, options = {}) {
 
 export function route(pattern, options = {}) {
   if (!routePatterns.includes(pattern) && import.meta.env?.DEV) {
-    console.warn("[otok] Unknown route pattern \\\"" + pattern + "\\\".");
+    console.warn("[otok] Unknown route pattern \\"" + pattern + "\\".");
   }
   return buildRoutePath(pattern, options);
 }
@@ -651,6 +651,9 @@ export default function otok(options: OtokPluginOptions = {}): Plugin[] {
 
       return {
         plugins: [...loaded.resolved.vitePlugins],
+        resolve: {
+          dedupe: ["preact", "preact/hooks", "preact/compat"],
+        },
       } as UserConfig;
     },
     configResolved(config) {
@@ -663,7 +666,9 @@ export default function otok(options: OtokPluginOptions = {}): Plugin[] {
       if (id === ROUTES_MODULE_ID) return RESOLVED_ROUTES_MODULE_ID;
       if (id === ISLANDS_MODULE_ID) return RESOLVED_ISLANDS_MODULE_ID;
       if (id === OTOK_CONFIG_MODULE_ID) return RESOLVED_OTOK_CONFIG_MODULE_ID;
-      for (const [virtualId, resolvedId] of [...virtualModules.entries()].map(([moduleId]) => [moduleId, `\0${moduleId}`] as const)) {
+      for (const [virtualId, resolvedId] of [...virtualModules.entries()].map(
+        ([moduleId]) => [moduleId, `\0${moduleId}`] as const,
+      )) {
         if (id === virtualId) return resolvedId;
       }
       return undefined;

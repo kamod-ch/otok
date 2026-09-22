@@ -14,6 +14,8 @@ This directory contains deployment samples and reference applications.
 - `i18n-trilingual` — DE / EN / FR demo with `@kamod-ch/otok-i18n` plugin, islands, locale switcher, hreflang, and sitemap.
 - `typed-routes` — typed `defineLoader` / route typegen demo.
 - `auth-github` — GitHub OAuth + session demo.
+- `devjobs-reference` — small job-board reference (multi-tenant auth, cached listings, CSV queue import, Kamod UI).
+- `saas-reference` — fuller SaaS sample (orgs, billing, audit).
 
 The reference and deployment apps are intentionally kept outside `pnpm-workspace.yaml` so they remain copyable starter projects and do not add app dependencies to Otok core.
 

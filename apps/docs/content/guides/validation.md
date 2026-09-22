@@ -48,7 +48,9 @@ export default function NewContact({ actionData }) {
   return (
     <form method="post">
       <input name="email" value={values.email ?? ""} aria-invalid={Boolean(failure?.fieldErrors?.email)} />
-      {failure?.fieldErrors?.email?.map((e) => <p role="alert">{e}</p>)}
+      {failure?.fieldErrors?.email?.map((e) => (
+        <p role="alert">{e}</p>
+      ))}
     </form>
   );
 }
@@ -58,12 +60,12 @@ Field errors map to form fields. Form-level errors (no path) appear in `formErro
 
 ## Schema libraries
 
-| Library | Usage |
-|---------|-------|
-| Zod 4+ | Pass schema directly |
-| Valibot | Pass schema directly (Standard Schema native) |
+| Library | Usage                                                                       |
+| ------- | --------------------------------------------------------------------------- |
+| Zod 4+  | Pass schema directly                                                        |
+| Valibot | Pass schema directly (Standard Schema native)                               |
 | ArkType | Wrap with `fromArkType()` from `@kamod-ch/otok-validation/adapters/arktype` |
-| Zod 3 | Supported via legacy `safeParse` interface |
+| Zod 3   | Supported via legacy `safeParse` interface                                  |
 
 ## Client-side validation
 
@@ -80,10 +82,10 @@ if (!result.success) showErrors(result.fieldErrors);
 
 ```ts
 parseFormData(formData, schema, {
-  status: 422,           // HTTP status (400 or 422)
-  values: true,          // include redisplay values (default: true for forms)
-  stripUnknown: true,    // remove unknown fields before validation
-  arrays: ["tags"],      // repeated form fields → array
+  status: 422, // HTTP status (400 or 422)
+  values: true, // include redisplay values (default: true for forms)
+  stripUnknown: true, // remove unknown fields before validation
+  arrays: ["tags"], // repeated form fields → array
   checkboxes: ["active"], // checkbox normalization
 });
 ```

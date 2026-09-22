@@ -22,20 +22,22 @@ const styles = {
 
 export function DevtoolsPanel({ open, snapshot, error, onToggle }: DevtoolsPanelProps) {
   return h("div", null, [
-    h("button", { type: "button", style: styles.toggle, onClick: onToggle }, open ? "Close Otok Devtools" : "Otok Devtools"),
+    h(
+      "button",
+      { type: "button", style: styles.toggle, onClick: onToggle },
+      open ? "Close Otok Devtools" : "Otok Devtools",
+    ),
     open
-      ? h(
-          "div",
-          { style: styles.panel, role: "region", "aria-label": "Otok Devtools" },
-          [
-            h("div", { style: styles.header }, [
-              h("strong", null, "Otok Devtools"),
-              h("span", { style: styles.muted }, snapshot ? new Date(snapshot.updatedAt).toLocaleTimeString() : "—"),
-            ]),
-            error ? h(Section, { title: "Error" }, h("p", null, error)) : null,
-            snapshot ? h(SnapshotView, { snapshot }) : h(Section, { title: "Loading" }, h("p", { style: styles.muted }, "Waiting for snapshot…")),
-          ],
-        )
+      ? h("div", { style: styles.panel, role: "region", "aria-label": "Otok Devtools" }, [
+          h("div", { style: styles.header }, [
+            h("strong", null, "Otok Devtools"),
+            h("span", { style: styles.muted }, snapshot ? new Date(snapshot.updatedAt).toLocaleTimeString() : "—"),
+          ]),
+          error ? h(Section, { title: "Error" }, h("p", null, error)) : null,
+          snapshot
+            ? h(SnapshotView, { snapshot })
+            : h(Section, { title: "Loading" }, h("p", { style: styles.muted }, "Waiting for snapshot…")),
+        ])
       : null,
   ]);
 }
@@ -44,11 +46,27 @@ function SnapshotView({ snapshot }: { snapshot: OtokDevtoolsSnapshot }) {
   const latest = snapshot.requests.at(-1);
   return h("div", null, [
     h(Section, { title: "Route tree" }, h(RouteTree, { routes: snapshot.routes })),
-    h(Section, { title: "Plugins" }, h(List, { items: snapshot.plugins.map((plugin) => `${plugin.name}${plugin.version ? `@${plugin.version}` : ""}`) })),
-    h(Section, { title: "Latest request" }, latest ? h(LatestRequest, { request: latest }) : h("p", { style: styles.muted }, "No requests yet.")),
+    h(
+      Section,
+      { title: "Plugins" },
+      h(List, {
+        items: snapshot.plugins.map((plugin) => `${plugin.name}${plugin.version ? `@${plugin.version}` : ""}`),
+      }),
+    ),
+    h(
+      Section,
+      { title: "Latest request" },
+      latest ? h(LatestRequest, { request: latest }) : h("p", { style: styles.muted }, "No requests yet."),
+    ),
     h(Section, { title: "Middleware timing" }, h(TimingList, { items: snapshot.middleware.slice(-8) })),
     h(Section, { title: "Loader / action timing" }, h(LoaderTimingList, { items: snapshot.loaders.slice(-8) })),
-    h(Section, { title: "Plugin hooks" }, h(TimingList, { items: snapshot.pluginHooks.slice(-8).map((item) => ({ ...item, route: `${item.plugin}:${item.hook}` })) })),
+    h(
+      Section,
+      { title: "Plugin hooks" },
+      h(TimingList, {
+        items: snapshot.pluginHooks.slice(-8).map((item) => ({ ...item, route: `${item.plugin}:${item.hook}` })),
+      }),
+    ),
   ]);
 }
 
@@ -87,20 +105,14 @@ function LatestRequest({ request }: { request: OtokDevtoolsSnapshot["requests"][
           request.auth.authenticated ? h("span", { style: styles.badge }, request.auth.userId ?? "yes") : "guest",
         ])
       : null,
-    request.islands.length > 0
-      ? h("p", null, ["islands ", h("code", null, request.islands.join(", "))])
-      : null,
+    request.islands.length > 0 ? h("p", null, ["islands ", h("code", null, request.islands.join(", "))]) : null,
     h("p", { style: styles.muted }, [
       `timings mw ${request.timings.middlewareMs.toFixed(1)}ms · loader ${request.timings.loaderMs.toFixed(1)}ms · render ${request.timings.renderMs.toFixed(1)}ms · total ${request.timings.totalMs.toFixed(1)}ms`,
     ]),
   ]);
 }
 
-function TimingList({
-  items,
-}: {
-  items: Array<{ route: string; durationMs: number; index?: number }>;
-}) {
+function TimingList({ items }: { items: Array<{ route: string; durationMs: number; index?: number }> }) {
   if (items.length === 0) return h("p", { style: styles.muted }, "No events.");
   return h(
     "ul",
@@ -142,5 +154,12 @@ function List({ items }: { items: string[] }) {
 }
 
 function Section({ title, children }: { title: string; children?: ComponentChildren }) {
-  return h("section", { style: styles.section }, [h("h3", { style: "margin:0 0 8px;font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:#93c5fd;" }, title), children]);
+  return h("section", { style: styles.section }, [
+    h(
+      "h3",
+      { style: "margin:0 0 8px;font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:#93c5fd;" },
+      title,
+    ),
+    children,
+  ]);
 }

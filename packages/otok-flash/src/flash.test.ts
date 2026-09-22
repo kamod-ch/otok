@@ -4,12 +4,7 @@ import type { Context } from "hono";
 import { createTestApp, renderRoute } from "@kamod-ch/otok-test";
 import type { OtokPageProps } from "@kamod-ch/otok/server";
 import { isOtokHttpError } from "@kamod-ch/otok/server";
-import {
-  consumeFlash,
-  flashRedirect,
-  flashSuccess,
-  setFlash,
-} from "./flash.js";
+import { consumeFlash, flashRedirect, flashSuccess, setFlash } from "./flash.js";
 import { createFlashMiddleware } from "./middleware.js";
 import { seal, unseal } from "./sign.js";
 
@@ -76,22 +71,18 @@ describe("flash cookies", () => {
 
 describe("createFlashMiddleware", () => {
   it("stores consumed flash on the Hono context", async () => {
-    const token = seal(
-      JSON.stringify({ message: "Willkommen", type: "info", iat: Date.now() }),
-      config.secret,
-    );
+    const token = seal(JSON.stringify({ message: "Willkommen", type: "info", iat: Date.now() }), config.secret);
 
     const { html } = await renderRoute(
       createTestApp({
         routes: [
           {
             path: "/",
-            component: (({ data }: OtokPageProps<{ message: string }>) =>
-              h("p", null, data.message)) as (props: OtokPageProps) => ReturnType<typeof h>,
+            component: (({ data }: OtokPageProps<{ message: string }>) => h("p", null, data.message)) as (
+              props: OtokPageProps,
+            ) => ReturnType<typeof h>,
             loader: ({ hono }) => ({
-              message:
-                ((hono as Context).get("flash") as { message: string } | undefined)?.message ??
-                "none",
+              message: ((hono as Context).get("flash") as { message: string } | undefined)?.message ?? "none",
             }),
             middleware: [
               {

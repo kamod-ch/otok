@@ -1,15 +1,10 @@
 import type { ContentEntry, SearchIndexEntry } from "./types.js";
 
-export function buildSearchIndex(
-  collection: string,
-  entries: ContentEntry[],
-): SearchIndexEntry[] {
+export function buildSearchIndex(collection: string, entries: ContentEntry[]): SearchIndexEntry[] {
   return entries.map((entry) => {
     const data = entry.data as Record<string, unknown>;
     const title =
-      (typeof data.title === "string" && data.title) ||
-      (typeof data.name === "string" && data.name) ||
-      entry.slug;
+      (typeof data.title === "string" && data.title) || (typeof data.name === "string" && data.name) || entry.slug;
     const excerpt =
       (typeof data.description === "string" && data.description) ||
       (typeof data.excerpt === "string" && data.excerpt) ||
@@ -27,11 +22,7 @@ export function buildSearchIndex(
   });
 }
 
-export function searchIndex(
-  index: SearchIndexEntry[],
-  query: string,
-  limit = 20,
-): SearchIndexEntry[] {
+export function searchIndex(index: SearchIndexEntry[], query: string, limit = 20): SearchIndexEntry[] {
   const q = query.trim().toLowerCase();
   if (!q) return [];
 

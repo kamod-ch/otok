@@ -26,20 +26,20 @@ export default defineConfig({
   plugins: [
     security({ trustedHosts: ["example.com"] }),
     observability(),
-    i18n({ /* ... */ }),
-    auth({ /* ... */ }),
+    i18n({/* ... */}),
+    auth({/* ... */}),
     seo({ origin: "https://example.com" }),
   ],
 });
 ```
 
-| Order | Plugin | Why |
-|-------|--------|-----|
-| 1 | `security` | CSP, CSRF, body limits, host validation before any handler |
-| 2 | `observability` | Request ID and spans wrap downstream plugins and SSR |
-| 3 | `i18n` | Locale available for SEO hreflang and loaders |
-| 4 | `auth` | Session hydration; may use CSRF from security or auth |
-| 5 | `seo` | Utility routes (`/robots.txt`, `/sitemap.xml`) after guards |
+| Order | Plugin          | Why                                                         |
+| ----- | --------------- | ----------------------------------------------------------- |
+| 1     | `security`      | CSP, CSRF, body limits, host validation before any handler  |
+| 2     | `observability` | Request ID and spans wrap downstream plugins and SSR        |
+| 3     | `i18n`          | Locale available for SEO hreflang and loaders               |
+| 4     | `auth`          | Session hydration; may use CSRF from security or auth       |
+| 5     | `seo`           | Utility routes (`/robots.txt`, `/sitemap.xml`) after guards |
 
 ## SEO
 

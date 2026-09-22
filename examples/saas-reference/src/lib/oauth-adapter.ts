@@ -23,11 +23,7 @@ export function createOAuthAdapter(getDb: () => Kysely<SaasDatabase>): OAuthAdap
 
       const email = profile.email?.toLowerCase();
       if (email) {
-        const byEmail = await db
-          .selectFrom("app_user")
-          .selectAll()
-          .where("email", "=", email)
-          .executeTakeFirst();
+        const byEmail = await db.selectFrom("app_user").selectAll().where("email", "=", email).executeTakeFirst();
         if (byEmail) {
           await db
             .insertInto("oauth_account")

@@ -4,14 +4,14 @@ This document describes the security model for Otok AI integration.
 
 ## Threat Model
 
-| Asset | Risk | Mitigation |
-|-------|------|------------|
-| API keys (OpenAI, etc.) | Exfiltration via prompts/logs | Server-only env vars; redaction; never in client bundles |
-| User prompts | PII leakage in logs/audit | Default redaction; opt-out only in dev |
-| Tool execution | Privilege escalation | Typed tools; explicit registration; no arbitrary code exec |
-| MCP route proxy | Unauthorized data access | Explicit route allowlist only |
-| AI spend | Cost abuse | Per-user/org budgets; AI rate limits |
-| Streaming | DoS via long connections | Timeouts; abort signals; body limits (otok-security) |
+| Asset                   | Risk                          | Mitigation                                                 |
+| ----------------------- | ----------------------------- | ---------------------------------------------------------- |
+| API keys (OpenAI, etc.) | Exfiltration via prompts/logs | Server-only env vars; redaction; never in client bundles   |
+| User prompts            | PII leakage in logs/audit     | Default redaction; opt-out only in dev                     |
+| Tool execution          | Privilege escalation          | Typed tools; explicit registration; no arbitrary code exec |
+| MCP route proxy         | Unauthorized data access      | Explicit route allowlist only                              |
+| AI spend                | Cost abuse                    | Per-user/org budgets; AI rate limits                       |
+| Streaming               | DoS via long connections      | Timeouts; abort signals; body limits (otok-security)       |
 
 ## API Key Handling
 
@@ -46,7 +46,7 @@ Separate from `@kamod-ch/otok-security` global limits:
 ```ts
 ai({
   rateLimit: { windowMs: 60_000, max: 20 },
-})
+});
 ```
 
 Applied to `/api/ai/*` routes.

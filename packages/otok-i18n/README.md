@@ -37,12 +37,12 @@ The plugin registers app-level middleware automatically (`configureApp`). No man
 
 ## Routing modes
 
-| Mode | Example URLs |
-|------|----------------|
-| `prefix` | `/de/products`, `/en/products` |
-| `prefix-except-default` | `/products` (de), `/en/products` |
-| `domain` | `example.ch`, `example.fr` (via `domains` map) |
-| `none` | No locale in URL — cookie / `Accept-Language` only |
+| Mode                    | Example URLs                                       |
+| ----------------------- | -------------------------------------------------- |
+| `prefix`                | `/de/products`, `/en/products`                     |
+| `prefix-except-default` | `/products` (de), `/en/products`                   |
+| `domain`                | `example.ch`, `example.fr` (via `domains` map)     |
+| `none`                  | No locale in URL — cookie / `Accept-Language` only |
 
 ## Locale resolution priority
 
@@ -94,7 +94,7 @@ export function Welcome({ itemCount }: { itemCount: number }) {
 // In route: pass loader payload
 <I18nProvider {...data.i18n}>
   <Welcome itemCount={3} />
-</I18nProvider>
+</I18nProvider>;
 ```
 
 SSR and hydration use the same `serializeI18n()` payload — only the active locale messages are sent to the client.
@@ -140,15 +140,15 @@ middleware: [toRouteMiddleware(createI18nMiddleware(i18nConfig))];
 
 ## Exports
 
-| Subpath | Purpose |
-|---------|---------|
-| `@kamod-ch/otok-i18n` | Plugin factory + core API |
+| Subpath                          | Purpose                                     |
+| -------------------------------- | ------------------------------------------- |
+| `@kamod-ch/otok-i18n`            | Plugin factory + core API                   |
 | `@kamod-ch/otok-i18n/middleware` | Middleware, `readI18n`, `toRouteMiddleware` |
-| `@kamod-ch/otok-i18n/loader` | `defineLoader`, `serializeI18n` |
-| `@kamod-ch/otok-i18n/client` | `I18nProvider`, `useI18n`, `useTranslation` |
-| `@kamod-ch/otok-i18n/routes` | Path / link helpers |
-| `@kamod-ch/otok-i18n/sitemap` | Localized sitemap XML |
-| `@kamod-ch/otok-i18n/switcher` | `LocaleSwitcher` component |
+| `@kamod-ch/otok-i18n/loader`     | `defineLoader`, `serializeI18n`             |
+| `@kamod-ch/otok-i18n/client`     | `I18nProvider`, `useI18n`, `useTranslation` |
+| `@kamod-ch/otok-i18n/routes`     | Path / link helpers                         |
+| `@kamod-ch/otok-i18n/sitemap`    | Localized sitemap XML                       |
+| `@kamod-ch/otok-i18n/switcher`   | `LocaleSwitcher` component                  |
 
 ## Example
 
@@ -156,8 +156,8 @@ See [`examples/i18n-trilingual`](../../examples/i18n-trilingual) for a complete 
 
 ## Related packages
 
-| Package | Purpose |
-|---------|---------|
-| `@kamod-ch/otok-auth` | Sessions, CSRF |
+| Package                     | Purpose                    |
+| --------------------------- | -------------------------- |
+| `@kamod-ch/otok-auth`       | Sessions, CSRF             |
 | `@kamod-ch/otok-validation` | Standard Schema validation |
-| `@kamod-ch/otok-flash` | Flash messages |
+| `@kamod-ch/otok-flash`      | Flash messages             |

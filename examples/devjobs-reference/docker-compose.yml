@@ -1,0 +1,19 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: otok
+      POSTGRES_PASSWORD: otok
+      POSTGRES_DB: devjobs_reference
+    ports:
+      - "5435:5432"
+    volumes:
+      - devjobs_pg_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U otok -d devjobs_reference"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  devjobs_pg_data:

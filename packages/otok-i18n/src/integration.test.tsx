@@ -172,7 +172,13 @@ describe("fallback locale", () => {
 function serializeForTest(
   _hono: unknown,
   payload: I18nClientPayload,
-): { locale: string; defaultLocale: string; fallbackLocale: string; messages: Record<string, string>; routing: string } {
+): {
+  locale: string;
+  defaultLocale: string;
+  fallbackLocale: string;
+  messages: Record<string, string>;
+  routing: string;
+} {
   return {
     locale: payload.locale,
     defaultLocale: payload.defaultLocale,

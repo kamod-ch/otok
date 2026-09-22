@@ -22,10 +22,12 @@ const valibotContactSchema = v.object({
   email: v.pipe(v.string(), v.trim(), v.email("Invalid email")),
 });
 
-const arkContactType = fromArkType(type({
-  name: "string >= 1",
-  email: "string.email",
-}));
+const arkContactType = fromArkType(
+  type({
+    name: "string >= 1",
+    email: "string.email",
+  }),
+);
 
 describe("formDataToRecord", () => {
   it("converts flat fields", () => {
@@ -182,8 +184,9 @@ describe("safeValidate (client contract)", () => {
 
 describe("parseJsonValue", () => {
   it("validates plain values", async () => {
-    await expect(
-      parseJsonValue({ name: "Ada", email: "ada@example.com" }, contactSchema),
-    ).resolves.toEqual({ name: "Ada", email: "ada@example.com" });
+    await expect(parseJsonValue({ name: "Ada", email: "ada@example.com" }, contactSchema)).resolves.toEqual({
+      name: "Ada",
+      email: "ada@example.com",
+    });
   });
 });

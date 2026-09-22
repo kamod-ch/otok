@@ -9,9 +9,7 @@ export function registerEventsRuntime(bus: InProcessEventBus): void {
 
 export function getEventsRuntime(): InProcessEventBus {
   if (!runtimeBus) {
-    throw new Error(
-      "otok-events: bus not registered. Add events() to otok.config.ts or call registerEventsRuntime().",
-    );
+    throw new Error("otok-events: bus not registered. Add events() to otok.config.ts or call registerEventsRuntime().");
   }
   return runtimeBus;
 }
@@ -26,14 +24,10 @@ export function resetEventsRuntimeForTests(): void {
 
 /** Typed publish helper — uses registered runtime bus. */
 export const events = {
-  publish<TPayload>(
-    ...args: Parameters<EventBus["publish"]>
-  ): ReturnType<EventBus["publish"]> {
+  publish<_TPayload>(...args: Parameters<EventBus["publish"]>): ReturnType<EventBus["publish"]> {
     return getEventsRuntime().publish(...args);
   },
-  subscribe<TPayload>(
-    ...args: Parameters<EventBus["subscribe"]>
-  ): ReturnType<EventBus["subscribe"]> {
+  subscribe<_TPayload>(...args: Parameters<EventBus["subscribe"]>): ReturnType<EventBus["subscribe"]> {
     return getEventsRuntime().subscribe(...args);
   },
 };

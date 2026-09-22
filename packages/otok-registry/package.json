@@ -2,13 +2,22 @@
   "name": "@kamod-ch/otok-registry",
   "version": "0.2.1",
   "description": "Versioned extension registry for Otok — schema, cache, search, and compatibility checks.",
+  "homepage": "https://github.com/kamod-ch/otok/tree/main/packages/otok-registry#readme",
+  "bugs": {
+    "url": "https://github.com/kamod-ch/otok/issues"
+  },
   "license": "MIT",
-  "type": "module",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kamod-ch/otok.git",
+    "directory": "packages/otok-registry"
+  },
   "files": [
     "dist",
     "registry",
     "README.md"
   ],
+  "type": "module",
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
@@ -18,6 +27,9 @@
       "types": "./dist/fixtures.d.ts",
       "default": "./dist/fixtures.js"
     }
+  },
+  "publishConfig": {
+    "access": "public"
   },
   "scripts": {
     "build": "rm -rf dist && tsc -p tsconfig.build.json && node ./scripts/copy-registry.mjs",
@@ -35,17 +47,5 @@
   },
   "engines": {
     "node": ">=20"
-  },
-  "publishConfig": {
-    "access": "public"
-  },
-  "homepage": "https://github.com/kamod-ch/otok/tree/main/packages/otok-registry#readme",
-  "bugs": {
-    "url": "https://github.com/kamod-ch/otok/issues"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/kamod-ch/otok.git",
-    "directory": "packages/otok-registry"
   }
 }

@@ -48,7 +48,7 @@ describe("queue client", () => {
   it("retries retryable failures and dead-letters permanent failures", async () => {
     await configureQueueApp({} as never, {
       provider: { type: "test" },
-      retry: { maxAttempts: 2, initialBackoffMs: 1, maxBackoffMs: 1 },
+      retry: { maxAttempts: 2, initialBackoffMs: 0, maxBackoffMs: 0 },
     });
 
     const queue = getQueueClient<TestJobs>();

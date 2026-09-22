@@ -38,8 +38,7 @@ export function defineLoader<Data extends LoaderResult, DB = unknown>(
 
 /** Loader enhancer that injects `db` from the otok-kysely runtime (outermost in composeLoader). */
 export function withDb<DB>(): LoaderEnhancer {
-  return (loader) => (context) =>
-    loader({ ...context, db: resolveDb<DB>(context.hono) } as OtokContext);
+  return (loader) => (context) => loader({ ...context, db: resolveDb<DB>(context.hono) } as OtokContext);
 }
 
 /**

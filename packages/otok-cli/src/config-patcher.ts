@@ -22,11 +22,7 @@ function createSourceFile(source: string, fileName: string): ts.SourceFile {
 }
 
 function isDefineConfigCall(node: ts.Node): node is ts.CallExpression {
-  return (
-    ts.isCallExpression(node) &&
-    ts.isIdentifier(node.expression) &&
-    node.expression.text === "defineConfig"
-  );
+  return ts.isCallExpression(node) && ts.isIdentifier(node.expression) && node.expression.text === "defineConfig";
 }
 
 function findDefineConfigCall(sourceFile: ts.SourceFile): ts.CallExpression | undefined {
@@ -96,9 +92,7 @@ function pluginAlreadyRegistered(sourceFile: ts.SourceFile, identifier: string):
   return found;
 }
 
-function findPluginsArrayProperty(
-  configArg: ts.ObjectLiteralExpression,
-): ts.PropertyAssignment | undefined {
+function findPluginsArrayProperty(configArg: ts.ObjectLiteralExpression): ts.PropertyAssignment | undefined {
   for (const property of configArg.properties) {
     if (!ts.isPropertyAssignment(property)) continue;
     const name = property.name;
@@ -120,7 +114,11 @@ function insertImport(source: string, sourceFile: ts.SourceFile, packageName: st
   return `${source.slice(0, insertPos)}\n${importLine}${source.slice(insertPos)}`;
 }
 
-function insertPluginIntoExistingArray(source: string, arrayLiteral: ts.ArrayLiteralExpression, pluginCall: string): string {
+function insertPluginIntoExistingArray(
+  source: string,
+  arrayLiteral: ts.ArrayLiteralExpression,
+  pluginCall: string,
+): string {
   const elements = arrayLiteral.elements;
   if (elements.length === 0) {
     const open = arrayLiteral.getChildren(sourceFileOf(arrayLiteral))[0];

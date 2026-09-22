@@ -47,10 +47,7 @@ export async function ensureMigrationsTable(db: Kysely<unknown>, tableName: stri
   `.execute(db);
 }
 
-export async function getAppliedMigrations(
-  db: Kysely<unknown>,
-  tableName: string,
-): Promise<MigrationRecord[]> {
+export async function getAppliedMigrations(db: Kysely<unknown>, tableName: string): Promise<MigrationRecord[]> {
   await ensureMigrationsTable(db, tableName);
   const rows = await db
     .selectFrom(tableName as never)
@@ -83,11 +80,7 @@ export async function getMigrationStatus(
   });
 }
 
-export async function migrateUp(
-  db: Kysely<unknown>,
-  directory: string,
-  tableName: string,
-): Promise<string[]> {
+export async function migrateUp(db: Kysely<unknown>, directory: string, tableName: string): Promise<string[]> {
   const files = await loadMigrationFiles(directory);
   const applied = await getAppliedMigrations(db, tableName);
   const appliedNames = new Set(applied.map((record) => record.name));
@@ -116,9 +109,7 @@ export async function migrateDown(
   const applied = await getAppliedMigrations(db, tableName);
   const rolledBack: string[] = [];
 
-  const toRollback = applied
-    .sort((a, b) => b.name.localeCompare(a.name))
-    .slice(0, steps);
+  const toRollback = applied.sort((a, b) => b.name.localeCompare(a.name)).slice(0, steps);
 
   for (const record of toRollback) {
     const file = files.find((entry) => entry.name === record.name);
@@ -126,7 +117,10 @@ export async function migrateDown(
       throw new Error(`otok-kysely: migration "${record.name}" has no down file.`);
     }
     await sql.raw(file.down).execute(db);
-    await db.deleteFrom(tableName as never).where("name" as never, "=", record.name as never).execute();
+    await db
+      .deleteFrom(tableName as never)
+      .where("name" as never, "=", record.name as never)
+      .execute();
     rolledBack.push(record.name);
   }
 

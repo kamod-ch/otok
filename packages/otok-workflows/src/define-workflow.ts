@@ -3,6 +3,8 @@ import type { WorkflowDefinition, WorkflowStepContext } from "./types.js";
 
 export interface DefineWorkflowOptions<TInput, TOutput> {
   name: string;
+  /** Increment when changing steps or IO; in-flight instances stop with VERSION_MISMATCH. */
+  version?: number;
   input: ZodType<TInput>;
   output?: ZodType<TOutput>;
   retry?: WorkflowDefinition<TInput, TOutput>["retry"];
@@ -23,6 +25,7 @@ export function defineWorkflow<TInput, TOutput = unknown>(
   return {
     __kind: "otok-workflow",
     name: options.name,
+    version: options.version ?? 1,
     inputSchema: options.input,
     outputSchema: options.output,
     retry: options.retry,
@@ -34,9 +37,7 @@ export function defineWorkflow<TInput, TOutput = unknown>(
 }
 
 export function isWorkflowDefinition(value: unknown): value is WorkflowDefinition {
-  return Boolean(
-    value && typeof value === "object" && (value as WorkflowDefinition).__kind === "otok-workflow",
-  );
+  return Boolean(value && typeof value === "object" && (value as WorkflowDefinition).__kind === "otok-workflow");
 }
 
 export { z } from "zod";

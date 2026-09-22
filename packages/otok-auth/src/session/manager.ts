@@ -22,8 +22,7 @@ export function createSessionManager<TUser>(
   const maxAgeSeconds = config.maxAgeSeconds ?? DEFAULT_MAX_AGE;
   const path = config.path ?? "/";
   const sameSite = config.sameSite ?? "Lax";
-  const rotationIntervalSeconds =
-    config.rotationIntervalSeconds ?? defaultRotationInterval(maxAgeSeconds);
+  const rotationIntervalSeconds = config.rotationIntervalSeconds ?? defaultRotationInterval(maxAgeSeconds);
 
   const resolvedConfig: SessionManager<TUser>["config"] = {
     ...config,

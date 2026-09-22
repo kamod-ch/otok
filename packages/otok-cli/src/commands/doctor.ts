@@ -3,14 +3,9 @@ import type { Dirent } from "node:fs";
 import { checkCompatibility, findOutdated, resolveExtension } from "@kamod-ch/otok-registry";
 import { runRouteTypegen } from "@kamod-ch/otok-route-typegen";
 import { loadOtokAppConfig } from "../load-config.js";
-import {
-  extractPluginsFromConfig,
-  extractRequiredEnvVars,
-  loadProjectSnapshot,
-  loadRegistryForProject,
-} from "../registry-context.js";
+import { extractRequiredEnvVars, loadProjectSnapshot, loadRegistryForProject } from "../registry-context.js";
 import { join } from "node:path";
-import { confirm, fail, findProjectRoot, ok, warn } from "../utils.js";
+import { confirm, fail, findProjectRoot, ok } from "../utils.js";
 
 export type DoctorSeverity = "error" | "warning" | "info";
 
@@ -134,25 +129,26 @@ function checkMiddlewareOrder(configSource: string): DoctorFinding[] {
 }
 
 async function checkRouteTypes(root: string): Promise<DoctorFinding[]> {
-  const candidates = [
-    join(root, ".otok", "types", "routes.d.ts"),
-    join(root, "src", "types", "routes.d.ts"),
-  ];
+  const candidates = [join(root, ".otok", "types", "routes.d.ts"), join(root, "src", "types", "routes.d.ts")];
   for (const file of candidates) {
     if (await pathExists(file)) {
-      return [{
-        id: "route-types",
-        severity: "info",
-        message: `Route types found at ${file.replace(root + "/", "")}.`,
-      }];
+      return [
+        {
+          id: "route-types",
+          severity: "info",
+          message: `Route types found at ${file.replace(root + "/", "")}.`,
+        },
+      ];
     }
   }
-  return [{
-    id: "route-types",
-    severity: "warning",
-    message: "No generated route types found. Run `otok typegen` to generate .otok/types/routes.d.ts.",
-    fixable: true,
-  }];
+  return [
+    {
+      id: "route-types",
+      severity: "warning",
+      message: "No generated route types found. Run `otok typegen` to generate .otok/types/routes.d.ts.",
+      fixable: true,
+    },
+  ];
 }
 
 async function checkDatabase(root: string, plugins: string[]): Promise<DoctorFinding[]> {
@@ -204,17 +200,21 @@ function checkMissingEnv(configSource: string | undefined): DoctorFinding[] {
 
 function checkAdapter(root: string, adapter: string | undefined): DoctorFinding[] {
   if (adapter) {
-    return [{
-      id: "adapter",
-      severity: "info",
-      message: `Detected adapter: ${adapter}.`,
-    }];
+    return [
+      {
+        id: "adapter",
+        severity: "info",
+        message: `Detected adapter: ${adapter}.`,
+      },
+    ];
   }
-  return [{
-    id: "adapter",
-    severity: "warning",
-    message: "No otok-adapter-* package found in package.json.",
-  }];
+  return [
+    {
+      id: "adapter",
+      severity: "warning",
+      message: "No otok-adapter-* package found in package.json.",
+    },
+  ];
 }
 
 export async function runDoctorChecks(root: string): Promise<DoctorReport> {
@@ -292,7 +292,7 @@ export async function runDoctorChecks(root: string): Promise<DoctorReport> {
 
   const errors = findings.filter((f) => f.severity === "error").length;
   const warnings = findings.filter((f) => f.severity === "warning").length;
-  const exitCode = errors > 0 ? 1 : warnings > 0 ? 0 : 0;
+  const _exitCode = errors > 0 ? 1 : warnings > 0 ? 0 : 0;
 
   return { findings, exitCode: errors > 0 ? 1 : 0 };
 }

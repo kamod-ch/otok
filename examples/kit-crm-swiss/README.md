@@ -6,6 +6,7 @@ Real Swiss B2B CRM validating Otok against business workflows (not a toy demo).
 
 - Otok + Preact + PostgreSQL (Kysely)
 - `@kamod-ch/otok-kit-crm` domain & Zefix import
+- `@kamod-ch/otok-kamod` (Tailwind v4 + Kamod UI theme)
 - `@kamod-ch/otok-auth` (sessions, roles)
 - `@kamod-ch/otok-i18n`, `@kamod-ch/otok-validation`
 - `@kamod-ch/otok-workflows`, `@kamod-ch/otok-audit`, `@kamod-ch/otok-search`
@@ -27,15 +28,15 @@ Open http://localhost:5173/login — sign in as admin or sales user.
 
 ## Core flows
 
-| Flow | Route |
-|------|-------|
-| Company search & filter | `/crm` |
-| Zefix JSON import + dedup | `/crm/import` |
+| Flow                      | Route                |
+| ------------------------- | -------------------- |
+| Company search & filter   | `/crm`               |
+| Zefix JSON import + dedup | `/crm/import`        |
 | Company detail + pipeline | `/crm/companies/:id` |
-| Contact, activity, task | Company detail forms |
-| Audit log | `/crm/audit` |
-| CSV export | POST on `/crm` |
-| Pipelines | `/crm/pipelines` |
+| Contact, activity, task   | Company detail forms |
+| Audit log                 | `/crm/audit`         |
+| CSV export                | POST on `/crm`       |
+| Pipelines                 | `/crm/pipelines`     |
 
 ## Sample Zefix data
 

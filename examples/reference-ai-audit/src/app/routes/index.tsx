@@ -32,7 +32,8 @@ export default function Dashboard({ data, actionData }: OtokPageProps) {
         <p class="eyebrow">Reference project</p>
         <h1>AI-assisted repository audits without framework magic.</h1>
         <p>
-          This app demonstrates route actions, progressive forms, server-rendered results, API routes, and an opt-in island for triage.
+          This app demonstrates route actions, progressive forms, server-rendered results, API routes, and an opt-in
+          island for triage.
         </p>
       </section>
 
@@ -43,7 +44,11 @@ export default function Dashboard({ data, actionData }: OtokPageProps) {
             Repository URL
             <input name="repo" placeholder="https://github.com/kamod-ch/otok" aria-invalid={Boolean(error)} />
           </label>
-          {error ? <p role="alert" class="form-error">{error}</p> : null}
+          {error ? (
+            <p role="alert" class="form-error">
+              {error}
+            </p>
+          ) : null}
           <label>
             Branch
             <input name="branch" value="main" />

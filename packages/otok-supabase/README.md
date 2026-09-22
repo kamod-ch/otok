@@ -195,12 +195,12 @@ Same as Node — explicit config object, no `process.env` inside the library.
 
 ## 16. Troubleshooting
 
-| Symptom | Check |
-|---------|--------|
-| Random logouts | Ensure `supabase()` middleware runs on every request with `getAll` + `setAll` |
-| Redirect loops | Verify `redirectAllowlist` includes post-login targets |
-| 401 on API routes | Set `Accept: application/json` or use `response: "json"` |
-| CSRF on sign-out | Include `_csrf` field matching `otok_csrf` cookie |
+| Symptom           | Check                                                                         |
+| ----------------- | ----------------------------------------------------------------------------- |
+| Random logouts    | Ensure `supabase()` middleware runs on every request with `getAll` + `setAll` |
+| Redirect loops    | Verify `redirectAllowlist` includes post-login targets                        |
+| 401 on API routes | Set `Accept: application/json` or use `response: "json"`                      |
+| CSRF on sign-out  | Include `_csrf` field matching `otok_csrf` cookie                             |
 
 ## 17. Security checklist
 
@@ -213,11 +213,11 @@ Same as Node — explicit config object, no `process.env` inside the library.
 
 ## 18. `getClaims` vs `getUser` vs `getSession`
 
-| Method | Use for |
-|--------|---------|
-| `getClaims()` | Fast route guards — local JWT verification (JWKS for asymmetric keys) |
-| `getUser()` | Sensitive operations needing Auth-server confirmation |
-| `getSession()` | Cookie refresh inside middleware only — **not** authorization |
+| Method         | Use for                                                               |
+| -------------- | --------------------------------------------------------------------- |
+| `getClaims()`  | Fast route guards — local JWT verification (JWKS for asymmetric keys) |
+| `getUser()`    | Sensitive operations needing Auth-server confirmation                 |
+| `getSession()` | Cookie refresh inside middleware only — **not** authorization         |
 
 ## 19. Working with `@kamod-ch/otok-oauth`
 
@@ -231,17 +231,17 @@ Use OAuth for social login and Supabase for database/auth as separate layers, or
 
 ## API exports
 
-| Entry | Exports |
-|-------|---------|
-| `.` | Config validation, errors, types, server middleware |
-| `./server` | `createOtokSupabaseServerClient`, cookie helpers |
-| `./browser` | `createOtokSupabaseBrowserClient` |
-| `./auth` | Middleware, routes, actions, redirects |
-| `./admin` | `createOtokSupabaseAdminClient` |
-| `./storage` | `getSupabaseStorage` — Storage entry point |
-| `./plugin` | Plugin factory (same as root default export) |
-| `./registry` | Runtime registry helpers |
-| `./loader` | `defineLoader` / `defineAction` with `supabase` injection |
+| Entry        | Exports                                                   |
+| ------------ | --------------------------------------------------------- |
+| `.`          | Config validation, errors, types, server middleware       |
+| `./server`   | `createOtokSupabaseServerClient`, cookie helpers          |
+| `./browser`  | `createOtokSupabaseBrowserClient`                         |
+| `./auth`     | Middleware, routes, actions, redirects                    |
+| `./admin`    | `createOtokSupabaseAdminClient`                           |
+| `./storage`  | `getSupabaseStorage` — Storage entry point                |
+| `./plugin`   | Plugin factory (same as root default export)              |
+| `./registry` | Runtime registry helpers                                  |
+| `./loader`   | `defineLoader` / `defineAction` with `supabase` injection |
 
 ## License
 

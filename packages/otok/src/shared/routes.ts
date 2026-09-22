@@ -28,12 +28,7 @@ export interface OtokActionContext<Env = unknown> extends OtokContext<Env> {
   idempotencyKey?: string;
 }
 
-export type LoaderResult =
-  | JsonValue
-  | Record<string, unknown>
-  | OtokFailure
-  | Response
-  | void;
+export type LoaderResult = JsonValue | Record<string, unknown> | OtokFailure | Response | void;
 
 export interface OtokFailure<T = unknown> {
   status: number;
@@ -56,9 +51,7 @@ export type ValidationErrorInput = {
 
 export type OtokResponse = Response | OtokHttpError;
 
-export type OtokLoader<Data extends LoaderResult = LoaderResult> = (
-  context: OtokContext,
-) => Data | Promise<Data>;
+export type OtokLoader<Data extends LoaderResult = LoaderResult> = (context: OtokContext) => Data | Promise<Data>;
 
 export type ActionResult = JsonValue | Record<string, JsonValue> | OtokFailure | Response | void;
 
@@ -188,7 +181,10 @@ export function notFound(message = "Not found"): never {
 
 export function fail(status: number, failure: Omit<OtokFailure, "status">): never;
 export function fail(message?: string, status?: number): never;
-export function fail(first: number | string = "Internal server error", second: Omit<OtokFailure, "status"> | number = 500): never {
+export function fail(
+  first: number | string = "Internal server error",
+  second: Omit<OtokFailure, "status"> | number = 500,
+): never {
   if (typeof first === "number") {
     const failure = normalizeFailure(first, second && typeof second === "object" ? second : {});
     throw new OtokHttpError(failure.status, failure.message ?? "Request failed", undefined, failure);
@@ -225,9 +221,7 @@ function normalizeFailure(status: number, failure: Omit<OtokFailure, "status">):
   };
 }
 
-function normalizeFieldErrors(
-  fieldErrors: Record<string, string[]> | undefined,
-): Record<string, string[]> | undefined {
+function normalizeFieldErrors(fieldErrors: Record<string, string[]> | undefined): Record<string, string[]> | undefined {
   if (!fieldErrors) return undefined;
   return Object.fromEntries(Object.entries(fieldErrors).map(([field, errors]) => [field, [...errors]]));
 }
@@ -255,8 +249,5 @@ export function defineMiddleware<T extends OtokMiddleware>(middleware: T): T {
 
 export type InferLoaderData<T extends OtokLoader> = Awaited<ReturnType<T>>;
 
-export type InferIslandProps<T> = T extends ComponentType<infer Props>
-  ? Props extends IslandProps
-    ? Props
-    : never
-  : never;
+export type InferIslandProps<T> =
+  T extends ComponentType<infer Props> ? (Props extends IslandProps ? Props : never) : never;

@@ -1,0 +1,17 @@
+{
+  "nav.jobs": "Jobs",
+  "nav.employer": "Employer",
+  "nav.login": "Sign in",
+  "nav.logout": "Sign out",
+  "nav.impressum": "Legal notice",
+  "jobs.title": "Open positions",
+  "jobs.search": "Search",
+  "jobs.page": "Page",
+  "login.title": "Sign in",
+  "login.submit": "Continue",
+  "login.demo": "Demo: alice@alpha.ch / bob@beta.ch — password seed-password",
+  "employer.title": "My listings",
+  "employer.new": "New job",
+  "employer.import": "CSV import",
+  "impressum.title": "Legal notice"
+}

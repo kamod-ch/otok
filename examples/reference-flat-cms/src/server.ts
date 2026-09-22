@@ -15,7 +15,7 @@ const app = createOtokApp({
   staticDir: "./dist/client",
   health: { ok: true, app: "reference-flat-cms" },
   configure: (app) => {
-    app.get("/api/posts", (c) => json({ posts: posts.list({ includeDrafts: true }) }));
+    app.get("/api/posts", (_c) => json({ posts: posts.list({ includeDrafts: true }) }));
   },
 });
 

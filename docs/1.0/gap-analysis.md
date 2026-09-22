@@ -1,7 +1,31 @@
 # Otok 1.0 Gap Analysis
 
-Prioritized work items derived from [audit.md](./audit.md).
+Prioritized work items derived from [audit.md](./audit.md) (**2026-08-03**, core `@0.4.0` at audit time).
+
+**Current stabilization / RC:** see [release-candidate.md](./release-candidate.md) and [../stabilization/status.md](../stabilization/status.md). This file keeps the **historical 1.0 backlog**; status tables below distinguish audit-era gaps from 2026 stabilization closure.
+
 **Principle:** No breaking change without migration guide + compatibility decision.
+
+---
+
+## Stabilization arc (2026, Prompts 01–12)
+
+| Prompt | Theme | Status | Evidence |
+|--------|--------|--------|----------|
+| 01 | Scaffold / baseline | Done | [status.md](../stabilization/status.md#prompt-01--baseline-und-scaffold-abgeschlossen) |
+| 02 | HTML cache | Done | `packages/otok/docs/html-cache.md`, `.changeset/html-cache-isolation.md` |
+| 03 | Action idempotency | Done | `packages/otok/docs/idempotency.md`, `.changeset/action-idempotency.md` |
+| 04 | Progressive forms | Done | `packages/otok/docs/progressive-forms.md`, playground E2E |
+| 05 | Hydration cleanup | Done | `packages/otok/docs/hydration-lifecycle.md` |
+| 06 | Prefetch / nav | Done | `packages/otok/docs/soft-nav-prefetch.md` |
+| 07 | Postgres queue + worker | Done (package) | ADR-001, `.changeset/postgres-queue-worker.md` |
+| 08 | Durable workflows | Done (package) | `packages/otok-workflows/docs/durability.md` |
+| 09 | Oxlint / CI split | Done | `.changeset/oxlint-oxfmt-ci.md`, `.github/workflows/ci.yml` |
+| 10 | API / pack / perf gates | Done | `docs/governance/quality-gates.md`, `pnpm release:check` |
+| 11 | Devjobs reference | Done (app) | `examples/devjobs-reference/` |
+| 12 | RC documentation | Done | This section + [release-checklist.md](./release-checklist.md) |
+
+**App migration for 02–06:** [migration-stabilization.md](./migration-stabilization.md).
 
 ---
 
@@ -87,19 +111,21 @@ These decisions avoid silent breaking changes:
 
 ---
 
-## Implementation Status
+## Implementation Status (1.0 audit items)
 
-| Item | Status |
-|------|--------|
-| Audit document | Done |
-| Gap analysis | Done |
-| Governance policies | In progress |
-| API stability manifest | In progress |
-| Plugin contract | In progress |
-| Benchmark harness | In progress |
-| `otok upgrade` | In progress |
-| SECURITY.md | In progress |
-| Migration guide | In progress |
-| Release checklist / runbook | In progress |
+| Item | Audit-era status | After stabilization (2026) |
+|------|------------------|----------------------------|
+| Audit document | Done | Unchanged — [audit.md](./audit.md) |
+| Gap analysis | Done | Updated (this file) |
+| Governance policies | In progress | Expanded — `docs/governance/*`, quality gates |
+| API stability manifest | In progress | **Enforced** — `api-stability.json`, `pnpm api:check`, snapshot |
+| Plugin contract | In progress | Package exists; gate via examples + pack consumer |
+| Benchmark harness | In progress | **Done** — `bench:otok`, `budget:check`, CI build job |
+| `otok upgrade` | In progress | **Open** (P0-2) |
+| SECURITY.md | In progress | **Open** (P0-3) |
+| Migration guide (0.4→1.0) | In progress | Draft + [migration-stabilization.md](./migration-stabilization.md) |
+| Release checklist / runbook | In progress | **Script-backed** — [release-checklist.md](./release-checklist.md) |
+| Canary releases | Open (P1-8) | **Open** |
+| Devjobs / Postgres reference | Not in audit | **Done** — `examples/devjobs-reference` |
 
-Update this table as items land.
+**Blockers for marketing `1.0.0` stable:** P0 rows below still apply unless explicitly waived. **RC recommendation:** [release-candidate.md](./release-candidate.md) (`0.7.0-rc.x`, not `1.0.0`).

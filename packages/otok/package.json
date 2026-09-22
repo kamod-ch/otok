@@ -2,21 +2,21 @@
   "name": "@kamod-ch/otok",
   "version": "0.6.1",
   "description": "Hono + Preact Islands framework runtime.",
-  "license": "MIT",
   "homepage": "https://github.com/kamod-ch/otok/tree/main/packages/otok#readme",
   "bugs": {
     "url": "https://github.com/kamod-ch/otok/issues"
   },
+  "license": "MIT",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/kamod-ch/otok.git",
     "directory": "packages/otok"
   },
-  "type": "module",
   "files": [
     "dist",
     "README.md"
   ],
+  "type": "module",
   "exports": {
     ".": {
       "types": "./dist/config/index.d.ts",
@@ -59,6 +59,9 @@
       "default": "./dist/client/mutations/index.js"
     }
   },
+  "publishConfig": {
+    "access": "public"
+  },
   "scripts": {
     "build": "rm -rf dist && tsc -p tsconfig.build.json",
     "typecheck": "tsc -p tsconfig.json --noEmit",
@@ -69,25 +72,28 @@
     "hono": "^4.12.25",
     "preact-render-to-string": "^6.7.0"
   },
+  "devDependencies": {
+    "@hono/node-server": "^2.0.1",
+    "@types/node": "^24.12.2",
+    "kysely": "^0.29.3",
+    "preact": "^10.28.2",
+    "typescript": "~6.0.2",
+    "vitest": "^4.1.2"
+  },
   "peerDependencies": {
     "@hono/node-server": ">=2.0.0",
+    "kysely": ">=0.27.0",
     "preact": ">=10.26.0"
   },
   "peerDependenciesMeta": {
     "@hono/node-server": {
       "optional": true
+    },
+    "kysely": {
+      "optional": true
     }
-  },
-  "devDependencies": {
-    "@hono/node-server": "^2.0.1",
-    "preact": "^10.28.2",
-    "typescript": "~6.0.2",
-    "vitest": "^4.1.2"
   },
   "engines": {
     "node": ">=20"
-  },
-  "publishConfig": {
-    "access": "public"
   }
 }

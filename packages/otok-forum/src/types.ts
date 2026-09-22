@@ -1,12 +1,5 @@
 import type { ComponentType } from "preact";
-import type {
-  MiddlewareModule,
-  OtokActionContext,
-  OtokContext,
-  OtokHead,
-  OtokPageProps,
-  OtokRoute,
-} from "@kamod-ch/otok/server";
+import type { MiddlewareModule, OtokActionContext, OtokContext, OtokHead, OtokRoute } from "@kamod-ch/otok/server";
 
 // ─── Permissions ───────────────────────────────────────────────────────────
 

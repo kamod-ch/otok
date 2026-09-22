@@ -1,8 +1,8 @@
 {
   "name": "saas-reference",
-  "private": true,
   "version": "0.1.0",
-  "description": "Full-stack Otok SaaS reference application \u2014 auth, orgs, billing, audit.",
+  "private": true,
+  "description": "Full-stack Otok SaaS reference application — auth, orgs, billing, audit.",
   "type": "module",
   "scripts": {
     "dev": "vite",

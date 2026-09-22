@@ -152,12 +152,12 @@ export function createKyselyAuditStore(db: Kysely<AuditDatabase>): AuditStore {
   };
 }
 
-export async function migrateAuditSchema(
-  db: Kysely<AuditDatabase>,
-  dialect: AuditDialect = "sqlite",
-): Promise<void> {
+export async function migrateAuditSchema(db: Kysely<AuditDatabase>, dialect: AuditDialect = "sqlite"): Promise<void> {
   const migration = dialect === "postgres" ? POSTGRES_MIGRATION : SQLITE_MIGRATION;
-  for (const statement of migration.split(";").map((s) => s.trim()).filter(Boolean)) {
+  for (const statement of migration
+    .split(";")
+    .map((s) => s.trim())
+    .filter(Boolean)) {
     await sql.raw(statement).execute(db);
   }
 }

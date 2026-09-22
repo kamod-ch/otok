@@ -19,10 +19,7 @@ export async function detectPackageManager(root: string): Promise<PackageManager
   return "npm";
 }
 
-export function installCommand(
-  manager: PackageManager,
-  packageName: string,
-): { command: string; args: string[] } {
+export function installCommand(manager: PackageManager, packageName: string): { command: string; args: string[] } {
   switch (manager) {
     case "pnpm":
       return { command: "pnpm", args: ["add", packageName] };

@@ -61,11 +61,11 @@ await fetchSseClient({
 
 ## Providers
 
-| Provider | Use case |
-|----------|----------|
-| `memory` | Dev / single instance |
-| `redis` | Multi-instance horizontal scaling |
-| `durable-objects` | Cloudflare Workers contract |
+| Provider          | Use case                          |
+| ----------------- | --------------------------------- |
+| `memory`          | Dev / single instance             |
+| `redis`           | Multi-instance horizontal scaling |
+| `durable-objects` | Cloudflare Workers contract       |
 
 ## CRM example
 

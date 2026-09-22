@@ -2,29 +2,14 @@ import fs from "node:fs/promises";
 import fsSync from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-import {
-  defaultCachePath,
-  isCacheFresh,
-  projectCachePath,
-  readCache,
-  writeCache,
-  type CacheRecord,
-} from "./cache.js";
-import {
-  indexRegistry,
-  validateRegistryBundle,
-  validateRegistryIndex,
-  verifyBundleChecksum,
-} from "./validate.js";
+import { defaultCachePath, isCacheFresh, projectCachePath, readCache, writeCache, type CacheRecord } from "./cache.js";
+import { indexRegistry, validateRegistryBundle, validateRegistryIndex, verifyBundleChecksum } from "./validate.js";
 import type { LoadedRegistry, RegistryClientOptions } from "./schema.js";
 
 const packageRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 
 export function bundledRegistryDir(): string {
-  const candidates = [
-    path.join(packageRoot, "registry", "v1"),
-    path.join(packageRoot, "dist", "registry", "v1"),
-  ];
+  const candidates = [path.join(packageRoot, "registry", "v1"), path.join(packageRoot, "dist", "registry", "v1")];
   for (const candidate of candidates) {
     if (fsSync.existsSync(candidate)) return candidate;
   }
@@ -49,8 +34,7 @@ export function parseRegistryPayload(indexRaw: string, bundleRaw: string): Loade
 
 export class RegistryClient {
   private loaded: LoadedRegistry | null = null;
-  private readonly options: Required<Pick<RegistryClientOptions, "cacheTtlMs">> &
-    RegistryClientOptions;
+  private readonly options: Required<Pick<RegistryClientOptions, "cacheTtlMs">> & RegistryClientOptions;
 
   constructor(options: RegistryClientOptions = {}) {
     this.options = {
@@ -76,10 +60,7 @@ export class RegistryClient {
     for (const cachePath of cachePaths) {
       const cached = await readCache(cachePath);
       if (cached && isCacheFresh(cached, this.options.cacheTtlMs)) {
-        this.loaded = parseRegistryPayload(
-          JSON.stringify(cached.index),
-          JSON.stringify(cached.bundle),
-        );
+        this.loaded = parseRegistryPayload(JSON.stringify(cached.index), JSON.stringify(cached.bundle));
         return this.loaded;
       }
     }

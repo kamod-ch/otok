@@ -37,7 +37,7 @@ export default defineConfig({
 Register `observability()` immediately after `security()` so every downstream plugin and SSR handler runs inside a request span:
 
 ```ts
-plugins: [security(), observability(), i18n(), auth(), seo()]
+plugins: [security(), observability(), i18n(), auth(), seo()];
 ```
 
 ## Traced loaders and actions
@@ -86,12 +86,12 @@ Built-in redaction covers `authorization`, `cookie`, `password`, `token`, `secre
 
 ## API
 
-| Export | Purpose |
-|--------|---------|
-| `observability()` | Plugin factory |
-| `defineLoader` / `defineAction` | Traced handlers |
-| `createJsonLogger` | Structured JSON logger |
-| `createRedactor` | Privacy filters |
-| `createOtelTracer` | OTEL bridge |
-| `createMemoryTracer` | In-process dev tracer |
-| `recordRenderDuration` | SSR timing hook |
+| Export                          | Purpose                |
+| ------------------------------- | ---------------------- |
+| `observability()`               | Plugin factory         |
+| `defineLoader` / `defineAction` | Traced handlers        |
+| `createJsonLogger`              | Structured JSON logger |
+| `createRedactor`                | Privacy filters        |
+| `createOtelTracer`              | OTEL bridge            |
+| `createMemoryTracer`            | In-process dev tracer  |
+| `recordRenderDuration`          | SSR timing hook        |

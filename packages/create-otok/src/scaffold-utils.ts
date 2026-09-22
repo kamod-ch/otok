@@ -42,7 +42,11 @@ export function resolveLayerDir(layerName: string): string {
   return layerPath;
 }
 
-export function copyDirectory(source: string, target: string, ignore = new Set(["node_modules", "dist", ".git"])): void {
+export function copyDirectory(
+  source: string,
+  target: string,
+  ignore = new Set(["node_modules", "dist", ".git"]),
+): void {
   fs.mkdirSync(target, { recursive: true });
   for (const entry of fs.readdirSync(source, { withFileTypes: true })) {
     if (ignore.has(entry.name)) continue;

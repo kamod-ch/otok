@@ -13,12 +13,7 @@ export function gitlabScopes(config: OAuthProviderConfig): string[] {
 }
 
 export function createGitLabClient(config: GitLabProviderConfig): GitLab {
-  return new GitLab(
-    config.baseURL ?? "https://gitlab.com",
-    config.clientId,
-    config.clientSecret,
-    config.redirectUri,
-  );
+  return new GitLab(config.baseURL ?? "https://gitlab.com", config.clientId, config.clientSecret, config.redirectUri);
 }
 
 export type { OAuthProviderConfig };

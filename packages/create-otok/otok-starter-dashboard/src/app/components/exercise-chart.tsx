@@ -18,9 +18,7 @@ export function ExerciseChart({ data }: ExerciseChartProps) {
     <Card class="col-span-4">
       <CardHeader>
         <CardTitle>Exercise Minutes</CardTitle>
-        <CardDescription>
-          Your exercise minutes are ahead of where you normally are.
-        </CardDescription>
+        <CardDescription>Your exercise minutes are ahead of where you normally are.</CardDescription>
       </CardHeader>
       <CardContent>
         <svg
@@ -35,14 +33,7 @@ export function ExerciseChart({ data }: ExerciseChartProps) {
             const y = padding.top + chartHeight - barHeight;
             return (
               <g key={point.day}>
-                <rect
-                  x={x}
-                  y={y}
-                  width={barWidth}
-                  height={barHeight}
-                  rx={4}
-                  class="fill-primary/80"
-                />
+                <rect x={x} y={y} width={barWidth} height={barHeight} rx={4} class="fill-primary/80" />
                 <text
                   x={x + barWidth / 2}
                   y={height - 8}

@@ -1,4 +1,4 @@
-import { cpSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
+import { mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 import { tmpdir } from "node:os";
 import { describe, expect, it } from "vitest";
@@ -6,10 +6,7 @@ import { addPlugin } from "../src/commands/add.js";
 
 function scaffoldProject(name: string): string {
   const dir = mkdtempSync(join(tmpdir(), `otok-add-${name}-`));
-  writeFileSync(
-    join(dir, "package.json"),
-    JSON.stringify({ name: "test-app", private: true }, null, 2),
-  );
+  writeFileSync(join(dir, "package.json"), JSON.stringify({ name: "test-app", private: true }, null, 2));
   writeFileSync(join(dir, "pnpm-lock.yaml"), "lockfileVersion: 9\n");
   writeFileSync(join(dir, "vite.config.ts"), "export default {};\n");
   return dir;

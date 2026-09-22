@@ -16,22 +16,13 @@ import {
   type EventsDialect,
 } from "../types.js";
 
-export {
-  DEAD_LETTER_TABLE,
-  OUTBOX_TABLE,
-  PROCESSED_TABLE,
-  SQLITE_MIGRATION,
-  POSTGRES_MIGRATION,
-} from "../types.js";
+export { DEAD_LETTER_TABLE, OUTBOX_TABLE, PROCESSED_TABLE, SQLITE_MIGRATION, POSTGRES_MIGRATION } from "../types.js";
 export type { EventsDatabase, EventsDialect } from "../types.js";
 
 type OutboxRow = EventsDatabase[typeof OUTBOX_TABLE];
 type DeadLetterRow = EventsDatabase[typeof DEAD_LETTER_TABLE];
 
-export function createKyselyOutboxStore(
-  db: Kysely<EventsDatabase>,
-  dialect: EventsDialect = "sqlite",
-): OutboxStore {
+export function createKyselyOutboxStore(db: Kysely<EventsDatabase>, dialect: EventsDialect = "sqlite"): OutboxStore {
   const useJson = dialect === "postgres";
 
   return {
@@ -81,10 +72,8 @@ export function createKyselyOutboxStore(
       }
 
       return rows.map((row) => {
-        const payload =
-          typeof row.payload === "string" ? parseOutboxPayload(row.payload) : row.payload;
-        const metadata =
-          typeof row.metadata === "string" ? parseOutboxMetadata(row.metadata) : row.metadata;
+        const payload = typeof row.payload === "string" ? parseOutboxPayload(row.payload) : row.payload;
+        const metadata = typeof row.metadata === "string" ? parseOutboxMetadata(row.metadata) : row.metadata;
         return toOutboxRecord({
           ...row,
           status: row.status as import("../../types.js").OutboxStatus,
@@ -118,11 +107,7 @@ export function createKyselyOutboxStore(
     },
 
     async markDead(id, error) {
-      await db
-        .updateTable(OUTBOX_TABLE)
-        .set({ status: "dead", last_error: error })
-        .where("id", "=", id)
-        .execute();
+      await db.updateTable(OUTBOX_TABLE).set({ status: "dead", last_error: error }).where("id", "=", id).execute();
     },
   };
 }
@@ -177,12 +162,7 @@ export function createKyselyDeadLetterStore(
     },
 
     async list(limit = 100) {
-      const rows = await db
-        .selectFrom(DEAD_LETTER_TABLE)
-        .selectAll()
-        .orderBy("failed_at desc")
-        .limit(limit)
-        .execute();
+      const rows = await db.selectFrom(DEAD_LETTER_TABLE).selectAll().orderBy("failed_at desc").limit(limit).execute();
 
       return rows.map((r) => ({
         id: r.id,
@@ -198,12 +178,12 @@ export function createKyselyDeadLetterStore(
   };
 }
 
-export async function migrateEventsSchema(
-  db: Kysely<EventsDatabase>,
-  dialect: EventsDialect,
-): Promise<void> {
+export async function migrateEventsSchema(db: Kysely<EventsDatabase>, dialect: EventsDialect): Promise<void> {
   const migration = dialect === "postgres" ? POSTGRES_MIGRATION : SQLITE_MIGRATION;
-  for (const statement of migration.split(";").map((s) => s.trim()).filter(Boolean)) {
+  for (const statement of migration
+    .split(";")
+    .map((s) => s.trim())
+    .filter(Boolean)) {
     await sql.raw(statement).execute(db);
   }
 }

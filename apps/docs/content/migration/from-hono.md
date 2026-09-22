@@ -3,15 +3,16 @@ title: Migrate from plain Hono
 section: Migration
 order: 73
 ---
+
 # Migrate from plain Hono
 
 If you already have a Hono API or custom server, Otok adds file routes, Preact SSR, islands, and soft navigation without replacing Hono.
 
 ## When to use which helper
 
-| Helper | Use when |
-| --- | --- |
-| `createOtokApp()` | You want defaults for health, static assets, and SSR |
+| Helper                | Use when                                               |
+| --------------------- | ------------------------------------------------------ |
+| `createOtokApp()`     | You want defaults for health, static assets, and SSR   |
 | `createOtokHandler()` | You already own a Hono `app` and need API routes first |
 
 ## Keep your API routes

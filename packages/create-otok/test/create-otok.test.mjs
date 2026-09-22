@@ -8,7 +8,7 @@ import test from "node:test";
 import { fileURLToPath } from "node:url";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const repoRoot = path.resolve(__dirname, "../../..");
+const _repoRoot = path.resolve(__dirname, "../../..");
 const cliPath = path.resolve(__dirname, "../bin/create-otok.mjs");
 
 function readJson(filePath) {
@@ -158,6 +158,18 @@ test("scaffolds crm variant with kit files and manifest", () => {
 
     const pkg = readJson(path.join(target, "package.json"));
     assert.ok(pkg.dependencies["@kamod-ch/otok-kit-crm"]);
+  });
+});
+
+test("scaffolds saas variant with kit billing files", () => {
+  withTempDir((tempDir) => {
+    const target = path.join(tempDir, "saas-app");
+    const result = runCli([target, "--yes", "--variant", "saas", "--no-install"], tempDir);
+    assert.equal(result.status, 0, result.stderr || result.stdout);
+    assert.ok(fs.existsSync(path.join(target, "src/app/routes/billing/index.tsx")), "billing route");
+    assert.ok(fs.existsSync(path.join(target, "src/app/routes/api/stripe/webhook.tsx")), "webhook route");
+    const manifest = readJson(path.join(target, ".otok/kit-manifest.json"));
+    assert.ok(manifest.kits.includes("@kamod-ch/otok-kit-saas"));
   });
 });
 

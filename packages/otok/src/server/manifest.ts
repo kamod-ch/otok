@@ -10,8 +10,7 @@ export interface ResolveOtokManifestOptions {
 export function isOtokProduction(isProd?: boolean): boolean {
   return (
     isProd ??
-    (typeof import.meta !== "undefined" &&
-      !!(import.meta as ImportMeta & { env?: { PROD?: boolean } }).env?.PROD)
+    (typeof import.meta !== "undefined" && !!(import.meta as ImportMeta & { env?: { PROD?: boolean } }).env?.PROD)
   );
 }
 

@@ -16,10 +16,7 @@ export interface OAuthAdapter<TUser> {
    * Link an OAuth account to an existing signed-in user.
    * Must verify the current session before linking.
    */
-  linkAccount?(input: {
-    user: TUser;
-    profile: OAuthProfile;
-  }): Promise<TUser>;
+  linkAccount?(input: { user: TUser; profile: OAuthProfile }): Promise<TUser>;
 }
 
 export interface OAuthTokenSet {

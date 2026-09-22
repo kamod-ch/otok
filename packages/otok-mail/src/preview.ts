@@ -1,5 +1,5 @@
 import type { Hono } from "hono";
-import { createTestMailProvider, formatMailPreview, getCapturedMail } from "./providers/test.js";
+import { formatMailPreview, getCapturedMail } from "./providers/test.js";
 import type { MailRuntime } from "./types.js";
 
 export function configureMailPreviewRoute(app: Hono, runtime: MailRuntime): void {
@@ -32,11 +32,7 @@ export function configureMailPreviewRoute(app: Hono, runtime: MailRuntime): void
 }
 
 function escapeHtml(value: string): string {
-  return value
-    .replaceAll("&", "&amp;")
-    .replaceAll("<", "&lt;")
-    .replaceAll(">", "&gt;")
-    .replaceAll('"', "&quot;");
+  return value.replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll('"', "&quot;");
 }
 
 export { createTestMailProvider, getCapturedMail, resetTestMailProvider } from "./providers/test.js";

@@ -4,13 +4,7 @@ export function UserAvatar({ user, size = 32 }: { user?: ForumUser; size?: numbe
   const initials = user?.displayName?.slice(0, 2).toUpperCase() ?? "?";
   if (user?.avatarUrl) {
     return (
-      <img
-        src={user.avatarUrl}
-        alt=""
-        width={size}
-        height={size}
-        style={{ borderRadius: "50%", objectFit: "cover" }}
-      />
+      <img src={user.avatarUrl} alt="" width={size} height={size} style={{ borderRadius: "50%", objectFit: "cover" }} />
     );
   }
   return (
@@ -33,13 +27,7 @@ export function UserAvatar({ user, size = 32 }: { user?: ForumUser; size?: numbe
   );
 }
 
-export function EmptyState({
-  title,
-  message,
-}: {
-  title: string;
-  message?: string;
-}) {
+export function EmptyState({ title, message }: { title: string; message?: string }) {
   return (
     <div role="status" class="forum-card" style={{ textAlign: "center", padding: "2rem" }}>
       <p style={{ fontWeight: 600, margin: 0 }}>{title}</p>
@@ -56,13 +44,7 @@ export function ForumError({ message }: { message: string }) {
   );
 }
 
-export function Pagination({
-  meta,
-  baseUrl,
-}: {
-  meta: { page: number; totalPages: number };
-  baseUrl: string;
-}) {
+export function Pagination({ meta, baseUrl }: { meta: { page: number; totalPages: number }; baseUrl: string }) {
   if (meta.totalPages <= 1) return null;
   const prev = meta.page > 1 ? `${baseUrl}?page=${meta.page - 1}` : null;
   const next = meta.page < meta.totalPages ? `${baseUrl}?page=${meta.page + 1}` : null;

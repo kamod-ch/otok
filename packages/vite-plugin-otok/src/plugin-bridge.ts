@@ -61,7 +61,11 @@ export async function loadResolvedOtokConfig(
   }
 
   const userConfig = await importOtokConfigFile(discovered);
-  const container = new Container(userConfig as import("@kamod-ch/otok-config").OtokUserConfig, { root, mode, command });
+  const container = new Container(userConfig as import("@kamod-ch/otok-config").OtokUserConfig, {
+    root,
+    mode,
+    command,
+  });
   const resolved = await container.resolve();
 
   return {

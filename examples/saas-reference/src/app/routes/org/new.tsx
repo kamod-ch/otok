@@ -35,11 +35,7 @@ export const action = defineAction({
     const user = await authFromOtokContext(hono, runtime.helpers).requireUser();
 
     const slug = input.slug?.trim() || slugify(input.name);
-    const taken = await database
-      .selectFrom("organization")
-      .select("id")
-      .where("slug", "=", slug)
-      .executeTakeFirst();
+    const taken = await database.selectFrom("organization").select("id").where("slug", "=", slug).executeTakeFirst();
     if (taken) {
       return { message: "Slug already taken", values: { name: input.name, slug } };
     }

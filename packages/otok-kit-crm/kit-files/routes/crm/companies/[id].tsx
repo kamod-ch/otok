@@ -46,33 +46,62 @@ export async function action(ctx: OtokActionContext) {
 export default function CompanyDetailPage({ data }: { data: Awaited<ReturnType<typeof loader>> }) {
   return (
     <section class="space-y-6">
-      <a href="/crm" class="text-sm text-sky-600">← Unternehmen</a>
+      <a href="/crm" class="text-sm text-sky-600">
+        ← Unternehmen
+      </a>
       <h1 class="text-2xl font-semibold">{data.company.name}</h1>
       <dl class="grid grid-cols-2 gap-2 text-sm">
-        <dt class="font-medium">UID</dt><dd>{data.company.uid ?? "—"}</dd>
-        <dt class="font-medium">Kanton</dt><dd>{data.company.canton ?? "—"}</dd>
-        <dt class="font-medium">Rechtsform</dt><dd>{data.company.legalForm ?? "—"}</dd>
+        <dt class="font-medium">UID</dt>
+        <dd>{data.company.uid ?? "—"}</dd>
+        <dt class="font-medium">Kanton</dt>
+        <dd>{data.company.canton ?? "—"}</dd>
+        <dt class="font-medium">Rechtsform</dt>
+        <dd>{data.company.legalForm ?? "—"}</dd>
       </dl>
 
       <form method="post" class="space-y-2 rounded border p-4">
         <input type="hidden" name="intent" value="update-company" />
-        <label class="block text-sm">Name<input name="name" defaultValue={data.company.name} class="mt-1 w-full rounded border px-2 py-1" /></label>
-        <label class="block text-sm">Branche<input name="industry" defaultValue={data.company.industry ?? ""} class="mt-1 w-full rounded border px-2 py-1" /></label>
-        <button type="submit" class="rounded bg-sky-600 px-3 py-1 text-white text-sm">Speichern</button>
+        <label class="block text-sm">
+          Name
+          <input name="name" defaultValue={data.company.name} class="mt-1 w-full rounded border px-2 py-1" />
+        </label>
+        <label class="block text-sm">
+          Branche
+          <input
+            name="industry"
+            defaultValue={data.company.industry ?? ""}
+            class="mt-1 w-full rounded border px-2 py-1"
+          />
+        </label>
+        <button type="submit" class="rounded bg-sky-600 px-3 py-1 text-white text-sm">
+          Speichern
+        </button>
       </form>
 
       <section>
         <h2 class="font-medium">Kontakte</h2>
-        <ul class="text-sm">{data.contacts.map((c) => <li key={c.id}>{c.firstName} {c.lastName} — {c.email}</li>)}</ul>
+        <ul class="text-sm">
+          {data.contacts.map((c) => (
+            <li key={c.id}>
+              {c.firstName} {c.lastName} — {c.email}
+            </li>
+          ))}
+        </ul>
       </section>
 
       <section>
         <h2 class="font-medium">Aktivitäten</h2>
-        <ul class="text-sm">{data.activities.map((a) => <li key={a.id}>{a.subject}</li>)}</ul>
+        <ul class="text-sm">
+          {data.activities.map((a) => (
+            <li key={a.id}>{a.subject}</li>
+          ))}
+        </ul>
         <form method="post" class="mt-2 flex gap-2">
           <input type="hidden" name="intent" value="add-activity" />
           <input name="subject" placeholder="Neue Aktivität" class="rounded border px-2 py-1" />
-          <button type="submit" class="rounded border px-2 py-1 text-sm">Hinzufügen</button>
+          <button type="submit" class="rounded border px-2 py-1 text-sm">
+            Hinzufügen
+          </button>
         </form>
       </section>
     </section>

@@ -22,18 +22,18 @@ async function confirmOr(defaultValue: boolean, message: string): Promise<boolea
   return value;
 }
 
-export async function promptScaffoldOptions(
-  partial: Partial<ScaffoldOptions>,
-): Promise<ScaffoldOptions> {
+export async function promptScaffoldOptions(partial: Partial<ScaffoldOptions>): Promise<ScaffoldOptions> {
   p.intro("create otok");
 
-  const nameInput = partial.name ?? (await p.text({
-    message: "Project name",
-    placeholder: "my-otok-app",
-    validate: (value) => {
-      if (!value?.trim()) return "Project name is required";
-    },
-  }));
+  const nameInput =
+    partial.name ??
+    (await p.text({
+      message: "Project name",
+      placeholder: "my-otok-app",
+      validate: (value) => {
+        if (!value?.trim()) return "Project name is required";
+      },
+    }));
   if (isCancel(nameInput)) throw new Error("otok: scaffold cancelled.");
   const name = nameInput as string;
 

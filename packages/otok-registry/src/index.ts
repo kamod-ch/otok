@@ -40,12 +40,6 @@ export {
   bundledRegistryDir,
 } from "./client.js";
 
-export {
-  defaultCachePath,
-  projectCachePath,
-  readCache,
-  writeCache,
-  isCacheFresh,
-} from "./cache.js";
+export { defaultCachePath, projectCachePath, readCache, writeCache, isCacheFresh } from "./cache.js";
 
 export { bundledRegistryFixturePath } from "./fixtures.js";

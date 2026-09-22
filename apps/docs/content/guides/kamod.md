@@ -3,6 +3,7 @@ title: Kamod integration
 section: Guides
 order: 28
 ---
+
 # Kamod integration (`@kamod-ch/otok-kamod`)
 
 Kamod UI, Tailwind, themes, and form helpers are **optional**. Otok core does not depend on Kamod.
@@ -53,7 +54,7 @@ Default theme:
 Brand presets require `@kamod-ch/themes`:
 
 ```ts
-kamod({ theme: "kamod" })
+kamod({ theme: "kamod" });
 ```
 
 ```css
@@ -95,12 +96,12 @@ These entry points are not bundled until imported.
 
 ## Bundle impact
 
-| Piece | When it ships |
-|-------|----------------|
-| `@kamod-ch/ui/*` subpaths | Only imported components |
-| `@kamod-ch/icons/*` | Only imported icons |
-| `@kamod-ch/otok-kamod` plugin | Build tooling only |
-| Signals / state entry points | When you import them |
+| Piece                         | When it ships            |
+| ----------------------------- | ------------------------ |
+| `@kamod-ch/ui/*` subpaths     | Only imported components |
+| `@kamod-ch/icons/*`           | Only imported icons      |
+| `@kamod-ch/otok-kamod` plugin | Build tooling only       |
+| Signals / state entry points  | When you import them     |
 
 ## Version errors
 

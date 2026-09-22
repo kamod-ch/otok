@@ -17,9 +17,7 @@ export function resetMailClientForTests(): void {
 
 export function getMailClient() {
   if (!client) {
-    throw new Error(
-      "otok-mail: no mail client registered. Add mail() to otok.config.ts plugins.",
-    );
+    throw new Error("otok-mail: no mail client registered. Add mail() to otok.config.ts plugins.");
   }
   return client;
 }

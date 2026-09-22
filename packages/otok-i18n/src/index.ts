@@ -1,18 +1,7 @@
-export {
-  createTranslator,
-  type FlattenKeys,
-  type MessageCatalog,
-  type TranslationKey,
-} from "./catalog.js";
+export { createTranslator, type FlattenKeys, type MessageCatalog, type TranslationKey } from "./catalog.js";
 export type { Translator } from "./types.js";
 export { i18nHead, type I18nHeadOptions } from "./head.js";
-export {
-  buildI18nContext,
-  createI18n,
-  createI18nAsync,
-  type I18nConfig,
-  type I18nContext,
-} from "./i18n.js";
+export { buildI18nContext, createI18n, createI18nAsync, type I18nConfig, type I18nContext } from "./i18n.js";
 export { interpolate } from "./interpolate.js";
 export { defineLoader, defineAction, serializeI18n } from "./loader.js";
 export {

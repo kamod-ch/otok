@@ -1,4 +1,9 @@
-import type { OtokPresetDefinition, PresetConflictStrategy, PresetFileEntry, PresetPackageJsonPatch } from "./preset.js";
+import type {
+  OtokPresetDefinition,
+  PresetConflictStrategy,
+  PresetFileEntry,
+  PresetPackageJsonPatch,
+} from "./preset.js";
 
 export interface MergePresetsOptions {
   /** When true, later presets override earlier ones for conflicting destinations. */
@@ -17,14 +22,10 @@ export interface MergedPresetPlan {
   chain: string[];
 }
 
-const FILE_COLLECTIONS: (keyof Pick<OtokPresetDefinition, "routes" | "layouts" | "components" | "styles" | "middleware" | "files">)[] = [
-  "routes",
-  "layouts",
-  "components",
-  "styles",
-  "middleware",
-  "files",
-];
+const FILE_COLLECTIONS: (keyof Pick<
+  OtokPresetDefinition,
+  "routes" | "layouts" | "components" | "styles" | "middleware" | "files"
+>)[] = ["routes", "layouts", "components", "styles", "middleware", "files"];
 
 function normalizeExtends(extendsValue: OtokPresetDefinition["extends"]): string[] {
   if (!extendsValue) return [];
@@ -130,9 +131,9 @@ export function mergePresets(
     if (preset.starter) starter = preset.starter;
     plugins = [...(plugins ?? []), ...(preset.plugins ?? [])];
     config = mergeConfig(config, preset.config);
-    envSchema = { ...envSchema, ...(preset.envSchema ?? {}) };
+    envSchema = { ...envSchema, ...preset.envSchema };
     packageJson = mergePackageJson(packageJson, preset.packageJson);
-    overwrite = { ...overwrite, ...(preset.overwrite ?? {}) };
+    overwrite = { ...overwrite, ...preset.overwrite };
 
     for (const entry of collectFiles(preset)) {
       const current = fileMap.get(entry.to);

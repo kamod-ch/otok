@@ -12,10 +12,7 @@ interface PackageJsonOtok {
   };
 }
 
-export async function loadPluginSetupHook(
-  root: string,
-  packageName: string,
-): Promise<PluginSetupHook | undefined> {
+export async function loadPluginSetupHook(root: string, packageName: string): Promise<PluginSetupHook | undefined> {
   const packageJsonPath = join(root, "node_modules", ...packageName.split("/"), "package.json");
   if (!(await exists(packageJsonPath))) return undefined;
 
@@ -39,10 +36,7 @@ export interface ApplySetupOptions {
   confirmCreate?: (path: string) => Promise<boolean>;
 }
 
-export async function applySetupChanges(
-  changes: PluginSetupChange[],
-  options: ApplySetupOptions,
-): Promise<string[]> {
+export async function applySetupChanges(changes: PluginSetupChange[], options: ApplySetupOptions): Promise<string[]> {
   const validated = validateSetupChanges(options.root, changes);
   const applied: string[] = [];
 

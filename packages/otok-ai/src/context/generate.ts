@@ -89,11 +89,7 @@ const IMPORT_PATHS = [
   "@kamod-ch/otok-ai/tools (defineAiTool)",
 ];
 
-const RELEVANT_EXAMPLES = [
-  "examples/saas-reference",
-  "examples/kit-crm-swiss",
-  "examples/reference-ai-audit",
-];
+const RELEVANT_EXAMPLES = ["examples/saas-reference", "examples/kit-crm-swiss", "examples/reference-ai-audit"];
 
 async function readPackageJson(root: string) {
   try {
@@ -144,11 +140,7 @@ async function scanStructure(dir: string, depth = 0): Promise<string[]> {
 }
 
 async function findProjectRules(root: string): Promise<string[]> {
-  const paths = [
-    join(root, ".cursor", "rules"),
-    join(root, "AGENTS.md"),
-    join(root, ".cursorrules"),
-  ];
+  const paths = [join(root, ".cursor", "rules"), join(root, "AGENTS.md"), join(root, ".cursorrules")];
   const rules: string[] = [];
   for (const p of paths) {
     try {

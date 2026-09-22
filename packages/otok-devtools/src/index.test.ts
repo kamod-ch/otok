@@ -1,11 +1,7 @@
 import { describe, expect, it, afterEach } from "vitest";
 import { h } from "preact";
 import { createTestApp, renderRoute } from "@kamod-ch/otok-test";
-import {
-  createOtokDevtoolsBridge,
-  getOtokDevtoolsBridge,
-  setOtokDevtoolsBridge,
-} from "@kamod-ch/otok/devtools";
+import { createOtokDevtoolsBridge, getOtokDevtoolsBridge, setOtokDevtoolsBridge } from "@kamod-ch/otok/devtools";
 import devtools from "./index.js";
 
 describe("@kamod-ch/otok-devtools", () => {

@@ -1,70 +1,65 @@
-interface IdempotencyEntry {
-  response: Response;
-  expiresAt: number;
-}
+import type { Context } from "hono";
+import type { OtokRoute } from "../shared/routes.js";
+import { resolveActionMethod } from "./action-method.js";
+import { IdempotencyPayloadError, fingerprintActionPayload } from "./idempotency/fingerprint.js";
+import { resolveIdempotencyKey, validateIdempotencyClientKey } from "./idempotency/keys.js";
+import { buildIdempotencyScope } from "./idempotency/scope.js";
+import {
+  clearIdempotencyStore,
+  getIdempotencyStore,
+  runIdempotentAction,
+  setIdempotencyStore,
+} from "./idempotency/run.js";
+import { idempotencyPayloadErrorResponse, invalidIdempotencyKeyResponse } from "./idempotency/serialize.js";
+import { buildStorageKey, encodeIdempotencyScopeKey } from "./idempotency/types.js";
 
-const store = new Map<string, IdempotencyEntry>();
-const DEFAULT_TTL_MS = 60_000;
-const MAX_ENTRIES = 500;
+export {
+  clearIdempotencyStore,
+  getIdempotencyStore,
+  setIdempotencyStore,
+  resolveIdempotencyKey,
+  validateIdempotencyClientKey,
+  buildIdempotencyScope,
+  encodeIdempotencyScopeKey,
+  buildStorageKey,
+  fingerprintActionPayload,
+  IdempotencyPayloadError,
+};
+export type { IdempotencyScope, IdempotencyStore } from "./idempotency/types.js";
+export { MemoryIdempotencyStore } from "./idempotency/memory-store.js";
+export { PostgresIdempotencyStore, IDEMPOTENCY_RECORDS_TABLE } from "./idempotency/postgres-store.js";
+export type { IdempotencyDatabase } from "./idempotency/postgres-store.js";
+export { IDEMPOTENCY_TTL_MS } from "./idempotency/types.js";
 
-function prune(): void {
-  const now = Date.now();
-  for (const [key, entry] of store) {
-    if (entry.expiresAt <= now) store.delete(key);
-  }
-  if (store.size <= MAX_ENTRIES) return;
-  const overflow = store.size - MAX_ENTRIES;
-  const keys = store.keys();
-  for (let i = 0; i < overflow; i++) {
-    const next = keys.next();
-    if (next.done) break;
-    store.delete(next.value);
-  }
-}
-
-export function resolveIdempotencyKey(request: Request, formData?: FormData): string | undefined {
-  const header = request.headers.get("x-otok-idempotency-key");
-  if (header) return header.trim() || undefined;
-  const field = formData?.get("_idempotency");
-  if (typeof field === "string" && field.trim()) return field.trim();
-  return undefined;
-}
-
-export function getIdempotentResponse(key: string): Response | undefined {
-  const entry = store.get(key);
-  if (!entry) return undefined;
-  if (entry.expiresAt <= Date.now()) {
-    store.delete(key);
-    return undefined;
-  }
-  return entry.response.clone();
-}
-
-export function storeIdempotentResponse(key: string, response: Response, ttlMs = DEFAULT_TTL_MS): void {
-  prune();
-  store.set(key, {
-    response: response.clone(),
-    expiresAt: Date.now() + ttlMs,
-  });
-}
-
-export async function withIdempotency(
-  key: string | undefined,
+export async function withActionIdempotency(
+  c: Context,
+  route: OtokRoute,
+  formData: FormData | undefined,
+  clientKey: string | undefined,
   factory: () => Promise<Response>,
 ): Promise<Response> {
-  if (!key) return factory();
+  if (!clientKey) return factory();
+  if (!validateIdempotencyClientKey(clientKey)) return invalidIdempotencyKeyResponse();
 
-  const cached = getIdempotentResponse(key);
-  if (cached) return cached;
-
-  const response = await factory();
-  if (response.ok || (response.status >= 300 && response.status < 400)) {
-    storeIdempotentResponse(key, response);
+  let fingerprint: string;
+  try {
+    const payload = await fingerprintActionPayload(c.req.raw, formData);
+    fingerprint = payload.hash;
+  } catch (error) {
+    if (error instanceof IdempotencyPayloadError) {
+      return idempotencyPayloadErrorResponse(error.code, error.message);
+    }
+    throw error;
   }
-  return response;
-}
 
-/** Test helper — clears the in-memory idempotency store. */
-export function clearIdempotencyStore(): void {
-  store.clear();
+  const method = resolveActionMethod(c.req.method, formData);
+  const scopeKey = encodeIdempotencyScopeKey(buildIdempotencyScope(c, route, method));
+  const storageKey = buildStorageKey(scopeKey, clientKey);
+  return runIdempotentAction(
+    storageKey,
+    fingerprint,
+    factory,
+    getIdempotencyStore(),
+    () => c.res.headers.getSetCookie().length === 0,
+  );
 }

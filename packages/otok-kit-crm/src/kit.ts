@@ -6,7 +6,7 @@ const KIT_ROOT = "kit-files";
 export default defineKit({
   kind: "kit",
   name: "@kamod-ch/otok-kit-crm",
-  version: "0.1.0",
+  version: "0.2.0",
   starter: "minimal",
   otok: "^0.4.0",
   requires: [
@@ -21,6 +21,12 @@ export default defineKit({
       kit: "@kamod-ch/otok-kit-crm",
       description: "CRM core tables — organizations, companies, contacts, pipelines",
       up: "src/schema/migrations/001_initial.sql",
+    },
+    {
+      id: "20260803140000_crm_extended",
+      kit: "@kamod-ch/otok-kit-crm",
+      description: "Extended company fields, sources, websites, contact requests, audit log (PostgreSQL)",
+      up: "src/schema/migrations/002_extended.sql",
     },
   ],
   packageJson: {

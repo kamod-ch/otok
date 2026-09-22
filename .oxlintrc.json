@@ -1,0 +1,24 @@
+{
+  "$schema": "./node_modules/oxlint/configuration_schema.json",
+  "plugins": ["typescript", "unicorn", "oxc"],
+  "categories": {
+    "correctness": "error"
+  },
+  "rules": {
+    "eslint/no-debugger": "error"
+  },
+  "ignorePatterns": [
+    "**/node_modules/**",
+    "**/dist/**",
+    "**/test-results/**",
+    "**/playwright-report/**",
+    "proofshot-artifacts/**",
+    "tmp/**",
+    "apps/playground/client/**",
+    "**/*.tsbuildinfo",
+    "pnpm-lock.yaml"
+  ],
+  "env": {
+    "builtin": true
+  }
+}

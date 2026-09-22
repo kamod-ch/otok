@@ -99,12 +99,12 @@ Register `seo()` after `i18n()` so locale is available in loaders and OG hooks. 
 
 ## API
 
-| Export | Purpose |
-|--------|---------|
-| `defineMeta` / `meta` | Typed route `head` factory |
-| `resolveMetaToHead` | Convert `RouteMeta` → `OtokHead` |
-| `seoI18nHead` | Merge metadata with i18n hreflang |
-| `createSitemapEntries` / `renderSitemapXml` | Sitemap helpers |
-| `renderRobotsTxt` | robots.txt renderer |
-| `renderRssFeed` / `renderAtomFeed` | Feed renderers |
-| `defineLoader` | Loader with `seo.origin` / locale |
+| Export                                      | Purpose                           |
+| ------------------------------------------- | --------------------------------- |
+| `defineMeta` / `meta`                       | Typed route `head` factory        |
+| `resolveMetaToHead`                         | Convert `RouteMeta` → `OtokHead`  |
+| `seoI18nHead`                               | Merge metadata with i18n hreflang |
+| `createSitemapEntries` / `renderSitemapXml` | Sitemap helpers                   |
+| `renderRobotsTxt`                           | robots.txt renderer               |
+| `renderRssFeed` / `renderAtomFeed`          | Feed renderers                    |
+| `defineLoader`                              | Loader with `seo.origin` / locale |

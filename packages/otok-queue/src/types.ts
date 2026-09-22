@@ -12,6 +12,8 @@ export type JobPayloadMap = Record<string, unknown>;
 
 export interface EnqueueOptions {
   idempotencyKey?: string;
+  /** Separates job dedupe keys (not HTTP action idempotency). */
+  idempotencyScope?: string;
   delayMs?: number;
   maxAttempts?: number;
   runAt?: Date;
@@ -25,9 +27,28 @@ export interface QueueJob<TName extends string = string, TPayload = unknown> {
   attempts: number;
   maxAttempts: number;
   idempotencyKey?: string;
+  idempotencyScope?: string;
   createdAt: string;
   availableAt: string;
   lastError?: string;
+  /** Present when claimed by a worker with lease support. */
+  leaseToken?: string;
+  leaseOwner?: string;
+  leaseUntil?: string;
+}
+
+export interface ClaimOptions {
+  workerId?: string;
+  leaseMs?: number;
+}
+
+export interface PostgresProviderConfig {
+  type: "postgres";
+  /** Default dedupe scope when enqueue omits idempotencyScope. */
+  defaultIdempotencyScope?: string;
+  leaseMs?: number;
+  dedupeRetentionMs?: number;
+  deadLetterRetentionMs?: number;
 }
 
 export interface CronSchedule {
@@ -46,10 +67,12 @@ export interface QueueProvider<TJobs extends JobPayloadMap = JobPayloadMap> {
     payload: TJobs[TName],
     options?: EnqueueOptions,
   ): Promise<QueueJob<TName, TJobs[TName]>>;
-  claim(limit?: number): Promise<QueueJob[]>;
-  complete(jobId: string): Promise<void>;
-  fail(jobId: string, error: string, retryable?: boolean): Promise<void>;
-  moveToDeadLetter(jobId: string, error: string): Promise<void>;
+  claim(limit?: number, options?: ClaimOptions): Promise<QueueJob[]>;
+  complete(jobId: string, leaseToken?: string): Promise<void>;
+  fail(jobId: string, error: string, retryable?: boolean, leaseToken?: string): Promise<void>;
+  heartbeat?(jobId: string, leaseToken: string): Promise<boolean>;
+  moveToDeadLetter(jobId: string, error: string, leaseToken?: string): Promise<void>;
+  retryDeadLetter?(deadLetterId: string): Promise<QueueJob>;
   findByIdempotencyKey?(key: string): Promise<QueueJob | null>;
   registerCron?(schedule: CronSchedule): Promise<void>;
   tickCron?(now?: Date): Promise<QueueJob[]>;
@@ -63,7 +86,7 @@ export type TestProviderConfig = {
   type: "test";
 };
 
-export type QueueProviderConfig = MemoryProviderConfig | TestProviderConfig;
+export type QueueProviderConfig = MemoryProviderConfig | TestProviderConfig | PostgresProviderConfig;
 
 export interface QueueRetryDefaults {
   maxAttempts: number;

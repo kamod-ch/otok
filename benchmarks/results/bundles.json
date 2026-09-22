@@ -1,0 +1,101 @@
+{
+  "generatedAt": "2026-09-21T21:31:15.991Z",
+  "project": "apps/playground",
+  "entries": {
+    "client/assets/chat-card-BOcMen9G.js": {
+      "rawBytes": 1451,
+      "gzipBytes": 781
+    },
+    "client/assets/chunk-4BJJOHZT-C7QpRuOv.js": {
+      "rawBytes": 13240,
+      "gzipBytes": 5196
+    },
+    "client/assets/chunk-5FBD2NTR-hJVv83Au.js": {
+      "rawBytes": 2930,
+      "gzipBytes": 1198
+    },
+    "client/assets/chunk-67J4KBOW-2EkxvmS_.js": {
+      "rawBytes": 1621,
+      "gzipBytes": 696
+    },
+    "client/assets/chunk-6RASPU5N-4TnAxxj3.js": {
+      "rawBytes": 882,
+      "gzipBytes": 484
+    },
+    "client/assets/chunk-MJG6UKD4-s4iiQ4OL.js": {
+      "rawBytes": 1477,
+      "gzipBytes": 706
+    },
+    "client/assets/chunk-PGOCR4LG-Bi1p1jGf.js": {
+      "rawBytes": 2306,
+      "gzipBytes": 1028
+    },
+    "client/assets/chunk-PPYJQNE5-BsYTfR1H.js": {
+      "rawBytes": 2187,
+      "gzipBytes": 1008
+    },
+    "client/assets/cleanup-probe-Wv_yFA10.js": {
+      "rawBytes": 541,
+      "gzipBytes": 331
+    },
+    "client/assets/client-BrUHD7jK.js": {
+      "rawBytes": 44648,
+      "gzipBytes": 15696
+    },
+    "client/assets/counter-BCdm0726.js": {
+      "rawBytes": 363,
+      "gzipBytes": 283
+    },
+    "client/assets/crm-activity-panel-DY3pqgst.js": {
+      "rawBytes": 1431,
+      "gzipBytes": 772
+    },
+    "client/assets/crm-companies-table-DEjRcM0p.js": {
+      "rawBytes": 2003,
+      "gzipBytes": 859
+    },
+    "client/assets/crm-company-editor-CLQ_R5Pt.js": {
+      "rawBytes": 1733,
+      "gzipBytes": 900
+    },
+    "client/assets/dashboard-toolbar-8ez7cQi5.js": {
+      "rawBytes": 5581,
+      "gzipBytes": 2256
+    },
+    "client/assets/demo-dialog-DEaJk1mR.js": {
+      "rawBytes": 880,
+      "gzipBytes": 475
+    },
+    "client/assets/dist-Ch05eTWO.js": {
+      "rawBytes": 32822,
+      "gzipBytes": 10550
+    },
+    "client/assets/payment-form-Az2uiH9A.js": {
+      "rawBytes": 4238,
+      "gzipBytes": 1668
+    },
+    "client/assets/signals.module-Cvr35f4A.js": {
+      "rawBytes": 7737,
+      "gzipBytes": 2930
+    },
+    "client/assets/strategy-lab-DMRYl1ba.js": {
+      "rawBytes": 390,
+      "gzipBytes": 289
+    },
+    "client/assets/team-members-mPLzXPji.js": {
+      "rawBytes": 7947,
+      "gzipBytes": 2996
+    },
+    "client/assets/theme-island-CNw-QPkW.js": {
+      "rawBytes": 297,
+      "gzipBytes": 244
+    },
+    "server/server.js": {
+      "rawBytes": 294227,
+      "gzipBytes": 66451
+    }
+  },
+  "aggregates": {
+    "clientJsGzipKb": 50
+  }
+}

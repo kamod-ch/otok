@@ -15,8 +15,8 @@ const app = createOtokApp({
   staticDir: "./dist/client",
   health: { ok: true, app: "reference-ai-audit" },
   configure: (app) => {
-    app.get("/api/audits", (c) => json({ audits: audits.list() }));
-    app.get("/api/audits/:id", (c) => json({ audit: audits.get(c.req.param("id")) }));
+    app.get("/api/audits", (_c) => json({ audits: audits.list() }));
+    app.get("/api/audits/:id", (_c) => json({ audit: audits.get(c.req.param("id")) }));
   },
 });
 

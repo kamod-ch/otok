@@ -1,11 +1,6 @@
 import type { Hono } from "hono";
 import type { Plugin } from "vite";
-import {
-  adapterToPlugin,
-  resolveAdapter,
-  runAdapterCleanup,
-  runAdapterFinish,
-} from "./adapter.js";
+import { adapterToPlugin, resolveAdapter, runAdapterCleanup, runAdapterFinish } from "./adapter.js";
 import type { ResolvedOtokAdapter } from "./adapter.js";
 import { normalizePlugins } from "./define.js";
 import { pluginError } from "./errors.js";
@@ -60,10 +55,7 @@ function collectVirtualModules(plugins: OtokPlugin[]): Map<string, VirtualModule
   return modules;
 }
 
-function parseEnvSchemas(
-  config: OtokUserConfig,
-  plugins: OtokPlugin[],
-): Record<string, unknown> {
+function parseEnvSchemas(config: OtokUserConfig, plugins: OtokPlugin[]): Record<string, unknown> {
   const raw = { ...process.env, ...config.env };
   const parsed: Record<string, unknown> = {};
 
@@ -85,10 +77,7 @@ export class PluginContainer {
     this.env = env;
     this.adapter = resolveAdapter(userConfig.adapter, env.root);
     this.config = { ...userConfig, plugins: undefined, adapter: undefined };
-    this.plugins = [
-      ...(this.adapter ? [adapterToPlugin(this.adapter)] : []),
-      ...normalizePlugins(userConfig.plugins),
-    ];
+    this.plugins = [...(this.adapter ? [adapterToPlugin(this.adapter)] : []), ...normalizePlugins(userConfig.plugins)];
     assertUniquePluginNames(this.plugins);
     for (const plugin of this.plugins) {
       validatePluginOptions(plugin);
@@ -241,10 +230,7 @@ export class PluginContainer {
   }
 }
 
-export async function resolveOtokConfig(
-  userConfig: OtokUserConfig,
-  env: OtokConfigEnv,
-): Promise<ResolvedOtokConfig> {
+export async function resolveOtokConfig(userConfig: OtokUserConfig, env: OtokConfigEnv): Promise<ResolvedOtokConfig> {
   const container = new PluginContainer(userConfig, env);
   return container.resolve();
 }

@@ -8,13 +8,48 @@ import {
   OTOK_SWAP_ATTR,
 } from "../shared/navigation.js";
 import type { IslandRegistry } from "../shared/islands.js";
-import { cancelPendingHydration, hydrateIslands } from "./hydration.js";
+import {
+  beginHydrationNavigation,
+  cancelPendingHydration,
+  hydrateIslandsDeferred,
+  hydrateIslandsEager,
+  unmountHydratedIslands,
+} from "./hydration.js";
 import {
   restoreFocus,
   restoreScrollPosition,
   saveScrollPosition,
+  scrollToHashFromUrl,
   withViewTransition,
 } from "./mutations/scroll.js";
+import {
+  invalidateSoftNavPrefetch,
+  parseSoftNavHtmlResponse,
+  prefetchSoftNavUrl,
+  takePrefetchedNavigationDocument,
+} from "./soft-nav-prefetch.js";
+
+export {
+  invalidateSoftNavPrefetch,
+  prefetchSoftNavUrl,
+  setSoftNavPrefetchScope,
+  type SoftNavPrefetchInvalidateOptions,
+  type SoftNavPrefetchInvalidateReason,
+  type SoftNavPrefetchScope,
+} from "./soft-nav-prefetch.js";
+import {
+  analyzeSoftNavFormSupport,
+  buildSoftFormFetchInit,
+  clearFormSubmitError,
+  defaultSoftFormErrorMessages,
+  historyPathFromUrl,
+  isValidationHtmlResponse,
+  nativeRequestSubmit,
+  setFormSubmitting,
+  showFormSubmitError,
+  softFormSubmitToLegacyBoolean,
+  type SoftFormSubmitResult,
+} from "./soft-nav-form.js";
 
 export interface SoftNavOptions {
   /** Enable link interception. Defaults to true for backwards compatibility. */
@@ -34,9 +69,8 @@ export interface SoftNavigateOptions {
 }
 
 let activeNavigation: AbortController | null = null;
-
-const prefetchCache = new Map<string, Document>();
-const MAX_PREFETCH_CACHE = 10;
+let activeFormSubmissionGeneration = 0;
+const inFlightForms = new WeakSet<HTMLFormElement>();
 
 function dispatchCancelHydration(root: ParentNode): void {
   cancelPendingHydration(root);
@@ -102,11 +136,13 @@ export function applySoftNavigationDocument(nextDoc: Document, currentDoc: Docum
     if (!swapId) continue;
     const currentRegion = currentDoc.querySelector(`[${OTOK_SWAP_ATTR}="${cssEscape(swapId)}"]`);
     if (currentRegion) {
+      unmountHydratedIslands(currentRegion);
       dispatchCancelHydration(currentRegion);
       currentRegion.outerHTML = nextRegion.outerHTML;
     }
   }
 
+  unmountHydratedIslands(currentPage);
   dispatchCancelHydration(currentPage);
   currentPage.outerHTML = nextPage.outerHTML;
   syncSoftNavigationHead(nextDoc, currentDoc);
@@ -119,14 +155,10 @@ interface NavigationDocumentResult {
   url: string;
 }
 
-async function fetchNavigationDocument(
-  url: string,
-  signal: AbortSignal,
-): Promise<NavigationDocumentResult | null> {
-  const cached = prefetchCache.get(url);
-  if (cached) {
-    prefetchCache.delete(url);
-    return { document: cached, url };
+async function fetchNavigationDocument(url: string, signal: AbortSignal): Promise<NavigationDocumentResult | null> {
+  const prefetched = takePrefetchedNavigationDocument(url);
+  if (prefetched) {
+    return prefetched;
   }
 
   const response = await fetch(url, {
@@ -136,39 +168,29 @@ async function fetchNavigationDocument(
     redirect: "follow",
   });
 
-  if (!response.ok) return null;
-
-  const finalUrl = response.url;
-  if (finalUrl) {
-    const final = new URL(finalUrl, window.location.href);
-    const requested = new URL(url, window.location.href);
-    if (final.origin !== requested.origin) return null;
-  }
-
   const html = await response.text();
-  return { document: new DOMParser().parseFromString(html, "text/html"), url: response.url || url };
+  return parseSoftNavHtmlResponse(response, url, html);
 }
 
-export function prefetchSoftNavUrl(url: string): void {
-  if (prefetchCache.has(url)) return;
+function navigationScrollUrl(requestedUrl: string, finalUrl: string): string {
+  const requested = new URL(requestedUrl, window.location.href);
+  const final = new URL(finalUrl, window.location.href);
+  if (requested.hash && !final.hash) {
+    return `${final.pathname}${final.search}${requested.hash}`;
+  }
+  return `${final.pathname}${final.search}${final.hash}`;
+}
 
-  void fetch(url, {
-    headers: { Accept: "text/html" },
-    credentials: "same-origin",
-  })
-    .then((response) => {
-      if (!response.ok) return undefined;
-      return response.text();
-    })
-    .then((html) => {
-      if (!html) return;
-      if (prefetchCache.size >= MAX_PREFETCH_CACHE) {
-        const first = prefetchCache.keys().next().value;
-        if (first) prefetchCache.delete(first);
-      }
-      prefetchCache.set(url, new DOMParser().parseFromString(html, "text/html"));
-    })
-    .catch(() => undefined);
+function applyScrollAfterNavigation(url: string, scrollBehavior: boolean | ScrollBehavior, historyMode: boolean): void {
+  if (scrollBehavior === false) return;
+  const behavior = scrollBehavior === true ? "auto" : scrollBehavior;
+  if (!historyMode) {
+    restoreScrollPosition(undefined, behavior);
+    return;
+  }
+  if (!scrollToHashFromUrl(url, behavior)) {
+    window.scrollTo({ top: 0, behavior });
+  }
 }
 
 export async function softNavigate(
@@ -188,8 +210,7 @@ export async function softNavigate(
     }
 
     if (options.history !== false) {
-      const historyUrl = new URL(result.url || url, window.location.href);
-      const historyPath = `${historyUrl.pathname}${historyUrl.search}${historyUrl.hash}`;
+      const historyPath = navigationScrollUrl(url, result.url || url);
       const state = { [OTOK_HISTORY_STATE_KEY]: true, url: historyPath };
 
       if (options.replace) {
@@ -199,24 +220,31 @@ export async function softNavigate(
       }
     }
 
-    const applied = applySoftNavigationDocument(result.document);
+    const navigationGeneration = beginHydrationNavigation();
+    const hydrateOpts = {
+      navigationGeneration,
+      onError: (error: unknown) => options.onError?.(error),
+    };
+
+    let applied = false;
+    await withViewTransition(async () => {
+      applied = applySoftNavigationDocument(result.document);
+      if (!applied) return;
+      await hydrateIslandsEager(document, registry, hydrateOpts);
+    });
+
     if (!applied) {
       window.location.assign(url);
       return false;
     }
 
-    await withViewTransition(async () => {
-      await hydrateIslands(document, registry, (error) => options.onError?.(error));
-    });
+    void hydrateIslandsDeferred(document, registry, hydrateOpts);
 
-    const scrollBehavior = options.scroll ?? true;
-    if (scrollBehavior !== false) {
-      if (options.history === false) {
-        restoreScrollPosition(undefined, scrollBehavior === true ? "auto" : scrollBehavior);
-      } else {
-        window.scrollTo({ top: 0, behavior: scrollBehavior === true ? "auto" : scrollBehavior });
-      }
-    }
+    applyScrollAfterNavigation(
+      navigationScrollUrl(url, result.url || url),
+      options.scroll ?? true,
+      options.history !== false,
+    );
 
     restoreFocus();
 
@@ -231,95 +259,104 @@ export async function softNavigate(
   }
 }
 
-export function isSoftNavForm(form: HTMLFormElement, submitter?: HTMLElement, location: Location = window.location): boolean {
+export function isSoftNavForm(
+  form: HTMLFormElement,
+  submitter?: HTMLElement,
+  location: Location = window.location,
+): boolean {
   if (form.hasAttribute(OTOK_NO_NAV_ATTR) || submitter?.hasAttribute(OTOK_NO_NAV_ATTR)) return false;
-  if (form.target && form.target !== "_self") return false;
-
-  const method = ((submitter instanceof HTMLButtonElement || submitter instanceof HTMLInputElement ? submitter.formMethod : "") || form.method || "get").toLowerCase();
-  if (method !== "get" && method !== "post") return false;
-
-  const action = (submitter instanceof HTMLButtonElement || submitter instanceof HTMLInputElement ? submitter.formAction : "") || form.action || location.href;
-  let url: URL;
-  try {
-    url = new URL(action, location.href);
-  } catch {
-    return false;
-  }
-
-  if (url.origin !== location.origin) return false;
-  if (url.protocol !== "http:" && url.protocol !== "https:") return false;
-  if (url.pathname.startsWith("/api/")) return false;
-
-  return true;
+  const analysis = analyzeSoftNavFormSupport(form, submitter, location);
+  return analysis.ok;
 }
 
-function formDataWithSubmitter(form: HTMLFormElement, submitter?: HTMLElement): FormData {
-  try {
-    return new FormData(form, submitter instanceof HTMLElement ? submitter : undefined);
-  } catch {
-    const data = new FormData(form);
-    if (
-      (submitter instanceof HTMLButtonElement || submitter instanceof HTMLInputElement) &&
-      submitter.name &&
-      !submitter.disabled
-    ) {
-      data.append(submitter.name, submitter.value);
-    }
-    return data;
-  }
-}
+export type { SoftFormSubmitResult } from "./soft-nav-form.js";
+export {
+  analyzeSoftNavFormSupport,
+  formDataWithSubmitter,
+  isSoftFormSubmitSettled,
+  nativeRequestSubmit,
+  softFormSubmitToLegacyBoolean,
+} from "./soft-nav-form.js";
 
-async function submitSoftNavigationForm(
+export async function submitSoftNavigationFormResult(
   form: HTMLFormElement,
   submitter: HTMLElement | undefined,
   registry: IslandRegistry,
   options: Pick<SoftNavOptions, "onError" | "scroll"> = {},
-): Promise<boolean> {
+): Promise<SoftFormSubmitResult> {
+  const analysis = analyzeSoftNavFormSupport(form, submitter, window.location);
+  if (!analysis.ok) {
+    return { kind: "native-fallback" };
+  }
+
+  const generation = ++activeFormSubmissionGeneration;
   activeNavigation?.abort();
   const controller = new AbortController();
   activeNavigation = controller;
 
-  const submitControl = submitter instanceof HTMLButtonElement || submitter instanceof HTMLInputElement ? submitter : undefined;
-  const method = (submitControl?.formMethod || form.method || "get").toUpperCase();
-  const action = submitControl?.formAction || form.action || window.location.href;
-  const url = new URL(action, window.location.href);
-  const body = formDataWithSubmitter(form, submitter);
-
-  const fetchUrl = new URL(url.href);
-  const init: RequestInit = {
-    signal: controller.signal,
-    headers: { Accept: "text/html" },
-    credentials: "same-origin",
-    redirect: "follow",
-  };
-
-  if (method === "GET") {
-    const search = new URLSearchParams();
-    for (const [key, value] of body) search.append(key, typeof value === "string" ? value : value.name);
-    fetchUrl.search = search.toString();
-  } else {
-    init.method = "POST";
-    init.body = body;
-  }
+  const { url: fetchUrl, init } = buildSoftFormFetchInit(form, submitter, analysis, controller.signal);
+  let sent = false;
 
   try {
+    sent = true;
     const response = await fetch(fetchUrl.href, init);
-    if (!response.ok) return false;
+    if (generation !== activeFormSubmissionGeneration) {
+      return { kind: "stale" };
+    }
+
     const finalUrl = response.url || fetchUrl.href;
     const final = new URL(finalUrl, window.location.href);
-    if (final.origin !== window.location.origin) return false;
+    if (final.origin !== window.location.origin) {
+      return {
+        kind: "ambiguous",
+        message: "Cross-origin response after form submission.",
+      };
+    }
+
+    const showHtml = response.ok || isValidationHtmlResponse(response);
+    if (!showHtml) {
+      return {
+        kind: sent ? "ambiguous" : "error",
+        message: sent ? defaultSoftFormErrorMessages.ambiguous : defaultSoftFormErrorMessages.error,
+      };
+    }
 
     const html = await response.text();
-    const nextDoc = new DOMParser().parseFromString(html, "text/html");
-    const applied = applySoftNavigationDocument(nextDoc);
-    if (!applied) return false;
+    if (generation !== activeFormSubmissionGeneration) {
+      return { kind: "stale" };
+    }
 
+    const nextDoc = new DOMParser().parseFromString(html, "text/html");
+    const navigationGeneration = beginHydrationNavigation();
+    const hydrateOpts = {
+      navigationGeneration,
+      onError: (error: unknown) => options.onError?.(error),
+    };
+
+    let applied = false;
     await withViewTransition(async () => {
-      await hydrateIslands(document, registry, (error) => options.onError?.(error));
+      applied = applySoftNavigationDocument(nextDoc);
+      if (!applied) return;
+      await hydrateIslandsEager(document, registry, hydrateOpts);
     });
 
-    const historyPath = `${final.pathname}${final.search}${final.hash}`;
-    const currentPath = `${window.location.pathname}${window.location.search}${window.location.hash}`;
+    if (!applied) {
+      return {
+        kind: sent ? "ambiguous" : "native-fallback",
+        message: sent ? defaultSoftFormErrorMessages.ambiguous : undefined,
+      };
+    }
+
+    void hydrateIslandsDeferred(document, registry, hydrateOpts);
+
+    if (generation !== activeFormSubmissionGeneration) {
+      return { kind: "stale" };
+    }
+
+    invalidateSoftNavPrefetch({ reason: "mutation" });
+
+    const historyPath = historyPathFromUrl(finalUrl);
+    const currentPath = historyPathFromUrl(window.location.href);
     if (historyPath !== currentPath) {
       saveScrollPosition(currentPath);
       history.pushState({ [OTOK_HISTORY_STATE_KEY]: true, url: historyPath }, "", historyPath);
@@ -327,19 +364,35 @@ async function submitSoftNavigationForm(
 
     restoreFocus();
 
-    const scrollBehavior = options.scroll ?? true;
-    if (scrollBehavior !== false) {
-      window.scrollTo({ top: 0, behavior: scrollBehavior === true ? "auto" : scrollBehavior });
-    }
+    applyScrollAfterNavigation(finalUrl, options.scroll ?? true, true);
 
-    return true;
+    return { kind: isValidationHtmlResponse(response) ? "validation" : "handled" };
   } catch (error) {
-    if (error instanceof DOMException && error.name === "AbortError") return false;
+    if (generation !== activeFormSubmissionGeneration) {
+      return { kind: "stale" };
+    }
+    if (error instanceof DOMException && error.name === "AbortError") {
+      return { kind: "aborted", message: defaultSoftFormErrorMessages.aborted };
+    }
     options.onError?.(error);
-    return false;
+    return {
+      kind: sent ? "error" : "native-fallback",
+      message: sent ? defaultSoftFormErrorMessages.error : undefined,
+    };
   } finally {
     if (activeNavigation === controller) activeNavigation = null;
   }
+}
+
+/** @returns true when the enhanced path applied HTML (success or validation). */
+export async function submitSoftNavigationForm(
+  form: HTMLFormElement,
+  submitter: HTMLElement | undefined,
+  registry: IslandRegistry,
+  options: Pick<SoftNavOptions, "onError" | "scroll"> = {},
+): Promise<boolean> {
+  const result = await submitSoftNavigationFormResult(form, submitter, registry, options);
+  return softFormSubmitToLegacyBoolean(result);
 }
 
 export function setupSoftNavigation(registry: IslandRegistry, options: SoftNavOptions = {}): () => void {
@@ -364,6 +417,7 @@ export function setupSoftNavigation(registry: IslandRegistry, options: SoftNavOp
     if (!linksEnabled || !isSoftNavLink(anchor)) return;
 
     event.preventDefault();
+    saveScrollPosition();
     const url = anchor.href;
     void softNavigate(url, registry, {
       onError: options.onError,
@@ -388,20 +442,47 @@ export function setupSoftNavigation(registry: IslandRegistry, options: SoftNavOp
     const form = event.target;
     if (!(form instanceof HTMLFormElement)) return;
     const submitter = event.submitter instanceof HTMLElement ? event.submitter : undefined;
-    if (!isSoftNavForm(form, submitter)) return;
+    if (form.hasAttribute(OTOK_NO_NAV_ATTR) || submitter?.hasAttribute(OTOK_NO_NAV_ATTR)) return;
+
+    const analysis = analyzeSoftNavFormSupport(form, submitter, window.location);
+    if (!analysis.ok) return;
 
     event.preventDefault();
-    void submitSoftNavigationForm(form, submitter, registry, {
+    if (inFlightForms.has(form)) return;
+    inFlightForms.add(form);
+    setFormSubmitting(form, true);
+    clearFormSubmitError(form);
+
+    void submitSoftNavigationFormResult(form, submitter, registry, {
       onError: options.onError,
       scroll: options.scroll,
-    }).then((applied) => {
-      if (applied) options.onNavigate?.({ url: form.action || window.location.href });
-      else form.submit();
-    });
+    })
+      .then((result) => {
+        if (result.kind === "native-fallback") {
+          nativeRequestSubmit(form, submitter);
+          return;
+        }
+        if (result.kind === "handled" || result.kind === "validation") {
+          options.onNavigate?.({ url: form.action || window.location.href });
+          return;
+        }
+        if (result.kind === "stale") return;
+        const message =
+          result.message ??
+          (result.kind === "aborted"
+            ? defaultSoftFormErrorMessages.aborted
+            : result.kind === "ambiguous"
+              ? defaultSoftFormErrorMessages.ambiguous
+              : defaultSoftFormErrorMessages.error);
+        showFormSubmitError(form, message);
+      })
+      .finally(() => {
+        setFormSubmitting(form, false);
+        inFlightForms.delete(form);
+      });
   };
 
   const onPopState = (event: PopStateEvent) => {
-    saveScrollPosition();
     const stateUrl = typeof event.state?.url === "string" ? event.state.url : undefined;
     const path = stateUrl ?? `${window.location.pathname}${window.location.search}${window.location.hash}`;
     void softNavigate(path, registry, {
@@ -409,10 +490,10 @@ export function setupSoftNavigation(registry: IslandRegistry, options: SoftNavOp
       onError: options.onError,
       scroll: false,
     }).then((applied) => {
-      if (!applied || !stateUrl) return;
+      if (!applied) return;
       restoreScrollPosition(stateUrl);
       const currentPath = `${window.location.pathname}${window.location.search}${window.location.hash}`;
-      if (currentPath !== stateUrl) {
+      if (stateUrl && currentPath !== stateUrl) {
         history.replaceState({ [OTOK_HISTORY_STATE_KEY]: true, url: stateUrl }, "", stateUrl);
       }
     });
@@ -430,6 +511,6 @@ export function setupSoftNavigation(registry: IslandRegistry, options: SoftNavOp
     window.removeEventListener("popstate", onPopState);
     activeNavigation?.abort();
     activeNavigation = null;
-    prefetchCache.clear();
+    invalidateSoftNavPrefetch({ reason: "manual" });
   };
 }

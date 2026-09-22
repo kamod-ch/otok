@@ -35,10 +35,22 @@ export function parseUpgradeArgv(argv: string[]) {
   } = {};
   for (const arg of argv) {
     if (arg === "--help" || arg === "-h") return { help: true, options, plans: [] as UpgradePlan[] };
-    if (arg === "--dry-run") { options.dryRun = true; continue; }
-    if (arg === "--skip-install") { options.skipInstall = true; continue; }
-    if (arg === "--core-only") { options.coreOnly = true; continue; }
-    if (arg === "--json") { options.json = true; continue; }
+    if (arg === "--dry-run") {
+      options.dryRun = true;
+      continue;
+    }
+    if (arg === "--skip-install") {
+      options.skipInstall = true;
+      continue;
+    }
+    if (arg === "--core-only") {
+      options.coreOnly = true;
+      continue;
+    }
+    if (arg === "--json") {
+      options.json = true;
+      continue;
+    }
     if (arg.startsWith("-")) throw new Error(`Unknown option "${arg}".`);
   }
   return { options, plans: null as UpgradePlan[] | null };
@@ -140,8 +152,7 @@ export async function runUpgradeCommand(argv: string[]): Promise<number> {
       return 0;
     }
 
-    const proceed =
-      !process.stdin.isTTY || (await confirm(`Apply ${plans.length} upgrade(s)?`));
+    const proceed = !process.stdin.isTTY || (await confirm(`Apply ${plans.length} upgrade(s)?`));
     if (!proceed) {
       warn("Aborted.");
       return 1;

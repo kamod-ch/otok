@@ -52,11 +52,10 @@ export type RouteBuildOptions<Path extends string> = {
   hash?: string;
 };
 
-export type RouteBuildOptionsFor<Path extends string> = RequiredKeys<
-  RouteParamsFromPattern<SplitRoute<Path>>
-> extends never
-  ? RouteBuildOptions<Path> | undefined
-  : Omit<RouteBuildOptions<Path>, "params"> & { params: RouteParamsFromPattern<SplitRoute<Path>> };
+export type RouteBuildOptionsFor<Path extends string> =
+  RequiredKeys<RouteParamsFromPattern<SplitRoute<Path>>> extends never
+    ? RouteBuildOptions<Path> | undefined
+    : Omit<RouteBuildOptions<Path>, "params"> & { params: RouteParamsFromPattern<SplitRoute<Path>> };
 
 type SerializableLoaderData<T> = T extends Response
   ? never
@@ -74,17 +73,19 @@ type SerializableActionData<T> = T extends Response
       ? T
       : T;
 
-export type ExtractLoaderData<TLoader> = TLoader extends OtokLoader<infer Data>
-  ? SerializableLoaderData<Awaited<ReturnType<TLoader>>>
-  : TLoader extends (...args: never[]) => infer Result
-    ? SerializableLoaderData<Awaited<Result>>
-    : Record<string, never>;
+export type ExtractLoaderData<TLoader> =
+  TLoader extends OtokLoader<infer _Data>
+    ? SerializableLoaderData<Awaited<ReturnType<TLoader>>>
+    : TLoader extends (...args: never[]) => infer Result
+      ? SerializableLoaderData<Awaited<Result>>
+      : Record<string, never>;
 
-export type ExtractActionData<TAction> = TAction extends OtokAction<infer Result>
-  ? SerializableActionData<Awaited<ReturnType<TAction>>>
-  : TAction extends (...args: never[]) => infer Result
-    ? SerializableActionData<Awaited<Result>>
-    : undefined;
+export type ExtractActionData<TAction> =
+  TAction extends OtokAction<infer _Result>
+    ? SerializableActionData<Awaited<ReturnType<TAction>>>
+    : TAction extends (...args: never[]) => infer Result
+      ? SerializableActionData<Awaited<Result>>
+      : undefined;
 
 type InferSchemaOutput<T> = T extends { schema: infer Schema }
   ? Schema extends { "~standard": { types: { output: infer Output } } }
@@ -104,20 +105,21 @@ export type ExtractActionInput<TAction> = TAction extends {
     ? InferSchemaOutput<TAction>
     : unknown;
 
-export type ExtractSearchParams<TSchema> = TSchema extends SearchParamsDefinition<infer Output>
-  ? Output
-  : TSchema extends { schema: infer Schema }
-    ? InferSchemaOutput<{ schema: Schema }>
-    : Record<string, string | string[] | undefined>;
+export type ExtractSearchParams<TSchema> =
+  TSchema extends SearchParamsDefinition<infer Output>
+    ? Output
+    : TSchema extends { schema: infer Schema }
+      ? InferSchemaOutput<{ schema: Schema }>
+      : Record<string, string | string[] | undefined>;
 
 export type ExtractMeta<
   THead extends ((props: OtokPageProps) => unknown) | undefined,
   TMeta extends ((props: OtokPageProps) => unknown) | undefined,
-> = THead extends (props: OtokPageProps<infer Data>) => infer Head
+> = THead extends (props: OtokPageProps<infer _Data>) => infer Head
   ? Head extends OtokHead | Promise<OtokHead>
     ? OtokHead
     : OtokHead
-  : TMeta extends (props: OtokPageProps<infer Data>) => infer Meta
+  : TMeta extends (props: OtokPageProps<infer _Data>) => infer Meta
     ? Meta extends OtokHead | Promise<OtokHead>
       ? OtokHead
       : OtokHead
@@ -151,11 +153,7 @@ export interface SearchParamsDefinition<Output = Record<string, string | string[
   readonly __otokSearchParams?: Output;
 }
 
-export interface ActionDefinition<
-  TSchema,
-  TContext,
-  Result extends ActionResult = ActionResult,
-> {
+export interface ActionDefinition<TSchema, TContext, Result extends ActionResult = ActionResult> {
   schema: TSchema;
   handler: (ctx: TContext & { input: InferSchemaOutput<{ schema: TSchema }> }) => Result | Promise<Result>;
   parse?: Record<string, unknown>;
@@ -173,18 +171,18 @@ export function defineLoader<Data extends LoaderResult, Context = OtokContext>(
 }
 
 /** Preserve action handler types, optionally with a validation schema. */
-export function defineAction<
-  TSchema,
-  Context,
-  Result extends ActionResult = ActionResult,
->(definition: ActionDefinition<TSchema, Context, Result>): TypedOtokAction<Result, InferSchemaOutput<{ schema: TSchema }>>;
+export function defineAction<TSchema, Context, Result extends ActionResult = ActionResult>(
+  definition: ActionDefinition<TSchema, Context, Result>,
+): TypedOtokAction<Result, InferSchemaOutput<{ schema: TSchema }>>;
 
 export function defineAction<Context, Result extends ActionResult = ActionResult>(
   handler: (ctx: Context & OtokActionContext) => Result | Promise<Result>,
 ): TypedOtokAction<Result, unknown>;
 
 export function defineAction(
-  definitionOrHandler: ActionDefinition<unknown, unknown> | ((ctx: OtokActionContext) => ActionResult | Promise<ActionResult>),
+  definitionOrHandler:
+    | ActionDefinition<unknown, unknown>
+    | ((ctx: OtokActionContext) => ActionResult | Promise<ActionResult>),
 ): OtokAction {
   if (typeof definitionOrHandler === "function") {
     return definitionOrHandler;

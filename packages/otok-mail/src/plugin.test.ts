@@ -105,8 +105,7 @@ describe("resend provider", () => {
     const provider = createResendMailProvider({ type: "resend", apiKey: "test_key" });
 
     const originalFetch = globalThis.fetch;
-    globalThis.fetch = async () =>
-      new Response("rate limited", { status: 429 });
+    globalThis.fetch = async () => new Response("rate limited", { status: 429 });
 
     try {
       await expect(

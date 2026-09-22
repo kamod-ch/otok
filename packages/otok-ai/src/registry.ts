@@ -13,9 +13,7 @@ export function registerAiRuntime(value: AiRuntime): void {
 
 export function getAiRuntime(): AiRuntime {
   if (!runtime) {
-    throw new Error(
-      "otok-ai: no AI runtime registered. Add ai() to otok.config.ts plugins.",
-    );
+    throw new Error("otok-ai: no AI runtime registered. Add ai() to otok.config.ts plugins.");
   }
   return runtime;
 }

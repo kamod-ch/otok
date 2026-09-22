@@ -1,9 +1,9 @@
 {
   "name": "docs",
-  "private": true,
   "version": "0.1.0",
-  "type": "module",
+  "private": true,
   "description": "Otok documentation site, structured for PreactPress-style static publishing.",
+  "type": "module",
   "scripts": {
     "dev": "node ./scripts/dev.mjs",
     "build": "node ./scripts/build.mjs",

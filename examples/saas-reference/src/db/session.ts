@@ -1,9 +1,5 @@
 import type { Kysely } from "kysely";
-import type {
-  CreateSessionRecordInput,
-  ResolvedSessionRecord,
-  SessionAdapter,
-} from "@kamod-ch/otok-auth";
+import type { CreateSessionRecordInput, ResolvedSessionRecord, SessionAdapter } from "@kamod-ch/otok-auth";
 import type { SaasDatabase, SaasUser } from "./types.js";
 
 type GetDb = () => Kysely<SaasDatabase>;
@@ -65,10 +61,7 @@ export function createSaasSessionAdapter(options: {
   };
 }
 
-export async function resolveUserByToken(
-  db: Kysely<SaasDatabase>,
-  tokenHash: string,
-): Promise<SaasUser | null> {
+export async function resolveUserByToken(db: Kysely<SaasDatabase>, tokenHash: string): Promise<SaasUser | null> {
   const row = await db
     .selectFrom("app_session")
     .innerJoin("app_user", "app_user.id", "app_session.user_id")

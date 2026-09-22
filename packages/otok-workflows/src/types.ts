@@ -1,4 +1,4 @@
-import type { ZodType, output } from "zod";
+import type { ZodType } from "zod";
 
 export type WorkflowStatus =
   | "pending"
@@ -10,13 +10,7 @@ export type WorkflowStatus =
   | "cancelled"
   | "dead";
 
-export type StepStatus =
-  | "pending"
-  | "running"
-  | "completed"
-  | "failed"
-  | "skipped"
-  | "compensated";
+export type StepStatus = "pending" | "running" | "completed" | "failed" | "skipped" | "compensated";
 
 export interface WorkflowInstance<TInput = unknown, TOutput = unknown> {
   id: string;
@@ -27,6 +21,14 @@ export interface WorkflowInstance<TInput = unknown, TOutput = unknown> {
   progress: number;
   currentStep?: string;
   idempotencyKey?: string;
+  /** Schema version pinned at start — must match definition on resume after deploy. */
+  workflowVersion?: number;
+  /** Whole-workflow execution attempts (not per-step row count). */
+  runAttempts?: number;
+  maxRunAttempts?: number;
+  leaseOwner?: string;
+  leaseToken?: string;
+  leaseUntil?: string;
   createdAt: string;
   updatedAt: string;
   startedAt?: string;
@@ -35,6 +37,14 @@ export interface WorkflowInstance<TInput = unknown, TOutput = unknown> {
   requestId?: string;
   metadata?: Record<string, unknown>;
 }
+
+export interface ClaimRunnableOptions {
+  workerId?: string;
+  leaseMs?: number;
+  now?: Date;
+}
+
+export type ClaimedWorkflowInstance = WorkflowInstance & { leaseToken: string };
 
 export interface StepRecord {
   instanceId: string;
@@ -93,6 +103,8 @@ export interface StepRunOptions {
 export interface WorkflowDefinition<TInput = unknown, TOutput = unknown> {
   readonly __kind: "otok-workflow";
   readonly name: string;
+  /** Bump when step graph or contracts change; running instances refuse incompatible versions. */
+  readonly version?: number;
   readonly inputSchema?: ZodType<TInput>;
   readonly outputSchema?: ZodType<TOutput>;
   readonly retry?: Partial<RetryPolicy>;
@@ -141,14 +153,23 @@ export interface WorkflowStore {
   getInstance(id: string): Promise<WorkflowInstance | null>;
   findByIdempotencyKey(key: string): Promise<WorkflowInstance | null>;
   updateInstance(id: string, patch: Partial<WorkflowInstance>): Promise<void>;
-  listInstances(filter?: { status?: WorkflowStatus; workflowName?: string; limit?: number }): Promise<WorkflowInstance[]>;
+  listInstances(filter?: {
+    status?: WorkflowStatus;
+    workflowName?: string;
+    limit?: number;
+  }): Promise<WorkflowInstance[]>;
 
   getStep(instanceId: string, stepName: string): Promise<StepRecord | null>;
   saveStep(step: StepRecord): Promise<void>;
   listSteps(instanceId: string): Promise<StepRecord[]>;
 
   enqueueDeadLetter(record: WorkflowDeadLetter): Promise<void>;
-  claimRunnable(limit: number, now?: Date): Promise<WorkflowInstance[]>;
+  /** Atomically reserve runnable instances (lease). At-least-once — handlers must be idempotent. */
+  claimRunnable(limit: number, options?: ClaimRunnableOptions): Promise<ClaimedWorkflowInstance[]>;
+  /** Clear lease after execute; returns false if token stale. */
+  releaseClaim(instanceId: string, leaseToken: string): Promise<boolean>;
+  /** Insert cron fire slot; false if this schedule minute was already taken. */
+  claimCronFire(scheduleName: string, fireAtUtc: Date): Promise<boolean>;
 }
 
 export interface WorkflowDeadLetter {
@@ -170,6 +191,8 @@ export interface WorkflowObservability {
   onWorkflowStart?(instance: WorkflowInstance): void;
   onWorkflowComplete?(instance: WorkflowInstance): void;
   onWorkflowFailed?(instance: WorkflowInstance, error: unknown): void;
+  /** Background execute / processRunnable rejection (not thrown to caller). */
+  onExecutionError?(instanceId: string, error: unknown): void;
   onStepStart?(instance: WorkflowInstance, stepName: string): void;
   onStepComplete?(instance: WorkflowInstance, stepName: string, output: unknown): void;
   onStepRetry?(instance: WorkflowInstance, stepName: string, attempt: number, error: unknown): void;
@@ -189,6 +212,22 @@ export function serializeJson(value: unknown): string {
   return JSON.stringify(value);
 }
 
-export function parseJson<T = unknown>(raw: string): T {
-  return JSON.parse(raw) as T;
+/** Parse JSON columns — pg JSONB may already be objects. */
+export function parseJson<T = unknown>(raw: string | unknown): T {
+  if (raw === null || raw === undefined) return raw as T;
+  if (typeof raw === "object") return raw as T;
+  if (typeof raw === "string") {
+    if (!raw) return raw as T;
+    return JSON.parse(raw) as T;
+  }
+  return raw as T;
+}
+
+export function toDbJson(value: unknown, dialect: "sqlite" | "postgres"): string | unknown {
+  if (dialect === "postgres") return value;
+  return serializeJson(value);
+}
+
+export function fromDbJson<T>(raw: string | unknown): T {
+  return parseJson<T>(raw);
 }

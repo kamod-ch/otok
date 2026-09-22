@@ -35,18 +35,10 @@ function timingSafeEqual(a: Uint8Array, b: Uint8Array): boolean {
   return diff === 0;
 }
 
-async function deriveKey(
-  password: string,
-  salt: Uint8Array,
-  iterations: number,
-): Promise<Uint8Array> {
-  const material = await crypto.subtle.importKey(
-    "raw",
-    new TextEncoder().encode(password),
-    "PBKDF2",
-    false,
-    ["deriveBits"],
-  );
+async function deriveKey(password: string, salt: Uint8Array, iterations: number): Promise<Uint8Array> {
+  const material = await crypto.subtle.importKey("raw", new TextEncoder().encode(password), "PBKDF2", false, [
+    "deriveBits",
+  ]);
   const bits = await crypto.subtle.deriveBits(
     {
       name: "PBKDF2",
@@ -60,20 +52,14 @@ async function deriveKey(
   return new Uint8Array(bits);
 }
 
-export async function hashPasswordWebCrypto(
-  password: string,
-  options?: { iterations?: number },
-): Promise<string> {
+export async function hashPasswordWebCrypto(password: string, options?: { iterations?: number }): Promise<string> {
   const iterations = options?.iterations ?? DEFAULT_ITERATIONS;
   const salt = crypto.getRandomValues(new Uint8Array(SALT_BYTES));
   const hash = await deriveKey(password, salt, iterations);
   return `pbkdf2$${iterations}$${toBase64(salt)}$${toBase64(hash)}`;
 }
 
-export async function verifyPasswordWebCrypto(
-  passwordHash: string,
-  password: string,
-): Promise<boolean> {
+export async function verifyPasswordWebCrypto(passwordHash: string, password: string): Promise<boolean> {
   const parts = passwordHash.split("$");
   if (parts.length !== 4 || parts[0] !== "pbkdf2") return false;
   const iterations = Number(parts[1]);

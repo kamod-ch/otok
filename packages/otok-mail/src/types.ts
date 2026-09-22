@@ -64,11 +64,7 @@ export type TestProviderConfig = {
   type: "test";
 };
 
-export type MailProviderConfig =
-  | TestProviderConfig
-  | SmtpProviderConfig
-  | ResendProviderConfig
-  | MailpitProviderConfig;
+export type MailProviderConfig = TestProviderConfig | SmtpProviderConfig | ResendProviderConfig | MailpitProviderConfig;
 
 export interface MailRetryOptions {
   maxAttempts?: number;
@@ -99,9 +95,7 @@ export interface MailTemplateProps {
 
 import type { JSX } from "preact";
 
-export type MailTemplateComponent<P extends MailTemplateProps = MailTemplateProps> = (
-  props: P,
-) => JSX.Element;
+export type MailTemplateComponent<P extends MailTemplateProps = MailTemplateProps> = (props: P) => JSX.Element;
 
 export interface SendMailInput {
   to: MailMessage["to"];

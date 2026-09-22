@@ -29,8 +29,7 @@ export interface TestRouteInput<Data extends LoaderResult = LoaderResult> {
   middleware?: MiddlewareModule[];
 }
 
-export interface CreateTestAppOptions
-  extends Omit<CreateOtokAppOptions, "routes" | "notFoundRoute" | "errorRoute"> {
+export interface CreateTestAppOptions extends Omit<CreateOtokAppOptions, "routes" | "notFoundRoute" | "errorRoute"> {
   routes: Array<OtokRoute | TestRouteInput>;
   notFoundRoute?: OtokRoute | TestRouteInput;
   errorRoute?: OtokRoute | TestRouteInput;

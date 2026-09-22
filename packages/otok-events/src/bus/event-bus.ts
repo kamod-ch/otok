@@ -132,17 +132,11 @@ export class InProcessEventBus implements EventBus {
   }
 
   /** Publish a pre-built event (used by outbox processor). */
-  async publishRaw<TPayload>(
-    definition: EventDefinition<TPayload>,
-    event: DomainEvent<TPayload>,
-  ): Promise<void> {
+  async publishRaw<TPayload>(definition: EventDefinition<TPayload>, event: DomainEvent<TPayload>): Promise<void> {
     await this.dispatch(definition, event);
   }
 
-  private async dispatch<TPayload>(
-    definition: EventDefinition<TPayload>,
-    event: DomainEvent<TPayload>,
-  ): Promise<void> {
+  private async dispatch<TPayload>(definition: EventDefinition<TPayload>, event: DomainEvent<TPayload>): Promise<void> {
     const list = this.handlers.get(eventKey(definition)) ?? [];
     const syncHandlers = list.filter((h) => h.options.mode === "sync");
     const asyncHandlers = list.filter((h) => h.options.mode === "async");
@@ -175,7 +169,7 @@ export class InProcessEventBus implements EventBus {
           () => Promise.resolve(entry.handler(event)),
           policy,
           (ms: number) => this.clock.sleep(ms),
-          (error: unknown, attempt: number) => this.observability?.onHandlerError?.(event, error, consumerName),
+          (error: unknown, _attempt: number) => this.observability?.onHandlerError?.(event, error, consumerName),
         );
       } else {
         await entry.handler(event);

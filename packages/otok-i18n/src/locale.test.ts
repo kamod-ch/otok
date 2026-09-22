@@ -79,9 +79,7 @@ describe("resolveLocaleFull routing modes", () => {
   };
 
   it("prefix: always reads locale from path", () => {
-    expect(
-      resolveLocaleFull({ ...base, pathname: "/en/products", routing: "prefix" }),
-    ).toEqual({
+    expect(resolveLocaleFull({ ...base, pathname: "/en/products", routing: "prefix" })).toEqual({
       locale: "en",
       source: "url",
       pathLocale: "en",
@@ -90,13 +88,16 @@ describe("resolveLocaleFull routing modes", () => {
   });
 
   it("prefix-except-default: default locale has no prefix", () => {
-    expect(
-      resolveLocaleFull({ ...base, pathname: "/products", routing: "prefix-except-default" }),
-    ).toMatchObject({ locale: "de", canonicalPathname: "/products" });
+    expect(resolveLocaleFull({ ...base, pathname: "/products", routing: "prefix-except-default" })).toMatchObject({
+      locale: "de",
+      canonicalPathname: "/products",
+    });
 
-    expect(
-      resolveLocaleFull({ ...base, pathname: "/en/products", routing: "prefix-except-default" }),
-    ).toMatchObject({ locale: "en", pathLocale: "en", canonicalPathname: "/products" });
+    expect(resolveLocaleFull({ ...base, pathname: "/en/products", routing: "prefix-except-default" })).toMatchObject({
+      locale: "en",
+      pathLocale: "en",
+      canonicalPathname: "/products",
+    });
   });
 
   it("domain: resolves locale from hostname", () => {
@@ -116,15 +117,15 @@ describe("resolveLocaleFull routing modes", () => {
   });
 
   it("none: ignores path prefix", () => {
-    expect(
-      resolveLocaleFull({ ...base, pathname: "/en/products", routing: "none", cookie: "fr" }),
-    ).toMatchObject({ locale: "fr", source: "cookie", canonicalPathname: "/en/products" });
+    expect(resolveLocaleFull({ ...base, pathname: "/en/products", routing: "none", cookie: "fr" })).toMatchObject({
+      locale: "fr",
+      source: "cookie",
+      canonicalPathname: "/en/products",
+    });
   });
 
   it("flags unknown locale prefixes", () => {
-    expect(
-      resolveLocaleFull({ ...base, pathname: "/xx/products", routing: "prefix" }),
-    ).toMatchObject({
+    expect(resolveLocaleFull({ ...base, pathname: "/xx/products", routing: "prefix" })).toMatchObject({
       unknownPathLocale: "xx",
       canonicalPathname: "/products",
     });

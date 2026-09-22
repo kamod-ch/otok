@@ -1,14 +1,16 @@
 #!/usr/bin/env node
 /**
- * Compares benchmark results against budgets.json thresholds.
+ * Validates benchmark metrics and bundle entry gzip budgets.
+ * Missing required measurements fail the gate (no silent skip).
  */
 import { readFileSync, existsSync } from "node:fs";
 import { join, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..");
-const budgetsPath = join(root, "benchmarks/budgets.json");
-const resultsPath = join(root, "benchmarks/results/latest.json");
+const budgetsPath = process.env.OTOK_BUDGETS_PATH ?? join(root, "benchmarks/budgets.json");
+const resultsPath = process.env.OTOK_BENCHMARK_RESULTS_PATH ?? join(root, "benchmarks/results/latest.json");
+const bundlesPath = process.env.OTOK_BUNDLE_RESULTS_PATH ?? join(root, "benchmarks/results/bundles.json");
 
 if (!existsSync(budgetsPath)) {
   console.error("Missing benchmarks/budgets.json");
@@ -16,37 +18,71 @@ if (!existsSync(budgetsPath)) {
 }
 
 const budgets = JSON.parse(readFileSync(budgetsPath, "utf8"));
-
-if (!existsSync(resultsPath)) {
-  console.warn("No benchmark results at benchmarks/results/latest.json — skipping budget check.");
-  console.warn("Run: pnpm bench:otok");
-  process.exit(0);
-}
-
-const results = JSON.parse(readFileSync(resultsPath, "utf8"));
+const strict = process.env.OTOK_GATES_STRICT === "1" || process.env.CI === "true";
 const errors = [];
 const warnings = [];
 const tolerance = budgets.tolerancePercent ?? 5;
 
-for (const [metric, limit] of Object.entries(budgets.metrics)) {
-  const actual = results.metrics?.[metric];
-  if (actual === undefined) {
-    warnings.push(`Metric "${metric}" not measured`);
-    continue;
+function checkLimit(label, actual, limit) {
+  if (actual === undefined || actual === null) {
+    errors.push(`${label}: missing measurement`);
+    return;
   }
-
   const spec = typeof limit === "number" ? { max: limit } : limit;
   const max = spec.max;
   const min = spec.min;
-
   if (max !== undefined && actual > max * (1 + tolerance / 100)) {
-    errors.push(`${metric}: ${actual} exceeds budget ${max} (+${tolerance}% tolerance)`);
+    errors.push(`${label}: ${actual} exceeds budget ${max} (+${tolerance}% tolerance)`);
   } else if (max !== undefined && actual > max) {
-    warnings.push(`${metric}: ${actual} slightly exceeds budget ${max}`);
+    warnings.push(`${label}: ${actual} slightly exceeds budget ${max} (within noise band)`);
+  }
+  if (min !== undefined && actual < min * (1 - tolerance / 100)) {
+    warnings.push(`${label}: ${actual} below minimum ${min} (investigate)`);
+  }
+}
+
+if (!existsSync(resultsPath)) {
+  errors.push(`Missing benchmark results at ${resultsPath} — run pnpm bench:otok`);
+} else {
+  const results = JSON.parse(readFileSync(resultsPath, "utf8"));
+  const required = budgets.requiredMetrics ?? Object.keys(budgets.metrics ?? {});
+
+  let metrics = { ...results.metrics };
+  if (existsSync(bundlesPath)) {
+    const bundles = JSON.parse(readFileSync(bundlesPath, "utf8"));
+    if (metrics.clientJsKb == null && bundles.aggregates?.clientJsGzipKb != null) {
+      metrics.clientJsKb = bundles.aggregates.clientJsGzipKb;
+    }
   }
 
-  if (min !== undefined && actual < min * (1 - tolerance / 100)) {
-    warnings.push(`${metric}: ${actual} below minimum ${min} (investigate)`);
+  for (const metric of required) {
+    const limit = budgets.metrics?.[metric];
+    if (!limit) {
+      errors.push(`Budget spec missing metric definition for "${metric}"`);
+      continue;
+    }
+    const optionalEnv = budgets.optionalUnlessEnv?.[metric];
+    if (optionalEnv && !process.env[optionalEnv]) {
+      if (strict && metrics?.[metric] == null) {
+        errors.push(`Metric "${metric}" requires ${optionalEnv} in CI/strict mode`);
+      }
+      continue;
+    }
+    checkLimit(metric, metrics?.[metric], limit);
+  }
+}
+
+if (!existsSync(bundlesPath)) {
+  errors.push(`Missing bundle measurements at ${bundlesPath} — run pnpm budget:measure`);
+} else {
+  const bundles = JSON.parse(readFileSync(bundlesPath, "utf8"));
+  if (budgets.aggregates?.clientJsGzipKb) {
+    checkLimit("clientJsGzipKb", bundles.aggregates?.clientJsGzipKb, budgets.aggregates.clientJsGzipKb);
+  }
+  for (const [entry, limit] of Object.entries(budgets.bundleEntries ?? {})) {
+    const gzipBytes = bundles.entries?.[entry]?.gzipBytes;
+    const gzipKb = gzipBytes == null ? undefined : Math.round((gzipBytes / 1024) * 10) / 10;
+    checkLimit(`bundle:${entry}`, gzipKb, limit);
   }
 }
 

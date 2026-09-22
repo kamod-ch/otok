@@ -82,10 +82,6 @@ export async function ensureBillingRecord(
 }
 
 export async function getOrgPlan(db: Kysely<SaasDatabase>, orgId: string): Promise<SaasPlan> {
-  const row = await db
-    .selectFrom("billing_record")
-    .select("plan")
-    .where("workspace_id", "=", orgId)
-    .executeTakeFirst();
+  const row = await db.selectFrom("billing_record").select("plan").where("workspace_id", "=", orgId).executeTakeFirst();
   return row?.plan ?? "free";
 }

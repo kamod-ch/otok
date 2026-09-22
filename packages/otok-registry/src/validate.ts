@@ -30,10 +30,7 @@ export function verifyBundleChecksum(bundleJson: string, expectedChecksum: strin
   return sha256Checksum(bundleJson) === expectedChecksum;
 }
 
-export function indexRegistry(
-  index: RegistryIndex,
-  bundle: RegistryBundle,
-): LoadedRegistry {
+export function indexRegistry(index: RegistryIndex, bundle: RegistryBundle): LoadedRegistry {
   const publishersById = new Map<string, Publisher>();
   for (const publisher of index.publishers) {
     publishersById.set(publisher.id, publisher);

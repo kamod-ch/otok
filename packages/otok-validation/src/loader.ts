@@ -43,15 +43,21 @@ type ActionDefinition<TSchema extends ValidationSchema, DB, Result> = {
   dbContextKey?: string;
 };
 
-export function defineAction<TSchema extends ValidationSchema, DB = unknown, Result extends ActionResult = ActionResult>(
-  definition: ActionDefinition<TSchema, DB, Result>,
-): (context: OtokActionContext) => Promise<Result> | Result;
+export function defineAction<
+  TSchema extends ValidationSchema,
+  DB = unknown,
+  Result extends ActionResult = ActionResult,
+>(definition: ActionDefinition<TSchema, DB, Result>): (context: OtokActionContext) => Promise<Result> | Result;
 
 export function defineAction<DB = unknown, Result extends ActionResult = ActionResult>(
   handler: (ctx: OtokActionContext & DbContext<DB>) => Result | Promise<Result>,
 ): (context: OtokActionContext) => Result | Promise<Result>;
 
-export function defineAction<TSchema extends ValidationSchema, DB = unknown, Result extends ActionResult = ActionResult>(
+export function defineAction<
+  TSchema extends ValidationSchema,
+  DB = unknown,
+  Result extends ActionResult = ActionResult,
+>(
   definitionOrHandler:
     | ActionDefinition<TSchema, DB, Result>
     | ((ctx: OtokActionContext & DbContext<DB>) => Result | Promise<Result>),

@@ -35,10 +35,7 @@ function resolveClientIp(c: Context, header: string): string | undefined {
 }
 
 /** In-memory rate limit provider for development and tests. */
-export function createMemoryRateLimitProvider(options: {
-  limit: number;
-  windowMs: number;
-}): RateLimitProvider {
+export function createMemoryRateLimitProvider(options: { limit: number; windowMs: number }): RateLimitProvider {
   const buckets = new Map<string, { count: number; resetAt: number }>();
 
   return {

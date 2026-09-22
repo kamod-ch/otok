@@ -24,7 +24,7 @@ export default defineSetup(async ({ root, dryRun }: PluginSetupContext) => {
   }
 
   const initialUp = join(migrationsDir, "20260101000000_initial.up.sql");
-  const initialDown = join(migrationsDir, "20260101000000_initial.down.sql");
+  const _initialDown = join(migrationsDir, "20260101000000_initial.down.sql");
 
   let needsInitial = true;
   if (!dryRun) {

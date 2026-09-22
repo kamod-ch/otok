@@ -9,10 +9,7 @@ import { fileURLToPath } from "node:url";
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const repoRoot = path.resolve(__dirname, "..");
 const sourceRoot = path.join(repoRoot, "apps/playground");
-const targets = [
-  path.join(repoRoot, "templates/default"),
-  path.join(repoRoot, "packages/create-otok/template"),
-];
+const targets = [path.join(repoRoot, "templates/default"), path.join(repoRoot, "packages/create-otok/template")];
 const checkMode = process.argv.includes("--check");
 
 const excludedSourceFiles = new Set(["src/smoke.test.ts", "src/app/routes/boom.tsx"]);
@@ -115,10 +112,7 @@ function buildTemplateFiles() {
   }
 
   files.set("vite.config.ts", fs.readFileSync(path.join(sourceRoot, "vite.config.ts"), "utf8"));
-  files.set(
-    "otok.config.ts",
-    'import { defineConfig } from "@kamod-ch/otok";\n\nexport default defineConfig({});\n',
-  );
+  files.set("otok.config.ts", 'import { defineConfig } from "@kamod-ch/otok";\n\nexport default defineConfig({});\n');
   files.set("tsconfig.json", templateTsconfig);
   files.set("package.json", createTemplatePackageJson());
 

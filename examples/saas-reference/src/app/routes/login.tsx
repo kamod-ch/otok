@@ -62,8 +62,21 @@ export default function LoginPage({ data, actionData }: OtokPageProps<any>) {
         </div>
         <form method="post" class="grid gap-4 rounded-xl border border-border bg-card p-6 shadow-sm">
           <FormAlert message={failure?.message} />
-          <FormField name="email" label="Email" type="email" defaultValue={failure?.values?.email} errors={failure?.fieldErrors?.email} required />
-          <FormField name="password" label="Password" type="password" errors={failure?.fieldErrors?.password} required />
+          <FormField
+            name="email"
+            label="Email"
+            type="email"
+            defaultValue={failure?.values?.email}
+            errors={failure?.fieldErrors?.email}
+            required
+          />
+          <FormField
+            name="password"
+            label="Password"
+            type="password"
+            errors={failure?.fieldErrors?.password}
+            required
+          />
           <FormActions submitLabel={data.copy.submit} cancelHref="/register" />
         </form>
         {(data.oauth.github || data.oauth.google) && (

@@ -10,10 +10,7 @@ type GitLabUser = {
   confirmed_at?: string | null;
 };
 
-export async function fetchGitLabProfile(
-  accessToken: string,
-  baseURL = "https://gitlab.com",
-): Promise<OAuthProfile> {
+export async function fetchGitLabProfile(accessToken: string, baseURL = "https://gitlab.com"): Promise<OAuthProfile> {
   const origin = baseURL.replace(/\/+$/, "");
   const response = await fetch(`${origin}/api/v4/user`, {
     headers: {

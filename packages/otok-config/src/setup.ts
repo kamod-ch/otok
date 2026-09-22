@@ -91,9 +91,7 @@ export function validateSetupChanges(root: string, changes: PluginSetupChange[])
       case "append-file": {
         const path = assertRelativePath(root, change.path);
         if (!isAppendAllowed(path)) {
-          throw new PluginSetupValidationError(
-            `Setup append is only allowed for env example files, not "${path}"`,
-          );
+          throw new PluginSetupValidationError(`Setup append is only allowed for env example files, not "${path}"`);
         }
         return { ...change, path };
       }

@@ -24,11 +24,7 @@ export default function LoginPage({ data }: { data: { users: typeof CRM_USERS } 
         <form method="post" class="space-y-4">
           <label class="block space-y-1 text-sm">
             <span>Benutzer</span>
-            <select
-              name="userId"
-              required
-              class="w-full rounded-md border border-input bg-background px-3 py-2"
-            >
+            <select name="userId" required class="w-full rounded-md border border-input bg-background px-3 py-2">
               {data.users.map((u) => (
                 <option value={u.id}>
                   {u.name} ({u.email})

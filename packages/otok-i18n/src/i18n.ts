@@ -75,9 +75,9 @@ export function createI18n<Catalog extends MessageCatalog>(
     defaultLocale: config.defaultLocale,
   });
 
-  const resolvedLocale = (config.locales.includes(locale as keyof Catalog & string)
-    ? locale
-    : config.defaultLocale) as keyof Catalog & string;
+  const resolvedLocale = (
+    config.locales.includes(locale as keyof Catalog & string) ? locale : config.defaultLocale
+  ) as keyof Catalog & string;
 
   const messages = config.catalog[resolvedLocale] ?? {};
   const fallbackMessages = config.catalog[fallbackLocale as keyof Catalog & string] ?? {};

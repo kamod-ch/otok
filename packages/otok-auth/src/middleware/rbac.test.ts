@@ -3,11 +3,7 @@ import { h } from "preact";
 import type { Context } from "hono";
 import { createTestApp, renderRoute, requestRoute } from "@kamod-ch/otok-test";
 import type { OtokPageProps } from "@kamod-ch/otok/server";
-import {
-  composeMiddleware,
-  createRequireRoleMiddleware,
-  createTenantMiddleware,
-} from "./rbac.js";
+import { composeMiddleware, createRequireRoleMiddleware, createTenantMiddleware } from "./rbac.js";
 import { createRequireAuthMiddleware } from "./require-auth.js";
 import { defineMiddleware } from "@kamod-ch/otok/server";
 

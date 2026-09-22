@@ -21,7 +21,10 @@ export function parseInfoArgv(argv: string[]) {
   const positional: string[] = [];
   for (const arg of argv) {
     if (arg === "--help" || arg === "-h") return { help: true, options, name: "" };
-    if (arg === "--json") { options.json = true; continue; }
+    if (arg === "--json") {
+      options.json = true;
+      continue;
+    }
     if (arg.startsWith("-")) throw new Error(`Unknown option "${arg}".`);
     positional.push(arg);
   }

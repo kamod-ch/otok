@@ -58,7 +58,12 @@ function decodeEntities(value: string): string {
 }
 
 function stripTags(html: string): string {
-  return decodeEntities(html.replace(/<[^>]+>/g, " ").replace(/\s+/g, " ").trim());
+  return decodeEntities(
+    html
+      .replace(/<[^>]+>/g, " ")
+      .replace(/\s+/g, " ")
+      .trim(),
+  );
 }
 
 function parseAttributes(raw: string): Record<string, string> {
@@ -153,10 +158,7 @@ function parseSelector(selector: string): SelectorPart {
       } else {
         const name = attr.slice(0, eq).trim().toLowerCase();
         let value = attr.slice(eq + 1).trim();
-        if (
-          (value.startsWith('"') && value.endsWith('"')) ||
-          (value.startsWith("'") && value.endsWith("'"))
-        ) {
+        if ((value.startsWith('"') && value.endsWith('"')) || (value.startsWith("'") && value.endsWith("'"))) {
           value = value.slice(1, -1);
         }
         part.attrs.push({ name, value: decodeEntities(value) });

@@ -85,12 +85,7 @@ export function parseCsvCompanies(csv: string): CsvImportRow[] {
   return rows;
 }
 
-export function importCompaniesFromCsv(
-  store: CrmStore,
-  orgId: string,
-  csv: string,
-  ownerId?: string,
-): CsvImportResult {
+export function importCompaniesFromCsv(store: CrmStore, orgId: string, csv: string, ownerId?: string): CsvImportResult {
   const rows = parseCsvCompanies(csv);
   let imported = 0;
   let skipped = 0;

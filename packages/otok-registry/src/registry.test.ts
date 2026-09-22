@@ -1,9 +1,5 @@
 import { describe, expect, it } from "vitest";
-import {
-  ExtensionEntrySchema,
-  RegistryBundleSchema,
-  RegistryIndexSchema,
-} from "./schema.js";
+import { ExtensionEntrySchema, RegistryBundleSchema, RegistryIndexSchema } from "./schema.js";
 import { loadBundledRegistry, parseRegistryPayload } from "./client.js";
 import { searchExtensions, resolveExtension, formatExtensionDetail } from "./search.js";
 import { checkCompatibility, findOutdated } from "./compatibility.js";
@@ -36,9 +32,7 @@ describe("registry schema", () => {
   it("rejects tampered bundle", async () => {
     const dir = bundledRegistryDir();
     const indexRaw = await fs.readFile(path.join(dir, "index.json"), "utf8");
-    expect(() => parseRegistryPayload(indexRaw, '{"schemaVersion":"1.0.0","extensions":[]}')).toThrow(
-      /checksum/i,
-    );
+    expect(() => parseRegistryPayload(indexRaw, '{"schemaVersion":"1.0.0","extensions":[]}')).toThrow(/checksum/i);
   });
 });
 
@@ -100,10 +94,7 @@ describe("compatibility", () => {
 
   it("finds outdated installed versions", async () => {
     const registry = await loadBundledRegistry();
-    const outdated = findOutdated(
-      { "@kamod-ch/otok-kysely": "0.9.0" },
-      registry.extensions,
-    );
+    const outdated = findOutdated({ "@kamod-ch/otok-kysely": "0.9.0" }, registry.extensions);
     expect(outdated[0]?.latest).toBe("1.0.0");
   });
 });

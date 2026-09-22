@@ -4,7 +4,4 @@ export {
   handleSubscriptionDeleted,
   handleSubscriptionUpdated,
 } from "./events.js";
-export {
-  createStripeWebhookHandler,
-  type StripeWebhookHandlerOptions,
-} from "./middleware.js";
+export { createStripeWebhookHandler, type StripeWebhookHandlerOptions } from "./middleware.js";

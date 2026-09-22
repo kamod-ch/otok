@@ -65,9 +65,7 @@ Request → Action
 Pass `requestId` from `@kamod-ch/otok-observability` into event context:
 
 ```ts
-withRequestId(c.get("requestId"), () =>
-  enqueueOutboxEvent(outbox, companyCreated, payload, metadataFromContext()),
-);
+withRequestId(c.get("requestId"), () => enqueueOutboxEvent(outbox, companyCreated, payload, metadataFromContext()));
 ```
 
 Correlation IDs chain child events via `childEventMetadata(parentEvent)`.

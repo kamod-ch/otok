@@ -2,7 +2,13 @@ import { describe, expect, it } from "vitest";
 import { Hono } from "hono";
 import { configureAuditApp } from "./plugin.js";
 import { createMemoryAuditStore } from "./providers/memory.js";
-import { audit, registerAuditRuntime, resetAuditRuntimeForTests, createAuditService, hasAuditCapability } from "./registry.js";
+import {
+  audit,
+  registerAuditRuntime,
+  resetAuditRuntimeForTests,
+  createAuditService,
+  hasAuditCapability,
+} from "./registry.js";
 import { withAuditTenant } from "./context.js";
 
 describe("audit plugin", () => {

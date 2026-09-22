@@ -9,12 +9,7 @@ export function toJsonValues(record: Record<string, unknown>): Record<string, Js
       continue;
     }
 
-    if (
-      value === null ||
-      typeof value === "string" ||
-      typeof value === "number" ||
-      typeof value === "boolean"
-    ) {
+    if (value === null || typeof value === "string" || typeof value === "number" || typeof value === "boolean") {
       values[key] = value;
       continue;
     }

@@ -1,22 +1,22 @@
 {
   "name": "@kamod-ch/otok-storage",
   "version": "1.0.0",
-  "description": "Provider-based object storage for Otok \u2014 local filesystem, S3, R2, and MinIO.",
-  "license": "MIT",
+  "description": "Provider-based object storage for Otok — local filesystem, S3, R2, and MinIO.",
   "homepage": "https://github.com/kamod-ch/otok/tree/main/packages/otok-storage#readme",
   "bugs": {
     "url": "https://github.com/kamod-ch/otok/issues"
   },
+  "license": "MIT",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/kamod-ch/otok.git",
     "directory": "packages/otok-storage"
   },
-  "type": "module",
   "files": [
     "dist",
     "README.md"
   ],
+  "type": "module",
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
@@ -35,10 +35,23 @@
       "default": "./dist/providers/test.js"
     }
   },
+  "publishConfig": {
+    "access": "public"
+  },
   "scripts": {
     "build": "rm -rf dist && tsc -p tsconfig.build.json",
     "typecheck": "tsc -p tsconfig.json --noEmit",
     "test": "vitest run"
+  },
+  "devDependencies": {
+    "@aws-sdk/client-s3": "^3.876.0",
+    "@aws-sdk/s3-request-presigner": "^3.876.0",
+    "@kamod-ch/otok": "workspace:*",
+    "@kamod-ch/otok-test": "workspace:*",
+    "@types/node": "^24.12.2",
+    "hono": "^4.12.25",
+    "typescript": "~6.0.2",
+    "vitest": "^4.1.2"
   },
   "peerDependencies": {
     "@kamod-ch/otok": ">=0.6.1",
@@ -52,20 +65,7 @@
       "optional": true
     }
   },
-  "devDependencies": {
-    "@aws-sdk/client-s3": "^3.876.0",
-    "@aws-sdk/s3-request-presigner": "^3.876.0",
-    "@kamod-ch/otok": "workspace:*",
-    "@kamod-ch/otok-test": "workspace:*",
-    "@types/node": "^24.12.2",
-    "hono": "^4.12.25",
-    "typescript": "~6.0.2",
-    "vitest": "^4.1.2"
-  },
   "engines": {
     "node": ">=20"
-  },
-  "publishConfig": {
-    "access": "public"
   }
 }

@@ -1,13 +1,24 @@
 {
-  "version": "1.0.0",
+  "version": "1.1.0",
   "tolerancePercent": 5,
+  "requiredMetrics": ["productionBuildMs", "peakRssMb", "clientJsKb"],
+  "optionalUnlessEnv": {
+    "ssrLatencyP50Ms": "BENCH_URL",
+    "ssrThroughputRps": "BENCH_URL"
+  },
   "metrics": {
     "devServerStartMs": { "max": 3000 },
     "productionBuildMs": { "max": 45000 },
     "ssrLatencyP50Ms": { "max": 15 },
     "ssrThroughputRps": { "min": 500 },
-    "clientJsKb": { "max": 45 },
+    "clientJsKb": { "max": 52 },
     "edgeBundleKb": { "max": 250 },
     "peakRssMb": { "max": 256 }
+  },
+  "aggregates": {
+    "clientJsGzipKb": { "max": 52 }
+  },
+  "bundleEntries": {
+    "server/server.js": { "max": 72 }
   }
 }

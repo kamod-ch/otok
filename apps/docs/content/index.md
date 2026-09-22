@@ -4,6 +4,7 @@ section: Introduction
 order: 1
 description: Lightweight Hono + Preact framework for server-rendered applications with islands and progressive enhancement.
 ---
+
 # What is Otok?
 
 Otok is a lightweight Hono + Preact framework for server-rendered applications with islands, progressive enhancement, and minimal client JavaScript.

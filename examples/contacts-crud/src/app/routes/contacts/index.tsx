@@ -15,13 +15,18 @@ export default function ContactsIndex({
     <section>
       <header style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1.5rem;">
         <h1>Contacts</h1>
-        <a href="/contacts/new" style="padding:0.5rem 1rem;background:#2563eb;color:white;border-radius:0.375rem;text-decoration:none;">
+        <a
+          href="/contacts/new"
+          style="padding:0.5rem 1rem;background:#2563eb;color:white;border-radius:0.375rem;text-decoration:none;"
+        >
           New contact
         </a>
       </header>
 
       {data.contacts.length === 0 ? (
-        <p>No contacts yet. <a href="/contacts/new">Create one</a>.</p>
+        <p>
+          No contacts yet. <a href="/contacts/new">Create one</a>.
+        </p>
       ) : (
         <table style="width:100%;border-collapse:collapse;">
           <thead>

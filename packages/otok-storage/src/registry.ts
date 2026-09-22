@@ -13,9 +13,7 @@ export function registerStorageRuntime(value: StorageRuntime): void {
 
 export function getStorageRuntime(): StorageRuntime {
   if (!runtime) {
-    throw new Error(
-      "otok-storage: no storage runtime registered. Add storage() to otok.config.ts plugins.",
-    );
+    throw new Error("otok-storage: no storage runtime registered. Add storage() to otok.config.ts plugins.");
   }
   return runtime;
 }

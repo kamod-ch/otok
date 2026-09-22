@@ -109,9 +109,7 @@ export class RealtimeClient {
 }
 
 /** Fetch-based SSE client with Authorization header and Last-Event-ID resume. */
-export async function fetchSseClient(
-  options: RealtimeClientOptions & { signal?: AbortSignal },
-): Promise<void> {
+export async function fetchSseClient(options: RealtimeClientOptions & { signal?: AbortSignal }): Promise<void> {
   const token = options.getToken ? await options.getToken() : null;
   const url = `${options.url}/${options.channel}/${options.room}`;
   const headers: Record<string, string> = {

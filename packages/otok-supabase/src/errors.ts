@@ -1,12 +1,7 @@
 import type { AuthError as SupabaseAuthApiError, PostgrestError } from "@supabase/supabase-js";
 import type { OtokFailure } from "@kamod-ch/otok/server";
 
-export type SupabaseIntegrationErrorCode =
-  | "configuration"
-  | "auth"
-  | "cookie"
-  | "runtime"
-  | "unsafe_redirect";
+export type SupabaseIntegrationErrorCode = "configuration" | "auth" | "cookie" | "runtime" | "unsafe_redirect";
 
 export class OtokSupabaseError extends Error {
   readonly code: SupabaseIntegrationErrorCode;
@@ -73,21 +68,17 @@ function fieldErrorsFromAuthError(error: SupabaseAuthApiError): Record<string, s
 
 export function mapSupabaseError(error: MappableError, fallbackMessage = "Request failed"): OtokFailure {
   const code = "code" in error ? error.code : undefined;
-  const status =
-    "status" in error && typeof error.status === "number"
-      ? error.status
-      : code === "PGRST116"
-        ? 404
-        : 400;
+  const status = "status" in error && typeof error.status === "number" ? error.status : code === "PGRST116" ? 404 : 400;
 
-  const publicMessage =
-    (code && PUBLIC_AUTH_MESSAGES[code]) ||
-    sanitizeMessage(error.message, fallbackMessage);
+  const publicMessage = (code && PUBLIC_AUTH_MESSAGES[code]) || sanitizeMessage(error.message, fallbackMessage);
 
   return {
     status,
     message: publicMessage,
-    fieldErrors: "name" in error && error.name === "AuthApiError" ? fieldErrorsFromAuthError(error as SupabaseAuthApiError) : undefined,
+    fieldErrors:
+      "name" in error && error.name === "AuthApiError"
+        ? fieldErrorsFromAuthError(error as SupabaseAuthApiError)
+        : undefined,
   };
 }
 

@@ -6,9 +6,7 @@ function isProduction(): boolean {
   return process.env.NODE_ENV === "production";
 }
 
-export function resolveSecureCookieDefaults(
-  options: boolean | SecureCookieDefaults | undefined,
-): SecureCookieDefaults {
+export function resolveSecureCookieDefaults(options: boolean | SecureCookieDefaults | undefined): SecureCookieDefaults {
   if (options === false) {
     throw new Error(
       "otok-security: secureCookies cannot be disabled in production. Pass explicit SecureCookieDefaults instead.",
@@ -25,10 +23,7 @@ export function resolveSecureCookieDefaults(
 }
 
 /** Apply secure cookie defaults to Hono setCookie options. */
-export function secureCookieOptions(
-  partial: CookieOptions = {},
-  defaults?: SecureCookieDefaults,
-): CookieOptions {
+export function secureCookieOptions(partial: CookieOptions = {}, defaults?: SecureCookieDefaults): CookieOptions {
   const base = defaults ?? resolveSecureCookieDefaults(true);
   if (isProduction() && partial.secure === false) {
     throw new Error("otok-security: setting secure: false on cookies is not allowed in production");

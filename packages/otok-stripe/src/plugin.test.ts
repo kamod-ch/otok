@@ -35,7 +35,14 @@ describe("stripe plugin", () => {
     });
 
     const app = new Hono();
-    await plugin.configureApp?.({ app, root: process.cwd(), mode: "test", command: "serve", config: { plugins: [] }, userConfig: { plugins: [] } });
+    await plugin.configureApp?.({
+      app,
+      root: process.cwd(),
+      mode: "test",
+      command: "serve",
+      config: { plugins: [] },
+      userConfig: { plugins: [] },
+    });
 
     const checkout = await stripeCheckoutAction({
       plan: "launch",

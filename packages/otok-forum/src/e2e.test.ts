@@ -8,7 +8,6 @@ import {
   seedTestThread,
 } from "./testing/index.js";
 import { createForum } from "./index.js";
-import { permissionsForUser } from "./permissions.js";
 import type { ForumUser } from "../types.js";
 
 describe("forum e2e", () => {

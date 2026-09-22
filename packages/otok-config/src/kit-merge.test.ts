@@ -1,7 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { defineKit } from "./kit.js";
 import { mergeKits, satisfiesRange, detectKitConflicts } from "./kit-merge.js";
-import { definePreset } from "./preset.js";
 import { mergePresets } from "./preset-merge.js";
 
 const crmKit = defineKit({
@@ -11,7 +10,14 @@ const crmKit = defineKit({
   starter: "minimal",
   otok: "^0.4.0",
   routes: [{ from: "routes/crm/index.tsx", to: "src/app/routes/crm/index.tsx" }],
-  migrations: [{ id: "20260801000000_crm_initial", kit: "@kamod-ch/otok-kit-crm", description: "CRM schema", up: "migrations/001.sql" }],
+  migrations: [
+    {
+      id: "20260801000000_crm_initial",
+      kit: "@kamod-ch/otok-kit-crm",
+      description: "CRM schema",
+      up: "migrations/001.sql",
+    },
+  ],
   permissions: ["crm:companies:read"],
   modules: {
     pipelines: {

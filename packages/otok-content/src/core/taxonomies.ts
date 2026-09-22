@@ -6,10 +6,7 @@ export interface TaxonomyGroup {
 }
 
 /** Group entries by a taxonomy field (string or string[] in frontmatter). */
-export function groupByTaxonomy(
-  entries: ContentEntry[],
-  field: string,
-): TaxonomyGroup[] {
+export function groupByTaxonomy(entries: ContentEntry[], field: string): TaxonomyGroup[] {
   const map = new Map<string, ContentEntry[]>();
 
   for (const entry of entries) {
@@ -28,7 +25,5 @@ export function groupByTaxonomy(
     }
   }
 
-  return [...map.entries()]
-    .sort(([a], [b]) => a.localeCompare(b))
-    .map(([term, group]) => ({ term, entries: group }));
+  return [...map.entries()].sort(([a], [b]) => a.localeCompare(b)).map(([term, group]) => ({ term, entries: group }));
 }

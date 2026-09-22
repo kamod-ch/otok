@@ -10,15 +10,15 @@ bun create otok@latest my-app
 
 ## Variants
 
-| Variant | Description |
-|---------|-------------|
-| `minimal` | Counter demo, no UI library |
-| `content` | Blog / marketing content site |
-| `kamod` | Kamod UI + Tailwind via `@kamod-ch/otok-kamod` |
-| `dashboard` | Admin dashboard components |
-| `saas` | Auth, i18n, Kysely, validation, security, SEO |
-| `crm` | CRM demo with mutations (`useAction` / `useFetcher`) |
-| `api` | Hono JSON API + minimal docs UI |
+| Variant     | Description                                          |
+| ----------- | ---------------------------------------------------- |
+| `minimal`   | Counter demo, no UI library                          |
+| `content`   | Blog / marketing content site                        |
+| `kamod`     | Kamod UI + Tailwind via `@kamod-ch/otok-kamod`       |
+| `dashboard` | Admin dashboard components                           |
+| `saas`      | Auth, i18n, Kysely, validation, security, SEO        |
+| `crm`       | CRM demo with mutations (`useAction` / `useFetcher`) |
+| `api`       | Hono JSON API + minimal docs UI                      |
 
 ## Non-interactive flags
 
@@ -32,22 +32,22 @@ pnpm create otok@latest my-saas \
   --no-install
 ```
 
-| Flag | Description |
-|------|-------------|
-| `--variant`, `--template` | Project variant (see table above) |
-| `--preset` | Named preset (e.g. `@kamod-ch/otok-preset-saas`) |
-| `--adapter` | `node`, `cloudflare`, or `static` |
-| `--database` | `none`, `sqlite`, `postgres` (with `--kysely`) |
-| `--auth`, `--i18n`, `--kysely`, `--validation`, `--testing` | Optional layers |
-| `--docker`, `--github-actions` | Deployment / CI layers |
-| `--ai-json` | Generate public-schema `ai.json`, `AGENTS.md`, and architecture docs for AI coding agents |
-| `--layer <name>` | Repeatable extra layer preset |
-| `--install` / `--no-install` | Run package manager install |
-| `--git` | `git init` after scaffold |
-| `--force` | Allow non-empty target directory |
-| `--dry-run` | Print preset chain without writing files |
-| `--smoke` | Run typecheck smoke test after scaffold |
-| `--yes`, `-y` | Skip interactive prompts |
+| Flag                                                        | Description                                                                               |
+| ----------------------------------------------------------- | ----------------------------------------------------------------------------------------- |
+| `--variant`, `--template`                                   | Project variant (see table above)                                                         |
+| `--preset`                                                  | Named preset (e.g. `@kamod-ch/otok-preset-saas`)                                          |
+| `--adapter`                                                 | `node`, `cloudflare`, or `static`                                                         |
+| `--database`                                                | `none`, `sqlite`, `postgres` (with `--kysely`)                                            |
+| `--auth`, `--i18n`, `--kysely`, `--validation`, `--testing` | Optional layers                                                                           |
+| `--docker`, `--github-actions`                              | Deployment / CI layers                                                                    |
+| `--ai-json`                                                 | Generate public-schema `ai.json`, `AGENTS.md`, and architecture docs for AI coding agents |
+| `--layer <name>`                                            | Repeatable extra layer preset                                                             |
+| `--install` / `--no-install`                                | Run package manager install                                                               |
+| `--git`                                                     | `git init` after scaffold                                                                 |
+| `--force`                                                   | Allow non-empty target directory                                                          |
+| `--dry-run`                                                 | Print preset chain without writing files                                                  |
+| `--smoke`                                                   | Run typecheck smoke test after scaffold                                                   |
+| `--yes`, `-y`                                               | Skip interactive prompts                                                                  |
 
 ## Package manager detection
 

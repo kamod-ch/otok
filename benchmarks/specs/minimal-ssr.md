@@ -27,13 +27,13 @@ Separate tier `*-with-island` for hydration comparisons.
 
 ## Measurement fairness
 
-| Rule | Rationale |
-|------|-----------|
-| Cold start: process spawn → first 200 | No pre-warmed workers |
-| Warm SSR: 5 samples, report median | Reduce noise |
-| Throughput: autocannon 10s, 10 connections | Single machine |
-| Build: clean `node_modules` not required; clean `dist` yes | CI practicality |
-| Install size: `node_modules` after `pnpm install` | Document package manager |
+| Rule                                                       | Rationale                |
+| ---------------------------------------------------------- | ------------------------ |
+| Cold start: process spawn → first 200                      | No pre-warmed workers    |
+| Warm SSR: 5 samples, report median                         | Reduce noise             |
+| Throughput: autocannon 10s, 10 connections                 | Single machine           |
+| Build: clean `node_modules` not required; clean `dist` yes | CI practicality          |
+| Install size: `node_modules` after `pnpm install`          | Document package manager |
 
 ## Excluded from comparison
 

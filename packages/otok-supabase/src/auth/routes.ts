@@ -35,12 +35,7 @@ function verifySignOutCsrf(c: Context, formData?: FormData): Response | undefine
   return undefined;
 }
 
-function authFailureResponse(
-  c: Context,
-  message: string,
-  status = 400,
-  errorRedirect?: string,
-): Response {
+function authFailureResponse(c: Context, message: string, status = 400, errorRedirect?: string): Response {
   if (isDataRequest(c.req.raw)) {
     return c.json({ status, message }, status as 400);
   }

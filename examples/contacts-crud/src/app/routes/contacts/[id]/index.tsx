@@ -11,13 +11,21 @@ export const loader = defineLoader<{ contact: Contact }, ContactsDatabase>(async
   return { contact };
 });
 
-export default function ContactDetail({ data }: { data: { contact: { id: number; name: string; email: string; created_at: string } } }) {
+export default function ContactDetail({
+  data,
+}: {
+  data: { contact: { id: number; name: string; email: string; created_at: string } };
+}) {
   const { contact } = data;
   return (
     <section>
       <h1>{contact.name}</h1>
-      <p><strong>Email:</strong> {contact.email}</p>
-      <p><strong>Created:</strong> {contact.created_at}</p>
+      <p>
+        <strong>Email:</strong> {contact.email}
+      </p>
+      <p>
+        <strong>Created:</strong> {contact.created_at}
+      </p>
       <p>
         <a href={`/contacts/${contact.id}/edit`}>Edit</a>
         {" · "}

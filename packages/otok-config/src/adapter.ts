@@ -1,12 +1,6 @@
 import type { Plugin } from "vite";
 import { OtokConfigError } from "./errors.js";
-import type {
-  BuildContext,
-  EnvSchema,
-  OtokPlugin,
-  PluginResolvedContext,
-  ViteContext,
-} from "./types.js";
+import type { BuildContext, EnvSchema, OtokPlugin, PluginResolvedContext, ViteContext } from "./types.js";
 
 /** Supported deployment runtimes. Custom adapters may extend with string literals. */
 export type OtokRuntime = "node" | "cloudflare" | "static" | (string & {});
@@ -176,10 +170,7 @@ function capabilitySet(adapter: OtokAdapter): ReadonlySet<OtokAdapterCapability>
   return new Set(adapter.capabilities);
 }
 
-export function resolveAdapter(
-  input: OtokAdapterInput | undefined,
-  root: string,
-): ResolvedOtokAdapter | undefined {
+export function resolveAdapter(input: OtokAdapterInput | undefined, root: string): ResolvedOtokAdapter | undefined {
   const adapter = normalizeAdapter(input);
   if (!adapter) return undefined;
 
@@ -216,10 +207,7 @@ export function assertAdapterCapability(
   );
 }
 
-export function adapterBuildContext(
-  ctx: BuildContext,
-  resolved: ResolvedOtokAdapter,
-): AdapterBuildContext {
+export function adapterBuildContext(ctx: BuildContext, resolved: ResolvedOtokAdapter): AdapterBuildContext {
   return {
     ...ctx,
     adapter: resolved,
@@ -251,18 +239,12 @@ export function adapterToPlugin(resolved: ResolvedOtokAdapter): OtokPlugin {
   };
 }
 
-export async function runAdapterCleanup(
-  ctx: BuildContext,
-  resolved: ResolvedOtokAdapter | undefined,
-): Promise<void> {
+export async function runAdapterCleanup(ctx: BuildContext, resolved: ResolvedOtokAdapter | undefined): Promise<void> {
   if (!resolved?.adapter.hooks?.cleanup) return;
   await resolved.adapter.hooks.cleanup(adapterBuildContext(ctx, resolved));
 }
 
-export async function runAdapterFinish(
-  ctx: BuildContext,
-  resolved: ResolvedOtokAdapter | undefined,
-): Promise<void> {
+export async function runAdapterFinish(ctx: BuildContext, resolved: ResolvedOtokAdapter | undefined): Promise<void> {
   if (!resolved?.adapter.hooks?.finish) return;
   await resolved.adapter.hooks.finish(adapterBuildContext(ctx, resolved));
 }

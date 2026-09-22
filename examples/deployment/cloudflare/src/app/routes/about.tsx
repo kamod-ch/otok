@@ -6,8 +6,8 @@ export default function About() {
       <p class="eyebrow">Zero JS by default</p>
       <h1>About this example</h1>
       <p>
-        This page has no islands. Client JavaScript is omitted. Hashed assets for other routes still
-        come from Workers Assets.
+        This page has no islands. Client JavaScript is omitted. Hashed assets for other routes still come from Workers
+        Assets.
       </p>
     </section>
   );

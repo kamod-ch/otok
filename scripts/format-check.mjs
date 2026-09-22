@@ -8,7 +8,7 @@ const ignoredDirs = new Set([
   ".changeset",
   "node_modules",
   "dist",
-  "client",
+  "apps/playground/client",
   "plans",
   "proofshot-artifacts",
   "test-results",

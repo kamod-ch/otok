@@ -2,6 +2,21 @@ import { describe, expect, it } from "vitest";
 import { mergeKits } from "@kamod-ch/otok-config";
 
 describe("multi-kit composition", () => {
+  it("composes CRM + admin without conflicts", async () => {
+    const crmKit = (await import("@kamod-ch/otok-kit-crm/kit")).default;
+    const adminKit = (await import("@kamod-ch/otok-kit-admin/kit")).default;
+    const plan = mergeKits(
+      [crmKit, adminKit],
+      {},
+      {
+        enabledModules: { "@kamod-ch/otok-kit-crm": ["pipelines", "import-export"] },
+      },
+    );
+    expect(plan.conflicts.filter((c) => c.type === "incompatible_kits")).toHaveLength(0);
+    expect(plan.files.some((f) => f.to.includes("crm"))).toBe(true);
+    expect(plan.files.some((f) => f.to.includes("admin"))).toBe(true);
+  });
+
   it("composes CRM + SaaS without conflicts", async () => {
     const crmKit = (await import("@kamod-ch/otok-kit-crm/kit")).default;
     const saasKit = (await import("@kamod-ch/otok-kit-saas/kit")).default;

@@ -3,6 +3,7 @@ title: API Reference
 section: Reference
 order: 50
 ---
+
 # API Reference
 
 ## Server API
@@ -23,10 +24,10 @@ defineMiddleware(middleware)
 ## Client API
 
 ```ts
-Island
-createOtokClient({ registry, softNav })
-hydrateIslands(root, registry)
-softNavigate(url, registry)
+Island;
+createOtokClient({ registry, softNav });
+hydrateIslands(root, registry);
+softNavigate(url, registry);
 ```
 
 ## Route Module API

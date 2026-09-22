@@ -50,13 +50,13 @@ Then read `hono.get("flash")` in loaders/components.
 
 ## API
 
-| Export | Purpose |
-|--------|---------|
-| `setFlash(c, message, config)` | Set signed flash cookie |
-| `consumeFlash(c, config)` | Read + clear cookie |
-| `flashRedirect(location, message, c, config)` | Set flash and `redirect()` |
-| `flashSuccess` / `flashError` / … | Message helpers |
-| `createFlashMiddleware(config)` | Auto-consume on GET requests |
+| Export                                        | Purpose                      |
+| --------------------------------------------- | ---------------------------- |
+| `setFlash(c, message, config)`                | Set signed flash cookie      |
+| `consumeFlash(c, config)`                     | Read + clear cookie          |
+| `flashRedirect(location, message, c, config)` | Set flash and `redirect()`   |
+| `flashSuccess` / `flashError` / …             | Message helpers              |
+| `createFlashMiddleware(config)`               | Auto-consume on GET requests |
 
 Flash cookies are `httpOnly`, signed with HMAC-SHA256, and expire after `maxAgeSeconds` (default 120).
 

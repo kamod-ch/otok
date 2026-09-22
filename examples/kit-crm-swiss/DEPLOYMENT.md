@@ -28,12 +28,12 @@ pnpm build && pnpm start   # Node adapter production
 
 ## Environment
 
-| Variable | Description |
-|----------|-------------|
-| `DATABASE_URL` | Postgres connection string |
-| `AUTH_SECRET` | Session signing secret |
-| `APP_URL` | Public URL for auth redirects |
-| `OTOK_LOCALE` | Default locale (de/fr/en/it) |
+| Variable       | Description                   |
+| -------------- | ----------------------------- |
+| `DATABASE_URL` | Postgres connection string    |
+| `AUTH_SECRET`  | Session signing secret        |
+| `APP_URL`      | Public URL for auth redirects |
+| `OTOK_LOCALE`  | Default locale (de/fr/en/it)  |
 
 ## Security checklist
 

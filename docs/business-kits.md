@@ -19,8 +19,8 @@ Composable, eject-free application layers built on `@kamod-ch/otok-config` prese
 | Kit | Package | Description |
 |-----|---------|-------------|
 | CRM | `@kamod-ch/otok-kit-crm` | Swiss B2B CRM — full implementation |
-| Admin | `@kamod-ch/otok-kit-admin` | User/org admin shell |
-| SaaS | `@kamod-ch/otok-kit-saas` | Billing + subscription hooks |
+| SaaS | `@kamod-ch/otok-kit-saas` | Billing — checkout, portal, Stripe webhooks |
+| Admin | `@kamod-ch/otok-kit-admin` | Users, roles, org settings |
 | Marketplace | `@kamod-ch/otok-kit-marketplace` | Listings + orders scaffold |
 | Content | `@kamod-ch/otok-kit-content` | CMS pages atop otok-content |
 
@@ -54,6 +54,8 @@ pnpm create otok my-crm --variant crm --no-install
 This copies kit routes into `src/app/`, patches `package.json`, and writes `.otok/kit-manifest.json`.
 
 Additional kits: `--kit @kamod-ch/otok-kit-admin`
+
+SaaS preset auto-composes `@kamod-ch/otok-kit-saas` (checkout, portal, webhooks).
 
 Local overrides without eject: configure `kitOverrides` in programmatic scaffold API.
 

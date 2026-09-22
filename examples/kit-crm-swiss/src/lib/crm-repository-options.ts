@@ -12,11 +12,7 @@ function domainFromWebsite(website: string | null | undefined): string | undefin
   }
 }
 
-export async function triggerCompanyEnrichment(company: {
-  id: string;
-  name: string;
-  website: string | null;
-}) {
+export async function triggerCompanyEnrichment(company: { id: string; name: string; website: string | null }) {
   const domain = domainFromWebsite(company.website);
   return workflows.start(
     enrichCompany,

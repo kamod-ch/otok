@@ -26,11 +26,7 @@ export function defineAuditAction<TMetadata = unknown>(
 }
 
 export function isAuditActionDefinition(value: unknown): value is AuditActionDefinition {
-  return (
-    typeof value === "object" &&
-    value != null &&
-    (value as AuditActionDefinition).__kind === "otok-audit-action"
-  );
+  return typeof value === "object" && value != null && (value as AuditActionDefinition).__kind === "otok-audit-action";
 }
 
 export { z } from "zod";

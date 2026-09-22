@@ -4,9 +4,7 @@ import { validateSupabaseConfig, type SupabaseConfig } from "../config.js";
 import type { SupabaseEnv } from "../types.js";
 import { createOtokSupabaseServerClient } from "./create-server-client.js";
 
-export function supabase<Database = unknown>(
-  config: SupabaseConfig,
-): MiddlewareHandler<SupabaseEnv<Database>> {
+export function supabase<Database = unknown>(config: SupabaseConfig): MiddlewareHandler<SupabaseEnv<Database>> {
   const validated = validateSupabaseConfig(config);
 
   return createMiddleware<SupabaseEnv<Database>>(async (c, next) => {

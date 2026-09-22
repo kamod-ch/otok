@@ -11,7 +11,13 @@ export default function AuditPage({
 }: {
   data: {
     user: { name: string };
-    audit: Array<{ action: string; resource_type: string; resource_id: string; created_at: string; user_id: string | null }>;
+    audit: Array<{
+      action: string;
+      resource_type: string;
+      resource_id: string;
+      created_at: string;
+      user_id: string | null;
+    }>;
   };
 }) {
   return (

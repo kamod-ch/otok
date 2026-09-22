@@ -6,9 +6,7 @@ import { createMemorySessionAdapter } from "@kamod-ch/otok-auth/adapters/memory"
 
 type User = { id: string; email: string; name: string | null; role: string };
 
-const users = new Map<string, User>([
-  ["demo", { id: "demo", email: "demo@example.com", name: "Demo", role: "admin" }],
-]);
+const users = new Map<string, User>([["demo", { id: "demo", email: "demo@example.com", name: "Demo", role: "admin" }]]);
 
 const sessionAdapter = createMemorySessionAdapter<User>({
   resolveUser: ({ session }) => users.get(session.userId) ?? null,

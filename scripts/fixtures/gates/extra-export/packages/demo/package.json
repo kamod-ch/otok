@@ -1,0 +1,7 @@
+{
+  "name": "@kamod-ch/otok-config",
+  "exports": {
+    ".": "./dist/index.js",
+    "./extra": "./dist/extra.js"
+  }
+}

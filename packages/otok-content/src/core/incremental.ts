@@ -34,10 +34,7 @@ export function fileFingerprint(file: string): { hash: string; mtimeMs: number }
   return { hash, mtimeMs: stat.mtimeMs };
 }
 
-export function isFileUnchanged(
-  state: IncrementalState,
-  file: string,
-): boolean {
+export function isFileUnchanged(state: IncrementalState, file: string): boolean {
   const prev = state.files[file];
   if (!prev) return false;
   try {
@@ -48,10 +45,7 @@ export function isFileUnchanged(
   }
 }
 
-export function updateIncrementalState(
-  state: IncrementalState,
-  files: string[],
-): IncrementalState {
+export function updateIncrementalState(state: IncrementalState, files: string[]): IncrementalState {
   const next: IncrementalState = { version: 1, files: { ...state.files } };
   for (const file of files) {
     try {

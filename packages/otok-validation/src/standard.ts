@@ -17,7 +17,9 @@ export function isStandardSchema<T>(schema: ValidationSchema<T>): schema is Stan
   );
 }
 
-export function isLegacySchema<T>(schema: ValidationSchema<T>): schema is import("./types.js").LegacyParseableSchema<T> {
+export function isLegacySchema<T>(
+  schema: ValidationSchema<T>,
+): schema is import("./types.js").LegacyParseableSchema<T> {
   return typeof (schema as import("./types.js").LegacyParseableSchema<T>).safeParse === "function";
 }
 
@@ -98,10 +100,7 @@ export function legacyErrorToValidationInput(
   );
 }
 
-export function stripUnknownFields(
-  input: Record<string, unknown>,
-  knownKeys: string[],
-): Record<string, unknown> {
+export function stripUnknownFields(input: Record<string, unknown>, knownKeys: string[]): Record<string, unknown> {
   const allowed = new Set(knownKeys);
   return Object.fromEntries(Object.entries(input).filter(([key]) => allowed.has(key)));
 }

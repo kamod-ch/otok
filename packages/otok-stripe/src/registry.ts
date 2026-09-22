@@ -13,9 +13,7 @@ export function registerStripeRuntime<TPlan extends string = string>(value: Stri
 
 export function getStripeRuntime<TPlan extends string = string>(): StripeRuntime<TPlan> {
   if (!runtime) {
-    throw new Error(
-      "otok-stripe: no stripe runtime registered. Add stripe() to otok.config.ts plugins.",
-    );
+    throw new Error("otok-stripe: no stripe runtime registered. Add stripe() to otok.config.ts plugins.");
   }
   return runtime as StripeRuntime<TPlan>;
 }

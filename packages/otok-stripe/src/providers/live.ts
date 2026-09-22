@@ -1,4 +1,3 @@
-import type Stripe from "stripe";
 import { createBillingPortalSession } from "../portal.js";
 import { createCheckoutSession } from "../checkout.js";
 import { createStripeClient } from "../client.js";
@@ -32,8 +31,7 @@ export function createLiveStripeProvider<TPlan extends string = string>(
     client,
     createCheckoutSession: (input) => createCheckoutSession(client, input),
     createBillingPortalSession: (input) => createBillingPortalSession(client, input),
-    constructWebhookEvent: (rawBody, signature, secret) =>
-      client.webhooks.constructEvent(rawBody, signature, secret),
+    constructWebhookEvent: (rawBody, signature, secret) => client.webhooks.constructEvent(rawBody, signature, secret),
   };
 }
 

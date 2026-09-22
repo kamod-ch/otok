@@ -13,9 +13,7 @@ export function registerKyselyRuntime<DB>(value: KyselyRuntime<DB>): void {
 
 export function getKyselyRuntime<DB = unknown>(): KyselyRuntime<DB> {
   if (!runtime) {
-    throw new Error(
-      "otok-kysely: no database runtime registered. Add kysely() to otok.config.ts plugins.",
-    );
+    throw new Error("otok-kysely: no database runtime registered. Add kysely() to otok.config.ts plugins.");
   }
   return runtime as KyselyRuntime<DB>;
 }

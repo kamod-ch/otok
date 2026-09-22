@@ -21,9 +21,7 @@ const googleTokens = {
 vi.mock("arctic", () => {
   class GitHub {
     createAuthorizationURL(state: string, scopes: string[]) {
-      return new URL(
-        `https://github.com/login/oauth/authorize?state=${state}&scope=${scopes.join("+")}`,
-      );
+      return new URL(`https://github.com/login/oauth/authorize?state=${state}&scope=${scopes.join("+")}`);
     }
     async validateAuthorizationCode(_code: string) {
       return githubTokens;
@@ -148,14 +146,11 @@ describe("createOAuthFlow", () => {
       secret,
     );
 
-    const response = await app.request(
-      "http://localhost/auth/github/callback?code=abc&state=fixed-state",
-      {
-        headers: {
-          cookie: `otok_oauth_state=${stateToken}`,
-        },
+    const response = await app.request("http://localhost/auth/github/callback?code=abc&state=fixed-state", {
+      headers: {
+        cookie: `otok_oauth_state=${stateToken}`,
       },
-    );
+    });
 
     expect(response.status).toBe(303);
     expect(response.headers.get("location")).toBe("/studio");
@@ -167,9 +162,7 @@ describe("createOAuthFlow", () => {
     const app = new Hono();
     flow.mount(app);
 
-    const response = await app.request(
-      "http://localhost/auth/github/callback?state=fixed-state",
-    );
+    const response = await app.request("http://localhost/auth/github/callback?state=fixed-state");
     expect(response.status).toBe(303);
     expect(response.headers.get("location")).toBe("/login?error=missing_code");
   });
@@ -190,10 +183,9 @@ describe("createOAuthFlow", () => {
       secret,
     );
 
-    const response = await app.request(
-      "http://localhost/auth/google/callback?code=abc&state=fixed-state",
-      { headers: { cookie: `otok_oauth_state=${stateToken}` } },
-    );
+    const response = await app.request("http://localhost/auth/google/callback?code=abc&state=fixed-state", {
+      headers: { cookie: `otok_oauth_state=${stateToken}` },
+    });
 
     expect(response.status).toBe(303);
     expect(response.headers.get("location")).toBe("/login?error=pkce_error");
@@ -204,9 +196,7 @@ describe("createOAuthFlow", () => {
     const app = new Hono();
     flow.mount(app);
 
-    const response = await app.request(
-      "http://localhost/auth/github/callback?error=access_denied&state=fixed-state",
-    );
+    const response = await app.request("http://localhost/auth/github/callback?error=access_denied&state=fixed-state");
     expect(response.status).toBe(303);
     expect(response.headers.get("location")).toBe("/login?error=provider_error");
   });
@@ -216,23 +206,20 @@ describe("createOAuthFlow", () => {
     const app = new Hono();
     flow.mount(app);
 
-    const response = await app.request(
-      "http://localhost/auth/github/callback?code=abc&state=wrong",
-      {
-        headers: {
-          cookie: `otok_oauth_state=${sealOAuthState(
-            {
-              provider: "github",
-              state: "fixed-state",
-              codeVerifier: null,
-              next: null,
-              issuedAt: Date.now(),
-            },
-            secret,
-          )}`,
-        },
+    const response = await app.request("http://localhost/auth/github/callback?code=abc&state=wrong", {
+      headers: {
+        cookie: `otok_oauth_state=${sealOAuthState(
+          {
+            provider: "github",
+            state: "fixed-state",
+            codeVerifier: null,
+            next: null,
+            issuedAt: Date.now(),
+          },
+          secret,
+        )}`,
       },
-    );
+    });
 
     expect(response.status).toBe(303);
     expect(response.headers.get("location")).toBe("/login?error=invalid_state");

@@ -3,6 +3,7 @@ title: CLI — otok add
 section: Guides
 order: 35
 ---
+
 # CLI — `otok add`
 
 Install Otok plugins from the command line. The CLI detects your package manager, installs the npm package, and registers the plugin in `otok.config.ts` without reformatting the whole file.
@@ -22,13 +23,13 @@ If `otok-cli` is not installed globally, use `pnpm dlx otok-cli add …` or add 
 
 Short names map to published packages:
 
-| Alias | Package |
-|-------|---------|
-| `oauth` | `@kamod-ch/otok-oauth` |
-| `i18n` | `@kamod-ch/otok-i18n` |
+| Alias    | Package                 |
+| -------- | ----------------------- |
+| `oauth`  | `@kamod-ch/otok-oauth`  |
+| `i18n`   | `@kamod-ch/otok-i18n`   |
 | `kysely` | `@kamod-ch/otok-kysely` |
-| `seo` | `@kamod-ch/otok-seo` |
-| `kamod` | `@kamod-ch/otok-kamod` |
+| `seo`    | `@kamod-ch/otok-seo`    |
+| `kamod`  | `@kamod-ch/otok-kamod`  |
 
 You can also pass a full scoped name (`@scope/custom-plugin`) or an unscoped `otok-*` name (resolved to `@kamod-ch/otok-*`).
 
@@ -75,11 +76,11 @@ Non-interactive environments (CI) skip creation steps that require confirmation.
 
 ## Errors
 
-| Situation | Message |
-|-----------|---------|
-| Not in an Otok project | Could not find an Otok project |
-| Unknown alias | Lists official aliases |
-| Config without `defineConfig` | Manual wiring instructions |
+| Situation                       | Message                             |
+| ------------------------------- | ----------------------------------- |
+| Not in an Otok project          | Could not find an Otok project      |
+| Unknown alias                   | Lists official aliases              |
+| Config without `defineConfig`   | Manual wiring instructions          |
 | Setup tries to overwrite a file | Refusing to overwrite existing file |
 
 ## See also

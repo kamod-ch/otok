@@ -56,7 +56,10 @@ export interface FormAlertProps {
 export function FormAlert({ message }: FormAlertProps) {
   if (!message) return null;
   return (
-    <p role="alert" class="rounded-md border border-destructive/40 bg-destructive/10 px-3 py-2 text-sm text-destructive">
+    <p
+      role="alert"
+      class="rounded-md border border-destructive/40 bg-destructive/10 px-3 py-2 text-sm text-destructive"
+    >
       {message}
     </p>
   );

@@ -25,13 +25,13 @@ This matches the user-facing API while remaining compatible with Otok's `defineM
 
 ## Runtime model
 
-| Entry | Purpose |
-|-------|---------|
-| `.` | Shared config, errors, server middleware re-exports |
-| `./server` | SSR client + cookie adapter |
-| `./browser` | Browser client singleton |
-| `./auth` | Auth middleware, routes, actions |
-| `./admin` | Service-role client (server-only) |
+| Entry       | Purpose                                             |
+| ----------- | --------------------------------------------------- |
+| `.`         | Shared config, errors, server middleware re-exports |
+| `./server`  | SSR client + cookie adapter                         |
+| `./browser` | Browser client singleton                            |
+| `./auth`    | Auth middleware, routes, actions                    |
+| `./admin`   | Service-role client (server-only)                   |
 
 Configuration is **explicit** — no `process.env` reads inside core functions. Applications pass env values from Node, Bun, Cloudflare bindings, or Deno.
 

@@ -10,17 +10,12 @@ export {
   useLoaderData,
   setMutationRegistry,
 } from "./hooks.js";
-export type {
-  UseActionOptions,
-  ActionHandle,
-  FetcherHandle,
-  FetcherFormProps,
-  BlockerOptions,
-} from "./hooks.js";
+export type { UseActionOptions, ActionHandle, FetcherHandle, FetcherFormProps, BlockerOptions } from "./hooks.js";
 export { LoadingBoundary, ErrorBoundary } from "./boundaries.js";
 export type { LoadingBoundaryProps, ErrorBoundaryProps } from "./boundaries.js";
 export {
   saveScrollPosition,
+  scrollToHashFromUrl,
   restoreScrollPosition,
   saveFocusSelector,
   restoreFocus,
@@ -35,8 +30,4 @@ export type {
   ActionDescriptor,
 } from "../../shared/mutations.js";
 
-export {
-  OTOK_DATA_ACCEPT,
-  OTOK_FETCHER_ATTR,
-  createIdempotencyKey,
-} from "../../shared/mutations.js";
+export { OTOK_DATA_ACCEPT, OTOK_FETCHER_ATTR, createIdempotencyKey } from "../../shared/mutations.js";

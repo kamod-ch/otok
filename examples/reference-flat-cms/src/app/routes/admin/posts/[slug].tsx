@@ -50,10 +50,27 @@ export default function EditPost({ data, actionData }: OtokPageProps) {
     <section class="editor-layout">
       <form method="post" class="card editor-form">
         <h1>Edit post</h1>
-        <label>Title<input name="title" value={values.title} aria-invalid={Boolean(failure?.fieldErrors?.title)} /></label>
-        <label>Excerpt<input name="excerpt" value={values.excerpt} /></label>
-        <label>Body<textarea name="body" rows={8}>{values.body}</textarea></label>
-        <label>Status<select name="status" value={values.status}><option value="draft">Draft</option><option value="published">Published</option></select></label>
+        <label>
+          Title
+          <input name="title" value={values.title} aria-invalid={Boolean(failure?.fieldErrors?.title)} />
+        </label>
+        <label>
+          Excerpt
+          <input name="excerpt" value={values.excerpt} />
+        </label>
+        <label>
+          Body
+          <textarea name="body" rows={8}>
+            {values.body}
+          </textarea>
+        </label>
+        <label>
+          Status
+          <select name="status" value={values.status}>
+            <option value="draft">Draft</option>
+            <option value="published">Published</option>
+          </select>
+        </label>
         <button class="button">Save changes</button>
       </form>
       <form method="post" class="card danger">

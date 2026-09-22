@@ -31,7 +31,10 @@ const seed: Post[] = [
 for (const post of seed) state.set(post.slug, post);
 
 export function slugify(input: string) {
-  return input.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "");
+  return input
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/(^-|-$)/g, "");
 }
 
 export const posts = {

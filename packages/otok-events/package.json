@@ -1,13 +1,22 @@
 {
   "name": "@kamod-ch/otok-events",
   "version": "0.1.1",
-  "description": "Typed domain events for Otok \u2014 in-process bus, transactional outbox, and Kysely integration.",
+  "description": "Typed domain events for Otok — in-process bus, transactional outbox, and Kysely integration.",
+  "homepage": "https://github.com/kamod-ch/otok/tree/main/packages/otok-events#readme",
+  "bugs": {
+    "url": "https://github.com/kamod-ch/otok/issues"
+  },
   "license": "MIT",
-  "type": "module",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kamod-ch/otok.git",
+    "directory": "packages/otok-events"
+  },
   "files": [
     "dist",
     "README.md"
   ],
+  "type": "module",
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
@@ -30,6 +39,9 @@
       "default": "./dist/crm/index.js"
     }
   },
+  "publishConfig": {
+    "access": "public"
+  },
   "scripts": {
     "build": "rm -rf dist && tsc -p tsconfig.build.json",
     "typecheck": "tsc -p tsconfig.json --noEmit",
@@ -38,6 +50,16 @@
   "dependencies": {
     "@kamod-ch/otok-config": "workspace:*",
     "zod": "^3.24.0"
+  },
+  "devDependencies": {
+    "@kamod-ch/otok": "workspace:*",
+    "@types/better-sqlite3": "^7.6.13",
+    "@types/node": "^24.12.2",
+    "better-sqlite3": "^12.6.2",
+    "hono": "^4.12.25",
+    "kysely": "^0.29.3",
+    "typescript": "~6.0.2",
+    "vitest": "^4.1.2"
   },
   "peerDependencies": {
     "@kamod-ch/otok": ">=0.6.1",
@@ -52,29 +74,7 @@
       "optional": true
     }
   },
-  "devDependencies": {
-    "@kamod-ch/otok": "workspace:*",
-    "@types/better-sqlite3": "^7.6.13",
-    "@types/node": "^24.12.2",
-    "better-sqlite3": "^12.6.2",
-    "hono": "^4.12.25",
-    "kysely": "^0.29.3",
-    "typescript": "~6.0.2",
-    "vitest": "^4.1.2"
-  },
   "engines": {
     "node": ">=20"
-  },
-  "publishConfig": {
-    "access": "public"
-  },
-  "homepage": "https://github.com/kamod-ch/otok/tree/main/packages/otok-events#readme",
-  "bugs": {
-    "url": "https://github.com/kamod-ch/otok/issues"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/kamod-ch/otok.git",
-    "directory": "packages/otok-events"
   }
 }

@@ -263,7 +263,7 @@
       "description": "Swiss B2B CRM business kit — companies, contacts, pipelines, import/export.",
       "publisher": "kamod-ch",
       "tier": "official",
-      "version": "0.1.0",
+      "version": "0.2.0",
       "otokVersion": "^0.4.0",
       "runtime": ["node", "static"],
       "adapters": ["node", "cloudflare", "static"],
@@ -274,6 +274,42 @@
       "deprecated": false,
       "publishedAt": "2026-08-03T00:00:00.000Z",
       "keywords": ["crm", "kit", "b2b", "swiss"]
+    },
+    {
+      "name": "@kamod-ch/otok-kit-saas",
+      "aliases": ["kit-saas", "saas"],
+      "description": "Billing kit — Stripe checkout, customer portal, and webhooks.",
+      "publisher": "kamod-ch",
+      "tier": "official",
+      "version": "0.2.0",
+      "otokVersion": "^0.4.0",
+      "runtime": ["node"],
+      "adapters": ["node", "cloudflare"],
+      "capabilities": ["billing", "kit", "stripe"],
+      "license": "MIT",
+      "maintenanceStatus": "active",
+      "qualityStatus": "verified",
+      "deprecated": false,
+      "publishedAt": "2026-08-14T00:00:00.000Z",
+      "keywords": ["saas", "kit", "billing", "stripe"]
+    },
+    {
+      "name": "@kamod-ch/otok-kit-admin",
+      "aliases": ["kit-admin", "admin"],
+      "description": "Admin kit — users, roles, and organization settings.",
+      "publisher": "kamod-ch",
+      "tier": "official",
+      "version": "0.2.0",
+      "otokVersion": "^0.4.0",
+      "runtime": ["node", "static"],
+      "adapters": ["node", "cloudflare", "static"],
+      "capabilities": ["admin", "kit"],
+      "license": "MIT",
+      "maintenanceStatus": "active",
+      "qualityStatus": "verified",
+      "deprecated": false,
+      "publishedAt": "2026-08-14T00:00:00.000Z",
+      "keywords": ["admin", "kit", "users", "roles"]
     }
   ]
 }

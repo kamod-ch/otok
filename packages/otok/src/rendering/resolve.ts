@@ -1,28 +1,20 @@
 import type { CacheConfig } from "../cache/types.js";
+import { isPersonalizedRequest } from "../cache/personalization.js";
 import type { RenderContext, RenderPlan, RenderingConfig, RenderingWarning, ResolvedRenderMode } from "./types.js";
-
-const AUTH_COOKIE_PREFIXES = ["session", "auth", "otok_session", "__session"];
-
-function isPersonalized(ctx: RenderContext): boolean {
-  if (ctx.hasAuth || ctx.hasSession) return true;
-  if (!ctx.cookies) return false;
-  const lower = ctx.cookies.toLowerCase();
-  return AUTH_COOKIE_PREFIXES.some((prefix) => lower.includes(`${prefix}=`));
-}
 
 function detectAutoMode(ctx: RenderContext, config: RenderingConfig): ResolvedRenderMode {
   if (config.prerender === true || (typeof config.prerender === "object" && config.prerender)) {
-    return isPersonalized(ctx) ? "ssr" : "ssg";
+    return isPersonalizedRequest(ctx) ? "ssr" : "ssg";
   }
   if (config.deferred) return "ssr";
-  if (isPersonalized(ctx)) return "ssr";
+  if (isPersonalizedRequest(ctx)) return "ssr";
   return "ssr";
 }
 
 function resolveMode(config: RenderingConfig, ctx: RenderContext): ResolvedRenderMode {
   const mode = config.mode ?? "ssr";
   if (mode === "auto") return detectAutoMode(ctx, config);
-  if (mode === "hybrid") return isPersonalized(ctx) ? "ssr" : "ssg";
+  if (mode === "hybrid") return isPersonalizedRequest(ctx) ? "ssr" : "ssg";
   if (mode === "client") return "client";
   if (mode === "ssg") return "ssg";
   return "ssr";
@@ -42,8 +34,11 @@ function sanitizeCache(
 ): { cache: CacheConfig | false; warnings: RenderingWarning[] } {
   const warnings: RenderingWarning[] = [];
   if (config.cache === false) return { cache: false, warnings };
+  if (config.cache?.noStore) {
+    return { cache: { ...config.cache, noStore: true }, warnings };
+  }
 
-  const personalized = isPersonalized(ctx);
+  const personalized = isPersonalizedRequest(ctx);
   const base: CacheConfig = config.cache ? { ...config.cache } : {};
 
   if (personalized) {
@@ -64,13 +59,21 @@ function sanitizeCache(
       });
       delete base.sMaxAge;
     }
+    const scope = ctx.cacheScope;
+    if (!scope?.userId && !scope?.tenantId) {
+      warnings.push({
+        code: "CACHE_SERVER_SKIP_PERSONALIZED",
+        message: `Route "${routePattern ?? ctx.pathname}" is personalized without verified cache scope; skipping shared server HTML cache.`,
+        route: routePattern,
+      });
+    }
   }
 
   if (!base.noStore && base.maxAge === undefined && base.sMaxAge === undefined && !base.private && !base.public) {
     return { cache: false, warnings };
   }
 
-  if (ctx.locale && !base.vary?.includes("Accept-Language")) {
+  if (ctx.cacheScope?.locale && !base.vary?.includes("Accept-Language")) {
     base.vary = [...(base.vary ?? []), "Accept-Language"];
   }
 

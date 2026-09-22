@@ -18,19 +18,19 @@ describe("defineRendering", () => {
 
 describe("resolveRenderPlan", () => {
   it("resolves ssr with streaming", () => {
-    const { plan } = resolveRenderPlan(
-      defineRendering({ mode: "ssr", streaming: true }),
-      {
-        method: "GET",
-        pathname: "/companies/acme",
-        params: { companyId: "acme" },
-        cookies: null,
-        hasAuth: false,
-        hasSession: false,
-        globalStreaming: false,
-        adapterCapabilities: new Set(["ssr", "streaming"]),
-      },
-    );
+    const { plan } = resolveRenderPlan(defineRendering({ mode: "ssr", streaming: true }), {
+      method: "GET",
+      pathname: "/companies/:companyId",
+      routeId: "companies/[companyId]",
+      requestPath: "/companies/acme",
+      query: [],
+      params: { companyId: "acme" },
+      cookies: null,
+      hasAuth: false,
+      hasSession: false,
+      globalStreaming: false,
+      adapterCapabilities: new Set(["ssr", "streaming"]),
+    });
     expect(plan.mode).toBe("ssr");
     expect(plan.streaming).toBe(true);
   });
@@ -41,6 +41,9 @@ describe("resolveRenderPlan", () => {
       {
         method: "GET",
         pathname: "/dashboard",
+        routeId: "dashboard",
+        requestPath: "/dashboard",
+        query: [],
         params: {},
         cookies: "session=abc",
         hasAuth: true,
@@ -56,6 +59,9 @@ describe("resolveRenderPlan", () => {
     const { plan } = resolveRenderPlan(defineRendering({ mode: "hybrid" }), {
       method: "GET",
       pathname: "/about",
+      routeId: "about",
+      requestPath: "/about",
+      query: [],
       params: {},
       cookies: null,
       hasAuth: false,
@@ -69,6 +75,9 @@ describe("resolveRenderPlan", () => {
     const { plan } = resolveRenderPlan(defineRendering({ mode: "client" }), {
       method: "GET",
       pathname: "/app",
+      routeId: "app",
+      requestPath: "/app",
+      query: [],
       params: {},
       cookies: null,
       hasAuth: false,

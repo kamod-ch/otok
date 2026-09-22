@@ -13,8 +13,8 @@
     "preact": "^10.28.2"
   },
   "devDependencies": {
-    "@kamod-ch/otok-vite-plugin": "workspace:*",
     "@hono/vite-dev-server": "^0.23.0",
+    "@kamod-ch/otok-vite-plugin": "workspace:*",
     "@types/node": "^24.12.2",
     "hono": "^4.12.25",
     "typescript": "~6.0.2",

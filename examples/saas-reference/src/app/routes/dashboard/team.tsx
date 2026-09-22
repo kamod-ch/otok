@@ -92,7 +92,8 @@ export default function TeamPage({
   actionData?: unknown;
 }) {
   const failure = readFormFailure(actionData);
-  const success = actionData && typeof actionData === "object" && "success" in actionData ? (actionData as { link?: string }) : null;
+  const success =
+    actionData && typeof actionData === "object" && "success" in actionData ? (actionData as { link?: string }) : null;
 
   return (
     <DashboardShell i18n={data.i18n} user={data.user}>
@@ -134,9 +135,7 @@ export default function TeamPage({
         {data.canInvite && (
           <form method="post" class="grid max-w-md gap-4 rounded-lg border border-border p-6">
             <FormAlert message={failure?.message} />
-            {success?.link && (
-              <p class="rounded-md bg-muted p-3 text-xs break-all">Dev invite link: {success.link}</p>
-            )}
+            {success?.link && <p class="rounded-md bg-muted p-3 text-xs break-all">Dev invite link: {success.link}</p>}
             <FormField name="email" label="Email" type="email" errors={failure?.fieldErrors?.email} required />
             <label class="grid gap-1 text-sm">
               <span>Role</span>

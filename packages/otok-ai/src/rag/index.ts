@@ -22,9 +22,10 @@ export interface EmbeddingProvider {
 /** Vector store for semantic search. */
 export interface VectorStore {
   upsert(items: Array<{ id: string; vector: number[]; metadata?: Record<string, unknown> }>): Promise<void>;
-  query(vector: number[], options?: { topK?: number; filter?: Record<string, unknown> }): Promise<
-    Array<{ id: string; score: number; metadata?: Record<string, unknown> }>
-  >;
+  query(
+    vector: number[],
+    options?: { topK?: number; filter?: Record<string, unknown> },
+  ): Promise<Array<{ id: string; score: number; metadata?: Record<string, unknown> }>>;
   delete?(ids: string[]): Promise<void>;
 }
 

@@ -20,7 +20,10 @@ export function createConsoleErrorReporter(logger: {
   };
 }
 
-export async function captureError(reporter: ErrorReporter | undefined, report: Parameters<ErrorReporter["capture"]>[0]) {
+export async function captureError(
+  reporter: ErrorReporter | undefined,
+  report: Parameters<ErrorReporter["capture"]>[0],
+) {
   if (!reporter) return;
   await reporter.capture(report);
 }

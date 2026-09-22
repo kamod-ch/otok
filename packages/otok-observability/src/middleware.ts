@@ -33,7 +33,9 @@ export function createRequestLoggingMiddleware(runtime: ObservabilityRuntime): O
   return defineMiddleware(async (c, next) => {
     const start = performance.now();
     const url = new URL(c.req.url);
-    const logger = c.get(LOGGER_CONTEXT_KEY as never) as ReturnType<ObservabilityRuntime["logger"]["child"]> | undefined;
+    const logger = c.get(LOGGER_CONTEXT_KEY as never) as
+      | ReturnType<ObservabilityRuntime["logger"]["child"]>
+      | undefined;
 
     try {
       await next();

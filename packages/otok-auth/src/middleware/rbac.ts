@@ -12,9 +12,7 @@ export interface SessionContextMiddlewareOptions<TUser> {
   set: Record<string, (user: TUser) => unknown>;
 }
 
-export function createSessionContextMiddleware<TUser>(
-  options: SessionContextMiddlewareOptions<TUser>,
-): OtokMiddleware {
+export function createSessionContextMiddleware<TUser>(options: SessionContextMiddlewareOptions<TUser>): OtokMiddleware {
   return defineMiddleware(async (c, next) => {
     const user = readUser(c, options.getUser);
     if (!user) redirect("/login", 303);
@@ -35,9 +33,7 @@ export interface TenantMiddlewareOptions<TUser> {
   also?: Record<string, (user: TUser) => unknown>;
 }
 
-export function createTenantMiddleware<TUser>(
-  options: TenantMiddlewareOptions<TUser>,
-): OtokMiddleware {
+export function createTenantMiddleware<TUser>(options: TenantMiddlewareOptions<TUser>): OtokMiddleware {
   const contextKey = options.contextKey ?? "tenantId";
   return createSessionContextMiddleware<TUser>({
     getUser: options.getUser,

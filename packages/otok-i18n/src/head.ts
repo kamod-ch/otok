@@ -18,10 +18,7 @@ export interface I18nHeadOptions {
 export function i18nHead(options: I18nHeadOptions): OtokHead;
 /** @deprecated Pass an options object for hreflang support. */
 export function i18nHead(locale: string, extra?: OtokHead): OtokHead;
-export function i18nHead(
-  localeOrOptions: string | I18nHeadOptions,
-  extra: OtokHead = {},
-): OtokHead {
+export function i18nHead(localeOrOptions: string | I18nHeadOptions, extra: OtokHead = {}): OtokHead {
   if (typeof localeOrOptions === "string") {
     return { ...extra, lang: localeOrOptions };
   }

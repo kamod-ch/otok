@@ -11,10 +11,7 @@ export interface PrerenderManifest {
   entries: PrerenderEntry[];
 }
 
-function expandParams(
-  pattern: string,
-  params: Record<string, string | string[]>,
-): string[] {
+function expandParams(pattern: string, params: Record<string, string | string[]>): string[] {
   const dynamic = Object.entries(params);
   if (dynamic.length === 0) return [pattern];
 
@@ -29,7 +26,7 @@ function expandParams(
 }
 
 function staticPathFromPattern(pattern: string): string | undefined {
-  if (/[\[*]/.test(pattern)) return undefined;
+  if (/[[*]/.test(pattern)) return undefined;
   return pattern.startsWith("/") ? pattern : `/${pattern}`;
 }
 

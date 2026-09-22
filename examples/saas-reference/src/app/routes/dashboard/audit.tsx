@@ -7,7 +7,7 @@ import type { AuditEntry } from "@kamod-ch/otok-audit";
 import type { I18nClientPayload } from "@kamod-ch/otok-i18n";
 import type { SaasContextUser } from "../../../db/types.js";
 
-export const loader = defineSaasLoader(async ({ user, db, hono }) => {
+export const loader = defineSaasLoader(async ({ user, db: _db, hono }) => {
   requirePermission(user, "audit:read");
   const result = await getAuditRuntime().search({
     tenantId: user.orgId,
@@ -46,9 +46,7 @@ export default function AuditPage({
               </p>
             </li>
           ))}
-          {data.entries.length === 0 && (
-            <li class="p-4 text-sm text-muted-foreground">No audit events yet.</li>
-          )}
+          {data.entries.length === 0 && <li class="p-4 text-sm text-muted-foreground">No audit events yet.</li>}
         </ul>
       </div>
     </DashboardShell>

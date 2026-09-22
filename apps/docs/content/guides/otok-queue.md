@@ -3,14 +3,15 @@ title: Queue Extension
 section: Guides
 order: 36
 ---
+
 # @kamod-ch/otok-queue
 
 Typed background jobs with provider abstraction, retry/backoff, idempotency keys, cron, and dead-letter behavior.
 
 ## Providers
 
-| Provider | Capabilities |
-|----------|--------------|
+| Provider          | Capabilities                                                  |
+| ----------------- | ------------------------------------------------------------- |
 | `memory` / `test` | Delayed jobs, cron, idempotency, dead letter (non-persistent) |
 
 ## Plugin
@@ -32,12 +33,18 @@ export default defineConfig({
 ```ts
 import { getQueueClient } from "@kamod-ch/otok-queue";
 
-await getQueueClient<Jobs>().enqueue("send-email", { to: "user@example.com" }, {
-  idempotencyKey: "welcome-user-123",
-});
+await getQueueClient<Jobs>().enqueue(
+  "send-email",
+  { to: "user@example.com" },
+  {
+    idempotencyKey: "welcome-user-123",
+  },
+);
 
 await getQueueClient<Jobs>().process({
-  "send-email": async ({ to }) => { /* ... */ },
+  "send-email": async ({ to }) => {
+    /* ... */
+  },
 });
 ```
 

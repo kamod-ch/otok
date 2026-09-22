@@ -15,9 +15,13 @@ export function assertRenderCapability(
     throw new Error(`[otok:rendering] Route "${routePath}" requires SSR but the active adapter does not support it.`);
   }
   if (plan.mode === "ssg" && !capabilities.prerender && !capabilities.ssr) {
-    throw new Error(`[otok:rendering] Route "${routePath}" requires prerender/SSG but the active adapter does not support it.`);
+    throw new Error(
+      `[otok:rendering] Route "${routePath}" requires prerender/SSG but the active adapter does not support it.`,
+    );
   }
   if (plan.streaming && !capabilities.streaming) {
-    throw new Error(`[otok:rendering] Route "${routePath}" requires streaming SSR but the active adapter does not support it.`);
+    throw new Error(
+      `[otok:rendering] Route "${routePath}" requires streaming SSR but the active adapter does not support it.`,
+    );
   }
 }

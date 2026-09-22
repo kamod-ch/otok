@@ -1,26 +1,35 @@
 {
   "name": "@kamod-ch/otok-plugin-contract",
   "version": "0.2.1",
-  "description": "Shared contract tests for Otok plugins \u2014 validates definePlugin hooks and lifecycle.",
+  "description": "Shared contract tests for Otok plugins — validates definePlugin hooks and lifecycle.",
+  "homepage": "https://github.com/kamod-ch/otok/tree/main/packages/otok-plugin-contract#readme",
+  "bugs": {
+    "url": "https://github.com/kamod-ch/otok/issues"
+  },
   "license": "MIT",
-  "type": "module",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kamod-ch/otok.git",
+    "directory": "packages/otok-plugin-contract"
+  },
   "files": [
     "dist",
     "README.md"
   ],
+  "type": "module",
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
       "default": "./dist/index.js"
     }
   },
+  "publishConfig": {
+    "access": "public"
+  },
   "scripts": {
     "build": "rm -rf dist && tsc -p tsconfig.build.json",
     "typecheck": "tsc -p tsconfig.json --noEmit",
     "test": "vitest run"
-  },
-  "peerDependencies": {
-    "vitest": ">=2"
   },
   "dependencies": {
     "@kamod-ch/otok": "workspace:*",
@@ -32,19 +41,10 @@
     "typescript": "~6.0.2",
     "vitest": "^4.1.2"
   },
+  "peerDependencies": {
+    "vitest": ">=2"
+  },
   "engines": {
     "node": ">=20"
-  },
-  "publishConfig": {
-    "access": "public"
-  },
-  "homepage": "https://github.com/kamod-ch/otok/tree/main/packages/otok-plugin-contract#readme",
-  "bugs": {
-    "url": "https://github.com/kamod-ch/otok/issues"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/kamod-ch/otok.git",
-    "directory": "packages/otok-plugin-contract"
   }
 }

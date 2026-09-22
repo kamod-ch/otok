@@ -156,11 +156,7 @@ async function benchmarkOtok() {
   const distDir = path.join(otokExample, "dist");
   await fs.rm(distDir, { recursive: true, force: true });
 
-  const buildTimeMs = await runCommand(otokRoot, "pnpm", [
-    "--filter",
-    "preactpress-migration",
-    "build",
-  ]);
+  const buildTimeMs = await runCommand(otokRoot, "pnpm", ["--filter", "preactpress-migration", "build"]);
 
   const assets = await analyzeHtmlAssets(distDir, "/docs/getting-started");
 

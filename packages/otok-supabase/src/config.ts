@@ -93,7 +93,7 @@ export function mergeCookieOptions(
   supabaseOptions: Record<string, unknown> | undefined,
   defaults: SupabaseCookieOptions | undefined,
 ): Record<string, unknown> {
-  const merged: Record<string, unknown> = { ...(supabaseOptions ?? {}) };
+  const merged: Record<string, unknown> = { ...supabaseOptions };
   if (defaults?.domain !== undefined) merged.domain = defaults.domain;
   if (defaults?.path !== undefined) merged.path = defaults.path;
   if (defaults?.secure !== undefined) merged.secure = defaults.secure;

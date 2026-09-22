@@ -3,7 +3,11 @@ import type { OtokPageProps } from "@kamod-ch/otok/server";
 export const loader = () => ({
   posts: [
     { slug: "hello-otok", title: "Hello Otok", excerpt: "Ship content sites with SSR and islands." },
-    { slug: "progressive-forms", title: "Progressive forms", excerpt: "HTML-first mutations with optional client enhancement." },
+    {
+      slug: "progressive-forms",
+      title: "Progressive forms",
+      excerpt: "HTML-first mutations with optional client enhancement.",
+    },
   ],
 });
 

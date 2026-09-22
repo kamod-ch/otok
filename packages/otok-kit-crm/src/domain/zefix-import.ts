@@ -22,12 +22,7 @@ export function findDuplicateCompany(
   return undefined;
 }
 
-export function importZefixRecords(
-  store: CrmStore,
-  orgId: string,
-  json: string,
-  ownerId?: string,
-): ZefixImportResult {
+export function importZefixRecords(store: CrmStore, orgId: string, json: string, ownerId?: string): ZefixImportResult {
   const rows = parseZefixJson(json);
   let imported = 0;
   let skipped = 0;

@@ -97,7 +97,9 @@ function renderNode(node: RouteTreeNode, prefix: string, lines: string[], isLast
   if (node.kind !== "root") {
     const connector = isLast ? "└── " : "├── ";
     const routeInfo = node.route ? `  → ${node.route.routePath}` : "";
-    const fileInfo = node.route ? `\n${prefix}${isLast ? "    " : "│   "}    ${relativeDisplayPath(node.route.file)}` : "";
+    const fileInfo = node.route
+      ? `\n${prefix}${isLast ? "    " : "│   "}    ${relativeDisplayPath(node.route.file)}`
+      : "";
     lines.push(`${prefix}${connector}${node.name}${routeInfo}${fileInfo}`);
     prefix += isLast ? "    " : "│   ";
   }

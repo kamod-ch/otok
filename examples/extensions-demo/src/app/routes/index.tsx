@@ -40,8 +40,12 @@ export default function IndexPage({ data }: { data: Awaited<ReturnType<typeof lo
   return (
     <main>
       <h1>{data.title}</h1>
-      <p>Checkout URL (test provider): <a href={data.checkoutUrl}>{data.checkoutUrl}</a></p>
-      <p>Mail preview: <a href={data.mailPreview}>{data.mailPreview}</a></p>
+      <p>
+        Checkout URL (test provider): <a href={data.checkoutUrl}>{data.checkoutUrl}</a>
+      </p>
+      <p>
+        Mail preview: <a href={data.mailPreview}>{data.mailPreview}</a>
+      </p>
     </main>
   );
 }

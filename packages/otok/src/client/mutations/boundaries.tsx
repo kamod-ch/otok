@@ -49,9 +49,7 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
       const message = error instanceof Error ? error.message : String(error);
       return (
         <div role="alert" data-otok-error-boundary="" tabIndex={-1}>
-          {this.props.fallback ? this.props.fallback(error) : (
-            <p class="otok-error">Something went wrong: {message}</p>
-          )}
+          {this.props.fallback ? this.props.fallback(error) : <p class="otok-error">Something went wrong: {message}</p>}
         </div>
       );
     }

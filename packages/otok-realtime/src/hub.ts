@@ -77,14 +77,10 @@ export class RealtimeHub {
       },
     };
 
-    conn.unsubscribe = this.provider.subscribe(
-      options.channel.name,
-      options.room,
-      (message) => {
-        if (conn.closed) return;
-        conn.push(message);
-      },
-    );
+    conn.unsubscribe = this.provider.subscribe(options.channel.name, options.room, (message) => {
+      if (conn.closed) return;
+      conn.push(message);
+    });
 
     this.registerConnection(conn, options.ip);
     this.replayMissedEvents(conn, options.channel, options.room, options.lastEventId, options.push);
@@ -103,12 +99,7 @@ export class RealtimeHub {
     return conn;
   }
 
-  async publish<T>(
-    channel: ChannelDefinition<T>,
-    room: string,
-    type: string,
-    data: T,
-  ): Promise<RealtimeMessage<T>> {
+  async publish<T>(channel: ChannelDefinition<T>, room: string, type: string, data: T): Promise<RealtimeMessage<T>> {
     if (channel.schema) {
       const parsed = channel.schema.safeParse(data);
       if (!parsed.success) {
@@ -124,11 +115,7 @@ export class RealtimeHub {
     }) as Promise<RealtimeMessage<T>>;
   }
 
-  async updatePresence(
-    channel: string,
-    room: string,
-    state: PresenceState,
-  ): Promise<void> {
+  async updatePresence(channel: string, room: string, state: PresenceState): Promise<void> {
     if (!this.provider.setPresence) return;
     await this.provider.setPresence(channel, room, state);
   }
@@ -140,7 +127,7 @@ export class RealtimeHub {
 
   async shutdown(): Promise<void> {
     if (this.heartbeatTimer) clearInterval(this.heartbeatTimer);
-    for (const conn of [...this.connections.values()]) {
+    for (const conn of this.connections.values()) {
       conn.close("SERVER_SHUTDOWN", "Server shutting down");
     }
     await this.provider.shutdown?.();
@@ -152,11 +139,7 @@ export class RealtimeHub {
     return p.broker;
   }
 
-  private enqueue(
-    conn: ActiveConnection,
-    message: RealtimeMessage,
-    push: ConnectOptions["push"],
-  ): boolean {
+  private enqueue(conn: ActiveConnection, message: RealtimeMessage, push: ConnectOptions["push"]): boolean {
     if (conn.pending.length >= this.limits.maxPendingEventsPerConnection) {
       conn.pending.shift();
       push({ code: "BACKPRESSURE", message: "Event queue overflow — oldest event dropped" });

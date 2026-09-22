@@ -9,12 +9,7 @@ export async function listUserOrganizations(db: Kysely<SaasDatabase>, userId: st
   return db
     .selectFrom("org_member")
     .innerJoin("organization", "organization.id", "org_member.org_id")
-    .select([
-      "organization.id",
-      "organization.slug",
-      "organization.name",
-      "org_member.role",
-    ])
+    .select(["organization.id", "organization.slug", "organization.name", "org_member.role"])
     .where("org_member.user_id", "=", userId)
     .orderBy("organization.name")
     .execute();
@@ -29,10 +24,7 @@ export async function resolveOrgContext(
   if (orgs.length === 0) return null;
 
   const cookieOrg = getCookie(hono, ORG_COOKIE);
-  const active =
-    orgs.find((o) => o.id === cookieOrg) ??
-    orgs.find((o) => o.slug === cookieOrg) ??
-    orgs[0];
+  const active = orgs.find((o) => o.id === cookieOrg) ?? orgs.find((o) => o.slug === cookieOrg) ?? orgs[0];
 
   const plan = await getOrgPlan(db, active.id);
 

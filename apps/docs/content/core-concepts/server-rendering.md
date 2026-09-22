@@ -3,6 +3,7 @@ title: Server Rendering
 section: Core Concepts
 order: 10
 ---
+
 # Server Rendering
 
 Otok renders Preact pages on the server through Hono. The Vite plugin scans route files and emits `virtual:otok-routes`; `createOtokApp()` or `createOtokHandler()` consumes that manifest.

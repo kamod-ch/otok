@@ -1,10 +1,5 @@
 import type { Kysely } from "kysely";
-import {
-  createSwissDemoSeed,
-  SWISS_DEMO_ORG_ID,
-  importZefixRecords,
-  createCrmStore,
-} from "@kamod-ch/otok-kit-crm";
+import { createSwissDemoSeed, SWISS_DEMO_ORG_ID, importZefixRecords, createCrmStore } from "@kamod-ch/otok-kit-crm";
 import { getSearchIndex, indexCompany } from "@kamod-ch/otok-search";
 import type { CrmDatabase } from "@kamod-ch/otok-kit-crm/db";
 import zefixSample from "../data/zefix-sample.json" with { type: "json" };
@@ -18,7 +13,7 @@ export default async function seed(db: Kysely<CrmDatabase>) {
   if (existing) return;
 
   const demo = createSwissDemoSeed();
-  const now = new Date().toISOString();
+  const _now = new Date().toISOString();
 
   await db
     .insertInto("crm_organizations")
@@ -73,7 +68,10 @@ export default async function seed(db: Kysely<CrmDatabase>) {
   }
 
   for (const tag of demo.tags) {
-    await db.insertInto("crm_tags").values({ id: tag.id, org_id: tag.orgId, name: tag.name, color: tag.color }).execute();
+    await db
+      .insertInto("crm_tags")
+      .values({ id: tag.id, org_id: tag.orgId, name: tag.name, color: tag.color })
+      .execute();
   }
 
   for (const company of demo.companies) {

@@ -33,7 +33,15 @@ export type {
   OtokRuntime,
   ResolvedOtokAdapter,
 } from "./adapter.js";
-export { defineConfig, definePlugin, definePreset, defineKit, instantiatePlugin, isPluginFactory, normalizePlugins } from "./define.js";
+export {
+  defineConfig,
+  definePlugin,
+  definePreset,
+  defineKit,
+  instantiatePlugin,
+  isPluginFactory,
+  normalizePlugins,
+} from "./define.js";
 export type { DefinePluginSetup } from "./define.js";
 export { mergePresets } from "./preset-merge.js";
 export type { MergePresetsOptions, MergedPresetPlan } from "./preset-merge.js";
@@ -60,11 +68,7 @@ export type {
 } from "./kit.js";
 export { PluginContainer, resolveOtokConfig } from "./container.js";
 export { OtokConfigError, pluginError } from "./errors.js";
-export {
-  defineSetup,
-  PluginSetupValidationError,
-  validateSetupChanges,
-} from "./setup.js";
+export { defineSetup, PluginSetupValidationError, validateSetupChanges } from "./setup.js";
 export type {
   PluginSetupAppendFile,
   PluginSetupChange,

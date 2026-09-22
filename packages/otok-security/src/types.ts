@@ -1,5 +1,4 @@
 import type { Context } from "hono";
-import type { MiddlewareHandler } from "hono";
 import type { ContentSecurityPolicyOptionHandler } from "hono/secure-headers";
 
 export interface SecurityPluginOptions {

@@ -21,15 +21,14 @@ function walk(dir) {
 }
 
 function escapeHtml(value) {
-  return value
-    .replaceAll("&", "&amp;")
-    .replaceAll("<", "&lt;")
-    .replaceAll(">", "&gt;")
-    .replaceAll('"', "&quot;");
+  return value.replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll('"', "&quot;");
 }
 
 function slugify(value) {
-  return value.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "");
+  return value
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/(^-|-$)/g, "");
 }
 
 function parseFrontmatter(markdown) {
@@ -128,22 +127,28 @@ function pagePath(file) {
 
 function titleFromPath(file, data) {
   if (data.title) return data.title;
-  return path.basename(file, ".md").split("-").map((part) => part[0].toUpperCase() + part.slice(1)).join(" ");
+  return path
+    .basename(file, ".md")
+    .split("-")
+    .map((part) => part[0].toUpperCase() + part.slice(1))
+    .join(" ");
 }
 
-const pages = walk(contentDir).map((file) => {
-  const parsed = parseFrontmatter(fs.readFileSync(file, "utf8"));
-  const rendered = renderMarkdown(parsed.body);
-  return {
-    file,
-    path: pagePath(file),
-    title: titleFromPath(file, parsed.data),
-    description: parsed.data.description ?? config.description,
-    section: parsed.data.section ?? path.relative(contentDir, path.dirname(file)).split(path.sep)[0],
-    order: Number(parsed.data.order ?? 999),
-    ...rendered,
-  };
-}).sort((a, b) => a.order - b.order || a.path.localeCompare(b.path));
+const pages = walk(contentDir)
+  .map((file) => {
+    const parsed = parseFrontmatter(fs.readFileSync(file, "utf8"));
+    const rendered = renderMarkdown(parsed.body);
+    return {
+      file,
+      path: pagePath(file),
+      title: titleFromPath(file, parsed.data),
+      description: parsed.data.description ?? config.description,
+      section: parsed.data.section ?? path.relative(contentDir, path.dirname(file)).split(path.sep)[0],
+      order: Number(parsed.data.order ?? 999),
+      ...rendered,
+    };
+  })
+  .sort((a, b) => a.order - b.order || a.path.localeCompare(b.path));
 
 function href(page) {
   const base = config.base.endsWith("/") ? config.base.slice(0, -1) : config.base;
@@ -157,15 +162,22 @@ function nav(active) {
     if (!groups.has(group)) groups.set(group, []);
     groups.get(group).push(page);
   }
-  return [...groups.entries()].map(([group, items]) => `
+  return [...groups.entries()]
+    .map(
+      ([group, items]) => `
     <section class="nav-group">
       <h2>${escapeHtml(group.replace(/-/g, " "))}</h2>
       ${items.map((page) => `<a class="${page.path === active.path ? "active" : ""}" href="${href(page)}">${escapeHtml(page.title)}</a>`).join("")}
-    </section>`).join("");
+    </section>`,
+    )
+    .join("");
 }
 
 function layout(page) {
-  const toc = page.headings.filter((heading) => heading.level > 1).map((heading) => `<a href="#${heading.id}">${escapeHtml(heading.text)}</a>`).join("");
+  const toc = page.headings
+    .filter((heading) => heading.level > 1)
+    .map((heading) => `<a href="#${heading.id}">${escapeHtml(heading.text)}</a>`)
+    .join("");
   const canonical = `${config.canonicalOrigin}${href(page)}`;
   const editPath = path.relative(contentDir, page.file).replace(/\\/g, "/");
   return `<!doctype html>
@@ -214,9 +226,23 @@ for (const page of pages) {
 
 write(path.join(outDir, "assets/style.css"), fs.readFileSync(path.join(root, "public/style.css"), "utf8"));
 write(path.join(outDir, "assets/search.js"), fs.readFileSync(path.join(root, "public/search.js"), "utf8"));
-write(path.join(outDir, "robots.txt"), `User-agent: *\nAllow: /\nSitemap: ${config.canonicalOrigin}${config.base}sitemap.xml\n`);
-write(path.join(outDir, "sitemap.xml"), `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">${pages.map((page) => `\n  <url><loc>${config.canonicalOrigin}${href(page)}</loc></url>`).join("")}\n</urlset>\n`);
-write(path.join(outDir, "404.html"), layout({ ...pages[0], title: "Page not found", html: "<h1>Page not found</h1><p>The requested documentation page could not be found.</p>", headings: [] }));
+write(
+  path.join(outDir, "robots.txt"),
+  `User-agent: *\nAllow: /\nSitemap: ${config.canonicalOrigin}${config.base}sitemap.xml\n`,
+);
+write(
+  path.join(outDir, "sitemap.xml"),
+  `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">${pages.map((page) => `\n  <url><loc>${config.canonicalOrigin}${href(page)}</loc></url>`).join("")}\n</urlset>\n`,
+);
+write(
+  path.join(outDir, "404.html"),
+  layout({
+    ...pages[0],
+    title: "Page not found",
+    html: "<h1>Page not found</h1><p>The requested documentation page could not be found.</p>",
+    headings: [],
+  }),
+);
 
 if (checkMode) {
   const index = fs.readFileSync(path.join(outDir, "index.html"), "utf8");

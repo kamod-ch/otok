@@ -3,7 +3,7 @@ import fs from "node:fs";
 import path from "node:path";
 
 const repoRoot = path.resolve(new URL("..", import.meta.url).pathname);
-const ignoredDirs = new Set([".git", "node_modules", "dist", "client", "proofshot-artifacts", "tmp"]);
+const ignoredDirs = new Set([".git", "node_modules", "dist", "proofshot-artifacts", "tmp"]);
 const checkedExtensions = new Set([".js", ".mjs", ".ts", ".tsx"]);
 
 function walk(dir) {

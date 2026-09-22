@@ -14,7 +14,9 @@ await hub.connect({
   channel: companiesChannel,
   room: "acme",
   transport: "sse",
-  push: (event) => { /* update UI */ return true; },
+  push: (event) => {
+    /* update UI */ return true;
+  },
   onClose: () => {},
 });
 

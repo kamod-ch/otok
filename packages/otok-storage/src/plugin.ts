@@ -15,17 +15,12 @@ export function resetStorageClientForTests(): void {
 
 export function getStorageClient() {
   if (!client) {
-    throw new Error(
-      "otok-storage: no storage client registered. Add storage() to otok.config.ts plugins.",
-    );
+    throw new Error("otok-storage: no storage client registered. Add storage() to otok.config.ts plugins.");
   }
   return client;
 }
 
-export async function configureStorageApp(
-  _app: Hono,
-  options: StoragePluginOptions,
-): Promise<StorageRuntime> {
+export async function configureStorageApp(_app: Hono, options: StoragePluginOptions): Promise<StorageRuntime> {
   if (!options.buckets || Object.keys(options.buckets).length === 0) {
     throw new OtokStorageConfigError("storage() requires at least one bucket configuration");
   }

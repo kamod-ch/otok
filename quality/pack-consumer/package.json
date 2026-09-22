@@ -1,0 +1,8 @@
+{
+  "name": "otok-pack-consumer-fixture",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "check": "node ./run-checks.mjs"
+  }
+}

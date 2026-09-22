@@ -1,14 +1,28 @@
 {
   "name": "@kamod-ch/otok-kit-content",
   "version": "0.2.0",
-  "type": "module",
+  "description": "Otok package @kamod-ch/otok-kit-content",
+  "homepage": "https://github.com/kamod-ch/otok/tree/main/packages/otok-kit-content#readme",
+  "bugs": {
+    "url": "https://github.com/kamod-ch/otok/issues"
+  },
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kamod-ch/otok.git",
+    "directory": "packages/otok-kit-content"
+  },
   "files": [
     "dist",
     "kit-files"
   ],
+  "type": "module",
   "exports": {
     ".": "./dist/index.js",
     "./kit": "./dist/kit.js"
+  },
+  "publishConfig": {
+    "access": "public"
   },
   "scripts": {
     "build": "tsc -p tsconfig.build.json"
@@ -19,21 +33,7 @@
   "devDependencies": {
     "typescript": "~6.0.2"
   },
-  "homepage": "https://github.com/kamod-ch/otok/tree/main/packages/otok-kit-content#readme",
-  "bugs": {
-    "url": "https://github.com/kamod-ch/otok/issues"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/kamod-ch/otok.git",
-    "directory": "packages/otok-kit-content"
-  },
-  "license": "MIT",
   "engines": {
     "node": ">=20"
-  },
-  "publishConfig": {
-    "access": "public"
-  },
-  "description": "Otok package @kamod-ch/otok-kit-content"
+  }
 }

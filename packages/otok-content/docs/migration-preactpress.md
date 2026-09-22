@@ -43,12 +43,12 @@ function toOtokDefinition(def: PreactpressCollectionDefinition): OtokDef {
 
 Map PreactPress `CollectionEntry` from `ContentEntry`:
 
-| PreactPress | otok-content |
-|-------------|--------------|
-| `entry.id` | `entry.id` |
-| `entry.route` | `entry.route` |
-| `entry.url` | `publicUrl(site.base, entry.route)` |
-| `entry.data` | `entry.data` |
+| PreactPress   | otok-content                        |
+| ------------- | ----------------------------------- |
+| `entry.id`    | `entry.id`                          |
+| `entry.route` | `entry.route`                       |
+| `entry.url`   | `publicUrl(site.base, entry.route)` |
+| `entry.data`  | `entry.data`                        |
 
 ## Phase 3: Markdown pipeline
 

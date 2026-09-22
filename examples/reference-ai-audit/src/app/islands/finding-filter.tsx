@@ -13,7 +13,11 @@ export default function FindingFilter({ findings }: { findings: Finding[] }) {
     <section class="card interactive">
       <div class="toolbar">
         <h2>Interactive finding triage</h2>
-        <select value={severity} onInput={(event) => setSeverity(event.currentTarget.value)} aria-label="Filter findings">
+        <select
+          value={severity}
+          onInput={(event) => setSeverity(event.currentTarget.value)}
+          aria-label="Filter findings"
+        >
           <option value="all">All severities</option>
           <option value="high">High</option>
           <option value="medium">Medium</option>

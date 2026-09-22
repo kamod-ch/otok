@@ -23,8 +23,7 @@ function resolveMessage(
 
   if (count != null) {
     const plural =
-      pickPluralMessage(messages, key, locale, count) ??
-      pickPluralMessage(fallbackMessages, key, locale, count);
+      pickPluralMessage(messages, key, locale, count) ?? pickPluralMessage(fallbackMessages, key, locale, count);
     if (plural != null) return interpolate(plural, { ...values, count });
   }
 
@@ -69,7 +68,9 @@ export type TranslationKey<M extends FlatMessages> = Extract<keyof M, string>;
 
 /** Flatten nested object keys into dot notation for typed catalogs. */
 export type FlattenKeys<T, Prefix extends string = ""> = T extends string
-  ? Prefix extends "" ? never : Prefix
+  ? Prefix extends ""
+    ? never
+    : Prefix
   : {
       [K in keyof T & string]: T[K] extends string
         ? Prefix extends ""

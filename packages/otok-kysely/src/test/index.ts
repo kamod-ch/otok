@@ -22,9 +22,7 @@ export interface TestDatabase<DB = unknown> {
  * Create an isolated test database with optional migrations applied.
  * Uses a temporary SQLite file by default.
  */
-export async function createTestDatabase<DB = unknown>(
-  options: TestDatabaseOptions = {},
-): Promise<TestDatabase<DB>> {
+export async function createTestDatabase<DB = unknown>(options: TestDatabaseOptions = {}): Promise<TestDatabase<DB>> {
   const dialect = options.dialect ?? "sqlite";
   const dir = await mkdtemp(join(tmpdir(), "otok-kysely-test-"));
   const connectionString = `sqlite://${join(dir, "test.db")}`;

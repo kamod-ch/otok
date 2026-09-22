@@ -3,6 +3,7 @@ title: Auth, CRUD, Styling, and Uploads
 section: Guides
 order: 32
 ---
+
 # Auth, CRUD, Styling, and Uploads
 
 ## Authentication Pattern

@@ -3,16 +3,17 @@ title: Stripe Extension
 section: Guides
 order: 37
 ---
+
 # @kamod-ch/otok-stripe
 
 Stripe billing with a provider interface, typed Otok actions, idempotent webhooks, and safe client DTOs.
 
 ## Providers
 
-| Provider | Use case |
-|----------|----------|
-| `live` | Production/test mode via Stripe SDK |
-| `test` | Deterministic local behavior without API calls |
+| Provider | Use case                                       |
+| -------- | ---------------------------------------------- |
+| `live`   | Production/test mode via Stripe SDK            |
+| `test`   | Deterministic local behavior without API calls |
 
 ## Plugin
 
@@ -34,7 +35,7 @@ export default defineConfig({
 ```ts
 import { stripeCheckoutAction, stripeBillingStatusAction } from "@kamod-ch/otok-stripe";
 
-const checkout = await stripeCheckoutAction({ /* ... */ });
+const checkout = await stripeCheckoutAction({/* ... */});
 // Returns { sessionId, url } — no raw Stripe objects
 ```
 

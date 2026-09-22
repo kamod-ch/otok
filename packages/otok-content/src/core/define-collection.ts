@@ -34,9 +34,7 @@ export function defineCollection<TSchema extends ZodType>(
 }
 
 export function isCollectionDefinition(value: unknown): value is CollectionDefinition {
-  return Boolean(
-    value && typeof value === "object" && (value as CollectionDefinition).__kind === "otok-collection",
-  );
+  return Boolean(value && typeof value === "object" && (value as CollectionDefinition).__kind === "otok-collection");
 }
 
 export { z } from "zod";

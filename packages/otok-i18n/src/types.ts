@@ -7,15 +7,11 @@ export type MessageValue = string | Record<string, string>;
 
 export type FlatMessages = Record<string, string>;
 
-export type MessageLoader =
-  | (() => Promise<{ default?: FlatMessages } | FlatMessages>)
-  | (() => FlatMessages);
+export type MessageLoader = (() => Promise<{ default?: FlatMessages } | FlatMessages>) | (() => FlatMessages);
 
 export type NamespaceLoader = Record<string, MessageLoader>;
 
-export interface I18nPluginOptions<
-  Locales extends readonly string[] = readonly string[],
-> {
+export interface I18nPluginOptions<Locales extends readonly string[] = readonly string[]> {
   locales: Locales;
   defaultLocale: Locales[number];
   /** Secondary locale for missing keys. Defaults to `defaultLocale`. */

@@ -67,8 +67,9 @@ describe("createRequireAuthMiddleware", () => {
         routes: [
           {
             path: "/home",
-            component: (({ data }: OtokPageProps<{ email: string }>) =>
-              h("p", null, data.email)) as (props: OtokPageProps) => ReturnType<typeof h>,
+            component: (({ data }: OtokPageProps<{ email: string }>) => h("p", null, data.email)) as (
+              props: OtokPageProps,
+            ) => ReturnType<typeof h>,
             loader: ({ hono }) => ({ email: (hono as Context).get("user").email as string }),
             middleware: [{ default: middleware }],
           },

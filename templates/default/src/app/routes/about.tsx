@@ -16,8 +16,7 @@ export default function About() {
       <section class="space-y-4">
         <Badge variant="secondary">Zero JS</Badge>
         <p class="max-w-2xl text-muted-foreground">
-          Otok renders this page on the server and omits the client entry script because there is
-          nothing to hydrate.
+          Otok renders this page on the server and omits the client entry script because there is nothing to hydrate.
         </p>
       </section>
       <Card class="mt-6">

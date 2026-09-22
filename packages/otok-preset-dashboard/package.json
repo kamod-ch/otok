@@ -2,7 +2,19 @@
   "name": "@kamod-ch/otok-preset-dashboard",
   "version": "0.2.0",
   "description": "Official Otok dashboard preset.",
+  "homepage": "https://github.com/kamod-ch/otok/tree/main/packages/otok-preset-dashboard#readme",
+  "bugs": {
+    "url": "https://github.com/kamod-ch/otok/issues"
+  },
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kamod-ch/otok.git",
+    "directory": "packages/otok-preset-dashboard"
+  },
+  "files": [
+    "dist"
+  ],
   "type": "module",
   "exports": {
     ".": {
@@ -10,9 +22,9 @@
       "default": "./dist/index.js"
     }
   },
-  "files": [
-    "dist"
-  ],
+  "publishConfig": {
+    "access": "public"
+  },
   "scripts": {
     "build": "rm -rf dist && tsc -p tsconfig.json",
     "typecheck": "tsc -p tsconfig.json --noEmit"
@@ -20,19 +32,7 @@
   "dependencies": {
     "@kamod-ch/otok-config": "workspace:*"
   },
-  "homepage": "https://github.com/kamod-ch/otok/tree/main/packages/otok-preset-dashboard#readme",
-  "bugs": {
-    "url": "https://github.com/kamod-ch/otok/issues"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/kamod-ch/otok.git",
-    "directory": "packages/otok-preset-dashboard"
-  },
   "engines": {
     "node": ">=20"
-  },
-  "publishConfig": {
-    "access": "public"
   }
 }

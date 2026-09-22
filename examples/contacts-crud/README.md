@@ -24,13 +24,13 @@ Open [http://localhost:5173/contacts](http://localhost:5173/contacts).
 
 ## Routes
 
-| Route | Method | Description |
-|-------|--------|-------------|
-| `/contacts` | GET | List all contacts |
-| `/contacts/new` | GET/POST | Create contact |
-| `/contacts/:id` | GET | View contact |
-| `/contacts/:id/edit` | GET/POST | Update contact |
-| `/contacts/:id/delete` | POST | Delete contact |
+| Route                  | Method   | Description       |
+| ---------------------- | -------- | ----------------- |
+| `/contacts`            | GET      | List all contacts |
+| `/contacts/new`        | GET/POST | Create contact    |
+| `/contacts/:id`        | GET      | View contact      |
+| `/contacts/:id/edit`   | GET/POST | Update contact    |
+| `/contacts/:id/delete` | POST     | Delete contact    |
 
 ## Environment
 

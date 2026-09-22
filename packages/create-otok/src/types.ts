@@ -1,11 +1,4 @@
-export type ProjectVariant =
-  | "minimal"
-  | "content"
-  | "saas"
-  | "dashboard"
-  | "api"
-  | "kamod"
-  | "crm";
+export type ProjectVariant = "minimal" | "content" | "saas" | "dashboard" | "api" | "kamod" | "crm";
 
 export type AdapterTarget = "node" | "cloudflare" | "static";
 

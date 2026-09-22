@@ -1,11 +1,12 @@
 import { describe, expect, it, vi, beforeEach } from "vitest";
 import { Hono } from "hono";
+import { createMockSupabaseClient, TEST_PUBLISHABLE_KEY, TEST_SUPABASE_URL } from "../test/fixtures.js";
 import {
-  createMockSupabaseClient,
-  TEST_PUBLISHABLE_KEY,
-  TEST_SUPABASE_URL,
-} from "../test/fixtures.js";
-import { readRequestCookies, getSetCookieHeaders, mergeResponseHeaders, createOtokSupabaseCookieMethods } from "./cookies.js";
+  readRequestCookies,
+  getSetCookieHeaders,
+  mergeResponseHeaders,
+  createOtokSupabaseCookieMethods,
+} from "./cookies.js";
 
 const mockClient = createMockSupabaseClient();
 let capturedCookies: {

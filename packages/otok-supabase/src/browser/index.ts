@@ -1,4 +1,1 @@
-export {
-  createOtokSupabaseBrowserClient,
-  resetOtokSupabaseBrowserClientForTests,
-} from "./create-browser-client.js";
+export { createOtokSupabaseBrowserClient, resetOtokSupabaseBrowserClientForTests } from "./create-browser-client.js";

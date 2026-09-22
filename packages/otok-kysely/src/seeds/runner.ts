@@ -4,7 +4,9 @@ import { pathToFileURL } from "node:url";
 import type { Kysely } from "kysely";
 import type { SeedModule } from "../types.js";
 
-export async function loadSeedModules(directory: string): Promise<Array<{ name: string; run: (db: Kysely<unknown>) => Promise<void> }>> {
+export async function loadSeedModules(
+  directory: string,
+): Promise<Array<{ name: string; run: (db: Kysely<unknown>) => Promise<void> }>> {
   let entries: string[];
   try {
     entries = await readdir(directory);

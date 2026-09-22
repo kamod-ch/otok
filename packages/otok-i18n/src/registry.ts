@@ -50,9 +50,7 @@ export function registerI18nRuntime(next: I18nRuntime): void {
 
 export function getI18nRuntime(): I18nRuntime {
   if (!runtime) {
-    throw new Error(
-      "otok-i18n: i18n() plugin not registered. Add i18n() to otok.config.ts plugins.",
-    );
+    throw new Error("otok-i18n: i18n() plugin not registered. Add i18n() to otok.config.ts plugins.");
   }
   return runtime;
 }

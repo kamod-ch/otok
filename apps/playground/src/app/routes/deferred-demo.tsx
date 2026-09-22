@@ -50,15 +50,12 @@ export default function DeferredDemo({ data }: { data: PageData }) {
           </CardDescription>
         </CardHeader>
         <CardContent class="text-sm text-muted-foreground">
-          View source / network waterfall: the HTML shell and this section should arrive before the feed
-          below (~1s artificial delay). No client JavaScript is required for the deferred region to appear.
+          View source / network waterfall: the HTML shell and this section should arrive before the feed below (~1s
+          artificial delay). No client JavaScript is required for the deferred region to appear.
         </CardContent>
       </Card>
 
-      <DeferredBoundary
-        slot={data.feed}
-        fallback={<p class="text-sm text-muted-foreground">Loading feed…</p>}
-      >
+      <DeferredBoundary slot={data.feed} fallback={<p class="text-sm text-muted-foreground">Loading feed…</p>}>
         {(posts) => (
           <Card>
             <CardHeader>

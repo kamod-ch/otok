@@ -43,10 +43,7 @@ export const OTOK_DEFERRED_MARKER_ATTR = "data-otok-deferred-marker";
  * Split critical HTML on deferred markers, preserving document order.
  * Markers must be empty self-contained divs emitted by DeferredBoundary.
  */
-export function splitHtmlAtDeferredMarkers(
-  html: string,
-  boundaryIds: string[],
-): { segments: string[]; ids: string[] } {
+export function splitHtmlAtDeferredMarkers(html: string, boundaryIds: string[]): { segments: string[]; ids: string[] } {
   if (boundaryIds.length === 0) {
     return { segments: [html], ids: [] };
   }

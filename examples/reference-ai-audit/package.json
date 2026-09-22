@@ -1,9 +1,9 @@
 {
   "name": "reference-ai-audit",
-  "private": true,
   "version": "0.1.0",
-  "type": "module",
+  "private": true,
   "description": "Reference Otok app for an AI-assisted repository audit workflow.",
+  "type": "module",
   "scripts": {
     "dev": "vite --host 0.0.0.0",
     "build": "vite build --mode client && vite build",

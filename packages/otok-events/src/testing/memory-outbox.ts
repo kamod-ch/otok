@@ -13,9 +13,7 @@ export class MemoryOutboxStore implements OutboxStore {
   }
 
   async claimPending(limit: number, now = new Date()): Promise<OutboxRecord[]> {
-    const pending = this.records.filter(
-      (r) => r.status === "pending" && r.availableAt <= now.toISOString(),
-    );
+    const pending = this.records.filter((r) => r.status === "pending" && r.availableAt <= now.toISOString());
     const claimed = pending.slice(0, limit);
     for (const record of claimed) {
       record.status = "processing";

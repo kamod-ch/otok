@@ -53,7 +53,6 @@ export function writeResponseCookie(
   setCookie(c, name, value, toHonoCookieOptions(options, defaults));
 }
 
-
 export function createOtokSupabaseCookieMethods(c: Context, config: SupabaseConfig) {
   const defaults = config.cookieOptions;
 
@@ -61,7 +60,10 @@ export function createOtokSupabaseCookieMethods(c: Context, config: SupabaseConf
     getAll() {
       return readRequestCookies(c);
     },
-    setAll(cookiesToSet: Array<{ name: string; value: string; options: Record<string, unknown> }>, headers?: Record<string, string>) {
+    setAll(
+      cookiesToSet: Array<{ name: string; value: string; options: Record<string, unknown> }>,
+      headers?: Record<string, string>,
+    ) {
       try {
         for (const { name, value, options } of cookiesToSet) {
           writeResponseCookie(c, name, value, options, defaults);

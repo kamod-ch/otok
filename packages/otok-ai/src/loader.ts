@@ -8,9 +8,7 @@ type AiContext = { ai: AiClient };
 function resolveAi(): AiClient {
   const runtime = tryGetAiRuntime();
   if (!runtime) {
-    throw new Error(
-      "otok-ai: defineAiAction requires ai() plugin. Add ai() to otok.config.ts plugins.",
-    );
+    throw new Error("otok-ai: defineAiAction requires ai() plugin. Add ai() to otok.config.ts plugins.");
   }
   return runtime.client;
 }

@@ -37,7 +37,7 @@ export const loader = defineLoader(async ({ params, db, hono }: any) => {
 
 export const head = defineMeta(() => ({ title: "Accept invitation", robots: "noindex" }));
 
-export const action = defineDbAction(async ({ params, db, hono, formData }) => {
+export const action = defineDbAction(async ({ params, db, hono, formData: _formData }) => {
   const token = String(params.token ?? "");
   const invite = await findValidInvitation(db as import("kysely").Kysely<SaasDatabase>, token);
   if (!invite) return { message: "Invitation expired or invalid" };
@@ -54,13 +54,7 @@ export const action = defineDbAction(async ({ params, db, hono, formData }) => {
     return { message: "Organization member limit reached" };
   }
 
-  await acceptInvitation(
-    db as import("kysely").Kysely<SaasDatabase>,
-    invite.id,
-    user.id,
-    invite.role,
-    invite.org_id,
-  );
+  await acceptInvitation(db as import("kysely").Kysely<SaasDatabase>, invite.id, user.id, invite.role, invite.org_id);
 
   await getAuditRuntime().record({
     tenantId: invite.org_id,

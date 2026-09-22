@@ -71,10 +71,8 @@ export default function content(options: ContentPluginOptions = {}) {
 
   plugin.buildStart = async ({ root }) => {
     const contentRoot = path.resolve(root, normalized.root ?? DEFAULT_CONTENT_OPTIONS.root);
-    const collectionsInput = normalized.collections
-      ?? (normalized.config
-        ? await loadCollectionsFromConfig(root, normalized.config)
-        : {});
+    const collectionsInput =
+      normalized.collections ?? (normalized.config ? await loadCollectionsFromConfig(root, normalized.config) : {});
 
     const registry = createRegistry(collectionsInput);
     runtimeManifest = await buildContentManifest(registry.entries(), {
@@ -97,10 +95,9 @@ export default function content(options: ContentPluginOptions = {}) {
       viteServer.watcher.add(contentRoot);
       viteServer.watcher.on("change", async (file: string) => {
         if (!file.startsWith(contentRoot)) return;
-        const collectionsInput = normalized.collections
-          ?? (normalized.config
-            ? await loadCollectionsFromConfig(root, normalized.config!)
-            : {});
+        const collectionsInput =
+          normalized.collections ??
+          (normalized.config ? await loadCollectionsFromConfig(root, normalized.config!) : {});
         const registry = createRegistry(collectionsInput);
         runtimeManifest = await buildContentManifest(registry.entries(), {
           root: contentRoot,

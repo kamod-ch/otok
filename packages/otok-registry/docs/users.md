@@ -55,18 +55,18 @@ Incompatible installs require explicit confirmation in interactive terminals.
 
 `otok doctor` performs read-only checks:
 
-| Check | Description |
-|-------|-------------|
-| Versions | Otok and plugin versions vs registry |
-| Duplicates | Same plugin registered twice in `otok.config.ts` |
-| Adapters | Detected adapter package |
-| Environment | `process.env.*` references without values |
-| Client leaks | Server imports in `src/client` |
-| Middleware order | Auth vs session ordering heuristic |
-| Route types | Presence of generated `.otok/types/routes.d.ts` |
-| Database | Migrations folder when Kysely is installed |
-| Security | Registry security notes for installed plugins |
-| Capabilities | Adapter vs plugin capability mismatches |
+| Check            | Description                                      |
+| ---------------- | ------------------------------------------------ |
+| Versions         | Otok and plugin versions vs registry             |
+| Duplicates       | Same plugin registered twice in `otok.config.ts` |
+| Adapters         | Detected adapter package                         |
+| Environment      | `process.env.*` references without values        |
+| Client leaks     | Server imports in `src/client`                   |
+| Middleware order | Auth vs session ordering heuristic               |
+| Route types      | Presence of generated `.otok/types/routes.d.ts`  |
+| Database         | Migrations folder when Kysely is installed       |
+| Security         | Registry security notes for installed plugins    |
+| Capabilities     | Adapter vs plugin capability mismatches          |
 
 Use `--fix` only when you want the CLI to propose and confirm safe repairs (e.g. route typegen).
 

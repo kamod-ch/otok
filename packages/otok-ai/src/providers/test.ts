@@ -1,11 +1,9 @@
 import type {
-  AiCompletionResult,
   AiEmbedOptions,
   AiEmbedResult,
   AiProvider,
   AiProviderCapabilities,
   AiProviderChatOptions,
-  AiStreamEvent,
   AiToolCall,
   AiUsage,
 } from "../types.js";
@@ -53,10 +51,14 @@ async function maybeDelay(signal?: AbortSignal): Promise<void> {
   if (signal?.aborted) throw new OtokAiAbortedError();
   await new Promise<void>((resolve, reject) => {
     const t = setTimeout(resolve, testState.delayMs);
-    signal?.addEventListener("abort", () => {
-      clearTimeout(t);
-      reject(new OtokAiAbortedError());
-    }, { once: true });
+    signal?.addEventListener(
+      "abort",
+      () => {
+        clearTimeout(t);
+        reject(new OtokAiAbortedError());
+      },
+      { once: true },
+    );
   });
 }
 
@@ -116,7 +118,10 @@ export function createTestProvider(): AiProvider {
     async embed(options: AiEmbedOptions): Promise<AiEmbedResult> {
       const inputs = Array.isArray(options.input) ? options.input : [options.input];
       const embeddings = inputs.map((text) =>
-        text.split("").slice(0, 8).map((c) => c.charCodeAt(0) / 256),
+        text
+          .split("")
+          .slice(0, 8)
+          .map((c) => c.charCodeAt(0) / 256),
       );
       return {
         embeddings,

@@ -27,7 +27,14 @@ export default function CrmDashboard({
 }: {
   data: {
     user: { name: string; orgId: string; id: string };
-    companies: Array<{ id: string; name: string; uid: string | null; canton: string | null; city: string | null; stage_id: string | null }>;
+    companies: Array<{
+      id: string;
+      name: string;
+      uid: string | null;
+      canton: string | null;
+      city: string | null;
+      stage_id: string | null;
+    }>;
     tasks: Array<{ id: string; title: string; status: string }>;
     q?: string;
     canton?: string;
@@ -89,9 +96,7 @@ export default function CrmDashboard({
         </div>
 
         <section>
-          <h2 class="text-lg font-medium">
-            Offene Aufgaben ({data.tasks.filter((t) => t.status === "open").length})
-          </h2>
+          <h2 class="text-lg font-medium">Offene Aufgaben ({data.tasks.filter((t) => t.status === "open").length})</h2>
           <ul class="mt-2 list-disc space-y-1 pl-5 text-sm text-muted-foreground">
             {data.tasks
               .filter((t) => t.status === "open")

@@ -96,13 +96,14 @@ export function configureSecurityApp(app: Hono, options: SecurityPluginOptions):
   if (trustedHosts && trustedHosts.length > 0) {
     app.use("*", createHostValidationMiddleware(trustedHosts, trustedOrigins));
   } else if (isProduction() && options.strict !== false) {
-    console.warn(
-      "otok-security: trustedHosts is empty in production. Set trustedHosts to your public hostnames.",
-    );
+    console.warn("otok-security: trustedHosts is empty in production. Set trustedHosts to your public hostnames.");
   }
 
   if (options.openRedirectGuard !== false) {
-    app.use("*", createOpenRedirectGuard(typeof options.openRedirectGuard === "object" ? options.openRedirectGuard : {}));
+    app.use(
+      "*",
+      createOpenRedirectGuard(typeof options.openRedirectGuard === "object" ? options.openRedirectGuard : {}),
+    );
   }
 
   if (options.bodyLimit !== false) {
@@ -123,16 +124,15 @@ export function configureSecurityApp(app: Hono, options: SecurityPluginOptions):
     );
   }
 
-  const csrfEnabled = options.csrf !== false && (options.csrf === true || isProduction() || typeof options.csrf === "object");
+  const csrfEnabled =
+    options.csrf !== false && (options.csrf === true || isProduction() || typeof options.csrf === "object");
   if (csrfEnabled) {
     app.use("*", createSecurityCsrfMiddleware(typeof options.csrf === "object" ? options.csrf : {}));
   }
 
   if (options.secureHeaders !== false) {
     const cspEnabled = options.csp !== false;
-    const directives = cspEnabled
-      ? buildCspDirectives(typeof options.csp === "object" ? options.csp : {})
-      : undefined;
+    const directives = cspEnabled ? buildCspDirectives(typeof options.csp === "object" ? options.csp : {}) : undefined;
     app.use(
       "*",
       secureHeaders({

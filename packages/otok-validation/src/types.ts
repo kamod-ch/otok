@@ -8,18 +8,14 @@ export interface StandardSchemaV1<Input = unknown, Output = Input> {
 export interface StandardSchemaV1Props<Input = unknown, Output = Input> {
   readonly version: 1;
   readonly vendor: string;
-  validate: (
-    value: unknown,
-  ) => StandardSchemaResult<Output> | Promise<StandardSchemaResult<Output>>;
+  validate: (value: unknown) => StandardSchemaResult<Output> | Promise<StandardSchemaResult<Output>>;
   readonly types?: {
     readonly input: Input;
     readonly output: Output;
   };
 }
 
-export type StandardSchemaResult<Output> =
-  | StandardSchemaSuccessResult<Output>
-  | StandardSchemaFailureResult;
+export type StandardSchemaResult<Output> = StandardSchemaSuccessResult<Output> | StandardSchemaFailureResult;
 
 export interface StandardSchemaSuccessResult<Output> {
   readonly value: Output;
@@ -37,15 +33,11 @@ export interface StandardSchemaIssue {
 }
 
 /** Any schema Otok validation can consume. */
-export type ValidationSchema<TOutput = unknown> =
-  | StandardSchemaV1<unknown, TOutput>
-  | LegacyParseableSchema<TOutput>;
+export type ValidationSchema<TOutput = unknown> = StandardSchemaV1<unknown, TOutput> | LegacyParseableSchema<TOutput>;
 
 /** Legacy safeParse-style schemas (Zod 3, custom). */
 export interface LegacyParseableSchema<TOutput> {
-  safeParse(input: unknown):
-    | { success: true; data: TOutput }
-    | { success: false; error: LegacyParseableError };
+  safeParse(input: unknown): { success: true; data: TOutput } | { success: false; error: LegacyParseableError };
 }
 
 export interface LegacyParseableError {

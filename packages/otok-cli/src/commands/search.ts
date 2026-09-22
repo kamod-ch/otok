@@ -1,7 +1,4 @@
-import {
-  resolveExtension,
-  searchExtensions,
-} from "@kamod-ch/otok-registry";
+import { searchExtensions } from "@kamod-ch/otok-registry";
 import { loadRegistryForProject } from "../registry-context.js";
 import { fail } from "../utils.js";
 
@@ -23,9 +20,18 @@ export function parseSearchArgv(argv: string[]) {
   const positional: string[] = [];
   for (const arg of argv) {
     if (arg === "--help" || arg === "-h") return { help: true, options, query: "" };
-    if (arg === "--official") { options.official = true; continue; }
-    if (arg === "--community") { options.community = true; continue; }
-    if (arg === "--json") { options.json = true; continue; }
+    if (arg === "--official") {
+      options.official = true;
+      continue;
+    }
+    if (arg === "--community") {
+      options.community = true;
+      continue;
+    }
+    if (arg === "--json") {
+      options.json = true;
+      continue;
+    }
     if (arg.startsWith("-")) throw new Error(`Unknown option "${arg}".`);
     positional.push(arg);
   }
@@ -46,7 +52,11 @@ export async function runSearchCommand(argv: string[]): Promise<number> {
     }
 
     const registry = await loadRegistryForProject(process.cwd());
-    const tier = parsed.options.official ? "official" as const : parsed.options.community ? "community" as const : undefined;
+    const tier = parsed.options.official
+      ? ("official" as const)
+      : parsed.options.community
+        ? ("community" as const)
+        : undefined;
     const results = searchExtensions(registry, { q: parsed.query, tier });
 
     if (parsed.options.json) {

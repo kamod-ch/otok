@@ -3,6 +3,7 @@ title: Deployment Adapters
 section: Guides
 order: 32
 ---
+
 # Deployment Adapters
 
 Otok uses explicit deployment adapters — similar to SvelteKit — configured in `otok.config.ts`:
@@ -18,11 +19,11 @@ export default defineConfig({
 
 ## Official adapters
 
-| Adapter | Package | Runtime |
-| --- | --- | --- |
-| Node.js | `otok-adapter-node` | Standalone Hono server |
+| Adapter    | Package                   | Runtime                  |
+| ---------- | ------------------------- | ------------------------ |
+| Node.js    | `otok-adapter-node`       | Standalone Hono server   |
 | Cloudflare | `otok-adapter-cloudflare` | Workers + Workers Assets |
-| Static | `otok-adapter-static` | Prerendered HTML |
+| Static     | `otok-adapter-static`     | Prerendered HTML         |
 
 Each adapter declares **capabilities** (`ssr`, `node-apis`, `prerender`, …). Plugins use `assertAdapterCapability(ctx.adapter, "node-apis", reason)` to fail fast with readable errors when the active runtime cannot support them.
 

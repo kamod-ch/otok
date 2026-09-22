@@ -17,8 +17,7 @@ import saasCore from "./src/plugins/saas-core.js";
 import type { SaasDatabase } from "./src/db/types.js";
 
 const appUrl = process.env.APP_URL ?? "http://localhost:5173";
-const connectionString =
-  process.env.DATABASE_URL ?? "postgres://otok:otok@localhost:5434/saas_reference";
+const connectionString = process.env.DATABASE_URL ?? "postgres://otok:otok@localhost:5434/saas_reference";
 
 const sessionAdapter = createSaasSessionAdapter({
   getDb: () => getKyselyRuntime<SaasDatabase>().db,
@@ -29,8 +28,8 @@ const oauthAdapter = createOAuthAdapter(() => getKyselyRuntime<SaasDatabase>().d
 
 const stripeProvider =
   process.env.STRIPE_SECRET_KEY && process.env.NODE_ENV === "production"
-    ? ({ type: "live" as const, secretKey: process.env.STRIPE_SECRET_KEY })
-    : ({ type: "test" as const });
+    ? { type: "live" as const, secretKey: process.env.STRIPE_SECRET_KEY }
+    : { type: "test" as const };
 
 const oauthProviders: Record<string, { clientId: string; clientSecret: string; redirectUri: string }> = {};
 if (process.env.GITHUB_CLIENT_ID) {

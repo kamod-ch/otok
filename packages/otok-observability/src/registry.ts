@@ -3,7 +3,9 @@ import type { ObservabilityPluginOptions } from "./types.js";
 let runtime: ObservabilityRuntime | null = null;
 
 export interface ObservabilityRuntime {
-  options: Required<Pick<ObservabilityPluginOptions, "requestIdHeader" | "generateRequestId" | "logRequests" | "traceHandlers">> &
+  options: Required<
+    Pick<ObservabilityPluginOptions, "requestIdHeader" | "generateRequestId" | "logRequests" | "traceHandlers">
+  > &
     ObservabilityPluginOptions;
   logger: import("./types.js").Logger;
   tracer: import("./types.js").Tracer;

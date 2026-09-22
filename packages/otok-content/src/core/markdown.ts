@@ -26,11 +26,7 @@ function getMarkdownIt(): MarkdownIt {
 }
 
 function escapeHtml(value: string): string {
-  return value
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;")
-    .replace(/"/g, "&quot;");
+  return value.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
 }
 
 export interface RenderMarkdownResult {
@@ -63,10 +59,7 @@ export function renderMarkdown(body: string, options: RenderMarkdownOptions = {}
 }
 
 /** MDX is compiled at build time only — never executed at runtime. */
-export async function compileMdx(
-  body: string,
-  _file: string,
-): Promise<RenderMarkdownResult> {
+export async function compileMdx(body: string, _file: string): Promise<RenderMarkdownResult> {
   try {
     const specifier = "@mdx-js/mdx";
     const mdx = await import(/* @vite-ignore */ specifier);

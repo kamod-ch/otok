@@ -35,9 +35,7 @@ export interface EventDefinition<TPayload = unknown> {
 
 export type InferEventPayload<T> = T extends EventDefinition<infer P> ? P : never;
 
-export type EventHandler<TPayload = unknown> = (
-  event: DomainEvent<TPayload>,
-) => void | Promise<void>;
+export type EventHandler<TPayload = unknown> = (event: DomainEvent<TPayload>) => void | Promise<void>;
 
 export type HandlerMode = "sync" | "async";
 

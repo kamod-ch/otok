@@ -123,10 +123,7 @@ export interface OtokPlugin<TOptions = unknown> {
   /**
    * Transform buffered SSR HTML (ADR 0007). Not applied to streaming responses.
    */
-  transformHtml?: (
-    html: string,
-    ctx: HtmlTransformContext,
-  ) => string | Promise<string>;
+  transformHtml?: (html: string, ctx: HtmlTransformContext) => string | Promise<string>;
   virtualModules?: Record<string, VirtualModuleFactory>;
   envSchema?: EnvSchema;
   /** @internal Marker set by definePlugin factories. */
@@ -141,10 +138,7 @@ export interface ResolvedOtokConfig {
   /** Collect programmatic routes from all plugins (ADR 0007). */
   collectPluginRoutes: () => Promise<ProgrammaticRouteDefinition[]>;
   /** Run plugin HTML transforms for buffered SSR (ADR 0007). */
-  transformHtml: (
-    html: string,
-    meta: { pathname: string; routeId?: string },
-  ) => Promise<string>;
+  transformHtml: (html: string, meta: { pathname: string; routeId?: string }) => Promise<string>;
   env: Record<string, unknown>;
   virtualModules: Map<string, VirtualModuleFactory>;
   vitePlugins: Plugin[];

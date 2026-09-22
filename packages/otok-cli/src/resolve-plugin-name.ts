@@ -57,16 +57,17 @@ export function resolvePluginPackageName(input: string): string {
 
 export function pluginImportIdentifier(packageName: string): string {
   const segment = packageName.includes("/") ? packageName.split("/").pop()! : packageName;
-  let base = segment.replace(/^otok-plugin-/, "").replace(/^plugin-/, "").replace(/^otok-/, "");
+  let base = segment
+    .replace(/^otok-plugin-/, "")
+    .replace(/^plugin-/, "")
+    .replace(/^otok-/, "");
   if (!base) base = segment;
 
   const parts = base.split("-").filter(Boolean);
   const [first, ...rest] = parts;
   if (!first) return "plugin";
 
-  const camel =
-    first +
-    rest.map((part) => part.charAt(0).toUpperCase() + part.slice(1)).join("");
+  const camel = first + rest.map((part) => part.charAt(0).toUpperCase() + part.slice(1)).join("");
 
   if (/^\d/.test(camel)) {
     return `plugin${camel.charAt(0).toUpperCase()}${camel.slice(1)}`;

@@ -3,7 +3,7 @@ import { fileURLToPath } from "node:url";
 import { describe, expect, it } from "vitest";
 import { assertAdapterCapability, resolveAdapter } from "@kamod-ch/otok-config";
 import { assertAdapterContract, expectMissingCapability } from "otok-adapter-contract";
-import staticAdapter, { collectPrerenderPaths, staticOutputDirs } from "./index.js";
+import staticAdapter, { collectPrerenderPaths } from "./index.js";
 
 describe("otok-adapter-static contract", () => {
   assertAdapterContract({

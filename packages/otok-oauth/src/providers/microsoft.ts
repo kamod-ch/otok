@@ -13,12 +13,7 @@ export function microsoftScopes(config: OAuthProviderConfig): string[] {
 }
 
 export function createMicrosoftClient(config: MicrosoftProviderConfig): MicrosoftEntraId {
-  return new MicrosoftEntraId(
-    config.tenant ?? "common",
-    config.clientId,
-    config.clientSecret,
-    config.redirectUri,
-  );
+  return new MicrosoftEntraId(config.tenant ?? "common", config.clientId, config.clientSecret, config.redirectUri);
 }
 
 export type { OAuthProviderConfig };

@@ -3,7 +3,7 @@
  * Otok self-benchmark — measures playground as reference app.
  * Writes benchmarks/results/latest.json
  */
-import { spawn } from "node:child_process";
+import { spawn, spawnSync } from "node:child_process";
 import { mkdirSync, writeFileSync, readFileSync, existsSync, rmSync } from "node:fs";
 import { join, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
@@ -41,16 +41,16 @@ function lockHash() {
   return createHash("sha256").update(readFileSync(lock, "utf8")).digest("hex").slice(0, 12);
 }
 
-async function measureSsrLatency(url) {
-  const samples = [];
-  for (let i = 0; i < 5; i++) {
+async function measureSsrLatency(url, { warmup = 2, samples = 7 } = {}) {
+  const timings = [];
+  for (let i = 0; i < warmup + samples; i++) {
     const t0 = performance.now();
     const res = await fetch(url, { headers: { accept: "text/html" } });
     await res.text();
-    samples.push(performance.now() - t0);
+    if (i >= warmup) timings.push(performance.now() - t0);
   }
-  samples.sort((a, b) => a - b);
-  return samples[Math.floor(samples.length / 2)];
+  timings.sort((a, b) => a - b);
+  return timings[Math.floor(timings.length / 2)];
 }
 
 async function measureThroughput(url, durationS = 10) {
@@ -114,12 +114,22 @@ async function main() {
     nodeVersion: process.version,
     lockfileHash: lockHash(),
     project: "apps/playground",
+    methodology: {
+      ssrWarmupRequests: 2,
+      ssrSampleCount: 7,
+      note: "Budget check uses configured max + tolerancePercent; small runner noise below tolerance is not a regression.",
+    },
     metrics,
   };
 
   writeFileSync(outFile, JSON.stringify(report, null, 2));
   process.stdout.write(`\nWrote ${outFile}\n`);
   process.stdout.write(`${JSON.stringify(metrics, null, 2)}\n`);
+
+  const measureBundles = join(root, "scripts/measure-bundle-budgets.mjs");
+  if (existsSync(measureBundles)) {
+    spawnSync(process.execPath, [measureBundles], { cwd: root, stdio: "inherit" });
+  }
 }
 
 main().catch((err) => {

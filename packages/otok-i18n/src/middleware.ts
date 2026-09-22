@@ -6,12 +6,7 @@ import { buildI18nContext, createI18nAsync } from "./i18n.js";
 import { DEFAULT_COOKIE_NAME, resolveLocaleFull } from "./locale.js";
 import { localizePath } from "./routes.js";
 import type { I18nConfig, I18nContext, I18nPluginOptions } from "./types.js";
-import {
-  getI18nRuntime,
-  normalizePluginOptions,
-  registerI18nRuntime,
-  type NormalizedI18nOptions,
-} from "./registry.js";
+import { normalizePluginOptions, registerI18nRuntime, type NormalizedI18nOptions } from "./registry.js";
 import { clearMessageCache } from "./messages.js";
 
 async function buildPluginContext(
@@ -92,9 +87,7 @@ export function createI18nPluginMiddleware(options: NormalizedI18nOptions): Otok
 }
 
 /** Route-level middleware for legacy flat-catalog config. */
-export function createI18nMiddleware<Catalog extends MessageCatalog>(
-  config: I18nConfig<Catalog>,
-): OtokMiddleware {
+export function createI18nMiddleware<_Catalog extends MessageCatalog>(config: I18nConfig<_Catalog>): OtokMiddleware {
   const cookieName = config.cookieName ?? DEFAULT_COOKIE_NAME;
   const contextKey = config.contextKey ?? "i18n";
   const routing = config.routing ?? "prefix-except-default";
@@ -113,12 +106,12 @@ export function createI18nMiddleware<Catalog extends MessageCatalog>(
       domains: config.domains as Record<string, string> | undefined,
     });
 
-    const locale = config.locales.includes(resolved.locale as keyof Catalog & string)
+    const locale = config.locales.includes(resolved.locale as keyof _Catalog & string)
       ? resolved.locale
       : config.defaultLocale;
 
-    const messages = config.catalog[locale as keyof Catalog & string] ?? {};
-    const fallbackMessages = config.catalog[fallbackLocale as keyof Catalog & string] ?? {};
+    const messages = config.catalog[locale as keyof _Catalog & string] ?? {};
+    const fallbackMessages = config.catalog[fallbackLocale as keyof _Catalog & string] ?? {};
 
     const i18n = buildI18nContext({
       locale: locale as string,
@@ -135,7 +128,7 @@ export function createI18nMiddleware<Catalog extends MessageCatalog>(
   });
 }
 
-export function readI18n<Catalog extends MessageCatalog = MessageCatalog>(
+export function readI18n<_Catalog extends MessageCatalog = MessageCatalog>(
   c: Context,
   contextKey = "i18n",
 ): I18nContext | undefined {
@@ -143,10 +136,7 @@ export function readI18n<Catalog extends MessageCatalog = MessageCatalog>(
 }
 
 /** Configure i18n on a Hono app (used by plugin and manual setup). */
-export function configureI18nApp(
-  app: import("hono").Hono,
-  pluginOptions: I18nPluginOptions,
-): NormalizedI18nOptions {
+export function configureI18nApp(app: import("hono").Hono, pluginOptions: I18nPluginOptions): NormalizedI18nOptions {
   clearMessageCache();
   const options = normalizePluginOptions(pluginOptions);
   app.use("*", createI18nPluginMiddleware(options));

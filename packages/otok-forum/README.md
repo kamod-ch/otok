@@ -47,12 +47,12 @@ See [docs/](./docs/) for full configuration, adapters, migrations, and deploymen
 
 ## Exports
 
-| Subpath | Purpose |
-|---------|---------|
-| `@kamod-ch/otok-forum` | `createForum`, types, services |
-| `@kamod-ch/otok-forum/kysely` | Schema, migrations, storage adapter |
-| `@kamod-ch/otok-forum/testing` | Test factories, SQLite helpers |
-| `@kamod-ch/otok-forum/plugin` | Otok plugin with `registerRoutes` |
+| Subpath                        | Purpose                             |
+| ------------------------------ | ----------------------------------- |
+| `@kamod-ch/otok-forum`         | `createForum`, types, services      |
+| `@kamod-ch/otok-forum/kysely`  | Schema, migrations, storage adapter |
+| `@kamod-ch/otok-forum/testing` | Test factories, SQLite helpers      |
+| `@kamod-ch/otok-forum/plugin`  | Otok plugin with `registerRoutes`   |
 
 ## Example
 

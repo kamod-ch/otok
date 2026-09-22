@@ -1,6 +1,11 @@
 import fs from "node:fs";
 import path from "node:path";
-import { adapterError, createDualBuildVitePlugin, defineAdapter, type AdapterBuildContext } from "@kamod-ch/otok-config";
+import {
+  adapterError,
+  createDualBuildVitePlugin,
+  defineAdapter,
+  type AdapterBuildContext,
+} from "@kamod-ch/otok-config";
 import { collectPrerenderEntries, scanRenderingFromSource } from "@kamod-ch/otok/rendering";
 
 export interface StaticAdapterOptions {
@@ -136,9 +141,9 @@ async function prerenderRoutes(ctx: AdapterBuildContext, options: StaticAdapterO
 
     let html = await response.text();
     if (options.relativeAssets !== false) {
-      html = html.replace(/(\s(?:src|href)=["'])\//g, '$1./');
+      html = html.replace(/(\s(?:src|href)=["'])\//g, "$1./");
     } else if (options.absoluteAssets) {
-      html = html.replace(/(\s(?:src|href)=["'])\//g, '$1/');
+      html = html.replace(/(\s(?:src|href)=["'])\//g, "$1/");
     }
 
     const target = path.resolve(ctx.root, outDirs.static ?? outDirs.root, routePathToFile(routePath));
@@ -175,7 +180,7 @@ const staticAdapterFactory = defineAdapter<StaticAdapterOptions>({
   outputDirs(options, _root) {
     return outputDirs(options);
   },
-  serverEntry(ctx) {
+  serverEntry(_ctx) {
     return { path: GENERATED_PRERENDER_ENTRY, generated: true };
   },
   assets: {
@@ -248,14 +253,15 @@ function collectPrerenderRouteInputs(routesDir: string) {
 
   return files.map((file) => {
     const relative = path.relative(routesDir, file).replace(/\.[cm]?[tj]sx?$/, "");
-    const segments = relative
-      .split(path.sep)
-      .filter((segment) => segment !== "index" && !/^\(.+\)$/.test(segment));
+    const segments = relative.split(path.sep).filter((segment) => segment !== "index" && !/^\(.+\)$/.test(segment));
     const routePattern = `/${segments.join("/")}`.replace(/\/$/, "") || "/";
     const source = fs.readFileSync(file, "utf8");
     return {
       routePattern,
-      routePath: routePattern.replace(/\[\.\.\.([^\]]+)\]/g, ":$1*").replace(/\[\[([^\]]+)\]\]/g, ":$1").replace(/\[([^\]]+)\]/g, ":$1"),
+      routePath: routePattern
+        .replace(/\[\.\.\.([^\]]+)\]/g, ":$1*")
+        .replace(/\[\[([^\]]+)\]\]/g, ":$1")
+        .replace(/\[([^\]]+)\]/g, ":$1"),
       file,
       rendering: scanRenderingFromSource(source),
     };

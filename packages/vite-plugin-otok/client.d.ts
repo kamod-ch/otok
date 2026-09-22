@@ -14,15 +14,18 @@ type RouteParamsFromSegments<Path extends string> = Path extends `${infer Segmen
   ? MergeParams<SegmentParam<Segment>, RouteParamsFromSegments<Rest>>
   : SegmentParam<Path>;
 type RequiredKeys<T> = { [K in keyof T]-?: Record<string, never> extends Pick<T, K> ? never : K }[keyof T];
-type RouteParams<Path extends string> = { [K in keyof RouteParamsFromSegments<SplitRoute<Path>>]: RouteParamsFromSegments<SplitRoute<Path>>[K] };
+type RouteParams<Path extends string> = {
+  [K in keyof RouteParamsFromSegments<SplitRoute<Path>>]: RouteParamsFromSegments<SplitRoute<Path>>[K];
+};
 type RouteOptions<Path extends string> = {
   params?: RouteParams<Path>;
   query?: Record<string, OtokRouteQueryValue>;
   hash?: string;
 };
-type RouteOptionsFor<Path extends string> = RequiredKeys<RouteParams<Path>> extends never
-  ? RouteOptions<Path> | undefined
-  : Omit<RouteOptions<Path>, "params"> & { params: RouteParams<Path> };
+type RouteOptionsFor<Path extends string> =
+  RequiredKeys<RouteParams<Path>> extends never
+    ? RouteOptions<Path> | undefined
+    : Omit<RouteOptions<Path>, "params"> & { params: RouteParams<Path> };
 
 declare module "virtual:otok-routes" {
   import type { OtokRoute } from "@kamod-ch/otok/server";
@@ -36,7 +39,9 @@ declare module "virtual:otok-routes" {
   export type OtokRouteOptions<Path extends string> = RouteOptionsFor<Path>;
   export function route<Path extends string>(
     path: Path,
-    ...args: RequiredKeys<RouteParams<Path>> extends never ? [options?: RouteOptions<Path>] : [options: RouteOptionsFor<Path>]
+    ...args: RequiredKeys<RouteParams<Path>> extends never
+      ? [options?: RouteOptions<Path>]
+      : [options: RouteOptionsFor<Path>]
   ): string;
   export const routes: OtokRoute[];
   export const notFoundRoute: OtokRoute | undefined;

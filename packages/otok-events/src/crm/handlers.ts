@@ -33,39 +33,59 @@ export interface CrmHandlerDeps {
 /** Register CRM event handlers: activities, search index, notifications. */
 export function registerCrmEventHandlers(bus: InProcessEventBus, deps: CrmHandlerDeps): () => void {
   const unsubs = [
-    bus.subscribe(companyCreated, async (event) => {
-      await onCompanyCreated(event, deps, bus);
-    }, { priority: 10, consumerName: "crm.activity" }),
+    bus.subscribe(
+      companyCreated,
+      async (event) => {
+        await onCompanyCreated(event, deps, bus);
+      },
+      { priority: 10, consumerName: "crm.activity" },
+    ),
 
-    bus.subscribe(companyCreated, async (event) => {
-      deps.search.indexCompany(event.payload.companyId, event.payload.name, event.payload.industry);
-    }, { priority: 20, consumerName: "crm.search" }),
+    bus.subscribe(
+      companyCreated,
+      async (event) => {
+        deps.search.indexCompany(event.payload.companyId, event.payload.name, event.payload.industry);
+      },
+      { priority: 20, consumerName: "crm.search" },
+    ),
 
-    bus.subscribe(companyCreated, async (event) => {
-      await bus.publish(
-        notificationRequested,
-        {
+    bus.subscribe(
+      companyCreated,
+      async (event) => {
+        await bus.publish(
+          notificationRequested,
+          {
+            companyId: event.payload.companyId,
+            channel: "in-app",
+            message: `New company created: ${event.payload.name}`,
+            recipientId: deps.defaultRecipientId ?? event.payload.createdBy,
+          },
+          childEventMetadata(event),
+        );
+      },
+      { priority: 30, mode: "async", consumerName: "crm.notify-on-create" },
+    ),
+
+    bus.subscribe(
+      notificationRequested,
+      async (event) => {
+        deps.notifications.push(event.payload);
+      },
+      { consumerName: "crm.notifications" },
+    ),
+
+    bus.subscribe(
+      activityLogged,
+      async (event) => {
+        deps.activities.add({
+          id: event.payload.activityId,
           companyId: event.payload.companyId,
-          channel: "in-app",
-          message: `New company created: ${event.payload.name}`,
-          recipientId: deps.defaultRecipientId ?? event.payload.createdBy,
-        },
-        childEventMetadata(event),
-      );
-    }, { priority: 30, mode: "async", consumerName: "crm.notify-on-create" }),
-
-    bus.subscribe(notificationRequested, async (event) => {
-      deps.notifications.push(event.payload);
-    }, { consumerName: "crm.notifications" }),
-
-    bus.subscribe(activityLogged, async (event) => {
-      deps.activities.add({
-        id: event.payload.activityId,
-        companyId: event.payload.companyId,
-        note: event.payload.note,
-        createdAt: new Date().toISOString(),
-      });
-    }, { consumerName: "crm.activity-log" }),
+          note: event.payload.note,
+          createdAt: new Date().toISOString(),
+        });
+      },
+      { consumerName: "crm.activity-log" },
+    ),
   ];
 
   return () => unsubs.forEach((u) => u());

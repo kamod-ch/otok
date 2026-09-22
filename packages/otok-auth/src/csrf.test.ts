@@ -2,12 +2,7 @@ import { describe, expect, it } from "vitest";
 import type { Context } from "hono";
 import { Hono } from "hono";
 import { getCookie } from "hono/cookie";
-import {
-  assertCsrf,
-  CSRF_FIELD,
-  ensureCsrfCookie,
-  verifyCsrf,
-} from "./csrf.js";
+import { assertCsrf, CSRF_FIELD, ensureCsrfCookie, verifyCsrf } from "./csrf.js";
 import { isOtokHttpError } from "@kamod-ch/otok/server";
 
 function withContext(handler: (c: Context) => void | Promise<void>, init?: RequestInit) {
@@ -60,7 +55,8 @@ describe("csrf", () => {
         assertCsrf(c, new FormData(), { cookieName: "csrf" });
         return c.text("ok");
       } catch (error) {
-        if (isOtokHttpError(error)) return c.json({ status: error.status, message: error.message }, error.status as 403);
+        if (isOtokHttpError(error))
+          return c.json({ status: error.status, message: error.message }, error.status as 403);
         throw error;
       }
     });

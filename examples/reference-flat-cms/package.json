@@ -1,9 +1,9 @@
 {
   "name": "reference-flat-cms",
-  "private": true,
   "version": "0.1.0",
-  "type": "module",
+  "private": true,
   "description": "Reference Otok app for a flat-file content management workflow.",
+  "type": "module",
   "scripts": {
     "dev": "vite --host 0.0.0.0",
     "build": "vite build --mode client && vite build",

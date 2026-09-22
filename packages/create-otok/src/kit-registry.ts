@@ -4,13 +4,13 @@ import { pathToFileURL } from "node:url";
 import type { OtokKitDefinition } from "@kamod-ch/otok-config";
 
 /** Presets that auto-compose business kits during scaffold. */
-export const PRESET_KIT_MAP: Record<
-  string,
-  { kits: string[]; modules?: Record<string, readonly string[]> }
-> = {
+export const PRESET_KIT_MAP: Record<string, { kits: string[]; modules?: Record<string, readonly string[]> }> = {
   "@kamod-ch/otok-preset-crm": {
     kits: ["@kamod-ch/otok-kit-crm"],
     modules: { "@kamod-ch/otok-kit-crm": ["pipelines", "import-export"] },
+  },
+  "@kamod-ch/otok-preset-saas": {
+    kits: ["@kamod-ch/otok-kit-saas"],
   },
 };
 
@@ -24,9 +24,7 @@ export const KNOWN_KIT_PACKAGES = [
 
 /** Map npm package name to monorepo folder (e.g. @kamod-ch/otok-kit-crm → otok-kit-crm). */
 export function kitFolderName(packageName: string): string {
-  const short = packageName
-    .replace(/^@kamod-ch\/otok-/, "")
-    .replace(/^@otok\//, "");
+  const short = packageName.replace(/^@kamod-ch\/otok-/, "").replace(/^@otok\//, "");
   if (short.startsWith("otok-kit-")) return short;
   if (short.startsWith("kit-")) return `otok-${short}`;
   return `otok-kit-${short}`;
@@ -59,10 +57,7 @@ export function modulesForPreset(
   return { ...mapped, ...explicit };
 }
 
-export async function loadKitDefinition(
-  packageName: string,
-  searchFrom: string,
-): Promise<OtokKitDefinition | null> {
+export async function loadKitDefinition(packageName: string, searchFrom: string): Promise<OtokKitDefinition | null> {
   const root = resolveKitPackageRoot(packageName, searchFrom);
   if (!root) return null;
 
@@ -75,17 +70,12 @@ export async function loadKitDefinition(
   return mod.default ?? null;
 }
 
-export async function loadKitDefinitions(
-  names: string[],
-  searchFrom: string,
-): Promise<OtokKitDefinition[]> {
+export async function loadKitDefinitions(names: string[], searchFrom: string): Promise<OtokKitDefinition[]> {
   const kits: OtokKitDefinition[] = [];
   for (const name of names) {
     const kit = await loadKitDefinition(name, searchFrom);
     if (!kit) {
-      throw new Error(
-        `otok: kit "${name}" not found. Install it or run from the otok monorepo with packages built.`,
-      );
+      throw new Error(`otok: kit "${name}" not found. Install it or run from the otok monorepo with packages built.`);
     }
     kits.push(kit);
   }

@@ -1,9 +1,5 @@
-import { defineMiddleware, type MiddlewareModule, type OtokRoute } from "@kamod-ch/otok/server";
-import type {
-  ForumConfig,
-  ForumExtension,
-  ForumRuntimeContext,
-} from "./types.js";
+import { defineMiddleware, type MiddlewareModule } from "@kamod-ch/otok/server";
+import type { ForumConfig, ForumExtension, ForumRuntimeContext } from "./types.js";
 import { createForumServices } from "./services/index.js";
 import { createDefaultMarkdownAdapter } from "./markdown.js";
 import { normalizeBasePath } from "./utils.js";

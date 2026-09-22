@@ -2,22 +2,22 @@
   "name": "@kamod-ch/otok-vite-plugin",
   "version": "0.6.1",
   "description": "Vite plugin for Otok file routes and Preact islands.",
-  "license": "MIT",
   "homepage": "https://github.com/kamod-ch/otok/tree/main/packages/vite-plugin-otok#readme",
   "bugs": {
     "url": "https://github.com/kamod-ch/otok/issues"
   },
+  "license": "MIT",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/kamod-ch/otok.git",
     "directory": "packages/vite-plugin-otok"
   },
-  "type": "module",
   "files": [
     "dist",
     "client.d.ts",
     "README.md"
   ],
+  "type": "module",
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
@@ -26,6 +26,9 @@
     "./client": {
       "types": "./client.d.ts"
     }
+  },
+  "publishConfig": {
+    "access": "public"
   },
   "scripts": {
     "build": "rm -rf dist && tsc -p tsconfig.build.json",
@@ -52,8 +55,5 @@
   },
   "engines": {
     "node": ">=20"
-  },
-  "publishConfig": {
-    "access": "public"
   }
 }

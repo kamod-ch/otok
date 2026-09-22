@@ -29,9 +29,7 @@ export class DuplicateSlugError extends Error {
     readonly slug: string,
     readonly files: string[],
   ) {
-    super(
-      `otok-content: duplicate slug "${slug}" in collection "${collection}": ${files.join(", ")}`,
-    );
+    super(`otok-content: duplicate slug "${slug}" in collection "${collection}": ${files.join(", ")}`);
     this.name = "DuplicateSlugError";
   }
 }

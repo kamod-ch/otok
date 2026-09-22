@@ -9,11 +9,11 @@ export interface StripeProviderCapabilities {
   liveMode: boolean;
 }
 
-export interface StripeProvider<TPlan extends string = string> {
+export interface StripeProvider<_TPlan extends string = string> {
   readonly name: string;
   readonly capabilities: StripeProviderCapabilities;
   readonly client: Stripe;
-  createCheckoutSession(input: CheckoutSessionInput<TPlan>): Promise<CheckoutSessionResult>;
+  createCheckoutSession(input: CheckoutSessionInput<_TPlan>): Promise<CheckoutSessionResult>;
   createBillingPortalSession(input: BillingPortalSessionInput): Promise<BillingPortalSessionResult>;
   constructWebhookEvent(rawBody: string, signature: string, secret: string): Stripe.Event;
 }
@@ -30,7 +30,7 @@ export type TestStripeProviderConfig = {
 
 export type StripeProviderConfig = LiveStripeProviderConfig | TestStripeProviderConfig;
 
-export interface StripePluginOptions<TPlan extends string = string> {
+export interface StripePluginOptions<_TPlan extends string = string> {
   provider: StripeProviderConfig;
   webhookPath?: string;
   webhookSecret?: string;

@@ -41,36 +41,39 @@ export function registerRealtimeRoutes(app: Hono, options: RealtimeRoutesOptions
 
       let cleanup = () => {};
 
-      const stream = createSseStream((write: (chunk: string) => void) => {
-        return new Promise<void>((resolve) => {
-          void options.hub
-            .connect({
-              user: auth.user!,
-              channel,
-              room,
-              transport: "sse",
-              ip,
-              requestId,
-              lastEventId,
-              push: (message: RealtimeMessage | RealtimeError) => {
-                write(formatSseEvent(message));
-                return true;
-              },
-              onClose: () => resolve(),
-            })
-            .then((conn: { close: () => void }) => {
-              cleanup = () => conn.close();
-            })
-            .catch((error: unknown) => {
-              const err =
-                error instanceof RealtimeException
-                  ? error.toJSON()
-                  : { code: "PROTOCOL_ERROR" as const, message: String(error) };
-              write(formatSseEvent(err));
-              resolve();
-            });
-        });
-      }, { onClose: cleanup, signal: c.req.raw.signal });
+      const stream = createSseStream(
+        (write: (chunk: string) => void) => {
+          return new Promise<void>((resolve) => {
+            void options.hub
+              .connect({
+                user: auth.user!,
+                channel,
+                room,
+                transport: "sse",
+                ip,
+                requestId,
+                lastEventId,
+                push: (message: RealtimeMessage | RealtimeError) => {
+                  write(formatSseEvent(message));
+                  return true;
+                },
+                onClose: () => resolve(),
+              })
+              .then((conn: { close: () => void }) => {
+                cleanup = () => conn.close();
+              })
+              .catch((error: unknown) => {
+                const err =
+                  error instanceof RealtimeException
+                    ? error.toJSON()
+                    : { code: "PROTOCOL_ERROR" as const, message: String(error) };
+                write(formatSseEvent(err));
+                resolve();
+              });
+          });
+        },
+        { onClose: cleanup, signal: c.req.raw.signal },
+      );
 
       return sseResponse(stream);
     } catch (error) {
@@ -131,9 +134,7 @@ export async function handleWebSocketConnection(
     });
   } catch (error) {
     const err =
-      error instanceof RealtimeException
-        ? error.toJSON()
-        : { code: "PROTOCOL_ERROR" as const, message: String(error) };
+      error instanceof RealtimeException ? error.toJSON() : { code: "PROTOCOL_ERROR" as const, message: String(error) };
     socket.send(encodeWsFrame(err));
     socket.close(4403, err.message);
     return;

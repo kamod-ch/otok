@@ -12,11 +12,7 @@ export function entryIdFromFile(contentRoot: string, file: string): string {
   return rel.replace(/\.(mdx|md)$/, "").replace(/\/index$/, "");
 }
 
-export function routeFromEntry(
-  collectionName: string,
-  slug: string,
-  locale?: string,
-): string {
+export function routeFromEntry(collectionName: string, slug: string, locale?: string): string {
   const base = `/${collectionName}/${slug}`.replace(/\/+/g, "/");
   return locale ? `/${locale}${base}`.replace(/\/+/g, "/") : base;
 }

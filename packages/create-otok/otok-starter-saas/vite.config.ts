@@ -26,10 +26,7 @@ export default defineConfig(({ mode }) => {
   }
 
   return {
-    plugins: [
-      ...plugins,
-      devServer({ entry: "src/server.ts" }),
-    ],
+    plugins: [...plugins, devServer({ entry: "src/server.ts" })],
     build: {
       outDir: "dist/server",
       ssr: "src/server.ts",

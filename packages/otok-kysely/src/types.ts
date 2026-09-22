@@ -32,7 +32,7 @@ export interface SeedsConfig {
   directory?: string;
 }
 
-export interface KyselyPluginOptions<DB = unknown> {
+export interface KyselyPluginOptions<_DB = unknown> {
   /** Built-in dialect name or custom adapter. MySQL: pass a `DialectAdapter` from `./dialects/mysql`. */
   dialect: BuiltInDialect | DialectAdapter;
   /** Connection string. Prefer env.DATABASE_URL via envSchema. */

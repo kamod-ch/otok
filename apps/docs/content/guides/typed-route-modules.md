@@ -49,12 +49,12 @@ Generated files live in `.otok/types/` by default. Include them in `tsconfig.jso
 
 Add `.otok/` to `.gitignore` if you prefer CI-only generation, or commit generated files for zero-config clones.
 
-| Trigger | Command / hook |
-|---|---|
-| Dev server | `@kamod-ch/otok-vite-plugin` regenerates on route file changes (debounced) |
-| Production build | `buildStart` hook runs typegen in strict mode |
-| CI | `otok typegen --strict` |
-| Inspect tree | `otok routes` |
+| Trigger          | Command / hook                                                             |
+| ---------------- | -------------------------------------------------------------------------- |
+| Dev server       | `@kamod-ch/otok-vite-plugin` regenerates on route file changes (debounced) |
+| Production build | `buildStart` hook runs typegen in strict mode                              |
+| CI               | `otok typegen --strict`                                                    |
+| Inspect tree     | `otok routes`                                                              |
 
 ## Typed links and redirects
 

@@ -45,13 +45,7 @@ export function createTestMailProvider(): MailProvider {
 export function formatMailPreview(message: MailMessage): string {
   const to = normalizeRecipients(message.to).join(", ");
   const from = formatAddress(message.from);
-  const parts = [
-    `From: ${from}`,
-    `To: ${to}`,
-    `Subject: ${message.subject}`,
-    "",
-    message.text ?? "(no text body)",
-  ];
+  const parts = [`From: ${from}`, `To: ${to}`, `Subject: ${message.subject}`, "", message.text ?? "(no text body)"];
   if (message.html) {
     parts.push("", "--- HTML ---", message.html);
   }

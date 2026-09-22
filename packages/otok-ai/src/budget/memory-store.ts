@@ -38,7 +38,10 @@ export function createMemoryBudgetStore(defaults?: {
     async check(key, estimatedTokens = 0) {
       const record = getOrCreate(key);
       const maxTokens = key.maxTokens ?? defaults?.maxTokensPerUser;
-      if (maxTokens !== undefined && (record.tokensUsed >= maxTokens || record.tokensUsed + estimatedTokens > maxTokens)) {
+      if (
+        maxTokens !== undefined &&
+        (record.tokensUsed >= maxTokens || record.tokensUsed + estimatedTokens > maxTokens)
+      ) {
         const { OtokAiBudgetExceededError } = await import("../errors.js");
         throw new OtokAiBudgetExceededError(
           `Token budget exceeded for ${record.key}: ${record.tokensUsed}/${maxTokens}`,

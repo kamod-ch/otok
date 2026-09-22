@@ -16,7 +16,13 @@ const server = http.createServer((req, res) => {
   let file = path.join(root, "dist", url.pathname.replace(/^\/otok\/?/, ""));
   if (url.pathname.endsWith("/")) file = path.join(file, "index.html");
   if (!fs.existsSync(file) || fs.statSync(file).isDirectory()) file = path.join(root, "dist", "404.html");
-  const type = file.endsWith(".css") ? "text/css" : file.endsWith(".js") ? "text/javascript" : file.endsWith(".xml") ? "application/xml" : "text/html";
+  const type = file.endsWith(".css")
+    ? "text/css"
+    : file.endsWith(".js")
+      ? "text/javascript"
+      : file.endsWith(".xml")
+        ? "application/xml"
+        : "text/html";
   res.writeHead(file.endsWith("404.html") ? 404 : 200, { "content-type": `${type}; charset=utf-8` });
   res.end(fs.readFileSync(file));
 });

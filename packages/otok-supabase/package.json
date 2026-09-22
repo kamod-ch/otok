@@ -2,23 +2,23 @@
   "name": "@kamod-ch/otok-supabase",
   "version": "1.1.0",
   "description": "Supabase SSR, cookie auth, and middleware integration for Otok apps.",
-  "license": "MIT",
   "homepage": "https://github.com/kamod-ch/otok/tree/main/packages/otok-supabase#readme",
   "bugs": {
     "url": "https://github.com/kamod-ch/otok/issues"
   },
+  "license": "MIT",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/kamod-ch/otok.git",
     "directory": "packages/otok-supabase"
   },
-  "type": "module",
-  "sideEffects": false,
   "files": [
     "dist",
     "README.md",
     "CHANGELOG.md"
   ],
+  "type": "module",
+  "sideEffects": false,
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
@@ -61,6 +61,9 @@
       "default": "./dist/realtime/index.js"
     }
   },
+  "publishConfig": {
+    "access": "public"
+  },
   "scripts": {
     "build": "rm -rf dist && tsc -p tsconfig.build.json",
     "typecheck": "tsc -p tsconfig.json --noEmit",
@@ -68,11 +71,6 @@
   },
   "dependencies": {
     "@supabase/ssr": "^0.12.4"
-  },
-  "peerDependencies": {
-    "@kamod-ch/otok": ">=0.6.1",
-    "@supabase/supabase-js": ">=2.49.0",
-    "hono": ">=4"
   },
   "devDependencies": {
     "@kamod-ch/otok": "workspace:*",
@@ -83,10 +81,12 @@
     "typescript": "~6.0.2",
     "vitest": "^4.1.2"
   },
+  "peerDependencies": {
+    "@kamod-ch/otok": ">=0.6.1",
+    "@supabase/supabase-js": ">=2.49.0",
+    "hono": ">=4"
+  },
   "engines": {
     "node": ">=20"
-  },
-  "publishConfig": {
-    "access": "public"
   }
 }

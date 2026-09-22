@@ -1,10 +1,7 @@
 import type { ExtensionEntry, LoadedRegistry, RegistrySearchQuery } from "./schema.js";
 import { satisfiesRange } from "./semver.js";
 
-export function searchExtensions(
-  registry: LoadedRegistry,
-  query: RegistrySearchQuery = {},
-): ExtensionEntry[] {
+export function searchExtensions(registry: LoadedRegistry, query: RegistrySearchQuery = {}): ExtensionEntry[] {
   const unique = new Map<string, ExtensionEntry>();
   for (const ext of registry.extensions) {
     unique.set(ext.name, ext);

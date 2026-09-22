@@ -4,13 +4,13 @@ Version 1.1 adds **Otok plugins** while keeping the composition API from 1.0.
 
 ## What changed
 
-| 1.0 (composition) | 1.1 (plugin + composition) |
-|-------------------|------------------------------|
-| Manual `createOAuthFlow` + `oauth.mount(app)` in `server.ts` | Optional `oauth()` plugin in `otok.config.ts` |
-| Manual `createSession` injection | Plugin reads session from `auth()` runtime |
-| `safeNextPath(path)` | Same function; optional **redirect allowlist** |
-| GitHub + Google | + Microsoft/GitLab extension stubs |
-| — | PKCE error code, provider `?error=` handling, account linking |
+| 1.0 (composition)                                            | 1.1 (plugin + composition)                                    |
+| ------------------------------------------------------------ | ------------------------------------------------------------- |
+| Manual `createOAuthFlow` + `oauth.mount(app)` in `server.ts` | Optional `oauth()` plugin in `otok.config.ts`                 |
+| Manual `createSession` injection                             | Plugin reads session from `auth()` runtime                    |
+| `safeNextPath(path)`                                         | Same function; optional **redirect allowlist**                |
+| GitHub + Google                                              | + Microsoft/GitLab extension stubs                            |
+| —                                                            | PKCE error code, provider `?error=` handling, account linking |
 
 **Nothing was removed.** Existing `createOAuthFlow` setups continue to work.
 
@@ -96,9 +96,9 @@ oauth({ redirectAllowlist: ["/", "/dashboard"], ... }) // optional override
 
 ## New error codes
 
-| Code | Meaning |
-|------|---------|
-| `pkce_error` | Google callback missing PKCE verifier |
+| Code                       | Meaning                                          |
+| -------------------------- | ------------------------------------------------ |
+| `pkce_error`               | Google callback missing PKCE verifier            |
 | `link_verification_failed` | Account linking without session or `linkAccount` |
 
 ## Account linking

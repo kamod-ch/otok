@@ -11,9 +11,7 @@ function assertServerRuntime(): void {
   }
 }
 
-export function createOtokSupabaseAdminClient<Database>(
-  config: SupabaseAdminConfig,
-): SupabaseClient<Database> {
+export function createOtokSupabaseAdminClient<Database>(config: SupabaseAdminConfig): SupabaseClient<Database> {
   assertServerRuntime();
   const validated = validateSupabaseAdminConfig(config);
 

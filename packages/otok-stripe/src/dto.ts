@@ -20,13 +20,7 @@ export interface BillingStatusDto<TPlan extends string = string> {
   updatedAt: string;
 }
 
-export type SubscriptionStatus =
-  | "none"
-  | "active"
-  | "trialing"
-  | "past_due"
-  | "canceled"
-  | "incomplete";
+export type SubscriptionStatus = "none" | "active" | "trialing" | "past_due" | "canceled" | "incomplete";
 
 export function toCheckoutSessionDto(result: CheckoutSessionResult): CheckoutSessionDto {
   return {

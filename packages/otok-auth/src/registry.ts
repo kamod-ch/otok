@@ -37,9 +37,7 @@ export function tryGetAuthRuntime<TUser extends AuthUser = AuthUser>(): AuthRunt
 }
 
 /** Convenience for API routes outside the plugin registry. */
-export async function getSession<TUser extends AuthUser = AuthUser>(
-  c: Context,
-): Promise<TUser | null> {
+export async function getSession<TUser extends AuthUser = AuthUser>(c: Context): Promise<TUser | null> {
   return getAuthRuntime<TUser>().helpers.getSession(c);
 }
 
@@ -47,9 +45,6 @@ export async function requireUser<TUser extends AuthUser = AuthUser>(c: Context)
   return getAuthRuntime<TUser>().helpers.requireUser(c);
 }
 
-export async function requireRole<TUser extends AuthUser = AuthUser>(
-  c: Context,
-  role: string,
-): Promise<TUser> {
+export async function requireRole<TUser extends AuthUser = AuthUser>(c: Context, role: string): Promise<TUser> {
   return getAuthRuntime<TUser>().helpers.requireRole(c, role);
 }

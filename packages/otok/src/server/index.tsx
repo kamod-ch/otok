@@ -45,7 +45,8 @@ import {
   dataResponseFromRedirect,
   wantsDataResponse,
 } from "./data-response.js";
-import { resolveIdempotencyKey, withIdempotency } from "./idempotency.js";
+import { resolveIdempotencyKey, withActionIdempotency } from "./idempotency.js";
+import { resolveActionMethod } from "./action-method.js";
 import { serializeLoaderData } from "../shared/mutations.js";
 import { resolveDarkModeFromCookie } from "../shared/theme.js";
 import {
@@ -100,10 +101,7 @@ export interface CreateOtokHandlerOptions {
    * Transform buffered SSR HTML after `pageHtml()` (ADR 0007).
    * Not applied to streaming responses.
    */
-  transformHtml?: (
-    html: string,
-    meta: { pathname: string; routeId?: string },
-  ) => string | Promise<string>;
+  transformHtml?: (html: string, meta: { pathname: string; routeId?: string }) => string | Promise<string>;
 }
 
 type RenderHandlerOptions = CreateOtokHandlerOptions & HandlerRenderOptions;
@@ -228,18 +226,9 @@ export function createOtokHandler(options: CreateOtokHandlerOptions): Handler {
   };
 }
 
-type ActionMethod = "POST" | "PUT" | "PATCH" | "DELETE";
-
 function isActionRequest(method: string): boolean {
   const normalized = method.toUpperCase();
   return normalized === "POST" || normalized === "PUT" || normalized === "PATCH" || normalized === "DELETE";
-}
-
-function resolveActionMethod(method: string, formData: FormData | undefined): ActionMethod {
-  const override = formData?.get("_method");
-  const candidate = typeof override === "string" ? override.toUpperCase() : method.toUpperCase();
-  if (candidate === "PUT" || candidate === "PATCH" || candidate === "DELETE") return candidate;
-  return "POST";
 }
 
 function isFormRequest(request: Request): boolean {
@@ -276,7 +265,7 @@ async function handleAction(
     idempotencyKey,
   };
 
-  return withIdempotency(idempotencyKey, async () => {
+  return withActionIdempotency(c, route, formData, idempotencyKey, async () => {
     try {
       const result = await route.module.action!(context);
       if (result instanceof Response) return result;
@@ -324,7 +313,9 @@ function middlewareFromModule(module: MiddlewareModule): OtokMiddleware | undefi
 }
 
 async function runRouteMiddleware(c: Context, route: OtokRoute, render: () => Promise<Response>): Promise<Response> {
-  const stack = (route.middleware ?? []).map(middlewareFromModule).filter((middleware): middleware is OtokMiddleware => Boolean(middleware));
+  const stack = (route.middleware ?? [])
+    .map(middlewareFromModule)
+    .filter((middleware): middleware is OtokMiddleware => Boolean(middleware));
   let index = -1;
 
   const dispatch = async (position: number): Promise<Response> => {
@@ -396,7 +387,7 @@ async function renderRoute(
   dataOverride?: LoaderResult,
   actionData?: ActionResult,
 ): Promise<Response> {
-  const renderContext = buildRenderContext(c, params, route.path);
+  const renderContext = buildRenderContext(c, params, route);
   const { plan, warnings } = resolveRouteRendering(route, renderContext, {
     globalStreaming: options.streaming,
     adapterCapabilities: options.adapterCapabilities,
@@ -410,11 +401,12 @@ async function renderRoute(
 
   if (
     plan.cache &&
+    !plan.cache.noStore &&
     renderContext.method === "GET" &&
     dataOverride === undefined &&
     actionData === undefined
   ) {
-    const cached = await readCachedHtml(plan.cache, renderContext);
+    const cached = await readCachedHtml(plan.cache, renderContext, c.req.raw.headers);
     if (cached) {
       return new Response(cached.html, {
         status,
@@ -504,11 +496,7 @@ async function renderRoute(
     darkMode: themeEnabled ? resolveDarkModeFromCookie(c.req.header("cookie")) : false,
   };
 
-  let tree: VNode<any> = h(
-    "div",
-    { [OTOK_PAGE_ATTR]: "" },
-    h(Page as ComponentType<typeof props>, props),
-  );
+  let tree: VNode<any> = h("div", { [OTOK_PAGE_ATTR]: "" }, h(Page as ComponentType<typeof props>, props));
   for (const layout of [...(route.layouts ?? [])].reverse()) {
     tree = h(layout.default as ComponentType<typeof props & { children: VNode<any> }>, {
       ...props,
@@ -633,8 +621,12 @@ async function renderRoute(
       ? await options.transformHtml(html, { pathname: c.req.path, routeId: route.id })
       : html;
 
-  if (plan.cache && renderContext.method === "GET") {
-    await writeCachedHtml(plan.cache, renderContext, transformed);
+  if (plan.cache && !plan.cache.noStore && renderContext.method === "GET" && status < 400) {
+    await writeCachedHtml(plan.cache, renderContext, transformed, {
+      status,
+      responseHeaders,
+      honoContext: c,
+    });
   }
 
   return new Response(transformed, {
@@ -643,11 +635,7 @@ async function renderRoute(
   });
 }
 
-async function handleRenderError(
-  c: Context,
-  error: unknown,
-  options: CreateOtokHandlerOptions,
-): Promise<Response> {
+async function handleRenderError(c: Context, error: unknown, options: CreateOtokHandlerOptions): Promise<Response> {
   if (isOtokHttpError(error)) {
     const location = error.headers.get("location");
     if (location) {
@@ -660,10 +648,16 @@ async function handleRenderError(
     }
 
     if (options.errorRoute) {
-      return renderFallbackRoute(c, options.errorRoute, options, error.status, error.failure ?? {
-        message: error.message,
-        status: error.status,
-      });
+      return renderFallbackRoute(
+        c,
+        options.errorRoute,
+        options,
+        error.status,
+        error.failure ?? {
+          message: error.message,
+          status: error.status,
+        },
+      );
     }
 
     if (error.failure) return json(error.failure, { status: error.status, headers: error.headers });
@@ -671,7 +665,8 @@ async function handleRenderError(
   }
 
   if (options.errorRoute) {
-    const message = options.exposeErrorDetails === true && error instanceof Error ? error.message : "Internal server error";
+    const message =
+      options.exposeErrorDetails === true && error instanceof Error ? error.message : "Internal server error";
     return renderFallbackRoute(c, options.errorRoute, options, 500, { message, status: 500 });
   }
 
@@ -741,7 +736,8 @@ function loadServeStatic() {
       throw new Error("node:module createRequire unavailable");
     }
     const require = nodeModule.createRequire(import.meta.url);
-    return require("@hono/node-server/serve-static").serveStatic as (typeof import("@hono/node-server/serve-static"))["serveStatic"];
+    return require("@hono/node-server/serve-static")
+      .serveStatic as (typeof import("@hono/node-server/serve-static"))["serveStatic"];
   } catch {
     throw new Error(
       "otok: createOtokApp({ staticDir }) requires optional peer dependency @hono/node-server. Omit staticDir on Edge runtimes or serve assets from a CDN.",
@@ -759,29 +755,28 @@ export function createOtokWorkerApp(
   });
 }
 
-export { pageHtml, composeHtmlStream, composeDeferredHtmlStream, type ViteManifest, type ViteManifestEntry } from "./html.js";
 export {
-  applyCacheHeaders,
-  buildRenderContext,
-  resolveRouteRendering,
-} from "./rendering.js";
+  pageHtml,
+  composeHtmlStream,
+  composeDeferredHtmlStream,
+  type ViteManifest,
+  type ViteManifestEntry,
+} from "./html.js";
+export { applyCacheHeaders, buildRenderContext, resolveRouteRendering } from "./rendering.js";
 export {
   revalidatePath,
   revalidateTag,
   setCacheProvider,
   getCacheProvider,
   buildCacheControlHeader,
+  setOtokCacheScope,
+  resolveOtokCacheScope,
+  type OtokCacheScope,
 } from "../cache/index.js";
 export { defineRendering } from "../rendering/define.js";
 export type { RenderingConfig, RenderPlan, RenderMode } from "../rendering/types.js";
-export {
-  resolveOtokManifest,
-  type ResolveOtokManifestOptions,
-} from "./manifest.js";
-export {
-  readOtokManifest,
-  type ReadOtokManifestOptions,
-} from "./manifest-node.js";
+export { resolveOtokManifest, type ResolveOtokManifestOptions } from "./manifest.js";
+export { readOtokManifest, type ReadOtokManifestOptions } from "./manifest-node.js";
 export { matchRoute, type RouteMatch } from "./router.js";
 export {
   defineMiddleware,

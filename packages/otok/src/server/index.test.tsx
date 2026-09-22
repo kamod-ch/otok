@@ -241,10 +241,16 @@ describe("createOtokHandler", () => {
   });
 
   it("runs route actions for form posts and re-renders with action data", async () => {
-    const FormPage = ({ actionData }: { actionData?: { message?: string; fieldErrors?: Record<string, string[]> } }) => (
+    const FormPage = ({
+      actionData,
+    }: {
+      actionData?: { message?: string; fieldErrors?: Record<string, string[]> };
+    }) => (
       <form method="post">
         <input name="name" aria-invalid={Boolean(actionData?.fieldErrors?.name)} />
-        {actionData?.fieldErrors?.name?.map((error) => <p role="alert">{error}</p>)}
+        {actionData?.fieldErrors?.name?.map((error) => (
+          <p role="alert">{error}</p>
+        ))}
         <p>{actionData?.message}</p>
       </form>
     );
@@ -639,7 +645,11 @@ describe("createOtokHandler", () => {
             },
           },
         ],
-        errorRoute: route("/", /^\/?$/, (({ data }: { data: { message: string; fieldErrors?: Record<string, string[]> } }) => (
+        errorRoute: route("/", /^\/?$/, (({
+          data,
+        }: {
+          data: { message: string; fieldErrors?: Record<string, string[]> };
+        }) => (
           <p>
             {data.message}: {data.fieldErrors?.email?.join(", ")}
           </p>
@@ -722,8 +732,14 @@ describe("createOtokHandler", () => {
       };
     }) => (
       <form>
-        <input name="email" defaultValue={actionData?.values?.email} aria-invalid={Boolean(actionData?.fieldErrors?.email)} />
-        {actionData?.fieldErrors?.email?.map((error) => <p role="alert">{error}</p>)}
+        <input
+          name="email"
+          defaultValue={actionData?.values?.email}
+          aria-invalid={Boolean(actionData?.fieldErrors?.email)}
+        />
+        {actionData?.fieldErrors?.email?.map((error) => (
+          <p role="alert">{error}</p>
+        ))}
         <p>{actionData?.message}</p>
       </form>
     );
@@ -802,6 +818,8 @@ describe("createOtokHandler", () => {
   });
 
   it("applies cache headers from defineRendering", async () => {
+    const { MemoryCacheProvider, setCacheProvider } = await import("../cache/index.js");
+    setCacheProvider(new MemoryCacheProvider());
     const { defineRendering } = await import("../rendering/define.js");
     const app = new Hono();
     app.get(
@@ -991,9 +1009,7 @@ describe("createOtokHandler", () => {
     const { DeferredBoundary } = await import("../shared/deferred-boundary.js");
 
     const DeferredPage = ({ data }: { data: { posts: unknown } }) => (
-      <DeferredBoundary slot={(data as { posts: any }).posts}>
-        {(posts) => <p>{posts[0].title}</p>}
-      </DeferredBoundary>
+      <DeferredBoundary slot={(data as { posts: any }).posts}>{(posts) => <p>{posts[0].title}</p>}</DeferredBoundary>
     );
 
     const app = new Hono();
@@ -1032,9 +1048,7 @@ describe("createOtokHandler", () => {
     const DeferredPage = ({ data }: { data: { posts: unknown } }) => (
       <div>
         <p>Critical</p>
-        <DeferredBoundary slot={(data as { posts: any }).posts}>
-          {(posts) => <p>{posts.title}</p>}
-        </DeferredBoundary>
+        <DeferredBoundary slot={(data as { posts: any }).posts}>{(posts) => <p>{posts.title}</p>}</DeferredBoundary>
       </div>
     );
 

@@ -52,7 +52,11 @@ export default function CrmCompanyPage({
       <FormAlert message={failure?.message} />
 
       {/* Progressive enhancement: native form works without JS */}
-      <form method="post" class="grid max-w-lg gap-4 rounded-2xl border border-slate-200 bg-white p-6 dark:border-slate-800 dark:bg-slate-950" data-testid="company-native-form">
+      <form
+        method="post"
+        class="grid max-w-lg gap-4 rounded-2xl border border-slate-200 bg-white p-6 dark:border-slate-800 dark:bg-slate-950"
+        data-testid="company-native-form"
+      >
         <FormField
           name="name"
           label="Company name"
@@ -93,11 +97,7 @@ export default function CrmCompanyPage({
         strategy="load"
       />
 
-      <Island
-        component={ActivityPanel}
-        props={{ companyId: params.id, activities: data.activities }}
-        strategy="load"
-      />
+      <Island component={ActivityPanel} props={{ companyId: params.id, activities: data.activities }} strategy="load" />
     </section>
   );
 }

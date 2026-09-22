@@ -1,9 +1,4 @@
-export type AuthErrorCode =
-  | "unauthenticated"
-  | "forbidden"
-  | "invalid_session"
-  | "csrf_invalid"
-  | "unsafe_redirect";
+export type AuthErrorCode = "unauthenticated" | "forbidden" | "invalid_session" | "csrf_invalid" | "unsafe_redirect";
 
 export class AuthError extends Error {
   readonly code: AuthErrorCode;

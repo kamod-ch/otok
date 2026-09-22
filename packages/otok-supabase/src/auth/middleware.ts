@@ -11,10 +11,7 @@ import type {
 import { mapSupabaseError } from "../errors.js";
 import { isApiLikeRequest, prefersHtmlResponse, resolveAuthRedirect, safeRedirectPath } from "./redirects.js";
 
-function resolveRedirectTarget(
-  c: Context,
-  options: RequireSupabaseAuthOptions,
-): string {
+function resolveRedirectTarget(c: Context, options: RequireSupabaseAuthOptions): string {
   const requested = c.req.query("returnTo") ?? c.req.query("next");
   const fallback = options.redirectTo ?? "/login";
   return resolveAuthRedirect(requested, fallback, options.redirectAllowlist);

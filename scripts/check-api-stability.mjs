@@ -1,22 +1,21 @@
 #!/usr/bin/env node
 /**
- * Validates package.json exports against api-stability.json manifest.
+ * Validates package.json exports against api-stability.json (classifications required).
  */
 import { readFileSync, readdirSync, statSync } from "node:fs";
 import { join, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
+import { normalizeExports, readJson } from "./lib/scan-package-api.mjs";
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..");
-const manifest = JSON.parse(readFileSync(join(root, "api-stability.json"), "utf8"));
-
-const packagesDir = join(root, "packages");
+const manifestPath = process.env.OTOK_API_STABILITY_PATH ?? join(root, "api-stability.json");
+const manifest = readJson(manifestPath);
+const packagesDir = process.env.OTOK_GOVERNANCE_PACKAGES_DIR ?? join(root, "packages");
 const errors = [];
-const warnings = [];
 
 function readPackageJson(dir) {
-  const path = join(dir, "package.json");
   try {
-    return JSON.parse(readFileSync(path, "utf8"));
+    return readJson(join(dir, "package.json"));
   } catch {
     return null;
   }
@@ -37,14 +36,12 @@ for (const { pkg } of collectPackages()) {
   const entry = manifest.packages[pkg.name];
   if (!entry) continue;
 
-  const exportsMap = pkg.exports ?? { ".": pkg.main ?? "./dist/index.js" };
-  const normalized =
-    typeof exportsMap === "string" ? { ".": exportsMap } : exportsMap;
+  const normalized = normalizeExports(pkg);
 
-  for (const [subpath, config] of Object.entries(normalized)) {
+  for (const [subpath] of Object.entries(normalized)) {
     const expected = entry.exports?.[subpath];
     if (!expected) {
-      warnings.push(`${pkg.name} export "${subpath}" not listed in api-stability.json`);
+      errors.push(`${pkg.name} export "${subpath}" is not listed in api-stability.json`);
       continue;
     }
     if (!["public", "experimental", "internal"].includes(expected)) {
@@ -57,10 +54,6 @@ for (const { pkg } of collectPackages()) {
       errors.push(`${pkg.name} missing documented export "${subpath}" in package.json`);
     }
   }
-}
-
-if (warnings.length) {
-  console.warn("API stability warnings:\n" + warnings.map((w) => `  ! ${w}`).join("\n"));
 }
 
 if (errors.length) {

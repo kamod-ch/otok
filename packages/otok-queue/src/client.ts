@@ -1,12 +1,5 @@
 import { isRetryableQueueError } from "./errors.js";
-import type {
-  EnqueueOptions,
-  JobHandler,
-  JobPayloadMap,
-  ProcessResult,
-  QueueJob,
-  QueueRuntime,
-} from "./types.js";
+import type { EnqueueOptions, JobHandler, JobPayloadMap, ProcessResult, QueueJob, QueueRuntime } from "./types.js";
 
 export class QueueClient<TJobs extends JobPayloadMap = JobPayloadMap> {
   constructor(private readonly runtime: QueueRuntime<TJobs>) {}
@@ -40,12 +33,12 @@ export class QueueClient<TJobs extends JobPayloadMap = JobPayloadMap> {
 
       try {
         await handler(job.payload as TJobs[keyof TJobs & string]);
-        await this.runtime.provider.complete(job.id);
+        await this.runtime.provider.complete(job.id, job.leaseToken);
         result.processed += 1;
       } catch (error) {
         const message = error instanceof Error ? error.message : "job failed";
         const retryable = isRetryableQueueError(error);
-        await this.runtime.provider.fail(job.id, message, retryable);
+        await this.runtime.provider.fail(job.id, message, retryable, job.leaseToken);
         if (!retryable || job.attempts >= job.maxAttempts) {
           result.deadLettered += 1;
         } else {
@@ -66,8 +59,6 @@ export class QueueClient<TJobs extends JobPayloadMap = JobPayloadMap> {
   }
 }
 
-export function createQueueClient<TJobs extends JobPayloadMap>(
-  runtime: QueueRuntime<TJobs>,
-): QueueClient<TJobs> {
+export function createQueueClient<TJobs extends JobPayloadMap>(runtime: QueueRuntime<TJobs>): QueueClient<TJobs> {
   return new QueueClient(runtime);
 }

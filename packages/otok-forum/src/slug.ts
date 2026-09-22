@@ -42,10 +42,7 @@ export function slugifyTag(name: string): string {
   return slugifyTitle(name);
 }
 
-export async function ensureUniqueSlug(
-  base: string,
-  exists: (slug: string) => Promise<boolean>,
-): Promise<string> {
+export async function ensureUniqueSlug(base: string, exists: (slug: string) => Promise<boolean>): Promise<string> {
   let slug = base || "item";
   let n = 0;
   while (await exists(slug)) {

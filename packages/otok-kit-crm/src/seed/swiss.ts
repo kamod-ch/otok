@@ -1,13 +1,4 @@
-import type {
-  Activity,
-  Company,
-  Contact,
-  Organization,
-  Pipeline,
-  Role,
-  Tag,
-  User,
-} from "../schema/types.js";
+import type { Activity, Company, Contact, Organization, Pipeline, Role, Tag, User } from "../schema/types.js";
 
 const ORG_ID = "org-swiss-demo";
 const now = "2026-08-03T08:00:00.000Z";
@@ -24,12 +15,39 @@ export const swissDemoOrganization: Organization = {
 
 export const swissDemoRoles: Role[] = [
   { id: "role-admin", orgId: ORG_ID, name: "Administrator", permissions: ["crm:*"] },
-  { id: "role-sales", orgId: ORG_ID, name: "Sales", permissions: ["crm:companies:read", "crm:companies:write", "crm:contacts:read", "crm:activities:write", "crm:search"] },
+  {
+    id: "role-sales",
+    orgId: ORG_ID,
+    name: "Sales",
+    permissions: [
+      "crm:companies:read",
+      "crm:companies:write",
+      "crm:contacts:read",
+      "crm:activities:write",
+      "crm:search",
+    ],
+  },
 ];
 
 export const swissDemoUsers: User[] = [
-  { id: "user-admin", orgId: ORG_ID, email: "admin@alpine-sales.ch", name: "Claudia Meier", roleId: "role-admin", locale: "de", active: true },
-  { id: "user-sales", orgId: ORG_ID, email: "sales@alpine-sales.ch", name: "Marco Bianchi", roleId: "role-sales", locale: "it", active: true },
+  {
+    id: "user-admin",
+    orgId: ORG_ID,
+    email: "admin@alpine-sales.ch",
+    name: "Claudia Meier",
+    roleId: "role-admin",
+    locale: "de",
+    active: true,
+  },
+  {
+    id: "user-sales",
+    orgId: ORG_ID,
+    email: "sales@alpine-sales.ch",
+    name: "Marco Bianchi",
+    roleId: "role-sales",
+    locale: "it",
+    active: true,
+  },
 ];
 
 export const swissDemoPipeline: Pipeline = {
@@ -99,13 +117,48 @@ export const swissDemoCompanies: Company[] = [
 ];
 
 export const swissDemoContacts: Contact[] = [
-  { id: "ct-migros", orgId: ORG_ID, companyId: "co-migros", firstName: "Sandra", lastName: "Brunner", email: "sandra.brunner@migros.ch", title: "Einkaufsleiterin", language: "de" },
-  { id: "ct-buhler", orgId: ORG_ID, companyId: "co-buhler", firstName: "Thomas", lastName: "Keller", email: "t.keller@buhlergroup.com", title: "Head of Procurement", language: "de" },
+  {
+    id: "ct-migros",
+    orgId: ORG_ID,
+    companyId: "co-migros",
+    firstName: "Sandra",
+    lastName: "Brunner",
+    email: "sandra.brunner@migros.ch",
+    title: "Einkaufsleiterin",
+    language: "de",
+  },
+  {
+    id: "ct-buhler",
+    orgId: ORG_ID,
+    companyId: "co-buhler",
+    firstName: "Thomas",
+    lastName: "Keller",
+    email: "t.keller@buhlergroup.com",
+    title: "Head of Procurement",
+    language: "de",
+  },
 ];
 
 export const swissDemoActivities: Activity[] = [
-  { id: "act-1", orgId: ORG_ID, companyId: "co-migros", contactId: "ct-migros", type: "meeting", subject: "Erstgespräch Nachhaltigkeit", occurredAt: "2026-08-01T10:00:00.000Z", userId: "user-sales" },
-  { id: "act-2", orgId: ORG_ID, companyId: "co-buhler", type: "call", subject: "Follow-up Offerte", occurredAt: "2026-08-02T14:00:00.000Z", userId: "user-sales" },
+  {
+    id: "act-1",
+    orgId: ORG_ID,
+    companyId: "co-migros",
+    contactId: "ct-migros",
+    type: "meeting",
+    subject: "Erstgespräch Nachhaltigkeit",
+    occurredAt: "2026-08-01T10:00:00.000Z",
+    userId: "user-sales",
+  },
+  {
+    id: "act-2",
+    orgId: ORG_ID,
+    companyId: "co-buhler",
+    type: "call",
+    subject: "Follow-up Offerte",
+    occurredAt: "2026-08-02T14:00:00.000Z",
+    userId: "user-sales",
+  },
 ];
 
 export const swissDemoTags: Tag[] = [

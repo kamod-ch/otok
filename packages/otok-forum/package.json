@@ -1,14 +1,23 @@
 {
   "name": "@kamod-ch/otok-forum",
   "version": "0.2.0",
-  "description": "Production-ready optional forum extension for Otok \u2014 SSR, Kysely, permissions, moderation.",
+  "description": "Production-ready optional forum extension for Otok — SSR, Kysely, permissions, moderation.",
+  "homepage": "https://github.com/kamod-ch/otok/tree/main/packages/otok-forum#readme",
+  "bugs": {
+    "url": "https://github.com/kamod-ch/otok/issues"
+  },
   "license": "MIT",
-  "type": "module",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kamod-ch/otok.git",
+    "directory": "packages/otok-forum"
+  },
   "files": [
     "dist",
     "README.md",
     "docs"
   ],
+  "type": "module",
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
@@ -27,6 +36,9 @@
       "default": "./dist/plugin.js"
     }
   },
+  "publishConfig": {
+    "access": "public"
+  },
   "scripts": {
     "build": "rm -rf dist && tsc -p tsconfig.build.json",
     "typecheck": "tsc -p tsconfig.json --noEmit",
@@ -36,6 +48,19 @@
     "@kamod-ch/otok-config": "workspace:*",
     "markdown-it": "^14.1.0",
     "zod": "^3.24.0"
+  },
+  "devDependencies": {
+    "@kamod-ch/otok": "workspace:*",
+    "@kamod-ch/otok-test": "workspace:*",
+    "@types/better-sqlite3": "^7.6.13",
+    "@types/markdown-it": "^14.1.2",
+    "@types/node": "^24.12.2",
+    "better-sqlite3": "^12.6.2",
+    "hono": "^4.12.25",
+    "kysely": "^0.29.3",
+    "preact": "^10.28.2",
+    "typescript": "~6.0.2",
+    "vitest": "^4.1.2"
   },
   "peerDependencies": {
     "@kamod-ch/otok": ">=0.6.1",
@@ -54,32 +79,7 @@
       "optional": true
     }
   },
-  "devDependencies": {
-    "@kamod-ch/otok": "workspace:*",
-    "@kamod-ch/otok-test": "workspace:*",
-    "@types/better-sqlite3": "^7.6.13",
-    "@types/markdown-it": "^14.1.2",
-    "@types/node": "^24.12.2",
-    "better-sqlite3": "^12.6.2",
-    "hono": "^4.12.25",
-    "kysely": "^0.29.3",
-    "preact": "^10.28.2",
-    "typescript": "~6.0.2",
-    "vitest": "^4.1.2"
-  },
   "engines": {
     "node": ">=20"
-  },
-  "publishConfig": {
-    "access": "public"
-  },
-  "homepage": "https://github.com/kamod-ch/otok/tree/main/packages/otok-forum#readme",
-  "bugs": {
-    "url": "https://github.com/kamod-ch/otok/issues"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/kamod-ch/otok.git",
-    "directory": "packages/otok-forum"
   }
 }

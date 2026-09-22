@@ -3,7 +3,6 @@ import type {
   StepRecord,
   StepRunOptions,
   StepRunner,
-  WorkflowDefinition,
   WorkflowInstance,
   WorkflowObservability,
   WorkflowStore,
@@ -17,8 +16,6 @@ export class StepExecutor implements StepRunner {
     private readonly instance: WorkflowInstance,
     private readonly store: WorkflowStore,
     private readonly defaultRetry: ReturnType<typeof resolveRetryPolicy>,
-    private readonly isCancelled: () => boolean,
-    private readonly isPaused: () => boolean,
     private readonly observability?: WorkflowObservability,
   ) {}
 
@@ -27,7 +24,7 @@ export class StepExecutor implements StepRunner {
   }
 
   async run<T>(name: string, fn: () => T | Promise<T>, options: StepRunOptions = {}): Promise<T> {
-    this.assertRunnable();
+    await this.assertRunnable();
 
     const existing = await this.store.getStep(this.instance.id, name);
     if (existing?.status === "completed") {
@@ -41,6 +38,7 @@ export class StepExecutor implements StepRunner {
     await this.store.updateInstance(this.instance.id, { currentStep: name, status: "running" });
 
     const execute = async (): Promise<T> => {
+      await this.assertRunnable();
       attempt += 1;
       const running: StepRecord = {
         instanceId: this.instance.id,
@@ -122,9 +120,7 @@ export class StepExecutor implements StepRunner {
   ): Promise<{ [K in keyof T]: Awaited<ReturnType<T[K]>> }> {
     const entries = Object.entries(steps) as [keyof T & string, T[keyof T]][];
     const results = await Promise.all(
-      entries.map(([stepName, fn]) =>
-        this.run(`${name}.${String(stepName)}`, fn as () => Promise<unknown>),
-      ),
+      entries.map(([stepName, fn]) => this.run(`${name}.${String(stepName)}`, fn as () => Promise<unknown>)),
     );
     const output = {} as { [K in keyof T]: Awaited<ReturnType<T[K]>> };
     entries.forEach(([key], index) => {
@@ -133,36 +129,27 @@ export class StepExecutor implements StepRunner {
     return output;
   }
 
-  private assertRunnable(): void {
-    if (this.isCancelled()) {
+  private async assertRunnable(): Promise<void> {
+    const fresh = await this.store.getInstance(this.instance.id);
+    if (!fresh) {
+      throw new WorkflowException("NOT_FOUND", `Workflow instance "${this.instance.id}" not found`);
+    }
+    if (fresh.status === "cancelled") {
       throw new WorkflowException("CANCELLED", "Workflow was cancelled");
     }
-    if (this.isPaused()) {
+    if (fresh.status === "paused") {
       throw new WorkflowException("PAUSED", "Workflow is paused");
     }
   }
 }
 
-export interface EngineRunState {
-  cancelled: boolean;
-  paused: boolean;
-}
-
 export function createStepRunner(
   instance: WorkflowInstance,
   store: WorkflowStore,
-  state: EngineRunState,
   defaultRetry: ReturnType<typeof resolveRetryPolicy>,
   observability?: WorkflowObservability,
 ): StepExecutor {
-  return new StepExecutor(
-    instance,
-    store,
-    defaultRetry,
-    () => state.cancelled,
-    () => state.paused,
-    observability,
-  );
+  return new StepExecutor(instance, store, defaultRetry, observability);
 }
 
 export async function computeProgress(store: WorkflowStore, instanceId: string, totalHint?: number): Promise<number> {
@@ -172,4 +159,4 @@ export async function computeProgress(store: WorkflowStore, instanceId: string, 
   return Math.min(100, Math.round((completed / totalHint) * 100));
 }
 
-export type { WorkflowDefinition };
+export type { WorkflowDefinition } from "./types.js";

@@ -9,7 +9,9 @@ export default function ApiHome() {
   return (
     <main class="mx-auto max-w-xl space-y-4 p-8 font-mono text-sm">
       <h1 class="text-xl font-semibold">Otok API starter</h1>
-      <p>JSON endpoints live under <code>/api/*</code>. This page is optional documentation UI.</p>
+      <p>
+        JSON endpoints live under <code>/api/*</code>. This page is optional documentation UI.
+      </p>
       <ul class="list-disc pl-5">
         <li>
           <a href="/api/health">GET /api/health</a>

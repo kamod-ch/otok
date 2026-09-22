@@ -91,9 +91,7 @@ export function createOpenAiProvider(config: OpenAiProviderConfig): AiProvider {
           tools: toolsToOpenAi(options.tools),
           stream: true,
           stream_options: { include_usage: true },
-          ...(options.jsonSchema
-            ? { response_format: { type: "json_object" } }
-            : {}),
+          ...(options.jsonSchema ? { response_format: { type: "json_object" } } : {}),
         }),
         signal: options.signal,
       });

@@ -10,12 +10,7 @@ import {
   createOtokRoot,
   writeKitManifest,
 } from "./kit-scaffold.js";
-import {
-  kitsForPreset,
-  loadKitDefinitions,
-  modulesForPreset,
-  findMonorepoPackagesDir,
-} from "./kit-registry.js";
+import { kitsForPreset, loadKitDefinitions, modulesForPreset, findMonorepoPackagesDir } from "./kit-registry.js";
 import {
   copyDirectory,
   loadVersionMatrix,
@@ -75,24 +70,24 @@ export async function resolveScaffoldPlan(options: ScaffoldOptions): Promise<{
 
   const combined = {
     ...presetPlan,
-    starter: kitPlan?.starter ?? presetPlan.starter,
+    ...kitPlan,
+    starter: kitPlan?.starter || presetPlan.starter,
     files: kitPlan?.files.length ? kitPlan.files : presetPlan.files,
     packageJson: {
       dependencies: {
         ...presetPlan.packageJson.dependencies,
-        ...(kitPlan?.packageJson.dependencies ?? {}),
+        ...kitPlan?.packageJson.dependencies,
       },
       devDependencies: {
         ...presetPlan.packageJson.devDependencies,
-        ...(kitPlan?.packageJson.devDependencies ?? {}),
+        ...kitPlan?.packageJson.devDependencies,
       },
       scripts: {
         ...presetPlan.packageJson.scripts,
-        ...(kitPlan?.packageJson.scripts ?? {}),
+        ...kitPlan?.packageJson.scripts,
       },
     },
     chain: [...presetPlan.chain, ...(kitPlan?.kits ?? [])],
-    ...(kitPlan ?? {}),
   };
 
   return { presetPlan, kitPlan, combined, layerNames };

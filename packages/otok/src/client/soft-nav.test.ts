@@ -73,17 +73,11 @@ describe("syncSoftNavigationHead", () => {
     document.head.innerHTML = `<title ${OTOK_HEAD_ATTR}="title">Old</title><meta ${OTOK_HEAD_ATTR}="description" name="description" content="Old desc">`;
     document.title = "Old";
 
-    const next = renderDoc(
-      "",
-      "New",
-      `<meta ${OTOK_HEAD_ATTR}="description" name="description" content="New desc">`,
-    );
+    const next = renderDoc("", "New", `<meta ${OTOK_HEAD_ATTR}="description" name="description" content="New desc">`);
 
     syncSoftNavigationHead(next);
     expect(document.title).toBe("New");
-    expect(document.querySelector(`meta[${OTOK_HEAD_ATTR}="description"]`)?.getAttribute("content")).toBe(
-      "New desc",
-    );
+    expect(document.querySelector(`meta[${OTOK_HEAD_ATTR}="description"]`)?.getAttribute("content")).toBe("New desc");
   });
 });
 

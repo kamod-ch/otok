@@ -16,11 +16,7 @@ export interface KamodThemeHeadProps {
  * SSR-safe Kamod theme bootstrap for Otok route `head` exports or layouts.
  * Use when `@kamod-ch/themes` brand presets are enabled (`theme` !== `"default"`).
  */
-export function KamodThemeHead({
-  defaultPreset = "kamod",
-  defaultScheme = "system",
-  nonce,
-}: KamodThemeHeadProps) {
+export function KamodThemeHead({ defaultPreset = "kamod", defaultScheme = "system", nonce }: KamodThemeHeadProps) {
   return (
     <script
       nonce={nonce}

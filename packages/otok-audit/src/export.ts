@@ -9,13 +9,8 @@ function escapeCsv(value: unknown): string {
   return text;
 }
 
-export function exportAuditEntries(
-  entries: readonly AuditEntry[],
-  options: AuditExportOptions,
-): string {
-  const rows = entries.map((entry) =>
-    redactAuditEntry(entry, options.redactFields),
-  );
+export function exportAuditEntries(entries: readonly AuditEntry[], options: AuditExportOptions): string {
+  const rows = entries.map((entry) => redactAuditEntry(entry, options.redactFields));
 
   if (options.format === "json") {
     return `${serializeJson(rows)}\n`;

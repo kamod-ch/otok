@@ -21,8 +21,7 @@ export default defineConfig({
     kamod({ theme: "default", icons: true, forms: true }),
     kysely({
       dialect: "postgres",
-      connectionString:
-        process.env.DATABASE_URL ?? "postgres://otok:otok@localhost:5433/crm_swiss",
+      connectionString: process.env.DATABASE_URL ?? "postgres://otok:otok@localhost:5433/crm_swiss",
       migrations: { directory: "migrations" },
       seeds: { directory: "seeds" },
     }),

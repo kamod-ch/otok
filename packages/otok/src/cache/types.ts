@@ -43,6 +43,23 @@ export interface CacheProvider {
 
 export interface CacheKeyInput {
   method: string;
+  /** Stable route identifier (file route id), not the request pathname. */
+  routeId: string;
+  /** Request pathname (no query). */
+  requestPath: string;
+  /** Query string entries in request order (multi-value keys preserved). */
+  query: ReadonlyArray<readonly [string, string]>;
+  /** Shared (anonymous) HTML cache entry. */
+  shared: boolean;
+  userId?: string;
+  tenantId?: string;
+  scopeLocale?: string;
+  varyHeaders?: Record<string, string>;
+}
+
+/** @deprecated Legacy fields — do not use for new keys. */
+export interface LegacyCacheKeyInput {
+  method: string;
   pathname: string;
   params: Record<string, string>;
   locale?: string;

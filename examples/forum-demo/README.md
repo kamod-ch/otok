@@ -14,11 +14,11 @@ Open http://localhost:3456/community
 
 ## Demo users
 
-| ID | Role |
-|----|------|
+| ID      | Role             |
+| ------- | ---------------- |
 | `alice` | member (default) |
-| `bob` | moderator |
-| `admin` | admin |
+| `bob`   | moderator        |
+| `admin` | admin            |
 
 Switch users by modifying `src/lib/auth.ts`.
 

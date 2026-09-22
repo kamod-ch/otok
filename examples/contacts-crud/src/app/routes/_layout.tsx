@@ -10,7 +10,9 @@ export default function Layout({ children }: OtokLayoutProps) {
       </head>
       <body style="font-family:system-ui,sans-serif;max-width:48rem;margin:2rem auto;padding:0 1rem;">
         <nav style="margin-bottom:2rem;">
-          <a href="/contacts" style="font-weight:600;">Contacts CRUD</a>
+          <a href="/contacts" style="font-weight:600;">
+            Contacts CRUD
+          </a>
         </nav>
         <main>{children}</main>
       </body>

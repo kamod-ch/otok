@@ -3,11 +3,7 @@ import { defineEvent, z, eventKey } from "../define-event.js";
 import { createEventBus } from "../bus/event-bus.js";
 import { enqueueOutboxEvent, OutboxProcessor } from "./processor.js";
 import { metadataFromContext } from "../context.js";
-import {
-  MemoryOutboxStore,
-  withOutboxTransaction,
-  withOutboxTransactionRollback,
-} from "../testing/memory-outbox.js";
+import { MemoryOutboxStore, withOutboxTransaction, withOutboxTransactionRollback } from "../testing/memory-outbox.js";
 
 const orderCreated = defineEvent({
   name: "order.created",
@@ -20,7 +16,9 @@ describe("transactional outbox boundaries", () => {
     const outbox = new MemoryOutboxStore();
     const bus = createEventBus();
     const handled: string[] = [];
-    bus.subscribe(orderCreated, (e) => { handled.push(e.payload.orderId); });
+    bus.subscribe(orderCreated, (e) => {
+      handled.push(e.payload.orderId);
+    });
 
     await withOutboxTransaction(outbox, async (trx) => {
       await enqueueOutboxEvent(
@@ -46,7 +44,9 @@ describe("transactional outbox boundaries", () => {
     const outbox = new MemoryOutboxStore();
     const bus = createEventBus();
     const handled: string[] = [];
-    bus.subscribe(orderCreated, (e) => { handled.push(e.payload.orderId); });
+    bus.subscribe(orderCreated, (e) => {
+      handled.push(e.payload.orderId);
+    });
     const processor = new OutboxProcessor({
       store: outbox,
       bus,

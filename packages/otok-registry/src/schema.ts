@@ -58,10 +58,11 @@ export type ExtensionEntry = z.infer<typeof ExtensionEntrySchema>;
 export type RegistryIndex = z.infer<typeof RegistryIndexSchema>;
 export type RegistryBundle = z.infer<typeof RegistryBundleSchema>;
 
-export type LoadedRegistry = RegistryIndex & RegistryBundle & {
-  publishersById: Map<string, Publisher>;
-  extensionsByName: Map<string, ExtensionEntry>;
-};
+export type LoadedRegistry = RegistryIndex &
+  RegistryBundle & {
+    publishersById: Map<string, Publisher>;
+    extensionsByName: Map<string, ExtensionEntry>;
+  };
 
 export interface RegistrySearchQuery {
   q?: string;

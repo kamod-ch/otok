@@ -39,12 +39,12 @@
 
 ### Integration points (loose coupling)
 
-| Feature | Integration |
-|---------|-------------|
+| Feature       | Integration                                                                   |
+| ------------- | ----------------------------------------------------------------------------- |
 | SEO / sitemap | Export `contentEntriesToSitemapUrls()` — merge in `@kamod-ch/otok-seo` loader |
-| i18n | Locale prefix in paths; filter by `entry.locale` |
-| Cache | Per-collection `cacheTag`; use with Otok revalidation |
-| Feeds | `renderRssFeed` / `renderAtomFeed` in route loaders |
+| i18n          | Locale prefix in paths; filter by `entry.locale`                              |
+| Cache         | Per-collection `cacheTag`; use with Otok revalidation                         |
+| Feeds         | `renderRssFeed` / `renderAtomFeed` in route loaders                           |
 
 ## Content collections
 
@@ -73,10 +73,10 @@ MDX is compiled during build only. The runtime manifest contains pre-rendered HT
 
 The core APIs mirror PreactPress `defineCollection` / `loadCollectionEntries` but use Otok conventions:
 
-| PreactPress | otok-content |
-|-------------|--------------|
-| `directory` | `source` glob |
-| `CollectionEntry.url` | `ContentEntry.route` + app origin |
-| `__kind: "collection"` | `__kind: "otok-collection"` |
+| PreactPress            | otok-content                      |
+| ---------------------- | --------------------------------- |
+| `directory`            | `source` glob                     |
+| `CollectionEntry.url`  | `ContentEntry.route` + app origin |
+| `__kind: "collection"` | `__kind: "otok-collection"`       |
 
 See [migration-preactpress.md](./migration-preactpress.md).

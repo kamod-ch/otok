@@ -6,7 +6,8 @@ export type WorkflowErrorCode =
   | "WAITING_APPROVAL"
   | "TIMEOUT"
   | "DEAD"
-  | "DUPLICATE";
+  | "DUPLICATE"
+  | "VERSION_MISMATCH";
 
 export class WorkflowException extends Error {
   readonly code: WorkflowErrorCode;

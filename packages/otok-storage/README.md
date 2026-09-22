@@ -57,13 +57,13 @@ const downloadUrl = await storage.getPresignedUrl({
 
 ## Providers
 
-| Provider | Config | Notes |
-|----------|--------|-------|
-| `test` | `{ type: "test" }` | In-memory store for tests. |
-| `local` | `{ type: "local", rootDir? }` | Filesystem under `.otok-storage` by default. |
-| `s3` | `{ type: "s3", bucket, region? }` | AWS S3 via AWS SDK. |
-| `r2` | `{ type: "r2", bucket, accountId? }` | Cloudflare R2 (S3-compatible). |
-| `minio` | `{ type: "minio", bucket, endpoint }` | MinIO or other S3-compatible stores. |
+| Provider | Config                                | Notes                                        |
+| -------- | ------------------------------------- | -------------------------------------------- |
+| `test`   | `{ type: "test" }`                    | In-memory store for tests.                   |
+| `local`  | `{ type: "local", rootDir? }`         | Filesystem under `.otok-storage` by default. |
+| `s3`     | `{ type: "s3", bucket, region? }`     | AWS S3 via AWS SDK.                          |
+| `r2`     | `{ type: "r2", bucket, accountId? }`  | Cloudflare R2 (S3-compatible).               |
+| `minio`  | `{ type: "minio", bucket, endpoint }` | MinIO or other S3-compatible stores.         |
 
 ## Bucket validation
 
@@ -79,9 +79,9 @@ CLOUDFLARE_ACCOUNT_ID=
 
 ## Exports
 
-| Subpath | Purpose |
-|---------|---------|
-| `@kamod-ch/otok-storage` | Plugin factory, `getStorageClient`, types |
-| `@kamod-ch/otok-storage/providers/local` | Local filesystem provider |
-| `@kamod-ch/otok-storage/providers/s3` | S3/R2/MinIO provider factories |
-| `@kamod-ch/otok-storage/providers/test` | Test provider helpers |
+| Subpath                                  | Purpose                                   |
+| ---------------------------------------- | ----------------------------------------- |
+| `@kamod-ch/otok-storage`                 | Plugin factory, `getStorageClient`, types |
+| `@kamod-ch/otok-storage/providers/local` | Local filesystem provider                 |
+| `@kamod-ch/otok-storage/providers/s3`    | S3/R2/MinIO provider factories            |
+| `@kamod-ch/otok-storage/providers/test`  | Test provider helpers                     |

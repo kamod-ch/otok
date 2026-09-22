@@ -57,9 +57,7 @@ describe("AuditService", () => {
       action: "test",
       resource: { type: "x", id: "1" },
     });
-    await expect(
-      store.append({ ...entry, action: "mutated" }),
-    ).rejects.toThrow("append-only");
+    await expect(store.append({ ...entry, action: "mutated" })).rejects.toThrow("append-only");
   });
 
   it("searches by tenant, action, and resource", async () => {

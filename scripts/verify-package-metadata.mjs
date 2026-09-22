@@ -33,7 +33,8 @@ for (const file of packageFiles) {
 
   if (pkg.private) problems.push(`${label}: publishable package must not be private`);
   if (pkg.repository?.type !== "git") problems.push(`${label}: repository.type must be git`);
-  if (pkg.repository?.url !== requiredRepository) problems.push(`${label}: repository.url must be ${requiredRepository}`);
+  if (pkg.repository?.url !== requiredRepository)
+    problems.push(`${label}: repository.url must be ${requiredRepository}`);
   if (!pkg.repository?.directory) problems.push(`${label}: repository.directory is required`);
   if (pkg.bugs?.url !== "https://github.com/kamod-ch/otok/issues") {
     problems.push(`${label}: bugs.url must point to the Otok issue tracker`);

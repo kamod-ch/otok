@@ -165,7 +165,9 @@ export default function ProjectForm({ actionData }: OtokPageProps) {
   return (
     <form method="post">
       <input name="name" aria-invalid={Boolean(result?.fieldErrors?.name)} />
-      {result?.fieldErrors?.name?.map((error) => <p role="alert">{error}</p>)}
+      {result?.fieldErrors?.name?.map((error) => (
+        <p role="alert">{error}</p>
+      ))}
       <button>Save</button>
     </form>
   );
@@ -321,6 +323,16 @@ const { response, html } = await renderRoute(app, "/users/123");
 ```
 
 `@kamod-ch/otok-test` uses Otok's real Hono handler and `app.request()` under the hood, so it is suitable for loaders, actions, middleware, redirects, cookies, headers, error routes, and SSR HTML. Use Playwright for hydration and browser behavior.
+
+## Release candidate (stabilization)
+
+The 2026 stabilization bundle (cache, idempotency, progressive forms, prefetch, quality gates, Postgres queue reference) is documented as a **verifiable RC** — not an automatic npm release:
+
+- [docs/1.0/release-candidate.md](docs/1.0/release-candidate.md) — recommendation and blockers
+- [docs/1.0/release-checklist.md](docs/1.0/release-checklist.md) — maps to `pnpm release:check`
+- [docs/stabilization/status.md](docs/stabilization/status.md) — per-prompt evidence
+
+Historical 1.0 audit (2026-08-03): [docs/1.0/audit.md](docs/1.0/audit.md).
 
 ## Learn More
 

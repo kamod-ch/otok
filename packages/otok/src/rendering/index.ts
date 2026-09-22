@@ -11,27 +11,15 @@ export type {
   RenderingWarning,
 } from "./types.js";
 
-export {
-  assertRenderCapability,
-  type AdapterRenderCapabilities,
-} from "./capabilities.js";
+export { assertRenderCapability, type AdapterRenderCapabilities } from "./capabilities.js";
 
-export {
-  collectPrerenderEntries,
-  type PrerenderEntry,
-  type PrerenderManifest,
-} from "./prerender-manifest.js";
+export { collectPrerenderEntries, type PrerenderEntry, type PrerenderManifest } from "./prerender-manifest.js";
 
 export { scanRenderingFromSource, routeWantsPrerender } from "./scan.js";
 
 export { OTOK_LOADING_ATTR, wrapLoadingBoundary } from "./loading.js";
 
-export {
-  OTOK_DEFERRED,
-  createDeferredSlot,
-  type DeferredSlot,
-  type DeferredRenderResult,
-} from "./deferred.js";
+export { OTOK_DEFERRED, createDeferredSlot, type DeferredSlot, type DeferredRenderResult } from "./deferred.js";
 
 export {
   isDeferredRenderResult,

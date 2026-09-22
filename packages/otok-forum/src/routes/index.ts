@@ -13,7 +13,15 @@ import {
   getForumState,
   resolvePermissions,
 } from "./context.js";
-import { CategoryList, ModerationQueue, NewThreadForm, ReportForm, SearchPage, ThreadList, ThreadPage } from "../components/default.js";
+import {
+  CategoryList,
+  ModerationQueue,
+  NewThreadForm,
+  ReportForm,
+  SearchPage,
+  ThreadList,
+  ThreadPage,
+} from "../components/default.js";
 import {
   createPostSchema,
   createThreadSchema,
@@ -84,7 +92,9 @@ export function createForumRoutes(basePath: string, config: ForumConfig, service
       const page = Number(new URL(ctx.request.url).searchParams.get("page") ?? 1);
       const pageSize = config.pagination?.defaultPageSize ?? 20;
       const threads = await services.threads.listByCategory(category.id, { page, pageSize });
-      const total = await services.threads.listByCategory(category.id, { page: 1, pageSize: 1000 }).then((t) => t.length);
+      const total = await services.threads
+        .listByCategory(category.id, { page: 1, pageSize: 1000 })
+        .then((t) => t.length);
       return {
         category,
         threads,
@@ -105,7 +115,9 @@ export function createForumRoutes(basePath: string, config: ForumConfig, service
       const forum = await buildRuntimeContext(reqCtx, state, permissions);
       const threadSlug = ctx.params.threadSlug!;
       const threadId = parseThreadIdFromSlug(threadSlug);
-      const thread = threadId ? await services.threads.findById(threadId) : await services.threads.findBySlug(threadSlug);
+      const thread = threadId
+        ? await services.threads.findById(threadId)
+        : await services.threads.findBySlug(threadSlug);
       if (!thread || thread.deletedAt) forumNotFound();
       if (!isCanonicalThreadSlug(threadSlug, thread.id, thread.title)) {
         forumRedirect(forum.basePath, `${forum.basePath}/t/${thread.slug}`);
@@ -146,7 +158,9 @@ export function createForumRoutes(basePath: string, config: ForumConfig, service
       const intent = String(ctx.formData?.get("intent") ?? "reply");
       const threadSlug = ctx.params.threadSlug!;
       const threadId = parseThreadIdFromSlug(threadSlug);
-      const thread = threadId ? await services.threads.findById(threadId) : await services.threads.findBySlug(threadSlug);
+      const thread = threadId
+        ? await services.threads.findById(threadId)
+        : await services.threads.findBySlug(threadSlug);
       if (!thread) forumNotFound();
 
       if (intent === "reply") {
@@ -171,7 +185,8 @@ export function createForumRoutes(basePath: string, config: ForumConfig, service
             permissions,
           );
         } catch (e) {
-          if (e instanceof ForumClosedThreadError) forumValidationFail({ formErrors: [forum.t("forum.thread.closed")] });
+          if (e instanceof ForumClosedThreadError)
+            forumValidationFail({ formErrors: [forum.t("forum.thread.closed")] });
           throw e;
         }
         forumRedirect(forum.basePath, `${forum.basePath}/t/${thread.slug}`);
@@ -246,13 +261,19 @@ export function createForumRoutes(basePath: string, config: ForumConfig, service
       if (!q) return { hits: [], q, forum, title: forum.t("forum.search") };
       const parsed = searchSchema.safeParse({ q, page: new URL(ctx.request.url).searchParams.get("page") ?? 1 });
       if (!parsed.success) return { hits: [], q, forum, title: forum.t("forum.search") };
-      const result = await services.search.search(parsed.data, { user: reqCtx.user, permissions, basePath: forum.basePath });
+      const result = await services.search.search(parsed.data, {
+        user: reqCtx.user,
+        permissions,
+        basePath: forum.basePath,
+      });
       return { hits: result.hits, q, forum, title: forum.t("forum.search") };
     },
     head(props) {
       const data = props.data as Record<string, unknown>;
       const forum = data.forum as ForumRuntimeContext;
-      return buildThreadHead(forum.t("forum.search"), "", `${forum.basePath}/search`, config.seo?.origin, { noindex: true });
+      return buildThreadHead(forum.t("forum.search"), "", `${forum.basePath}/search`, config.seo?.origin, {
+        noindex: true,
+      });
     },
   };
 
@@ -270,7 +291,9 @@ export function createForumRoutes(basePath: string, config: ForumConfig, service
     head(props) {
       const data = props.data as Record<string, unknown>;
       const forum = data.forum as ForumRuntimeContext;
-      return buildThreadHead(forum.t("forum.moderation"), "", `${forum.basePath}/moderation`, config.seo?.origin, { noindex: true });
+      return buildThreadHead(forum.t("forum.moderation"), "", `${forum.basePath}/moderation`, config.seo?.origin, {
+        noindex: true,
+      });
     },
   };
 
@@ -382,7 +405,16 @@ export function createForumRoutes(basePath: string, config: ForumConfig, service
       const threads = await config.storage.tags.listThreadsByTag(tag.id, { page: 1, pageSize: 50 });
       return {
         threads,
-        category: { id: tag.id, slug: tag.slug, name: tag.name, sortOrder: 0, threadCount: tag.threadCount, postCount: 0, createdAt: tag.createdAt, updatedAt: tag.createdAt },
+        category: {
+          id: tag.id,
+          slug: tag.slug,
+          name: tag.name,
+          sortOrder: 0,
+          threadCount: tag.threadCount,
+          postCount: 0,
+          createdAt: tag.createdAt,
+          updatedAt: tag.createdAt,
+        },
         forum,
         title: tag.name,
       };
@@ -405,7 +437,16 @@ export function createForumRoutes(basePath: string, config: ForumConfig, service
       }
       return {
         threads,
-        category: { id: userId, slug: userId, name: userId, sortOrder: 0, threadCount: threads.length, postCount: 0, createdAt: "", updatedAt: "" },
+        category: {
+          id: userId,
+          slug: userId,
+          name: userId,
+          sortOrder: 0,
+          threadCount: threads.length,
+          postCount: 0,
+          createdAt: "",
+          updatedAt: "",
+        },
         forum,
         title: userId,
       };
@@ -421,7 +462,9 @@ export function createForumRoutes(basePath: string, config: ForumConfig, service
       const forum = await buildRuntimeContext(reqCtx, state, permissions);
       const threadSlug = ctx.params.threadSlug!;
       const threadId = parseThreadIdFromSlug(threadSlug);
-      const thread = threadId ? await services.threads.findById(threadId) : await services.threads.findBySlug(threadSlug);
+      const thread = threadId
+        ? await services.threads.findById(threadId)
+        : await services.threads.findBySlug(threadSlug);
       if (!thread) forumNotFound();
       const categories = await services.categories.list();
       return { categories, thread, forum, title: forum.t("forum.edit") };
@@ -453,7 +496,9 @@ export function createForumRoutes(basePath: string, config: ForumConfig, service
       for (const cat of categories.slice(0, 5)) {
         const threads = await services.threads.listByCategory(cat.id, { pageSize: 20 });
         for (const t of threads) {
-          items.push(`<item><title>${escapeXml(t.title)}</title><link>${base}/t/${t.slug}</link><pubDate>${t.createdAt}</pubDate></item>`);
+          items.push(
+            `<item><title>${escapeXml(t.title)}</title><link>${base}/t/${t.slug}</link><pubDate>${t.createdAt}</pubDate></item>`,
+          );
         }
       }
       const xml = `<?xml version="1.0"?><rss version="2.0"><channel><title>Forum</title>${items.join("")}</channel></rss>`;

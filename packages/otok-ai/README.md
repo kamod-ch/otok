@@ -33,9 +33,7 @@ import { defineConfig } from "@kamod-ch/otok";
 export default defineConfig({
   plugins: [
     ai({
-      provider: process.env.OPENAI_API_KEY
-        ? { type: "openai", defaultModel: "gpt-4o-mini" }
-        : { type: "test" },
+      provider: process.env.OPENAI_API_KEY ? { type: "openai", defaultModel: "gpt-4o-mini" } : { type: "test" },
       rateLimit: { windowMs: 60_000, max: 30 },
       mcpRoutes: ["/api/companies", "/api/tasks"],
     }),
@@ -82,12 +80,12 @@ See [docs/SECURITY.md](./docs/SECURITY.md).
 
 ## Exports
 
-| Path | Purpose |
-|------|---------|
-| `@kamod-ch/otok-ai` | Core client, types, utilities |
-| `@kamod-ch/otok-ai/loader` | `defineAiAction`, `defineAiLoader` |
-| `@kamod-ch/otok-ai/plugin` | `ai()` plugin factory |
-| `@kamod-ch/otok-ai/providers/test` | Deterministic test provider |
-| `@kamod-ch/otok-ai/mcp` | MCP server helpers |
-| `@kamod-ch/otok-ai/rag` | RAG adapter interfaces |
-| `@kamod-ch/otok-ai/cli` | `otok ai-context` implementation |
+| Path                               | Purpose                            |
+| ---------------------------------- | ---------------------------------- |
+| `@kamod-ch/otok-ai`                | Core client, types, utilities      |
+| `@kamod-ch/otok-ai/loader`         | `defineAiAction`, `defineAiLoader` |
+| `@kamod-ch/otok-ai/plugin`         | `ai()` plugin factory              |
+| `@kamod-ch/otok-ai/providers/test` | Deterministic test provider        |
+| `@kamod-ch/otok-ai/mcp`            | MCP server helpers                 |
+| `@kamod-ch/otok-ai/rag`            | RAG adapter interfaces             |
+| `@kamod-ch/otok-ai/cli`            | `otok ai-context` implementation   |

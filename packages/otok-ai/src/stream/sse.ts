@@ -66,9 +66,7 @@ export function aiStreamToSse(events: AsyncIterable<AiStreamEvent>): ReadableStr
         }
       } catch (error) {
         const message = error instanceof Error ? error.message : "Stream error";
-        controller.enqueue(
-          encoder.encode(`event: error\ndata: ${JSON.stringify({ message })}\n\n`),
-        );
+        controller.enqueue(encoder.encode(`event: error\ndata: ${JSON.stringify({ message })}\n\n`));
       } finally {
         controller.close();
       }

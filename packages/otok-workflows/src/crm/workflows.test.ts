@@ -10,12 +10,16 @@ describe("CRM enrichCompany workflow", () => {
     const engine = new WorkflowEngine({ store: createMemoryWorkflowStore() });
     engine.register(enrichCompany);
 
-    const instance = await engine.start(enrichCompany, {
-      companyId: "acme",
-      name: "Acme Corp",
-      domain: "acme.com",
-      notifyEmail: "team@example.com",
-    }, manualStart);
+    const instance = await engine.start(
+      enrichCompany,
+      {
+        companyId: "acme",
+        name: "Acme Corp",
+        domain: "acme.com",
+        notifyEmail: "team@example.com",
+      },
+      manualStart,
+    );
 
     await engine.execute(instance.id);
     const status = await engine.getStatus(instance.id);
@@ -25,7 +29,8 @@ describe("CRM enrichCompany workflow", () => {
       website: "https://acme.com",
       notified: true,
     });
-    expect((status?.output as { contacts: unknown[] }).contacts.length).toBeGreaterThan(0);
+    const contacts = (status?.output as { contacts?: unknown[] } | undefined)?.contacts;
+    expect(contacts?.length).toBeGreaterThan(0);
   });
 
   it("replays without duplicate side effects after crash mid-workflow", async () => {
@@ -35,6 +40,7 @@ describe("CRM enrichCompany workflow", () => {
     const engine = new WorkflowEngine({ store: createMemoryWorkflowStore() });
     const crashingWorkflow = {
       ...enrichCompany,
+      retry: { maxAttempts: 5, initialDelayMs: 0, maxDelayMs: 0, backoffMultiplier: 1 },
       run: async (ctx: Parameters<typeof enrichCompany.run>[0]) => {
         await ctx.step.run("import-company", () => {
           importCalls++;
@@ -56,10 +62,14 @@ describe("CRM enrichCompany workflow", () => {
     };
     engine.register(crashingWorkflow);
 
-    const instance = await engine.start(crashingWorkflow, {
-      companyId: "acme",
-      name: "Acme",
-    }, manualStart);
+    const instance = await engine.start(
+      crashingWorkflow,
+      {
+        companyId: "acme",
+        name: "Acme",
+      },
+      manualStart,
+    );
 
     await expect(engine.execute(instance.id)).rejects.toThrow("notify failed");
     expect(importCalls).toBe(1);

@@ -29,10 +29,11 @@ describe("applySetupChanges", () => {
 
     try {
       await expect(
-        applySetupChanges(
-          [{ kind: "create-file", path: "config/example.ts", content: "export const x = 1;\n" }],
-          { root, packageName: "@test/pkg", dryRun: false },
-        ),
+        applySetupChanges([{ kind: "create-file", path: "config/example.ts", content: "export const x = 1;\n" }], {
+          root,
+          packageName: "@test/pkg",
+          dryRun: false,
+        }),
       ).rejects.toThrow(/Refusing to overwrite/);
     } finally {
       rmSync(root, { recursive: true, force: true });

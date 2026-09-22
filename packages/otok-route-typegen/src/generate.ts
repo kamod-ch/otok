@@ -79,12 +79,7 @@ function paramsTypeFromRoutePath(routePath: string, routePattern: string): strin
   return fields.length > 0 ? `{ ${fields.join("; ")} }` : "Record<string, never>";
 }
 
-function generateRouteModuleTypes(
-  route: RouteEntry,
-  root: string,
-  moduleImportPath: string,
-  source: string,
-): string {
+function generateRouteModuleTypes(route: RouteEntry, root: string, moduleImportPath: string, source: string): string {
   const paramsType = paramsTypeFromRoutePath(route.routePath, route.routePattern);
   const searchExport = detectSearchParamsSchemaName(source);
   const searchParamsType = searchExport

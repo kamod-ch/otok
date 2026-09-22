@@ -11,10 +11,7 @@ type User = { id: string; role: string };
 function memoryAdapter(): SessionAdapter<User> & {
   records: Map<string, { userId: string; createdAt: Date; expiresAt: Date; revoked: boolean }>;
 } {
-  const records = new Map<
-    string,
-    { userId: string; createdAt: Date; expiresAt: Date; revoked: boolean }
-  >();
+  const records = new Map<string, { userId: string; createdAt: Date; expiresAt: Date; revoked: boolean }>();
   return {
     records,
     async createRecord(input) {

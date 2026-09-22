@@ -11,12 +11,7 @@ import type {
   AiToolMap,
   AiUsage,
 } from "../types.js";
-import {
-  OtokAiAbortedError,
-  OtokAiProviderError,
-  OtokAiRateLimitError,
-  OtokAiTimeoutError,
-} from "../errors.js";
+import { OtokAiAbortedError, OtokAiProviderError, OtokAiRateLimitError, OtokAiTimeoutError } from "../errors.js";
 import { redactMessages, redactText } from "../redaction/redact.js";
 import { parseStructuredOutputAsync, schemaToJsonSchema, validateSchema } from "../schema/validate.js";
 import { aiSseResponse, aiStreamToSse, collectStreamEvents, teeAsyncIterable } from "../stream/sse.js";
@@ -150,16 +145,13 @@ export class AiClient {
     const messages = this.redact ? redactMessages(options.messages) : options.messages;
 
     const result = await this.withRetry(() =>
-      this.withTimeout(
-        options.signal,
-        options.timeoutMs ?? this.timeoutMs,
-        async (signal) =>
-          this.provider.complete({
-            model,
-            messages,
-            signal,
-            jsonSchema: schemaToJsonSchema(options.schema),
-          }),
+      this.withTimeout(options.signal, options.timeoutMs ?? this.timeoutMs, async (signal) =>
+        this.provider.complete({
+          model,
+          messages,
+          signal,
+          jsonSchema: schemaToJsonSchema(options.schema),
+        }),
       ),
     );
 
@@ -202,8 +194,7 @@ export class AiClient {
           promptTokens: totalUsage.promptTokens + collected.usage.usage.promptTokens,
           completionTokens: totalUsage.completionTokens + collected.usage.usage.completionTokens,
           totalTokens: totalUsage.totalTokens + collected.usage.usage.totalTokens,
-          estimatedCostUsd:
-            (totalUsage.estimatedCostUsd ?? 0) + (collected.usage.usage.estimatedCostUsd ?? 0),
+          estimatedCostUsd: (totalUsage.estimatedCostUsd ?? 0) + (collected.usage.usage.estimatedCostUsd ?? 0),
         };
       }
 

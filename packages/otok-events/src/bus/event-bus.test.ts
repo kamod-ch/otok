@@ -14,8 +14,20 @@ describe("InProcessEventBus", () => {
     const testBus = createTestEventBus();
     const order: number[] = [];
 
-    testBus.bus.subscribe(testEvent, () => { order.push(2); }, { priority: 200 });
-    testBus.bus.subscribe(testEvent, () => { order.push(1); }, { priority: 100 });
+    testBus.bus.subscribe(
+      testEvent,
+      () => {
+        order.push(2);
+      },
+      { priority: 200 },
+    );
+    testBus.bus.subscribe(
+      testEvent,
+      () => {
+        order.push(1);
+      },
+      { priority: 100 },
+    );
 
     await testBus.publish(testEvent, { orderId: "o1" });
     expect(order).toEqual([1, 2]);
@@ -41,7 +53,9 @@ describe("InProcessEventBus", () => {
 
     testBus.bus.subscribe(
       testEvent,
-      () => { count++; },
+      () => {
+        count++;
+      },
       { consumerName: "billing", mode: "sync" },
     );
 
@@ -63,7 +77,9 @@ describe("InProcessEventBus", () => {
 
     testBus.bus.subscribe(
       testEvent,
-      () => { throw new Error("boom"); },
+      () => {
+        throw new Error("boom");
+      },
       { mode: "async", retry: { maxAttempts: 1 } },
     );
 

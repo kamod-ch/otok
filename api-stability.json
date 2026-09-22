@@ -18,7 +18,8 @@
     },
     "@kamod-ch/otok-vite-plugin": {
       "exports": {
-        ".": "public"
+        ".": "public",
+        "./client": "public"
       },
       "symbols": {
         "otok": "public"
@@ -26,14 +27,14 @@
     },
     "@kamod-ch/otok-test": {
       "exports": {
-        ".": "public"
+        ".": "public",
+        "./client": "public",
+        "./adapter": "public"
       },
       "symbols": {}
     },
     "otok-cli": {
-      "exports": {
-        ".": "internal"
-      },
+      "exports": {},
       "bin": {
         "otok": "public"
       }
@@ -88,6 +89,25 @@
         "Island": "public",
         "createOtokClient": "public"
       }
+    },
+    "@kamod-ch/otok-queue": {
+      "exports": {
+        ".": "public",
+        "./providers/memory": "public",
+        "./providers/postgres": "public",
+        "./worker": "public"
+      },
+      "symbols": {}
+    },
+    "@kamod-ch/otok-workflows": {
+      "exports": {
+        ".": "public",
+        "./plugin": "public",
+        "./providers/kysely": "public",
+        "./testing": "internal",
+        "./crm": "experimental"
+      },
+      "symbols": {}
     }
   },
   "classifications": {

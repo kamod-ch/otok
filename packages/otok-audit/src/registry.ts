@@ -9,9 +9,7 @@ export function registerAuditRuntime(service: AuditService): void {
 
 export function getAuditRuntime(): AuditService {
   if (!runtime) {
-    throw new Error(
-      "otok-audit: not registered. Add audit() to otok.config.ts or call registerAuditRuntime().",
-    );
+    throw new Error("otok-audit: not registered. Add audit() to otok.config.ts or call registerAuditRuntime().");
   }
   return runtime;
 }
@@ -28,7 +26,11 @@ export function resetAuditRuntimeForTests(): void {
   runtime = null;
 }
 
-export function createAuditService(options: { store: AuditStore; defaultTenantId?: string; redactFields?: readonly string[] }) {
+export function createAuditService(options: {
+  store: AuditStore;
+  defaultTenantId?: string;
+  redactFields?: readonly string[];
+}) {
   return new AuditService(options);
 }
 

@@ -10,12 +10,12 @@ describe("localizePath routing modes", () => {
   });
 
   it("prefix-except-default: omits default locale", () => {
-    expect(
-      localizePath("/products", "de", { routing: "prefix-except-default", defaultLocale: "de" }),
-    ).toBe("/products");
-    expect(
-      localizePath("/products", "en", { routing: "prefix-except-default", defaultLocale: "de" }),
-    ).toBe("/en/products");
+    expect(localizePath("/products", "de", { routing: "prefix-except-default", defaultLocale: "de" })).toBe(
+      "/products",
+    );
+    expect(localizePath("/products", "en", { routing: "prefix-except-default", defaultLocale: "de" })).toBe(
+      "/en/products",
+    );
   });
 
   it("none and domain: leave path unchanged", () => {

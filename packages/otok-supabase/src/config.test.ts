@@ -1,13 +1,6 @@
 import { describe, expect, it } from "vitest";
-import {
-  TEST_PUBLISHABLE_KEY,
-  TEST_SERVICE_ROLE_KEY,
-  TEST_SUPABASE_URL,
-} from "./test/fixtures.js";
-import {
-  validateSupabaseAdminConfig,
-  validateSupabaseConfig,
-} from "./config.js";
+import { TEST_PUBLISHABLE_KEY, TEST_SERVICE_ROLE_KEY, TEST_SUPABASE_URL } from "./test/fixtures.js";
+import { validateSupabaseAdminConfig, validateSupabaseConfig } from "./config.js";
 import { SupabaseConfigurationError } from "./errors.js";
 
 describe("validateSupabaseConfig", () => {
@@ -28,21 +21,19 @@ describe("validateSupabaseConfig", () => {
   });
 
   it("rejects invalid url", () => {
-    expect(() =>
-      validateSupabaseConfig({ url: "not-a-url", publishableKey: TEST_PUBLISHABLE_KEY }),
-    ).toThrow(/absolute http/);
-  });
-
-  it("rejects missing publishable key", () => {
-    expect(() => validateSupabaseConfig({ url: TEST_SUPABASE_URL, publishableKey: "" })).toThrow(
-      /publishableKey/,
+    expect(() => validateSupabaseConfig({ url: "not-a-url", publishableKey: TEST_PUBLISHABLE_KEY })).toThrow(
+      /absolute http/,
     );
   });
 
+  it("rejects missing publishable key", () => {
+    expect(() => validateSupabaseConfig({ url: TEST_SUPABASE_URL, publishableKey: "" })).toThrow(/publishableKey/);
+  });
+
   it("rejects service role keys for publishable config", () => {
-    expect(() =>
-      validateSupabaseConfig({ url: TEST_SUPABASE_URL, publishableKey: TEST_SERVICE_ROLE_KEY }),
-    ).toThrow(/service role/);
+    expect(() => validateSupabaseConfig({ url: TEST_SUPABASE_URL, publishableKey: TEST_SERVICE_ROLE_KEY })).toThrow(
+      /service role/,
+    );
   });
 
   it("never includes keys in error messages", () => {

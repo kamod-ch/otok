@@ -5,15 +5,15 @@ Issues discovered while building the Swiss CRM reference product.
 
 ## Fixed in Otok packages
 
-| Issue | Fix | Package |
-|-------|-----|---------|
-| No Zefix/LINDAS import format | `parseZefixJson`, `importZefixRecords`, UID normalization | `@kamod-ch/otok-kit-crm` |
-| No `otok-search` package | New `@kamod-ch/otok-search` with index + plugin | `@kamod-ch/otok-search` |
-| Company schema missing address/source fields | Extended types + migration `002_extended.sql` | `@kamod-ch/otok-kit-crm` |
-| Composable loaders (auth + kysely) | `composeLoader` + `loaderEnhancer` in `otok/route`; `withDb()` in `@kamod-ch/otok-kysely/loader` | `otok`, `@kamod-ch/otok-kysely` |
-| Kit CRM Postgres adapter | `@kamod-ch/otok-kit-crm/db` — `KyselyCrmRepository` + types | `@kamod-ch/otok-kit-crm` |
-| Workflow enrichment on import | `onCompanyImported` hook + `company.enrich` in `otok.config.ts` | reference app + `@kamod-ch/otok-workflows` |
-| Kamod UI in reference app | `@kamod-ch/otok-kamod`, `@kamod-ch/ui`, `CrmShell` layout | reference app |
+| Issue                                        | Fix                                                                                              | Package                                    |
+| -------------------------------------------- | ------------------------------------------------------------------------------------------------ | ------------------------------------------ |
+| No Zefix/LINDAS import format                | `parseZefixJson`, `importZefixRecords`, UID normalization                                        | `@kamod-ch/otok-kit-crm`                   |
+| No `otok-search` package                     | New `@kamod-ch/otok-search` with index + plugin                                                  | `@kamod-ch/otok-search`                    |
+| Company schema missing address/source fields | Extended types + migration `002_extended.sql`                                                    | `@kamod-ch/otok-kit-crm`                   |
+| Composable loaders (auth + kysely)           | `composeLoader` + `loaderEnhancer` in `otok/route`; `withDb()` in `@kamod-ch/otok-kysely/loader` | `otok`, `@kamod-ch/otok-kysely`            |
+| Kit CRM Postgres adapter                     | `@kamod-ch/otok-kit-crm/db` — `KyselyCrmRepository` + types                                      | `@kamod-ch/otok-kit-crm`                   |
+| Workflow enrichment on import                | `onCompanyImported` hook + `company.enrich` in `otok.config.ts`                                  | reference app + `@kamod-ch/otok-workflows` |
+| Kamod UI in reference app                    | `@kamod-ch/otok-kamod`, `@kamod-ch/ui`, `CrmShell` layout                                        | reference app                              |
 
 ## Open — needs framework work
 

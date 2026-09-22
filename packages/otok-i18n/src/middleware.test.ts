@@ -2,7 +2,6 @@ import { describe, expect, it, beforeEach } from "vitest";
 import { Hono } from "hono";
 import { clearMessageCache } from "./messages.js";
 import { configureI18nApp, createI18nMiddleware, readI18n } from "./middleware.js";
-import i18n from "./plugin.js";
 
 const catalog = {
   en: { hello: "Hello", "dashboard.welcome": "Welcome" },

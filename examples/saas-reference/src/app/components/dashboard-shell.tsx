@@ -32,7 +32,10 @@ export function DashboardShell({ i18n, user, children }: DashboardShellProps) {
           </div>
           <nav class="flex flex-wrap items-center gap-2 text-sm">
             {nav.map((item) => (
-              <a href={item.href} class="rounded-md px-3 py-1.5 text-muted-foreground hover:bg-muted hover:text-foreground">
+              <a
+                href={item.href}
+                class="rounded-md px-3 py-1.5 text-muted-foreground hover:bg-muted hover:text-foreground"
+              >
                 {item.label}
               </a>
             ))}

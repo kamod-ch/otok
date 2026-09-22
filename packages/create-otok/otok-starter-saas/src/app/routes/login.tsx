@@ -27,11 +27,7 @@ export const action = defineAction({
   schema: loginSchema,
   handler: async ({ input, hono, db }) => {
     const database = db as import("kysely").Kysely<SaasDatabase>;
-    const row = await database
-      .selectFrom("users")
-      .selectAll()
-      .where("email", "=", input.email)
-      .executeTakeFirst();
+    const row = await database.selectFrom("users").selectAll().where("email", "=", input.email).executeTakeFirst();
 
     if (!row || !verifyPassword(input.password, row.passwordHash)) {
       return {

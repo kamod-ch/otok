@@ -13,19 +13,20 @@ import { bodyToBuffer, resolveEnvValue } from "../validation.js";
 
 type S3LikeConfig = S3ProviderConfig | R2ProviderConfig | MinioProviderConfig;
 
-async function loadS3Client(config: S3LikeConfig) {
+async function loadS3Client(_config: S3LikeConfig) {
   try {
-    const [{ S3Client }, { getSignedUrl }, { GetObjectCommand, PutObjectCommand, DeleteObjectCommand, HeadObjectCommand }] =
-      await Promise.all([
-        import("@aws-sdk/client-s3"),
-        import("@aws-sdk/s3-request-presigner"),
-        import("@aws-sdk/client-s3"),
-      ]);
+    const [
+      { S3Client },
+      { getSignedUrl },
+      { GetObjectCommand, PutObjectCommand, DeleteObjectCommand, HeadObjectCommand },
+    ] = await Promise.all([
+      import("@aws-sdk/client-s3"),
+      import("@aws-sdk/s3-request-presigner"),
+      import("@aws-sdk/client-s3"),
+    ]);
     return { S3Client, getSignedUrl, GetObjectCommand, PutObjectCommand, DeleteObjectCommand, HeadObjectCommand };
   } catch {
-    throw new OtokStorageConfigError(
-      "S3 provider requires @aws-sdk/client-s3 and @aws-sdk/s3-request-presigner",
-    );
+    throw new OtokStorageConfigError("S3 provider requires @aws-sdk/client-s3 and @aws-sdk/s3-request-presigner");
   }
 }
 

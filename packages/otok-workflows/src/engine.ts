@@ -1,6 +1,6 @@
 import { WorkflowException, isWaitingApproval } from "./errors.js";
 import { redactForLog } from "./redaction.js";
-import { computeProgress, createStepRunner, type EngineRunState } from "./step.js";
+import { computeProgress, createStepRunner } from "./step.js";
 import type {
   CronTrigger,
   StartWorkflowOptions,
@@ -10,16 +10,23 @@ import type {
   WorkflowObservability,
   WorkflowStore,
 } from "./types.js";
-import { resolveRetryPolicy } from "./retry.js";
+import { resolveRetryPolicy, retryDelay } from "./retry.js";
+import { cronFireAtUtc, cronMatches } from "./utils/cron.js";
+
+export interface ExecuteOptions {
+  leaseToken?: string;
+}
 
 export class WorkflowEngine {
   private readonly store: WorkflowStore;
   private readonly definitions = new Map<string, WorkflowDefinition>();
   private readonly defaultRetry: ReturnType<typeof resolveRetryPolicy>;
   private readonly observability?: WorkflowObservability;
-  private readonly runState = new Map<string, EngineRunState>();
   private readonly cronTriggers: CronTrigger[] = [];
-  private readonly eventTriggers = new Map<string, { workflowName: string; mapInput?: (payload: unknown) => unknown }[]>();
+  private readonly eventTriggers = new Map<
+    string,
+    { workflowName: string; mapInput?: (payload: unknown) => unknown }[]
+  >();
   private readonly now: () => Date;
 
   constructor(options: WorkflowEngineOptions) {
@@ -67,6 +74,7 @@ export class WorkflowEngine {
       }
     }
 
+    const policy = resolveRetryPolicy(definition.retry ?? this.defaultRetry);
     const now = this.now().toISOString();
     const instance: WorkflowInstance<TInput, TOutput> = {
       id: crypto.randomUUID(),
@@ -75,33 +83,60 @@ export class WorkflowEngine {
       input,
       progress: 0,
       idempotencyKey: options.idempotencyKey,
+      workflowVersion: definition.version ?? 1,
+      runAttempts: 0,
+      maxRunAttempts: policy.maxAttempts,
       createdAt: now,
       updatedAt: now,
       requestId: options.requestId,
       metadata: {
         ...options.metadata,
-        availableAt: options.delayMs
-          ? new Date(this.now().getTime() + options.delayMs).toISOString()
-          : now,
+        availableAt: options.delayMs ? new Date(this.now().getTime() + options.delayMs).toISOString() : now,
       },
     };
 
     await this.store.createInstance(instance as WorkflowInstance);
 
     if (!options.delayMs && options.autoExecute !== false) {
-      void this.execute(instance.id);
+      this.scheduleExecute(instance.id);
     }
 
     return instance;
   }
 
-  async execute(instanceId: string): Promise<WorkflowInstance | undefined> {
-    const instance = await this.store.getInstance(instanceId);
+  private scheduleExecute(instanceId: string, options?: ExecuteOptions): void {
+    void this.execute(instanceId, options).catch((error) => {
+      if (isWaitingApproval(error)) return;
+      if (error instanceof WorkflowException && (error.code === "PAUSED" || error.code === "CANCELLED")) {
+        return;
+      }
+      this.observability?.onExecutionError?.(instanceId, error);
+    });
+  }
+
+  async execute(instanceId: string, options: ExecuteOptions = {}): Promise<WorkflowInstance | undefined> {
+    let instance = await this.store.getInstance(instanceId);
     if (!instance) return undefined;
+
+    if (options.leaseToken && instance.leaseToken !== options.leaseToken) {
+      throw new WorkflowException("NOT_FOUND", `Lease lost for workflow "${instanceId}"`);
+    }
 
     const definition = this.definitions.get(instance.workflowName);
     if (!definition) {
       throw new WorkflowException("NOT_FOUND", `Unknown workflow "${instance.workflowName}"`);
+    }
+
+    const defVersion = definition.version ?? 1;
+    const pinnedVersion = instance.workflowVersion ?? 1;
+    if (defVersion !== pinnedVersion) {
+      const message = `Workflow version mismatch: instance=${pinnedVersion}, definition=${defVersion}`;
+      await this.store.updateInstance(instanceId, {
+        status: "dead",
+        error: message,
+        updatedAt: this.now().toISOString(),
+      });
+      throw new WorkflowException("VERSION_MISMATCH", message);
     }
 
     if (instance.status === "cancelled" || instance.status === "completed" || instance.status === "dead") {
@@ -117,18 +152,21 @@ export class WorkflowEngine {
       return instance;
     }
 
-    const state: EngineRunState = this.runState.get(instanceId) ?? { cancelled: false, paused: false };
-    this.runState.set(instanceId, state);
-
     await this.store.updateInstance(instanceId, {
       status: "running",
       startedAt: instance.startedAt ?? this.now().toISOString(),
       updatedAt: this.now().toISOString(),
     });
 
+    instance = (await this.store.getInstance(instanceId)) ?? instance;
     this.observability?.onWorkflowStart?.(instance);
 
-    const step = createStepRunner(instance, this.store, state, resolveRetryPolicy(definition.retry ?? this.defaultRetry), this.observability);
+    const step = createStepRunner(
+      instance,
+      this.store,
+      resolveRetryPolicy(definition.retry ?? this.defaultRetry),
+      this.observability,
+    );
 
     try {
       const output = await definition.run({
@@ -148,7 +186,6 @@ export class WorkflowEngine {
         validated = parsed.data;
       }
 
-      const progress = await computeProgress(this.store, instanceId);
       const completed: WorkflowInstance = {
         ...instance,
         status: "completed",
@@ -165,17 +202,20 @@ export class WorkflowEngine {
         return (await this.store.getInstance(instanceId)) ?? instance;
       }
 
-      if (state.cancelled) {
-        await this.store.updateInstance(instanceId, { status: "cancelled", updatedAt: this.now().toISOString() });
+      if (error instanceof WorkflowException && (error.code === "CANCELLED" || error.code === "PAUSED")) {
         return (await this.store.getInstance(instanceId)) ?? instance;
       }
 
-      const message = error instanceof Error ? error.message : String(error);
-      const steps = await this.store.listSteps(instanceId);
-      const attempts = steps.filter((s) => s.status === "failed").length;
-      const policy = resolveRetryPolicy(definition.retry ?? this.defaultRetry);
+      if (error instanceof WorkflowException && error.code === "VERSION_MISMATCH") {
+        throw error;
+      }
 
-      if (attempts >= policy.maxAttempts) {
+      const message = error instanceof Error ? error.message : String(error);
+      const policy = resolveRetryPolicy(definition.retry ?? this.defaultRetry);
+      const nextRunAttempts = (instance.runAttempts ?? 0) + 1;
+
+      if (nextRunAttempts >= (instance.maxRunAttempts ?? policy.maxAttempts)) {
+        const steps = await this.store.listSteps(instanceId);
         if (definition.compensate) {
           await definition.compensate({
             input: instance.input,
@@ -193,12 +233,17 @@ export class WorkflowEngine {
         await this.store.updateInstance(instanceId, {
           status: "dead",
           error: message,
+          runAttempts: nextRunAttempts,
           updatedAt: this.now().toISOString(),
         });
       } else {
+        const delay = retryDelay(policy, nextRunAttempts);
+        const available = new Date(this.now().getTime() + delay).toISOString();
         await this.store.updateInstance(instanceId, {
           status: "failed",
           error: message,
+          runAttempts: nextRunAttempts,
+          metadata: { ...instance.metadata, availableAt: available },
           updatedAt: this.now().toISOString(),
         });
       }
@@ -206,24 +251,19 @@ export class WorkflowEngine {
       this.observability?.onWorkflowFailed?.(instance, error);
       throw error;
     } finally {
-      this.runState.delete(instanceId);
+      if (options.leaseToken) {
+        await this.store.releaseClaim(instanceId, options.leaseToken);
+      }
     }
   }
 
   async pause(instanceId: string): Promise<void> {
-    const state = this.runState.get(instanceId) ?? { cancelled: false, paused: false };
-    state.paused = true;
-    this.runState.set(instanceId, state);
     await this.store.updateInstance(instanceId, { status: "paused", updatedAt: this.now().toISOString() });
   }
 
   async resume(instanceId: string): Promise<WorkflowInstance | undefined> {
     const instance = await this.store.getInstance(instanceId);
     if (!instance) return undefined;
-
-    const state = this.runState.get(instanceId) ?? { cancelled: false, paused: false };
-    state.paused = false;
-    this.runState.set(instanceId, state);
 
     if (instance.status === "waiting_approval") {
       const stepName = instance.currentStep;
@@ -246,9 +286,6 @@ export class WorkflowEngine {
   }
 
   async cancel(instanceId: string): Promise<void> {
-    const state = this.runState.get(instanceId) ?? { cancelled: false, paused: false };
-    state.cancelled = true;
-    this.runState.set(instanceId, state);
     await this.store.updateInstance(instanceId, { status: "cancelled", updatedAt: this.now().toISOString() });
   }
 
@@ -260,17 +297,49 @@ export class WorkflowEngine {
   }
 
   async processRunnable(limit = 10): Promise<{ processed: number }> {
-    const runnable = await this.store.claimRunnable(limit, this.now());
+    const runnable = await this.store.claimRunnable(limit, { now: this.now() });
     let processed = 0;
     for (const instance of runnable) {
       try {
-        await this.execute(instance.id);
+        await this.execute(instance.id, { leaseToken: instance.leaseToken });
         processed += 1;
-      } catch {
-        /* logged via observability */
+      } catch (error) {
+        if (isWaitingApproval(error)) {
+          processed += 1;
+          continue;
+        }
+        this.observability?.onExecutionError?.(instance.id, error);
       }
     }
     return { processed };
+  }
+
+  /**
+   * UTC minute-bucket cron (five-field subset). Missed ticks while offline are not backfilled.
+   */
+  async tickCron(now: Date = this.now()): Promise<WorkflowInstance[]> {
+    const started: WorkflowInstance[] = [];
+    for (const trigger of this.cronTriggers) {
+      if (trigger.timezone && trigger.timezone !== "UTC") {
+        continue;
+      }
+      if (!cronMatches(trigger.cron, now)) continue;
+      const fireAt = cronFireAtUtc(now);
+      const scheduleKey = trigger.workflowName;
+      const acquired = await this.store.claimCronFire(scheduleKey, fireAt);
+      if (!acquired) continue;
+
+      const def = this.definitions.get(trigger.workflowName);
+      if (!def) continue;
+      const input = trigger.input ?? {};
+      const instance = await this.start(def, input, {
+        autoExecute: false,
+        idempotencyKey: `cron:${scheduleKey}:${fireAt.toISOString()}`,
+      });
+      this.scheduleExecute(instance.id);
+      started.push(instance);
+    }
+    return started;
   }
 
   async triggerByEvent(eventName: string, payload: unknown): Promise<WorkflowInstance[]> {

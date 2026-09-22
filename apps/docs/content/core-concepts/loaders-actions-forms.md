@@ -3,6 +3,7 @@ title: Loaders, Actions, and Forms
 section: Core Concepts
 order: 12
 ---
+
 # Loaders, Actions, and Forms
 
 Loaders return data for SSR. Actions handle mutations from `POST`, `PUT`, `PATCH`, and `DELETE` requests.
@@ -28,7 +29,9 @@ export default function ProjectForm({ actionData }: OtokPageProps) {
   return (
     <form method="post">
       <input name="name" aria-invalid={Boolean(result?.fieldErrors?.name)} />
-      {result?.fieldErrors?.name?.map((error) => <p role="alert">{error}</p>)}
+      {result?.fieldErrors?.name?.map((error) => (
+        <p role="alert">{error}</p>
+      ))}
       <button>Save</button>
     </form>
   );

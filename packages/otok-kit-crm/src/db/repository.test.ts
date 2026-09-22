@@ -104,9 +104,7 @@ describe("KyselyCrmRepository", () => {
       },
     });
 
-    const json = JSON.stringify([
-      { name: "Test AG", uid: "CHE-123.456.789", canton: "ZH", city: "Zürich" },
-    ]);
+    const json = JSON.stringify([{ name: "Test AG", uid: "CHE-123.456.789", canton: "ZH", city: "Zürich" }]);
     const result = await repo.importZefix("org-1", json, "user-1");
 
     expect(result.imported).toBe(1);

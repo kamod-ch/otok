@@ -130,10 +130,7 @@ function createThreadRepo(db: Kysely<ForumDatabase>) {
     async listByCategory(categoryId: string, options: ThreadListOptions) {
       const pageSize = options.pageSize ?? 20;
       const offset = offsetForPage(options.page ?? 1, pageSize);
-      let q = db
-        .selectFrom("forum_threads")
-        .selectAll()
-        .where("category_id", "=", categoryId);
+      let q = db.selectFrom("forum_threads").selectAll().where("category_id", "=", categoryId);
       if (!options.includeDeleted) q = q.where("deleted_at", "is", null);
       if (options.sort === "popular") {
         q = q.orderBy("view_count desc");
@@ -153,7 +150,11 @@ function createThreadRepo(db: Kysely<ForumDatabase>) {
       return Number(r.count);
     },
     async softDelete(id: string, deletedAt: string) {
-      await db.updateTable("forum_threads").set({ deleted_at: deletedAt, updated_at: deletedAt }).where("id", "=", id).execute();
+      await db
+        .updateTable("forum_threads")
+        .set({ deleted_at: deletedAt, updated_at: deletedAt })
+        .where("id", "=", id)
+        .execute();
     },
     async incrementViewCount(id: string) {
       await db
@@ -218,7 +219,11 @@ function createPostRepo(db: Kysely<ForumDatabase>) {
       return Number(r.count);
     },
     async softDelete(id: string, deletedAt: string) {
-      await db.updateTable("forum_posts").set({ deleted_at: deletedAt, updated_at: deletedAt }).where("id", "=", id).execute();
+      await db
+        .updateTable("forum_posts")
+        .set({ deleted_at: deletedAt, updated_at: deletedAt })
+        .where("id", "=", id)
+        .execute();
     },
     async saveRevision(revision: {
       postId: string;

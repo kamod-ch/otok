@@ -1,6 +1,6 @@
 import { findOutdated } from "@kamod-ch/otok-registry";
 import { loadProjectSnapshot, loadRegistryForProject } from "../registry-context.js";
-import { findProjectRoot, fail, ok, warn } from "../utils.js";
+import { findProjectRoot, fail, ok } from "../utils.js";
 
 function usage(): string {
   return `Usage: otok outdated [options]
@@ -38,9 +38,7 @@ export async function runOutdatedCommand(argv: string[]): Promise<number> {
 
     process.stdout.write("Package                          Installed   Latest\n");
     for (const row of outdated) {
-      process.stdout.write(
-        `${row.name.padEnd(32)} ${row.installed.padEnd(11)} ${row.latest}\n`,
-      );
+      process.stdout.write(`${row.name.padEnd(32)} ${row.installed.padEnd(11)} ${row.latest}\n`);
     }
     return 0;
   } catch (error) {

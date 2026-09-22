@@ -3,6 +3,7 @@ title: File-based Routing
 section: Core Concepts
 order: 11
 ---
+
 # File-based Routing
 
 Routes live in `src/app/routes`.

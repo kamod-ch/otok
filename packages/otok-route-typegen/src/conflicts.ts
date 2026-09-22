@@ -73,10 +73,7 @@ export function detectUnreachableRoutes(_routes: RouteEntry[]): RouteIssue[] {
 }
 
 export function analyzeRoutes(scan: RoutesScanResult): AnalyzeRoutesResult {
-  const issues = dedupeIssues([
-    ...detectRouteConflicts(scan.routes),
-    ...detectUnreachableRoutes(scan.routes),
-  ]);
+  const issues = dedupeIssues([...detectRouteConflicts(scan.routes), ...detectUnreachableRoutes(scan.routes)]);
 
   return {
     issues,

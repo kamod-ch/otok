@@ -5,8 +5,7 @@ import { formatAddress, normalizeRecipients, resolveEnvValue, validateMailMessag
 const RETRYABLE_STATUS = new Set([408, 429, 500, 502, 503, 504]);
 
 export function createResendMailProvider(config: ResendProviderConfig): MailProvider {
-  const apiKey =
-    config.apiKey ?? resolveEnvValue(config.apiKeyEnv ?? "RESEND_API_KEY", "Resend API key");
+  const apiKey = config.apiKey ?? resolveEnvValue(config.apiKeyEnv ?? "RESEND_API_KEY", "Resend API key");
 
   return {
     name: "resend",

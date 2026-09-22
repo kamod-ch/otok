@@ -158,9 +158,24 @@ export default function CompanyDetail({
           <h2 class="text-lg font-medium">Kontakt erfassen</h2>
           <form method="post" class="grid max-w-md gap-2">
             <input type="hidden" name="intent" value="contact" />
-            <input name="firstName" placeholder="Vorname" required class="rounded-md border border-input px-3 py-2 text-sm" />
-            <input name="lastName" placeholder="Nachname" required class="rounded-md border border-input px-3 py-2 text-sm" />
-            <input name="email" type="email" placeholder="E-Mail" class="rounded-md border border-input px-3 py-2 text-sm" />
+            <input
+              name="firstName"
+              placeholder="Vorname"
+              required
+              class="rounded-md border border-input px-3 py-2 text-sm"
+            />
+            <input
+              name="lastName"
+              placeholder="Nachname"
+              required
+              class="rounded-md border border-input px-3 py-2 text-sm"
+            />
+            <input
+              name="email"
+              type="email"
+              placeholder="E-Mail"
+              class="rounded-md border border-input px-3 py-2 text-sm"
+            />
             <Button type="submit">Kontakt anlegen</Button>
           </form>
         </section>
@@ -169,7 +184,12 @@ export default function CompanyDetail({
           <h2 class="text-lg font-medium">Aufgabe zuweisen</h2>
           <form method="post" class="grid max-w-md gap-2">
             <input type="hidden" name="intent" value="task" />
-            <input name="title" placeholder="Aufgabe" required class="rounded-md border border-input px-3 py-2 text-sm" />
+            <input
+              name="title"
+              placeholder="Aufgabe"
+              required
+              class="rounded-md border border-input px-3 py-2 text-sm"
+            />
             <input type="hidden" name="assigneeId" value={data.user.id} />
             <Button type="submit">Aufgabe erstellen</Button>
           </form>

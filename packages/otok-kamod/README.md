@@ -80,7 +80,12 @@ export default function NewItem({ actionData }: OtokPageProps) {
   return (
     <form method="post" class="grid max-w-md gap-4">
       <FormAlert message={failure?.message} />
-      <FormField name="title" label="Title" defaultValue={failure?.values?.title} errors={failure?.fieldErrors?.title} />
+      <FormField
+        name="title"
+        label="Title"
+        defaultValue={failure?.values?.title}
+        errors={failure?.fieldErrors?.title}
+      />
       <FormActions cancelHref="/items" />
     </form>
   );
@@ -102,21 +107,21 @@ Or import directly from `@kamod-ch/signals` / `@kamod-ch/state`.
 
 ## Theme customization
 
-| `theme` option | CSS |
-|----------------|-----|
-| `"default"` | `@kamod-ch/ui/theme.css` |
-| brand preset | `@kamod-ch/themes` + `brands/{preset}.css` |
+| `theme` option | CSS                                        |
+| -------------- | ------------------------------------------ |
+| `"default"`    | `@kamod-ch/ui/theme.css`                   |
+| brand preset   | `@kamod-ch/themes` + `brands/{preset}.css` |
 
 Use `KamodThemeHead` from `@kamod-ch/otok-kamod/theme` in layouts when brand presets need a no-flash bootstrap script.
 
 ## Bundle impact
 
-| Import | Client impact |
-|--------|----------------|
-| `@kamod-ch/ui/button` (subpath) | Only that component |
-| `@kamod-ch/icons/shadcn` | Only imported icons |
-| `@kamod-ch/otok-kamod/signals` | Signals runtime when used |
-| `@kamod-ch/otok-kamod` plugin | Build-time only (Tailwind Vite plugin) |
+| Import                          | Client impact                          |
+| ------------------------------- | -------------------------------------- |
+| `@kamod-ch/ui/button` (subpath) | Only that component                    |
+| `@kamod-ch/icons/shadcn`        | Only imported icons                    |
+| `@kamod-ch/otok-kamod/signals`  | Signals runtime when used              |
+| `@kamod-ch/otok-kamod` plugin   | Build-time only (Tailwind Vite plugin) |
 
 ## Separation from Otok core
 

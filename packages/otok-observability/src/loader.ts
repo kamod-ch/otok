@@ -3,10 +3,15 @@ import { getObservabilityRuntime, TIMING_CONTEXT_KEY } from "./registry.js";
 import { traceAsync } from "./tracing.js";
 import type { HandlerTiming } from "./types.js";
 
-function recordTiming(hono: OtokContext["hono"], key: keyof HandlerTiming | "pluginHooksMs", ms: number, plugin?: string) {
+function recordTiming(
+  hono: OtokContext["hono"],
+  key: keyof HandlerTiming | "pluginHooksMs",
+  ms: number,
+  plugin?: string,
+) {
   const timing = (hono.get(TIMING_CONTEXT_KEY as never) as HandlerTiming | undefined) ?? {};
   if (key === "pluginHooksMs" && plugin) {
-    timing.pluginHooksMs = { ...(timing.pluginHooksMs ?? {}), [plugin]: ms };
+    timing.pluginHooksMs = { ...timing.pluginHooksMs, [plugin]: ms };
   } else if (key !== "pluginHooksMs") {
     timing[key] = ms;
   }

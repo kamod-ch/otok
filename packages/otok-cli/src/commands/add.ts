@@ -2,10 +2,7 @@ import { writeFile } from "node:fs/promises";
 import { join } from "node:path";
 import { checkCompatibility, resolveExtension } from "@kamod-ch/otok-registry";
 import { detectPackageManager, installCommand } from "../detect-manager.js";
-import {
-  patchOtokConfig,
-  resolveIdentifierForConfig,
-} from "../config-patcher.js";
+import { patchOtokConfig, resolveIdentifierForConfig } from "../config-patcher.js";
 import {
   pluginImportIdentifier,
   PluginNameError,
@@ -13,11 +10,7 @@ import {
   uniqueImportIdentifier,
 } from "../resolve-plugin-name.js";
 import { runPluginSetup } from "../setup-runner.js";
-import {
-  DEFAULT_CONFIG_FILENAME,
-  defaultConfigTemplate,
-  findOtokConfigFile,
-} from "../project.js";
+import { DEFAULT_CONFIG_FILENAME, defaultConfigTemplate, findOtokConfigFile } from "../project.js";
 import { confirm, fail, findProjectRoot, ok, runCommand, warn } from "../utils.js";
 import { loadProjectSnapshot, loadRegistryForProject } from "../registry-context.js";
 
@@ -41,8 +34,7 @@ const DEFAULT_PLUGIN_CALLS: Record<string, (identifier: string) => string> = {
   icons: true,
   forms: true,
 })`,
-  "@kamod-ch/otok-flash": (identifier) =>
-    `${identifier}({\n  secret: process.env.FLASH_SECRET!,\n})`,
+  "@kamod-ch/otok-flash": (identifier) => `${identifier}({\n  secret: process.env.FLASH_SECRET!,\n})`,
 };
 
 function defaultPluginCall(packageName: string, identifier: string): string | undefined {
@@ -107,8 +99,7 @@ export async function addPlugin(pluginInput: string, options: AddCommandOptions 
     if (!compat.compatible) {
       for (const message of compat.errors) fail(message);
       if (!options.dryRun) {
-        const proceed =
-          !process.stdin.isTTY || (await confirm("Compatibility errors detected. Install anyway?"));
+        const proceed = !process.stdin.isTTY || (await confirm("Compatibility errors detected. Install anyway?"));
         if (!proceed) throw new Error("Aborted due to compatibility errors.");
       }
     }
@@ -140,9 +131,7 @@ export async function addPlugin(pluginInput: string, options: AddCommandOptions 
     const used = new Set<string>();
     used.add(baseIdentifier);
     identifier = uniqueImportIdentifier(`${baseIdentifier}Plugin`, used);
-    warn(
-      `Import name "${baseIdentifier}" is already used. Using "${identifier}" instead.`,
-    );
+    warn(`Import name "${baseIdentifier}" is already used. Using "${identifier}" instead.`);
     if (process.stdin.isTTY && !options.dryRun) {
       const proceed = await confirm(`Continue with import name "${identifier}"?`);
       if (!proceed) {

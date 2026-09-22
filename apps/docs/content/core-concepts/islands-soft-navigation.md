@@ -3,6 +3,7 @@ title: Islands and Soft Navigation
 section: Core Concepts
 order: 14
 ---
+
 # Islands and Soft Navigation
 
 Islands are opt-in Preact components rendered on the server and hydrated in the browser.

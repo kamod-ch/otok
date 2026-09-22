@@ -3,6 +3,7 @@ title: Plugins
 section: Guides
 order: 34
 ---
+
 # Plugins
 
 Otok ships a typed plugin API for official extensions and app-specific integrations. Plugins are optional — existing composition packages and manual `createOtokApp({ configure })` wiring continue to work.
@@ -64,19 +65,19 @@ Plugins run in declared order:
 
 ## Public vs internal API
 
-| Public | Internal |
-|--------|----------|
-| `defineConfig`, `definePlugin` | `PluginContainer` internals |
-| `OtokPlugin`, `OtokUserConfig` | config file bundling |
-| `virtual:otok-config` | generated temp config bundles |
-| `virtual:otok-plugin/<name>/<id>` | devtools metadata (reserved) |
+| Public                            | Internal                      |
+| --------------------------------- | ----------------------------- |
+| `defineConfig`, `definePlugin`    | `PluginContainer` internals   |
+| `OtokPlugin`, `OtokUserConfig`    | config file bundling          |
+| `virtual:otok-config`             | generated temp config bundles |
+| `virtual:otok-plugin/<name>/<id>` | devtools metadata (reserved)  |
 
 ## Packages
 
-| Package | Purpose |
-|---------|---------|
-| `@kamod-ch/otok-config` | Plugin contract and resolution |
-| `@kamod-ch/otok-plugin-hello` | Minimal example plugin |
-| `@kamod-ch/otok-plugin-fixture` | Test fixture plugin |
+| Package                         | Purpose                        |
+| ------------------------------- | ------------------------------ |
+| `@kamod-ch/otok-config`         | Plugin contract and resolution |
+| `@kamod-ch/otok-plugin-hello`   | Minimal example plugin         |
+| `@kamod-ch/otok-plugin-fixture` | Test fixture plugin            |
 
 See also [Create your first Otok plugin](./create-your-first-plugin.md), [CLI — otok add](./cli-add.md), and [Composition Packages](./extensions.md).

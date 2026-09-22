@@ -1,4 +1,4 @@
-import { matchLocale, normalizeLocale, parseAcceptLanguage } from "./locale-core.js";
+import { matchLocale, parseAcceptLanguage } from "./locale-core.js";
 import type { ResolveLocaleInput, ResolvedLocaleResult, RoutingMode } from "./types.js";
 
 export { matchLocale, normalizeLocale, parseAcceptLanguage } from "./locale-core.js";

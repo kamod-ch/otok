@@ -76,17 +76,11 @@ export function permissionsForUser(user: ForumUser | null): ForumPermission[] {
   return [...granted];
 }
 
-export function hasForumPermission(
-  granted: readonly ForumPermission[],
-  required: ForumPermission,
-): boolean {
+export function hasForumPermission(granted: readonly ForumPermission[], required: ForumPermission): boolean {
   return granted.includes(required);
 }
 
-export function requireForumPermission(
-  granted: readonly ForumPermission[],
-  required: ForumPermission,
-): void {
+export function requireForumPermission(granted: readonly ForumPermission[], required: ForumPermission): void {
   if (!hasForumPermission(granted, required)) {
     throw new ForumPermissionError(required);
   }

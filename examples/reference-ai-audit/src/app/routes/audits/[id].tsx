@@ -24,9 +24,18 @@ export default function AuditDetail({ data }: OtokPageProps) {
         <h1>{audit.repo}</h1>
         <p>{audit.summary}</p>
         <dl class="facts">
-          <div><dt>Branch</dt><dd>{audit.branch}</dd></div>
-          <div><dt>Created</dt><dd>{new Date(audit.createdAt).toLocaleString()}</dd></div>
-          <div><dt>Findings</dt><dd>{audit.findings.length}</dd></div>
+          <div>
+            <dt>Branch</dt>
+            <dd>{audit.branch}</dd>
+          </div>
+          <div>
+            <dt>Created</dt>
+            <dd>{new Date(audit.createdAt).toLocaleString()}</dd>
+          </div>
+          <div>
+            <dt>Findings</dt>
+            <dd>{audit.findings.length}</dd>
+          </div>
         </dl>
       </section>
 
@@ -44,11 +53,7 @@ export default function AuditDetail({ data }: OtokPageProps) {
         </ul>
       </section>
 
-      <Island
-        component={FindingFilter as any}
-        props={{ findings: audit.findings as any }}
-        strategy="visible"
-      />
+      <Island component={FindingFilter as any} props={{ findings: audit.findings as any }} strategy="visible" />
     </>
   );
 }

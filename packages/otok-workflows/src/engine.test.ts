@@ -14,6 +14,7 @@ describe("step durability", () => {
     const workflow = defineWorkflow({
       name: "crash.test",
       input: z.object({}),
+      retry: { maxAttempts: 5, initialDelayMs: 0, maxDelayMs: 0, backoffMultiplier: 1 },
       run: async ({ step }) => {
         await step.run("step-a", () => {
           stepACalls++;
@@ -123,8 +124,14 @@ describe("parallel steps", () => {
       input: z.object({}),
       run: async ({ step }) => {
         const result = await step.parallel("fetch", {
-          a: () => { aCalls++; return "A"; },
-          b: () => { bCalls++; return "B"; },
+          a: () => {
+            aCalls++;
+            return "A";
+          },
+          b: () => {
+            bCalls++;
+            return "B";
+          },
         });
         return result;
       },

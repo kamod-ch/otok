@@ -1,10 +1,7 @@
 import { OtokStorageValidationError } from "./errors.js";
 import type { BucketConfig, UploadFileInput } from "./types.js";
 
-export function resolveBucketConfig(
-  buckets: Record<string, BucketConfig>,
-  bucket: string,
-): BucketConfig {
+export function resolveBucketConfig(buckets: Record<string, BucketConfig>, bucket: string): BucketConfig {
   const config = buckets[bucket];
   if (!config) {
     throw new OtokStorageValidationError(`unknown bucket "${bucket}"`);
@@ -12,11 +9,7 @@ export function resolveBucketConfig(
   return config;
 }
 
-export function validateUpload(
-  bucketConfig: BucketConfig,
-  input: UploadFileInput,
-  sizeBytes: number,
-): void {
+export function validateUpload(bucketConfig: BucketConfig, input: UploadFileInput, sizeBytes: number): void {
   if (bucketConfig.maxSizeBytes !== undefined && sizeBytes > bucketConfig.maxSizeBytes) {
     throw new OtokStorageValidationError(
       `file exceeds max size for bucket "${bucketConfig.name}" (${sizeBytes} > ${bucketConfig.maxSizeBytes})`,
@@ -24,9 +17,7 @@ export function validateUpload(
   }
 
   if (bucketConfig.allowedMimeTypes?.length && input.contentType) {
-    const allowed = bucketConfig.allowedMimeTypes.some((pattern) =>
-      matchMimePattern(input.contentType!, pattern),
-    );
+    const allowed = bucketConfig.allowedMimeTypes.some((pattern) => matchMimePattern(input.contentType!, pattern));
     if (!allowed) {
       throw new OtokStorageValidationError(
         `content type "${input.contentType}" is not allowed in bucket "${bucketConfig.name}"`,

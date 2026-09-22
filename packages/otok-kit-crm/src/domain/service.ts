@@ -8,9 +8,7 @@ import type {
   Organization,
   Pipeline,
   Role,
-  SavedFilter,
   Tag,
-  Task,
   User,
 } from "../schema/types.js";
 import {
@@ -54,7 +52,11 @@ export class CrmService {
     const c = this.store.companies.get(id);
     return c?.orgId === orgId ? c : undefined;
   }
-  updateCompany(orgId: string, id: string, patch: Partial<Pick<Company, "name" | "industry" | "canton" | "city" | "stageId">>) {
+  updateCompany(
+    orgId: string,
+    id: string,
+    patch: Partial<Pick<Company, "name" | "industry" | "canton" | "city" | "stageId">>,
+  ) {
     const company = this.getCompany(orgId, id);
     if (!company) return undefined;
     Object.assign(company, patch, { updatedAt: new Date().toISOString() });

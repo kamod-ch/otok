@@ -17,10 +17,7 @@ export interface MemorySessionPersistence {
 }
 
 export interface MemorySessionAdapterOptions<TUser> {
-  resolveUser: (input: {
-    tokenHash: string;
-    session: MemorySessionRecord;
-  }) => Promise<TUser | null> | TUser | null;
+  resolveUser: (input: { tokenHash: string; session: MemorySessionRecord }) => Promise<TUser | null> | TUser | null;
   persistence?: MemorySessionPersistence;
   /** Used when no persistence hook is configured (mainly tests). */
   initialSessions?: MemorySessionRecord[];
@@ -30,17 +27,13 @@ function isActive(session: MemorySessionRecord, now = Date.now()): boolean {
   return !session.revokedAt && session.expiresAt.getTime() > now;
 }
 
-export function createMemorySessionAdapter<TUser>(
-  options: MemorySessionAdapterOptions<TUser>,
-): SessionAdapter<TUser> {
+export function createMemorySessionAdapter<TUser>(options: MemorySessionAdapterOptions<TUser>): SessionAdapter<TUser> {
   let sessions: MemorySessionRecord[] = [];
   let loaded = false;
 
   async function ensureLoaded(): Promise<void> {
     if (loaded) return;
-    sessions = options.persistence
-      ? [...(await options.persistence.load())]
-      : [...(options.initialSessions ?? [])];
+    sessions = options.persistence ? [...(await options.persistence.load())] : [...(options.initialSessions ?? [])];
     loaded = true;
   }
 

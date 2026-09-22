@@ -106,7 +106,9 @@ export function createMemoryForumStorage(): ForumStorageAdapter {
         const offset = offsetForPage(options.page ?? 1, pageSize);
         return [...threads.values()]
           .filter((t) => t.categoryId === categoryId && (options.includeDeleted || !t.deletedAt))
-          .sort((a, b) => Number(b.isPinned) - Number(a.isPinned) || (b.lastPostAt ?? "").localeCompare(a.lastPostAt ?? ""))
+          .sort(
+            (a, b) => Number(b.isPinned) - Number(a.isPinned) || (b.lastPostAt ?? "").localeCompare(a.lastPostAt ?? ""),
+          )
           .slice(offset, offset + pageSize);
       },
       async countByCategory(categoryId) {
@@ -151,7 +153,12 @@ export function createMemoryForumStorage(): ForumStorageAdapter {
       },
       async listByThread(threadId, options: PostListOptions) {
         return [...posts.values()]
-          .filter((p) => p.threadId === threadId && (options.includeDeleted || !p.deletedAt) && (options.includeHidden || !p.isHidden))
+          .filter(
+            (p) =>
+              p.threadId === threadId &&
+              (options.includeDeleted || !p.deletedAt) &&
+              (options.includeHidden || !p.isHidden),
+          )
           .sort((a, b) => a.createdAt.localeCompare(b.createdAt));
       },
       async countByThread(threadId, includeDeleted = false) {

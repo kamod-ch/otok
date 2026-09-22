@@ -2,35 +2,34 @@
   "name": "otok-adapter-node",
   "version": "1.0.1",
   "description": "Node.js deployment adapter for Otok with standalone server builds, static assets, and graceful shutdown.",
-  "license": "MIT",
   "homepage": "https://github.com/kamod-ch/otok/tree/main/packages/otok-adapter-node#readme",
   "bugs": {
     "url": "https://github.com/kamod-ch/otok/issues"
   },
+  "license": "MIT",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/kamod-ch/otok.git",
     "directory": "packages/otok-adapter-node"
   },
-  "type": "module",
   "files": [
     "dist",
     "README.md"
   ],
+  "type": "module",
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
       "default": "./dist/index.js"
     }
   },
+  "publishConfig": {
+    "access": "public"
+  },
   "scripts": {
     "build": "rm -rf dist && tsc -p tsconfig.build.json",
     "typecheck": "tsc -p tsconfig.json --noEmit",
     "test": "vitest run"
-  },
-  "peerDependencies": {
-    "@kamod-ch/otok": ">=0.6.1",
-    "vite": ">=6"
   },
   "dependencies": {
     "@kamod-ch/otok-config": "workspace:*"
@@ -43,10 +42,11 @@
     "vite": "^8.0.10",
     "vitest": "^4.1.2"
   },
+  "peerDependencies": {
+    "@kamod-ch/otok": ">=0.6.1",
+    "vite": ">=6"
+  },
   "engines": {
     "node": ">=20"
-  },
-  "publishConfig": {
-    "access": "public"
   }
 }

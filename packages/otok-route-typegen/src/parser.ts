@@ -133,9 +133,7 @@ export function segmentToVariants(segment: string, variants: RouteVariant[]): Ro
 }
 
 export function publicRoutePattern(relative: string): string {
-  const segments = relative
-    .split("/")
-    .filter((segment) => segment !== "index" && !/^\(.+\)$/.test(segment));
+  const segments = relative.split("/").filter((segment) => segment !== "index" && !/^\(.+\)$/.test(segment));
   return `/${segments.join("/")}`.replace(/\/$/, "") || "/";
 }
 
@@ -162,10 +160,9 @@ export function routeFileToEntries(
   const relative = normalizePath(path.relative(routesDir, stripExtension(file)));
   const routePattern = publicRoutePattern(relative);
   const segments = relative.split("/");
-  const variants = segments.reduce(
-    (current, segment) => segmentToVariants(segment, current),
-    [emptyVariant()] as RouteVariant[],
-  );
+  const variants = segments.reduce((current, segment) => segmentToVariants(segment, current), [
+    emptyVariant(),
+  ] as RouteVariant[]);
   const layouts = layoutFilesForRoute(relative, layoutMap);
   const middleware = middlewareFilesForRoute(relative, middlewareMap);
 

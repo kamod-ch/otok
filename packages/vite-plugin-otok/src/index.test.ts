@@ -32,7 +32,8 @@ describe("otok vite plugin", () => {
       {
         "src/app/routes/_layout.tsx": "export default function Layout() {}",
         "src/app/routes/_middleware.ts": "export default async function RootMiddleware(_c, next) { await next(); }",
-        "src/app/routes/admin/_middleware.ts": "export default async function AdminMiddleware(_c, next) { await next(); }",
+        "src/app/routes/admin/_middleware.ts":
+          "export default async function AdminMiddleware(_c, next) { await next(); }",
         "src/app/routes/_not-found.tsx": "export default function NotFound() {}",
         "src/app/routes/_error.tsx": "export default function ErrorRoute() {}",
         "src/app/routes/index.tsx": "export default function Home() {}",
@@ -92,22 +93,25 @@ describe("otok vite plugin", () => {
       "/docs/getting-started/intro",
     );
     expect(
-      __testing.buildRoutePath("/[[lang]]/about", { params: { lang: "de" }, query: { ref: "docs", tags: ["a", "b"], skip: undefined } }),
+      __testing.buildRoutePath("/[[lang]]/about", {
+        params: { lang: "de" },
+        query: { ref: "docs", tags: ["a", "b"], skip: undefined },
+      }),
     ).toBe("/de/about?ref=docs&tags=a&tags=b");
     expect(__testing.buildRoutePath("/(marketing)/about")).toBe("/about");
     expect(() => __testing.buildRoutePath("/users/[id]")).toThrow('Missing route param "id"');
   });
 
   it("injects stable island ids into default function exports", () => {
-    expect(
-      __testing.injectIslandId("export default function Counter() { return null; }", "Counter"),
-    ).toContain('Counter.__otokIslandId = "Counter"');
+    expect(__testing.injectIslandId("export default function Counter() { return null; }", "Counter")).toContain(
+      'Counter.__otokIslandId = "Counter"',
+    );
   });
 
   it("injects stable island ids into anonymous default exports", () => {
     const code = __testing.injectIslandId("export default () => null;", "Counter");
 
     expect(code).toContain("const __OtokDefaultIsland =");
-    expect(code).toContain('export default __OtokDefaultIsland');
+    expect(code).toContain("export default __OtokDefaultIsland");
   });
 });

@@ -13,10 +13,7 @@ export function referenceCollectionName(description: string | undefined): string
   return name || undefined;
 }
 
-export function isReferenceField(
-  references: Record<string, string> | undefined,
-  field: string,
-): boolean {
+export function isReferenceField(references: Record<string, string> | undefined, field: string): boolean {
   return Boolean(references?.[field]);
 }
 

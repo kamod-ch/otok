@@ -21,9 +21,7 @@ export class RealtimeException extends Error {
 }
 
 export function isRealtimeError(value: unknown): value is RealtimeError {
-  return Boolean(
-    value && typeof value === "object" && typeof (value as RealtimeError).code === "string",
-  );
+  return Boolean(value && typeof value === "object" && typeof (value as RealtimeError).code === "string");
 }
 
 export function formatRealtimeError(code: RealtimeErrorCode, message: string): RealtimeError {

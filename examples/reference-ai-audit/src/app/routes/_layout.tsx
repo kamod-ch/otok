@@ -9,7 +9,9 @@ export default function Layout({ children }: { children: ComponentChildren }) {
       </head>
       <body>
         <header class="site-header" data-otok-swap="shell">
-          <a href="/" class="brand">Otok AI Audit</a>
+          <a href="/" class="brand">
+            Otok AI Audit
+          </a>
           <nav>
             <a href="/">Dashboard</a>
             <a href="/audits/otok-playground">Sample audit</a>

@@ -6,7 +6,7 @@ import { extractCount, pickPluralMessage } from "./plural.js";
 const messages = {
   "about.title": "About",
   "nav.home": "Home",
-  "welcome": "Hello, {name}!",
+  welcome: "Hello, {name}!",
   "items.one": "1 item",
   "items.other": "{count} items",
 } as const;

@@ -80,14 +80,8 @@ export function assertAdapterContract(options: AdapterContractOptions): void {
   }
 }
 
-export function expectMissingCapability(
-  adapter: OtokAdapter,
-  capability: OtokAdapterCapability,
-  reason: string,
-): void {
+export function expectMissingCapability(adapter: OtokAdapter, capability: OtokAdapterCapability, reason: string): void {
   const resolved = resolveAdapter(adapter, "/tmp/otok");
   expect(resolved?.capabilities.has(capability)).toBe(false);
-  expect(() => assertAdapterCapability(resolved, capability, reason)).toThrow(
-    `Requires capability "${capability}"`,
-  );
+  expect(() => assertAdapterCapability(resolved, capability, reason)).toThrow(`Requires capability "${capability}"`);
 }

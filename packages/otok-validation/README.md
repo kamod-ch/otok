@@ -48,11 +48,11 @@ Use `actionData.fieldErrors` and `actionData.values` in your page component for 
 
 All libraries implementing [Standard Schema V1](https://github.com/standard-schema/standard-schema) work natively:
 
-| Library  | Import |
-|----------|--------|
-| Zod 4+   | Pass schema directly |
-| Valibot  | `@kamod-ch/otok-validation/adapters/valibot` |
-| ArkType  | `@kamod-ch/otok-validation/adapters/arktype` |
+| Library | Import                                       |
+| ------- | -------------------------------------------- |
+| Zod 4+  | Pass schema directly                         |
+| Valibot | `@kamod-ch/otok-validation/adapters/valibot` |
+| ArkType | `@kamod-ch/otok-validation/adapters/arktype` |
 
 Legacy Zod 3 `safeParse` schemas are also supported.
 

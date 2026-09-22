@@ -1,8 +1,6 @@
 import type { LoaderResult, OtokContext, OtokLoader } from "../shared/routes.js";
 
-export type LoaderEnhancer = <Data extends LoaderResult>(
-  loader: OtokLoader<Data>,
-) => OtokLoader<Data>;
+export type LoaderEnhancer = <Data extends LoaderResult>(loader: OtokLoader<Data>) => OtokLoader<Data>;
 
 /**
  * Compose loader enhancers around a base handler.

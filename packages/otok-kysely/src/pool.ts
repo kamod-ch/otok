@@ -4,9 +4,7 @@ import type { BuiltInDialect, DialectAdapter, DialectConnectOptions, PoolOptions
 export function resolveConnectionString(explicit?: string): string {
   const value = explicit ?? process.env.DATABASE_URL;
   if (!value) {
-    throw new Error(
-      "otok-kysely: provide connectionString or set DATABASE_URL environment variable.",
-    );
+    throw new Error("otok-kysely: provide connectionString or set DATABASE_URL environment variable.");
   }
   return value;
 }

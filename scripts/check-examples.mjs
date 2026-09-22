@@ -23,7 +23,11 @@ const packTargets = [
   { filter: "@kamod-ch/otok", name: "@kamod-ch/otok", prefix: "kamod-ch-otok-" },
   { filter: "@kamod-ch/otok-vite-plugin", name: "@kamod-ch/otok-vite-plugin", prefix: "kamod-ch-otok-vite-plugin-" },
   { filter: "@kamod-ch/otok-config", name: "@kamod-ch/otok-config", prefix: "kamod-ch-otok-config-" },
-  { filter: "@kamod-ch/otok-route-typegen", name: "@kamod-ch/otok-route-typegen", prefix: "kamod-ch-otok-route-typegen-" },
+  {
+    filter: "@kamod-ch/otok-route-typegen",
+    name: "@kamod-ch/otok-route-typegen",
+    prefix: "kamod-ch-otok-route-typegen-",
+  },
   { filter: "otok-cli", name: "otok-cli", prefix: "otok-cli-" },
   { filter: "@kamod-ch/otok-ai", name: "@kamod-ch/otok-ai", prefix: "kamod-ch-otok-ai-" },
   { filter: "@kamod-ch/otok-kysely", name: "@kamod-ch/otok-kysely", prefix: "kamod-ch-otok-kysely-" },
@@ -73,8 +77,8 @@ function copyExample(name, destRoot) {
     if (tsconfig.extends === "../../tsconfig.base.json") {
       const baseTsconfig = JSON.parse(fs.readFileSync(path.join(repoRoot, "tsconfig.base.json"), "utf8"));
       tsconfig.compilerOptions = {
-        ...(baseTsconfig.compilerOptions ?? {}),
-        ...(tsconfig.compilerOptions ?? {}),
+        ...baseTsconfig.compilerOptions,
+        ...tsconfig.compilerOptions,
       };
       delete tsconfig.compilerOptions.paths;
       delete tsconfig.extends;
@@ -119,10 +123,11 @@ try {
 
     packageJson.dependencies = rewriteWorkspaceDeps(
       {
-        ...(packageJson.dependencies ?? {}),
+        ...packageJson.dependencies,
         "@kamod-ch/otok": `file:${packsByName["@kamod-ch/otok"]}`,
         "@kamod-ch/otok-vite-plugin":
-          packageJson.dependencies?.["@kamod-ch/otok-vite-plugin"] || packageJson.devDependencies?.["@kamod-ch/otok-vite-plugin"]
+          packageJson.dependencies?.["@kamod-ch/otok-vite-plugin"] ||
+          packageJson.devDependencies?.["@kamod-ch/otok-vite-plugin"]
             ? undefined
             : `file:${packsByName["@kamod-ch/otok-vite-plugin"]}`,
       },
@@ -137,7 +142,10 @@ try {
     packageJson.devDependencies["@types/node"] ??= "^24.12.2";
 
     // Ensure vite-plugin and its local workspace dependencies are always installable.
-    if (!packageJson.dependencies["@kamod-ch/otok-vite-plugin"] && !packageJson.devDependencies["@kamod-ch/otok-vite-plugin"]) {
+    if (
+      !packageJson.dependencies["@kamod-ch/otok-vite-plugin"] &&
+      !packageJson.devDependencies["@kamod-ch/otok-vite-plugin"]
+    ) {
       packageJson.devDependencies["@kamod-ch/otok-vite-plugin"] = `file:${packsByName["@kamod-ch/otok-vite-plugin"]}`;
     }
     packageJson.dependencies["@kamod-ch/otok-config"] = `file:${packsByName["@kamod-ch/otok-config"]}`;

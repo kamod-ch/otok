@@ -9,9 +9,7 @@ export interface RequireAuthOptions<TUser> {
   onAuthenticated?: (c: Context, user: TUser) => void;
 }
 
-export function createRequireAuthMiddleware<TUser>(
-  options: RequireAuthOptions<TUser>,
-): OtokMiddleware {
+export function createRequireAuthMiddleware<TUser>(options: RequireAuthOptions<TUser>): OtokMiddleware {
   const loginPath = options.loginPath ?? "/login";
   const publicPaths = new Set(options.publicPaths ?? []);
   const contextKey = options.contextKey ?? "user";

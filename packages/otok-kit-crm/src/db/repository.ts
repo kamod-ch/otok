@@ -50,11 +50,7 @@ export class KyselyCrmRepository {
   }
 
   async findByUid(orgId: string, uid: string) {
-    const rows = await this.db
-      .selectFrom("crm_companies")
-      .selectAll()
-      .where("org_id", "=", orgId)
-      .execute();
+    const rows = await this.db.selectFrom("crm_companies").selectAll().where("org_id", "=", orgId).execute();
     return rows.find((r) => uidEquals(r.uid ?? undefined, uid));
   }
 
@@ -176,13 +172,7 @@ export class KyselyCrmRepository {
     return id;
   }
 
-  async addActivity(input: {
-    orgId: string;
-    companyId: string;
-    type: string;
-    subject: string;
-    userId: string;
-  }) {
+  async addActivity(input: { orgId: string; companyId: string; type: string; subject: string; userId: string }) {
     const id = crypto.randomUUID();
     await this.db
       .insertInto("crm_activities")
@@ -202,13 +192,7 @@ export class KyselyCrmRepository {
     return id;
   }
 
-  async assignTask(input: {
-    orgId: string;
-    title: string;
-    assigneeId: string;
-    relatedId: string;
-    userId: string;
-  }) {
+  async assignTask(input: { orgId: string; title: string; assigneeId: string; relatedId: string; userId: string }) {
     const id = crypto.randomUUID();
     await this.db
       .insertInto("crm_tasks")

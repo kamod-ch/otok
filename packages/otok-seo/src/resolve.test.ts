@@ -65,9 +65,7 @@ describe("robots and sitemap", () => {
   });
 
   it("renders sitemap xml", () => {
-    const xml = renderSitemapXml(
-      createSitemapEntries({ origin: "https://example.com", paths: ["/", "/about"] }),
-    );
+    const xml = renderSitemapXml(createSitemapEntries({ origin: "https://example.com", paths: ["/", "/about"] }));
     expect(xml).toContain("<loc>https://example.com/</loc>");
     expect(xml).toContain("<loc>https://example.com/about</loc>");
   });

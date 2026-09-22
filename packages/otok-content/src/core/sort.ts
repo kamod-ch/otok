@@ -17,9 +17,7 @@ function getOrderValue(entry: ContentEntry): number {
 }
 
 /** Resolve a built-in sort preset or pass through a custom comparator. */
-export function resolveSortComparator(
-  option: CollectionSortOption | CollectionSortFn,
-): CollectionSortFn {
+export function resolveSortComparator(option: CollectionSortOption | CollectionSortFn): CollectionSortFn {
   if (typeof option === "function") return option;
 
   switch (option) {

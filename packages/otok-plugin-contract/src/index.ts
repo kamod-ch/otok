@@ -1,10 +1,5 @@
 import { expect, it } from "vitest";
-import {
-  PluginContainer,
-  instantiatePlugin,
-  type OtokPlugin,
-  type OtokPluginFactory,
-} from "@kamod-ch/otok-config";
+import { PluginContainer, instantiatePlugin, type OtokPlugin, type OtokPluginFactory } from "@kamod-ch/otok-config";
 
 export interface PluginContractExpectation {
   name: string;
@@ -39,10 +34,7 @@ const env = {
   command: "build" as const,
 };
 
-function resolvePlugin(
-  plugin: OtokPlugin | OtokPluginFactory,
-  options?: unknown,
-): OtokPlugin {
+function resolvePlugin(plugin: OtokPlugin | OtokPluginFactory, options?: unknown): OtokPlugin {
   return instantiatePlugin(plugin as never, options);
 }
 
@@ -70,10 +62,7 @@ export function assertPluginContract(options: PluginContractOptions): void {
 
   if (options.expected.virtualModules?.length) {
     it("registers expected virtual modules", async () => {
-      const resolved = await new PluginContainer(
-        { plugins: [options.plugin as never] },
-        { ...env, root },
-      ).resolve();
+      const resolved = await new PluginContainer({ plugins: [options.plugin as never] }, { ...env, root }).resolve();
       for (const key of options.expected.virtualModules!) {
         expect(resolved.virtualModules.has(`virtual:otok-plugin/${plugin.name}/${key}`)).toBe(true);
       }
@@ -82,10 +71,7 @@ export function assertPluginContract(options: PluginContractOptions): void {
 
   if (options.expected.envKeys?.length) {
     it("resolves env schema keys", async () => {
-      const resolved = await new PluginContainer(
-        { plugins: [options.plugin as never] },
-        { ...env, root },
-      ).resolve();
+      const resolved = await new PluginContainer({ plugins: [options.plugin as never] }, { ...env, root }).resolve();
       for (const key of options.expected.envKeys!) {
         expect(key in resolved.env).toBe(true);
       }

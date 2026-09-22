@@ -48,14 +48,20 @@ export default function NewPost({ actionData }: OtokPageProps) {
           Title
           <input name="title" value={values.title ?? ""} aria-invalid={Boolean(failure?.fieldErrors?.title)} />
         </label>
-        {failure?.fieldErrors?.title?.map((error) => <p role="alert" class="form-error">{error}</p>)}
+        {failure?.fieldErrors?.title?.map((error) => (
+          <p role="alert" class="form-error">
+            {error}
+          </p>
+        ))}
         <label>
           Excerpt
           <input name="excerpt" value={values.excerpt ?? ""} aria-invalid={Boolean(failure?.fieldErrors?.excerpt)} />
         </label>
         <label>
           Body
-          <textarea name="body" rows={8} aria-invalid={Boolean(failure?.fieldErrors?.body)}>{values.body ?? ""}</textarea>
+          <textarea name="body" rows={8} aria-invalid={Boolean(failure?.fieldErrors?.body)}>
+            {values.body ?? ""}
+          </textarea>
         </label>
         <label>
           Status

@@ -3,6 +3,7 @@ title: Plugin setup hooks
 section: Guides
 order: 36
 ---
+
 # Plugin setup hooks
 
 When users run `otok add`, the CLI can run a **setup hook** exported by your package. Setup hooks perform controlled, declarative project changes — example config, env vars, directories — without overwriting arbitrary files.
@@ -59,12 +60,12 @@ After `otok add`, the CLI loads `package.json` → `otok.setup`, imports the mod
 
 ## Allowed operations
 
-| Kind | Purpose | Restrictions |
-|------|---------|----------------|
-| `append-file` | Append lines | Only `.env.example` and `.env.local.example` |
-| `create-file` | Create a new file | Only under `config/`, `src/config/`, `migrations/`, or env example files; **never** if the file already exists |
-| `mkdir` | Create directories | Path must stay inside the project |
-| `tsconfig-types` | Add `compilerOptions.types` | Merges into existing `tsconfig.json` |
+| Kind             | Purpose                     | Restrictions                                                                                                   |
+| ---------------- | --------------------------- | -------------------------------------------------------------------------------------------------------------- |
+| `append-file`    | Append lines                | Only `.env.example` and `.env.local.example`                                                                   |
+| `create-file`    | Create a new file           | Only under `config/`, `src/config/`, `migrations/`, or env example files; **never** if the file already exists |
+| `mkdir`          | Create directories          | Path must stay inside the project                                                                              |
+| `tsconfig-types` | Add `compilerOptions.types` | Merges into existing `tsconfig.json`                                                                           |
 
 Paths must be **relative** to the project root. Absolute paths and `../` escapes are rejected.
 
@@ -83,7 +84,7 @@ Plugins must **not** write directly to the filesystem in the setup hook. Return 
 
 ```ts
 interface PluginSetupContext {
-  root: string;       // absolute project root
+  root: string; // absolute project root
   packageName: string;
   dryRun: boolean;
 }

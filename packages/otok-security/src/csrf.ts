@@ -36,10 +36,7 @@ export function createSecurityCsrfMiddleware(options: CsrfOptions = {}): OtokMid
 
     if (["POST", "PUT", "PATCH", "DELETE"].includes(method)) {
       const contentType = c.req.header("content-type") ?? "";
-      if (
-        contentType.includes("application/x-www-form-urlencoded") ||
-        contentType.includes("multipart/form-data")
-      ) {
+      if (contentType.includes("application/x-www-form-urlencoded") || contentType.includes("multipart/form-data")) {
         const cookieToken = getCookie(c, cookieName);
         const formData = await c.req.raw.clone().formData();
         const formToken = formData.get(CSRF_FIELD);

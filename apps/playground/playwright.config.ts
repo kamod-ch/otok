@@ -10,7 +10,7 @@ export default defineConfig({
     video: "retain-on-failure",
   },
   webServer: {
-    command: "pnpm build && pnpm start",
+    command: "pnpm --filter @kamod-ch/otok build && pnpm build && pnpm start",
     url: "http://127.0.0.1:3000",
     reuseExistingServer: !process.env.CI,
     timeout: 120_000,

@@ -14,19 +14,19 @@ Vollständige Multi-Tenant-SaaS-Referenz auf Otok — kein Mock-Dashboard, sonde
 
 ## Stack
 
-| Bereich | Paket |
-|---------|--------|
-| Auth & Sessions | `@kamod-ch/otok-auth` (Rotation, CSRF-Cookie) |
-| OAuth | `@kamod-ch/otok-oauth` |
-| DB | `@kamod-ch/otok-kysely` + PostgreSQL |
-| Validation | `@kamod-ch/otok-validation` + Zod |
-| E-Mail | `@kamod-ch/otok-mail` (Test-Provider, Preview unter `/__otok/mail/preview`) |
-| Stripe | `@kamod-ch/otok-stripe` |
-| Audit | `@kamod-ch/otok-audit` + Kysely |
-| Security | `@kamod-ch/otok-security` (Rate Limits, CSRF, Headers) |
-| Observability | `@kamod-ch/otok-observability` |
-| i18n / SEO | `@kamod-ch/otok-i18n`, `@kamod-ch/otok-seo` |
-| UI | `@kamod-ch/otok-kamod`, `@kamod-ch/ui` |
+| Bereich         | Paket                                                                       |
+| --------------- | --------------------------------------------------------------------------- |
+| Auth & Sessions | `@kamod-ch/otok-auth` (Rotation, CSRF-Cookie)                               |
+| OAuth           | `@kamod-ch/otok-oauth`                                                      |
+| DB              | `@kamod-ch/otok-kysely` + PostgreSQL                                        |
+| Validation      | `@kamod-ch/otok-validation` + Zod                                           |
+| E-Mail          | `@kamod-ch/otok-mail` (Test-Provider, Preview unter `/__otok/mail/preview`) |
+| Stripe          | `@kamod-ch/otok-stripe`                                                     |
+| Audit           | `@kamod-ch/otok-audit` + Kysely                                             |
+| Security        | `@kamod-ch/otok-security` (Rate Limits, CSRF, Headers)                      |
+| Observability   | `@kamod-ch/otok-observability`                                              |
+| i18n / SEO      | `@kamod-ch/otok-i18n`, `@kamod-ch/otok-seo`                                 |
+| UI              | `@kamod-ch/otok-kamod`, `@kamod-ch/ui`                                      |
 
 ## Schnellstart
 
