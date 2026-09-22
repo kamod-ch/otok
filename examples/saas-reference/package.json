@@ -34,7 +34,7 @@
     "@kamod-ch/otok-validation": "workspace:*",
     "@kamod-ch/ui": "^1.0.1",
     "@preact/signals": "^2.9.1",
-    "hono": "^4.12.25",
+    "hono": "^4.13.8",
     "kysely": "^0.29.2",
     "otok-adapter-node": "workspace:*",
     "pg": "^8.16.0",

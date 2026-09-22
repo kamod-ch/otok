@@ -39,7 +39,7 @@ const matrix = {
   "otok-adapter-node": "^1.0.0",
   "otok-adapter-cloudflare": "^1.0.0",
   "otok-adapter-static": "^1.0.0",
-  hono: "^4.12.25",
+  hono: "^4.13.8",
   preact: "^10.28.2",
   "@hono/node-server": "^2.0.1",
   "@preact/preset-vite": "^2.10.5",

@@ -13,7 +13,7 @@
     "@kamod-ch/otok-queue": "workspace:*",
     "@kamod-ch/otok-storage": "workspace:*",
     "@kamod-ch/otok-stripe": "workspace:*",
-    "hono": "^4.12.25",
+    "hono": "^4.13.8",
     "preact": "^10.28.2"
   },
   "devDependencies": {

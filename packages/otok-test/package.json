@@ -46,7 +46,7 @@
   "devDependencies": {
     "@kamod-ch/otok-plugin-hello": "workspace:*",
     "@types/node": "^24.12.2",
-    "hono": "^4.12.25",
+    "hono": "^4.13.8",
     "jsdom": "^29.1.1",
     "preact": "^10.28.2",
     "typescript": "~6.0.2",

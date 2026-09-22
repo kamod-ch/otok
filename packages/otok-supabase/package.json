@@ -79,7 +79,7 @@
     "@supabase/supabase-js": "^2.99.0",
     "@types/node": "^24.12.2",
     "@types/ws": "^8.18.1",
-    "hono": "^4.12.25",
+    "hono": "^4.13.8",
     "typescript": "~6.0.2",
     "vitest": "^4.1.2"
   },

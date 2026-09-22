@@ -22,7 +22,7 @@
     "@kamod-ch/ui": "^1.0.1",
     "@preact/preset-vite": "^2.10.5",
     "@preact/signals": "^2.0.0",
-    "hono": "^4.12.25",
+    "hono": "^4.13.8",
     "otok-adapter-static": "workspace:*",
     "preact": "^10.28.2",
     "vite": "^8.0.10"

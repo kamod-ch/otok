@@ -52,7 +52,7 @@
     "@kamod-ch/otok-test": "workspace:*",
     "@types/node": "^24.12.2",
     "@types/nodemailer": "^6.4.17",
-    "hono": "^4.12.25",
+    "hono": "^4.13.8",
     "nodemailer": "^7.0.5",
     "preact": "^10.28.2",
     "preact-render-to-string": "^6.7.0",

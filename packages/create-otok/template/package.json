@@ -19,7 +19,7 @@
     "@kamod-ch/otok-kamod": "workspace:*",
     "@kamod-ui/core": "^0.1.5",
     "@preact/signals": "^2.0.0",
-    "hono": "^4.12.25",
+    "hono": "^4.13.8",
     "preact": "^10.28.2"
   },
   "devDependencies": {

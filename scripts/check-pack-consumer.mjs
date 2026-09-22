@@ -45,7 +45,7 @@ try {
     "@kamod-ch/otok": `file:${findPack(packTargets[1].prefix)}`,
     "@kamod-ch/otok-vite-plugin": `file:${findPack(packTargets[2].prefix)}`,
     preact: "^10.26.0",
-    hono: "^4.12.25",
+    hono: "^4.13.8",
     kysely: "^0.28.0",
     "@hono/node-server": "^2.0.0",
   };
