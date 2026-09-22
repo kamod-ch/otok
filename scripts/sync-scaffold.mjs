@@ -34,7 +34,12 @@ const templateTsconfig = `${JSON.stringify(
   },
   null,
   2,
-)}\n`;
+)
+  .replace(/"types": \[\n\s+"vite\/client",\n\s+"node"\n\s+\]/, '"types": ["vite/client", "node"]')
+  .replace(
+    /"include": \[\n\s+"src",\n\s+"vite.config.ts",\n\s+"otok.config.ts"\n\s+\]/,
+    '"include": ["src", "vite.config.ts", "otok.config.ts"]',
+  )}\n`;
 
 function collectFiles(dir, base = dir) {
   const files = [];

@@ -1,4 +1,4 @@
-import { fail, redirect, type OtokActionContext, type OtokPageProps } from "@kamod-ch/otok/server";
+import { fail, redirect, type OtokActionContext, type OtokContext, type OtokPageProps } from "@kamod-ch/otok/server";
 
 type Project = {
   id: string;
@@ -18,7 +18,11 @@ interface ProjectActionData {
 }
 
 const projects: Project[] = [{ id: "otok", name: "Otok", featured: true }];
-let projectActionCalls = 0;
+const projectActionCalls = new Map<string, number>();
+
+function actionCounterKey({ hono }: Pick<OtokContext, "hono">): string {
+  return hono.req.header("x-otok-test-id") ?? "default";
+}
 
 export const client = true;
 
@@ -32,10 +36,15 @@ export const head = () => ({
   description: "Progressive forms powered by Otok route actions.",
 });
 
-export const loader = () => ({ projects, projectActionCalls });
+export const loader = (context: OtokContext) => ({
+  projects,
+  projectActionCalls: projectActionCalls.get(actionCounterKey(context)) ?? 0,
+});
 
-export async function action({ formData, method }: OtokActionContext) {
-  projectActionCalls += 1;
+export async function action(context: OtokActionContext) {
+  const { formData, method } = context;
+  const counterKey = actionCounterKey(context);
+  projectActionCalls.set(counterKey, (projectActionCalls.get(counterKey) ?? 0) + 1);
   const delayMs = Number(formData?.get("_otok_delay_ms") ?? 0);
   if (Number.isFinite(delayMs) && delayMs > 0) {
     await new Promise((resolve) => setTimeout(resolve, delayMs));

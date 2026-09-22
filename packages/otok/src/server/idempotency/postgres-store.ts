@@ -1,5 +1,4 @@
 import type { Kysely } from "kysely";
-import { sql } from "kysely";
 import { deserializeIdempotencyResponse } from "./serialize.js";
 import type { IdempotencyBeginResult, IdempotencyStore, SerializedIdempotencyResponse } from "./types.js";
 import { IDEMPOTENCY_WAIT_MS } from "./types.js";
@@ -35,7 +34,7 @@ export class PostgresIdempotencyStore implements IdempotencyStore {
   }
 
   private async prune(): Promise<void> {
-    await sql`DELETE FROM otok_idempotency_records WHERE expires_at < NOW()`.execute(this.db);
+    await this.db.deleteFrom(IDEMPOTENCY_RECORDS_TABLE).where("expires_at", "<", new Date()).execute();
   }
 
   async begin(storageKey: string, fingerprint: string, ttlMs: number): Promise<IdempotencyBeginResult> {

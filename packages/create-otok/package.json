@@ -57,6 +57,9 @@
     "@kamod-ch/otok-config": "workspace:*"
   },
   "devDependencies": {
+    "@kamod-ch/otok-kit-admin": "workspace:*",
+    "@kamod-ch/otok-kit-crm": "workspace:*",
+    "@kamod-ch/otok-kit-saas": "workspace:*",
     "@types/node": "^24.12.2"
   },
   "engines": {

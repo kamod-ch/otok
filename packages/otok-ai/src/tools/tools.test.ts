@@ -84,7 +84,7 @@ describe("AI provider errors", () => {
       id: "fail",
       capabilities: { streaming: true, tools: false, structuredOutput: false, embeddings: false },
       async *stream() {
-        yield { type: "start" as const };
+        yield { type: "text-delta" as const, delta: "" };
         throw new (await import("../errors.js")).OtokAiProviderError("fail", "500 error", 500);
       },
       async complete() {

@@ -4,6 +4,8 @@ import { getKyselyRuntime } from "@kamod-ch/otok-kysely/registry";
 import { defineAction as defineValidatedAction } from "@kamod-ch/otok-validation/loader";
 import type { ValidationSchema } from "@kamod-ch/otok-validation";
 import { authFromOtokContext, tryGetAuthRuntime } from "@kamod-ch/otok-auth";
+import { readI18n } from "@kamod-ch/otok-i18n/middleware";
+import type { I18nContext } from "@kamod-ch/otok-i18n";
 import type { Kysely } from "kysely";
 import type { ActionResult, OtokActionContext, OtokContext } from "@kamod-ch/otok/server";
 import type { DevjobsContextUser, DevjobsDatabase, DevjobsUser } from "../db/types.js";
@@ -12,13 +14,16 @@ import { resolveCompanyContext } from "./tenant.js";
 export type DevjobsLoaderContext = OtokContext & {
   user: DevjobsContextUser;
   db: Kysely<DevjobsDatabase>;
+  i18n: I18nContext;
 };
 
 type DbContext = OtokContext & { db: Kysely<DevjobsDatabase> };
 
-async function resolveDevjobsContext(ctx: DbContext): Promise<Pick<DevjobsLoaderContext, "user">> {
+async function resolveDevjobsContext(ctx: DbContext): Promise<Pick<DevjobsLoaderContext, "user" | "i18n">> {
   const runtime = tryGetAuthRuntime();
   if (!runtime) throw new Error("auth plugin required");
+  const i18n = readI18n(ctx.hono);
+  if (!i18n) throw new Error("i18n plugin required");
   const auth = authFromOtokContext(ctx.hono, runtime.helpers);
   const baseUser = await auth.requireUser();
   const user: DevjobsUser = {
@@ -28,7 +33,7 @@ async function resolveDevjobsContext(ctx: DbContext): Promise<Pick<DevjobsLoader
   };
   const companyUser = await resolveCompanyContext(ctx.db, user);
   if (!companyUser) throw new Response("Forbidden", { status: 403 });
-  return { user: companyUser };
+  return { user: companyUser, i18n };
 }
 
 export function defineEmployerLoader<Data extends LoaderResult>(

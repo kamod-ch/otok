@@ -1,5 +1,6 @@
 import { createClient } from "@supabase/supabase-js";
 import type { SupabaseClient } from "@supabase/supabase-js";
+import WebSocket from "ws";
 import { validateSupabaseAdminConfig, type SupabaseAdminConfig } from "../config.js";
 import { SupabaseConfigurationError } from "../errors.js";
 
@@ -21,5 +22,6 @@ export function createOtokSupabaseAdminClient<Database>(config: SupabaseAdminCon
       persistSession: false,
       detectSessionInUrl: false,
     },
-  });
+    realtime: { transport: WebSocket as never },
+  }) as SupabaseClient<Database>;
 }

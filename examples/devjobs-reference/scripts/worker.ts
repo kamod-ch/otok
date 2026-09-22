@@ -1,8 +1,12 @@
 import { createKyselyInstance } from "@kamod-ch/otok-kysely";
-import { activateQueueRuntime } from "@kamod-ch/otok-queue";
+import {
+  activateQueueRuntime,
+  createWorkerHealth,
+  resolveQueueRetry,
+  startWorkerHealthServer,
+} from "@kamod-ch/otok-queue";
 import { createPostgresQueueProvider, migratePostgresQueueSchema } from "@kamod-ch/otok-queue/providers/postgres";
-import { resolveQueueRetry } from "@kamod-ch/otok-queue";
-import { createWorkerHealth, runQueueWorker, startWorkerHealthServer } from "@kamod-ch/otok-queue/worker";
+import { runQueueWorker } from "@kamod-ch/otok-queue/worker";
 import type { Kysely } from "kysely";
 import type { QueueDatabase } from "@kamod-ch/otok-queue/providers/postgres";
 import type { DevjobsDatabase } from "../src/db/types.js";
@@ -14,7 +18,7 @@ const db = await createKyselyInstance<DevjobsDatabase>("postgres", connectionStr
 
 await migratePostgresQueueSchema(db as unknown as Kysely<QueueDatabase>);
 const retry = resolveQueueRetry({ maxAttempts: 5 });
-const provider = createPostgresQueueProvider(db as unknown as Kysely<QueueDatabase>, {
+const provider = createPostgresQueueProvider<DevjobsQueueJobs>(db as unknown as Kysely<QueueDatabase>, {
   type: "postgres",
   retry,
 });

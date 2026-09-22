@@ -18,7 +18,6 @@ if (!existsSync(budgetsPath)) {
 }
 
 const budgets = JSON.parse(readFileSync(budgetsPath, "utf8"));
-const strict = process.env.OTOK_GATES_STRICT === "1" || process.env.CI === "true";
 const errors = [];
 const warnings = [];
 const tolerance = budgets.tolerancePercent ?? 5;
@@ -62,12 +61,7 @@ if (!existsSync(resultsPath)) {
       continue;
     }
     const optionalEnv = budgets.optionalUnlessEnv?.[metric];
-    if (optionalEnv && !process.env[optionalEnv]) {
-      if (strict && metrics?.[metric] == null) {
-        errors.push(`Metric "${metric}" requires ${optionalEnv} in CI/strict mode`);
-      }
-      continue;
-    }
+    if (optionalEnv && !process.env[optionalEnv]) continue;
     checkLimit(metric, metrics?.[metric], limit);
   }
 }

@@ -976,6 +976,15 @@ importers:
         specifier: workspace:*
         version: link:../otok-config
     devDependencies:
+      '@kamod-ch/otok-kit-admin':
+        specifier: workspace:*
+        version: link:../otok-kit-admin
+      '@kamod-ch/otok-kit-crm':
+        specifier: workspace:*
+        version: link:../otok-kit-crm
+      '@kamod-ch/otok-kit-saas':
+        specifier: workspace:*
+        version: link:../otok-kit-saas
       '@types/node':
         specifier: ^24.12.2
         version: 24.13.6
@@ -1996,6 +2005,9 @@ importers:
       '@supabase/ssr':
         specifier: ^0.12.4
         version: 0.12.7(@supabase/supabase-js@2.116.0(@opentelemetry/api@1.9.1))
+      ws:
+        specifier: ^8.18.0
+        version: 8.21.3
     devDependencies:
       '@kamod-ch/otok':
         specifier: workspace:*
@@ -2009,6 +2021,9 @@ importers:
       '@types/node':
         specifier: ^24.12.2
         version: 24.13.6
+      '@types/ws':
+        specifier: ^8.18.1
+        version: 8.18.1
       hono:
         specifier: ^4.12.25
         version: 4.13.8

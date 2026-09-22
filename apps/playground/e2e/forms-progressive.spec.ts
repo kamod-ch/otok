@@ -6,7 +6,8 @@ async function readActionCount(page: import("@playwright/test").Page): Promise<n
 }
 
 test.describe("progressive forms hardening", () => {
-  test.beforeEach(async ({ page }) => {
+  test.beforeEach(async ({ page }, testInfo) => {
+    await page.context().setExtraHTTPHeaders({ "x-otok-test-id": testInfo.testId });
     await page.goto("/projects");
   });
 
@@ -98,8 +99,11 @@ test.describe("progressive forms hardening", () => {
   });
 });
 
-test("works without JavaScript (baseline)", async ({ browser }) => {
-  const context = await browser.newContext({ javaScriptEnabled: false });
+test("works without JavaScript (baseline)", async ({ browser }, testInfo) => {
+  const context = await browser.newContext({
+    javaScriptEnabled: false,
+    extraHTTPHeaders: { "x-otok-test-id": testInfo.testId },
+  });
   const page = await context.newPage();
   await page.goto("/projects");
   const before = await readActionCount(page);

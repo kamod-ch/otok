@@ -25,6 +25,7 @@ export default function StrategiesPage() {
       <Island component={StrategyLab} props={{ label: "idle" }} strategy="idle" />
       <Island component={StrategyLab} props={{ label: "visible" }} strategy="visible" rootMargin="200px" />
       <Island component={StrategyLab} props={{ label: "media" }} strategy="media" media="(min-width: 1px)" />
+      <Island component={StrategyLab} props={{ label: "media never" }} strategy="media" media="(max-width: 0px)" />
       <Island component={StrategyLab} props={{ label: "client-only" }} strategy="client-only" />
       <Island component={StrategyLab} props={{ label: "large props", payload: largePayload }} strategy="load" />
     </section>

@@ -20,6 +20,21 @@ const app = createOtokApp({
   configure: (app) => {
     void applyAppPlugins(app);
     app.get("/plain-html", (c) => c.html("<!doctype html><title>Plain</title><p>No Otok page region</p>"));
+    app.get("/prefetch-redirect", (c) => c.redirect("/about", 302));
+    app.get("/prefetch-test/no-store", (c) =>
+      c.html(
+        `<!doctype html><html><head><title>No store</title></head><body><div data-otok-page><p data-testid="prefetch-no-store">no store</p></div></body></html>`,
+        200,
+        { "Cache-Control": "no-store" },
+      ),
+    );
+    app.get("/prefetch-test/cacheable", (c) =>
+      c.html(
+        `<!doctype html><html><head><title>Cacheable</title></head><body><div data-otok-page><p data-testid="prefetch-cacheable">cacheable</p></div></body></html>`,
+        200,
+        { "Cache-Control": "public, max-age=120" },
+      ),
+    );
   },
   theme: runtime.theme ?? true,
 });

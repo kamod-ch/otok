@@ -56,6 +56,7 @@ try {
     esbuild: "^0.25.0",
   };
   writeFileSync(pkgPath, `${JSON.stringify(pkg, null, 2)}\n`);
+  writeFileSync(join(workDir, "pnpm-workspace.yaml"), "allowBuilds:\n  esbuild: true\n");
 
   run("pnpm", ["install"], { cwd: workDir });
   run("node", ["run-checks.mjs"], { cwd: workDir });

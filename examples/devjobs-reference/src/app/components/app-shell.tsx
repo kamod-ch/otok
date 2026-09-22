@@ -53,7 +53,7 @@ export function AppShell({ title, i18n, user, children }: AppShellProps) {
           </nav>
         </div>
       </header>
-      <main id="main" class="focus:outline-none" tabindex="-1">
+      <main id="main" class="focus:outline-none" tabIndex={-1}>
         {children}
       </main>
     </div>
