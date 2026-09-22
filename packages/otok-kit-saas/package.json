@@ -1,6 +1,6 @@
 {
   "name": "@kamod-ch/otok-kit-saas",
-  "version": "0.2.0",
+  "version": "1.0.0",
   "description": "Billing kit — Stripe checkout, portal, webhooks, and subscriptions.",
   "homepage": "https://github.com/kamod-ch/otok/tree/main/packages/otok-kit-saas#readme",
   "bugs": {

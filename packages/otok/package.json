@@ -1,6 +1,6 @@
 {
   "name": "@kamod-ch/otok",
-  "version": "0.6.1",
+  "version": "1.0.0",
   "description": "Hono + Preact Islands framework runtime.",
   "homepage": "https://github.com/kamod-ch/otok/tree/main/packages/otok#readme",
   "bugs": {

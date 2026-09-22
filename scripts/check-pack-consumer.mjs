@@ -16,6 +16,11 @@ const workDir = mkdtempSync(join(tmpdir(), "otok-pack-consumer-app-"));
 const packTargets = [
   { filter: "@kamod-ch/otok-config", name: "@kamod-ch/otok-config", prefix: "kamod-ch-otok-config-" },
   { filter: "@kamod-ch/otok", name: "@kamod-ch/otok", prefix: "kamod-ch-otok-" },
+  {
+    filter: "@kamod-ch/otok-route-typegen",
+    name: "@kamod-ch/otok-route-typegen",
+    prefix: "kamod-ch-otok-route-typegen-",
+  },
   { filter: "@kamod-ch/otok-vite-plugin", name: "@kamod-ch/otok-vite-plugin", prefix: "kamod-ch-otok-vite-plugin-" },
 ];
 
@@ -39,11 +44,12 @@ try {
   run("cp", ["-a", `${consumerTemplate}/.`, workDir]);
   const pkgPath = join(workDir, "package.json");
   const pkg = JSON.parse(readFileSync(pkgPath, "utf8"));
+  const packedDependencies = Object.fromEntries(
+    packTargets.map((target) => [target.name, `file:${findPack(target.prefix)}`]),
+  );
   pkg.dependencies = {
     ...pkg.dependencies,
-    "@kamod-ch/otok-config": `file:${findPack(packTargets[0].prefix)}`,
-    "@kamod-ch/otok": `file:${findPack(packTargets[1].prefix)}`,
-    "@kamod-ch/otok-vite-plugin": `file:${findPack(packTargets[2].prefix)}`,
+    ...packedDependencies,
     preact: "^10.26.0",
     hono: "^4.13.8",
     kysely: "^0.28.0",
@@ -56,7 +62,10 @@ try {
     esbuild: "^0.25.0",
   };
   writeFileSync(pkgPath, `${JSON.stringify(pkg, null, 2)}\n`);
-  writeFileSync(join(workDir, "pnpm-workspace.yaml"), "allowBuilds:\n  esbuild: true\n");
+  const overrides = Object.entries(packedDependencies)
+    .map(([name, tarball]) => `  ${JSON.stringify(name)}: ${JSON.stringify(tarball)}`)
+    .join("\n");
+  writeFileSync(join(workDir, "pnpm-workspace.yaml"), `allowBuilds:\n  esbuild: true\noverrides:\n${overrides}\n`);
 
   run("pnpm", ["install"], { cwd: workDir });
   run("node", ["run-checks.mjs"], { cwd: workDir });

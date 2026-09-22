@@ -1,6 +1,6 @@
 {
   "name": "@kamod-ch/otok-ai",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "description": "Framework-wide AI integration for Otok — streaming, tools, agents, RAG, budgets, MCP.",
   "homepage": "https://github.com/kamod-ch/otok/tree/main/packages/otok-ai#readme",
   "bugs": {

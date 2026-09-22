@@ -1,6 +1,6 @@
 {
   "name": "@kamod-ch/otok-plugin-fixture",
-  "version": "1.1.0",
+  "version": "1.0.0",
   "description": "Otok plugin fixture used by tests to exercise multiple plugin hooks.",
   "homepage": "https://github.com/kamod-ch/otok/tree/main/packages/otok-plugin-fixture#readme",
   "bugs": {

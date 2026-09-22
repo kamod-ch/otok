@@ -1,6 +1,6 @@
 {
   "name": "@kamod-ch/otok-workflows",
-  "version": "0.1.1",
+  "version": "1.0.0",
   "description": "Durable multi-step workflows for Otok — typed steps, retries, cron, and persistent providers.",
   "homepage": "https://github.com/kamod-ch/otok/tree/main/packages/otok-workflows#readme",
   "bugs": {

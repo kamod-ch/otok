@@ -1,6 +1,6 @@
 {
   "name": "@kamod-ch/otok-realtime",
-  "version": "0.1.1",
+  "version": "1.0.0",
   "description": "Typed SSE and WebSocket realtime for Otok — channels, rooms, presence, and scalable providers.",
   "homepage": "https://github.com/kamod-ch/otok/tree/main/packages/otok-realtime#readme",
   "bugs": {

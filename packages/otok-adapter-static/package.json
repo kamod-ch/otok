@@ -1,6 +1,6 @@
 {
   "name": "otok-adapter-static",
-  "version": "1.0.1",
+  "version": "1.0.0",
   "description": "Static hosting adapter for Otok that prerenders known routes for generic static deploys.",
   "homepage": "https://github.com/kamod-ch/otok/tree/main/packages/otok-adapter-static#readme",
   "bugs": {

@@ -1,6 +1,6 @@
 {
   "name": "@kamod-ch/otok-oauth",
-  "version": "2.0.0",
+  "version": "1.0.0",
   "description": "OAuth login helpers (GitHub, Google, Microsoft, GitLab) for Otok apps.",
   "homepage": "https://github.com/kamod-ch/otok/tree/main/packages/otok-oauth#readme",
   "bugs": {
@@ -70,7 +70,7 @@
   },
   "peerDependencies": {
     "@kamod-ch/otok": ">=0.6.1",
-    "@kamod-ch/otok-auth": ">=2.0.0",
+    "@kamod-ch/otok-auth": ">=1.0.0",
     "arctic": ">=3.0.0",
     "hono": ">=4"
   },

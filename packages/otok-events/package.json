@@ -1,6 +1,6 @@
 {
   "name": "@kamod-ch/otok-events",
-  "version": "0.1.1",
+  "version": "1.0.0",
   "description": "Typed domain events for Otok — in-process bus, transactional outbox, and Kysely integration.",
   "homepage": "https://github.com/kamod-ch/otok/tree/main/packages/otok-events#readme",
   "bugs": {

@@ -1,6 +1,6 @@
 {
   "name": "otok-adapter-cloudflare",
-  "version": "1.0.1",
+  "version": "1.0.0",
   "description": "Cloudflare Workers deployment adapter for Otok with worker-safe bundles and Workers Assets.",
   "homepage": "https://github.com/kamod-ch/otok/tree/main/packages/otok-adapter-cloudflare#readme",
   "bugs": {

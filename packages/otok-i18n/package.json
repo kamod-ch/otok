@@ -1,6 +1,6 @@
 {
   "name": "@kamod-ch/otok-i18n",
-  "version": "3.0.0",
+  "version": "1.0.0",
   "description": "Locale resolution, message catalogs, and i18n helpers for Otok apps.",
   "homepage": "https://github.com/kamod-ch/otok/tree/main/packages/otok-i18n#readme",
   "bugs": {

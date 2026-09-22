@@ -1,6 +1,6 @@
 {
   "name": "@kamod-ch/otok-content",
-  "version": "0.1.1",
+  "version": "1.0.0",
   "description": "Typed content collections for Otok — markdown, MDX, taxonomies, and build-time manifests.",
   "homepage": "https://github.com/kamod-ch/otok/tree/main/packages/otok-content#readme",
   "bugs": {

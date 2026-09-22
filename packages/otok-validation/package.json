@@ -1,6 +1,6 @@
 {
   "name": "@kamod-ch/otok-validation",
-  "version": "2.0.0",
+  "version": "1.0.0",
   "description": "Standard Schema validation for Otok — typed inputs, field errors, and defineAction integration.",
   "homepage": "https://github.com/kamod-ch/otok/tree/main/packages/otok-validation#readme",
   "bugs": {

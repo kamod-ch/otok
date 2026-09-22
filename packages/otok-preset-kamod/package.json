@@ -1,6 +1,6 @@
 {
   "name": "@kamod-ch/otok-preset-kamod",
-  "version": "0.2.0",
+  "version": "1.0.0",
   "description": "Official Otok kamod preset.",
   "homepage": "https://github.com/kamod-ch/otok/tree/main/packages/otok-preset-kamod#readme",
   "bugs": {

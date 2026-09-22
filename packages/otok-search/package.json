@@ -1,6 +1,6 @@
 {
   "name": "@kamod-ch/otok-search",
-  "version": "0.1.1",
+  "version": "1.0.0",
   "description": "Lightweight full-text search index for Otok apps — CRM company indexing.",
   "homepage": "https://github.com/kamod-ch/otok/tree/main/packages/otok-search#readme",
   "bugs": {

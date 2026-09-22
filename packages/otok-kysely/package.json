@@ -1,6 +1,6 @@
 {
   "name": "@kamod-ch/otok-kysely",
-  "version": "2.0.0",
+  "version": "1.0.0",
   "description": "Kysely database integration for Otok — typed db context, migrations, seeds, and CLI.",
   "homepage": "https://github.com/kamod-ch/otok/tree/main/packages/otok-kysely#readme",
   "bugs": {
