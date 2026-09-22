@@ -395,12 +395,7 @@
       ".": {
         "classification": "public",
         "typesFile": "dist/index.d.ts",
-        "exports": [
-          "PluginContractExpectation",
-          "PluginContractOptions",
-          "assertPluginContract",
-          "env"
-        ]
+        "exports": ["PluginContractExpectation", "PluginContractOptions", "assertPluginContract", "env"]
       }
     },
     "@kamod-ch/otok-queue": {
@@ -430,11 +425,7 @@
       "./providers/memory": {
         "classification": "public",
         "typesFile": "dist/providers/memory.d.ts",
-        "exports": [
-          "createMemoryQueueProvider",
-          "createTestQueueProvider",
-          "getMemoryProviderInternals"
-        ]
+        "exports": ["createMemoryQueueProvider", "createTestQueueProvider", "getMemoryProviderInternals"]
       },
       "./providers/postgres": {
         "classification": "public",
@@ -453,11 +444,7 @@
       "./worker": {
         "classification": "public",
         "typesFile": "dist/worker/run-worker.d.ts",
-        "exports": [
-          "QueueWorkerHandle",
-          "QueueWorkerOptions",
-          "runQueueWorker"
-        ]
+        "exports": ["QueueWorkerHandle", "QueueWorkerOptions", "runQueueWorker"]
       }
     },
     "@kamod-ch/otok-registry": {
@@ -616,12 +603,7 @@
       "./plugin": {
         "classification": "public",
         "typesFile": "dist/plugin.d.ts",
-        "exports": [
-          "WorkflowProviderConfig",
-          "WorkflowsPluginOptions",
-          "configureWorkflowsApp",
-          "createWorkflowStore"
-        ]
+        "exports": ["WorkflowProviderConfig", "WorkflowsPluginOptions", "configureWorkflowsApp", "createWorkflowStore"]
       },
       "./providers/kysely": {
         "classification": "public",
@@ -637,11 +619,7 @@
       "./crm": {
         "classification": "experimental",
         "typesFile": "dist/crm/index.d.ts",
-        "exports": [
-          "companyInputSchema",
-          "crmWorkflows",
-          "enrichCompany"
-        ]
+        "exports": ["companyInputSchema", "crmWorkflows", "enrichCompany"]
       }
     },
     "@kamod-ch/otok-vite-plugin": {
