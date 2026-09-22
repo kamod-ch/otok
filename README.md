@@ -1,20 +1,53 @@
 # Otok
 
-Otok is a small Hono + Preact Islands framework for server-rendered apps that only ship browser JavaScript where a page actually needs interactivity.
+**A server-first full-stack framework built on Hono, Preact, and Vite.**
+
+Build fast, progressively enhanced web apps with server-side rendering, file-based routing, typed routes, route actions, middleware, and opt-in islands. Pages ship browser JavaScript only where interactivity is needed.
+
+![CI](https://github.com/kamod-ch/otok/actions/workflows/ci.yml/badge.svg)
+![npm](https://img.shields.io/npm/v/@kamod-ch/otok?label=%40kamod-ch%2Fotok)
+![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)
+![Node.js](https://img.shields.io/badge/node-%3E%3D20-339933?logo=node.js&logoColor=white)
+
+[Documentation](https://kamod-ch.github.io/otok/) · [Quick start](#quick-start) · [Examples](./examples) · [Roadmap](./apps/docs/content/project/roadmap.md) · [Discussions](https://github.com/kamod-ch/otok/discussions)
+
+> [!IMPORTANT]
+> Otok is under active development and has not reached 1.0 yet. Review the [release-candidate status](./docs/1.0/release-candidate.md) before using it in production.
+
+
+
+## Why Otok?
+
+
+| Capability                  | What it gives you                                                                          |
+| --------------------------- | ------------------------------------------------------------------------------------------ |
+| Server-first rendering      | HTML on the first response, with client JavaScript only for interactive islands            |
+| File-based routing          | Pages, nested layouts, middleware, error boundaries, and typed URL generation              |
+| Progressive enhancement     | Native forms and links work without JavaScript; soft navigation enhances them when enabled |
+| Full-stack Hono foundation  | Add APIs, authentication, uploads, and Hono middleware beside SSR routes                   |
+| Preact islands              | Hydrate components on load, idle, visibility, media query, or client-only                  |
+| Deployable architecture     | Node.js reference deployment plus Edge-safe and Cloudflare Workers foundations             |
+| Production-oriented tooling | Testing helpers, health checks, graceful shutdown, package checks, and reproducible builds |
+
+
+Otok keeps its core focused: routing, rendering, islands, actions, middleware, and deployment primitives. UI libraries, databases, authentication, validation, and CSS remain explicit application choices.
 
 ## Quick Start
 
 ```bash
-pnpm create otok my-app              # minimal template (default)
-pnpm create otok my-app --template full   # dashboard demo with kamod-ui
+pnpm create otok@latest my-app
 cd my-app
 pnpm install
 pnpm dev
 ```
 
-App names must be lowercase npm-compatible package names such as `my-app`.
+Use the full dashboard starter with Kamod UI:
 
-An Otok app has three main entry points:
+```bash
+pnpm create otok@latest my-app --template full
+```
+
+An Otok app has four main areas:
 
 ```text
 src/server.ts          Hono server entry
@@ -23,81 +56,34 @@ src/app/routes/        File-based pages, layouts, and special routes
 src/app/islands/       Interactive Preact components
 ```
 
-## How Rendering Works
 
-1. `@kamod-ch/otok-vite-plugin` scans `src/app/routes` and generates `virtual:otok-routes`.
-2. The server uses `createOtokHandler()` or `createOtokApp()` from `otok/server`.
-3. Pages render on the server with Preact.
-4. `<Island>` marks interactive regions in the HTML.
-5. `createOtokClient()` hydrates only those island roots.
-6. With `softNav: true`, internal links fetch the next page and swap only marked regions so layout chrome can stay mounted.
-7. If a page renders no islands, Otok omits the client module script.
+
+## How It Works
+
+1. The Vite plugin scans `src/app/routes` and generates typed route definitions.
+2. Hono handles requests, middleware, loaders, actions, and API endpoints.
+3. Preact renders pages to HTML on the server.
+4. `<Island>` marks only the interactive parts of a page.
+5. The client hydrates those islands using the selected loading strategy.
+6. Optional soft navigation swaps page regions without remounting persistent layout chrome.
+7. Pages without islands omit the client module entirely.
 
 ```mermaid
 flowchart LR
-  Routes[routesDirectory] --> Plugin[vite-plugin-otok]
-  Islands[islandsDirectory] --> Plugin
-  Plugin --> VirtualRoutes[virtualRoutes]
-  Plugin --> VirtualIslands[virtualIslands]
-  VirtualRoutes --> Server[createOtokApp]
-  Server --> HTML[serverRenderedHtml]
-  VirtualIslands --> Client[createOtokClient]
-  HTML --> Client
-  Client --> SoftNav[softNavSwap]
+  Routes["Routes"] --> Vite["Otok Vite plugin"]
+  Islands["Islands"] --> Vite
+  Vite --> Server["Hono + Preact SSR"]
+  Server --> HTML["HTML response"]
+  HTML --> Hydration["Selective hydration"]
 ```
 
-## Soft Navigation
 
-Enable partial page updates so persistent layout chrome (sidebars, shells) does not reload on every click:
 
-```ts
-createOtokClient({ registry: islandModules, softNav: true });
 
-// Opt into progressive form submissions too:
-createOtokClient({ registry: islandModules, softNav: { forms: true } });
-```
-
-Otok wraps each page in `data-otok-page`. Mark layout regions that change with the route using `data-otok-swap`:
-
-```tsx
-<nav data-otok-swap="sidebar-nav">...</nav>
-<header data-otok-swap="topbar">...</header>
-<main>{children}</main>
-```
-
-On internal link clicks Otok:
-
-1. prefetches HTML on link hover (when enabled)
-2. fetches the destination HTML
-3. replaces `[data-otok-page]`
-4. patches every matching `[data-otok-swap]`
-5. syncs managed head metadata (`data-otok-head`)
-6. hydrates new islands
-7. updates the URL with `history.pushState`
-
-Use `data-otok-no-nav` to opt a link out (downloads, external flows). If the fetched HTML has no page region, Otok falls back to a full navigation.
-
-## Route Chrome
-
-Export `chrome` from a route module to pass layout shell metadata without a central route switch:
-
-```tsx
-export const chrome = ({ data, params }) => ({
-  title: "Dashboard",
-  description: "Overview",
-  toolbar: <Island component={Toolbar} props={{}} />,
-});
-
-export default function Page({ data }) {
-  return <p>...</p>;
-}
-```
-
-Layouts receive `chrome` on `OtokLayoutProps` alongside `data`, `params`, and `route`.
 
 ## Routing
 
-Routes are files in `src/app/routes`.
+Routes are files in `src/app/routes`:
 
 ```text
 routes/index.tsx              /
@@ -108,195 +94,125 @@ routes/[[lang]]/about.tsx     /about and /:lang/about
 routes/(marketing)/about.tsx  /about
 ```
 
-Special files:
+Special files colocate framework behavior with the routes they affect:
 
 ```text
-routes/_layout.tsx       Shared layout for the directory
-routes/_not-found.tsx    Convention-based 404 page
-routes/_error.tsx        Convention-based error page
+_layout.tsx       Shared layout
+_middleware.ts    Route middleware
+_not-found.tsx    Convention-based 404 page
+_error.tsx        Convention-based error page
 ```
 
-Files in `routes` that start with `$` are treated as co-located islands and are not matched as pages.
-Unexpected errors render `_error.tsx` with a generic `Internal server error` message by default; set `exposeErrorDetails: true` only when raw server error messages should be shown.
-
-Loaders can return normal serializable data or a native `Response`. Otok also exports small response helpers that share one model for loaders, actions, and middleware:
+The generated `virtual:otok-routes` module also provides a typed URL builder:
 
 ```ts
-import { fail, json, notFound, redirect, validationError } from "@kamod-ch/otok/server";
+import { route } from "virtual:otok-routes";
 
-export const loader = ({ params }) => {
-  if (!params.id) notFound();
-  if (params.id === "latest") redirect("/users/alice");
-  if (params.id === "api") return json({ userId: "alice" });
-  if (params.id === "invalid") {
-    validationError({
-      message: "Validation failed",
-      fieldErrors: { email: "Enter a valid email address" },
-      values: { email: "" },
-    });
-  }
-  return { userId: params.id };
-};
+route("/users/[id]", { params: { id: "alice" } });
+route("/docs/[...slug]", { params: { slug: ["routing", "catch-all"] } });
 ```
 
-`validationError()` defaults to HTTP 400 (or pass `422`) and normalizes `string | string[]` field errors. `fail(status, failure)` remains available for non-validation failures.
 
-## Route Actions and Forms
 
-Route modules can export `action` for server-side mutations. Native HTML forms work without JavaScript; with `softNav: { forms: true }`, same-origin forms are progressively enhanced through the existing page swap runtime.
+## Loaders, Actions, and Forms
+
+Route modules can load data and handle mutations on the server. Native HTML forms work without JavaScript; optional progressive enhancement uses the same soft-navigation runtime.
 
 ```tsx
-import { fail, redirect, type OtokActionContext, type OtokPageProps } from "@kamod-ch/otok/server";
+import { fail, redirect, type OtokActionContext } from "@kamod-ch/otok/server";
 
 export async function action({ formData }: OtokActionContext) {
   const name = String(formData?.get("name") ?? "").trim();
+
   if (!name) {
     fail(400, {
       message: "Validation failed",
       fieldErrors: { name: ["Name is required"] },
     });
   }
+
   await saveProject(name);
   redirect("/projects", 303);
 }
 
-export default function ProjectForm({ actionData }: OtokPageProps) {
-  const result = actionData as { fieldErrors?: Record<string, string[]> } | undefined;
+export default function ProjectForm() {
   return (
     <form method="post">
-      <input name="name" aria-invalid={Boolean(result?.fieldErrors?.name)} />
-      {result?.fieldErrors?.name?.map((error) => (
-        <p role="alert">{error}</p>
-      ))}
+      <input name="name" />
       <button>Save</button>
     </form>
   );
 }
 ```
 
-For browser forms that need `PUT`, `PATCH`, or `DELETE`, use a hidden `_method` field. Otok exposes the effective method as `context.method` in the action. Production pages without islands normally omit the client module; export `client = true` from a no-island route when direct visits should still get progressive form enhancement. Otok does not provide automatic CSRF protection; configure CSRF checks for cookie-authenticated applications.
-
-## Route Middleware
-
-Colocate server middleware in `_middleware.ts` files under `src/app/routes`. Parent middleware runs before child middleware for loaders, actions, and rendering.
-
-```ts
-// src/app/routes/admin/_middleware.ts
-import { defineMiddleware, redirect } from "@kamod-ch/otok/server";
-
-export default defineMiddleware(async (c, next) => {
-  if (!c.get("user")) redirect("/login", 303);
-  await next();
-});
-```
-
-Middleware uses Hono's context and `next()` model. It may return a native `Response`, throw Otok helpers such as `redirect()` / `fail()`, or set values with `c.set()` for loaders and actions.
-
-The Vite plugin also exports `routePaths`, `routeFilePatterns`, and a typed `route()` URL builder from `virtual:otok-routes`:
-
-```ts
-import { route } from "virtual:otok-routes";
-
-route("/users/[id]", { params: { id: "alice" } }); // /users/alice
-route("/docs/[...slug]", { params: { slug: ["routing", "catch-all"] } });
-route("/[[lang]]/about", { params: { lang: "de" }, query: { ref: "docs" } });
-```
-
-The builder accepts file-route patterns, omits route groups from the final URL, URL-encodes params, repeats query arrays, and omits `null` / `undefined` query values.
+Otok also includes response helpers for JSON, redirects, validation failures, not-found responses, and typed route data.
 
 ## Islands
 
-Islands are Preact components rendered on the server and hydrated later in the browser.
+Islands are Preact components rendered on the server and hydrated later in the browser:
 
 ```tsx
 import { Island } from "@kamod-ch/otok/client";
 import Counter from "../islands/counter";
 
 export default function Page() {
-  return <Island component={Counter} props={{ init: 5 }} strategy="visible" />;
+  return <Island component={Counter} props={{ initial: 5 }} strategy="visible" />;
 }
 ```
 
-Otok assigns island IDs from filenames at build time. This avoids production mismatches caused by minified or anonymous component names. The plugin warns when two island files resolve to the same id.
+Available hydration strategies:
 
-Hydration strategies:
 
-```text
-load         Hydrate immediately
-idle         Hydrate during idle time
-visible      Hydrate when the island enters the viewport
-media        Hydrate when a media query matches
-client-only  Skip SSR markup; hydrate an empty shell on the client
-```
+| Strategy      | Behavior                                       |
+| ------------- | ---------------------------------------------- |
+| `load`        | Hydrate immediately                            |
+| `idle`        | Hydrate during browser idle time               |
+| `visible`     | Hydrate when the island enters the viewport    |
+| `media`       | Hydrate when a media query matches             |
+| `client-only` | Skip SSR markup and render only in the browser |
 
-Island props must be JSON-serializable. Small payloads are stored in a base64url HTML attribute. Larger payloads are emitted as adjacent `application/json` script blocks to avoid large attributes.
 
-## Server Entry
+
+
+## Soft Navigation
+
+Keep persistent shells mounted while replacing the current page and other named regions:
 
 ```ts
-import { serve } from "@hono/node-server";
-import { createOtokApp, readOtokManifest } from "@kamod-ch/otok/server";
-import { errorRoute, notFoundRoute, routes } from "virtual:otok-routes";
-
-const app = createOtokApp({
-  routes,
-  notFoundRoute,
-  errorRoute,
-  manifest: readOtokManifest(import.meta.url),
-  clientEntry: "src/client.ts",
-  devClientEntry: "/src/client.ts",
-  staticDir: "./dist/client",
-  health: { ok: true, framework: "otok" },
-  theme: true,
+createOtokClient({
+  registry: islandModules,
+  softNav: { forms: true },
 });
-
-serve({ fetch: app.fetch, port: 3000 });
 ```
 
-Pass `theme: true` to include the built-in dark-mode bootstrap script. Omit it for apps that manage theme themselves.
+```tsx
+<nav data-otok-swap="sidebar-nav">...</nav>
+<header data-otok-swap="topbar">...</header>
+<main>{children}</main>
+```
 
-## Full-Stack Apps (API + SSR)
+Otok synchronizes managed head metadata, swaps matching regions, hydrates new islands, restores navigation state, and falls back to a full navigation when enhancement is not possible.
 
-Use `createOtokHandler()` when the app needs custom API routes, auth middleware, or uploads:
+## Full-Stack Hono Apps
+
+Use `createOtokHandler()` when your application also needs API routes, authentication middleware, or uploads:
 
 ```ts
 import { Hono } from "hono";
-import { createOtokHandler, readOtokManifest } from "@kamod-ch/otok/server";
-import { errorRoute, notFoundRoute, routes } from "virtual:otok-routes";
+import { createOtokHandler } from "@kamod-ch/otok/server";
+import { routes } from "virtual:otok-routes";
 
 const app = new Hono();
 
 app.get("/api/health", (c) => c.json({ ok: true }));
-app.route("/api/documents", createDocumentRoutes());
-
-const ssr = createOtokHandler({
-  routes,
-  notFoundRoute,
-  errorRoute,
-  manifest: readOtokManifest(import.meta.url),
-  clientEntry: "src/client.ts",
-  devClientEntry: "/src/client.ts",
-});
-
-app.get("*", ssr);
+app.get("*", createOtokHandler({ routes }));
 ```
 
-Or register handlers before SSR through `createOtokApp({ configure })`:
 
-```ts
-createOtokApp({
-  routes,
-  configure: (app) => {
-    app.route("/api/auth", authRoutes);
-  },
-});
-```
 
-Soft navigation automatically skips `/api/` links.
+## Build and Deploy
 
-## Build
-
-The default template uses separate Vite builds for the client and server:
+The default template creates separate Vite builds for browser and server code:
 
 ```bash
 pnpm build:client
@@ -304,36 +220,55 @@ pnpm build:server
 pnpm start
 ```
 
-The client build writes a Vite manifest. Use `readOtokManifest(import.meta.url)` in production so Otok can link the hashed client entry and CSS assets.
-
-Node is the Phase 1 reference runtime. The default server entry supports `PORT`, `HOST`, and graceful shutdown on `SIGTERM` / `SIGINT`. See `docs/deployment/node.md` and `examples/deployment/node/` for a production smoke test, Docker example, reverse-proxy notes, health checks, and asset caching guidance.
+Node.js is the reference runtime. The repository also contains Cloudflare Workers smoke tests and Edge-safe runtime foundations. See [the Node deployment guide](./docs/deployment/node.md) for Docker, reverse-proxy, health-check, static-asset caching, and graceful-shutdown guidance.
 
 ## Testing
 
-Use `@kamod-ch/otok-test` for server-side unit tests without a browser or Vite dev server:
+Use `@kamod-ch/otok-test` for server-side route tests without a browser or Vite development server:
 
 ```ts
 import { createTestApp, renderRoute } from "@kamod-ch/otok-test";
 
 const app = createTestApp({
-  routes: [{ path: "/users/:id", component: ({ params }) => <p>User {params.id}</p> }],
+  routes: [
+    {
+      path: "/users/:id",
+      component: ({ params }) => <p>User {params.id}</p>,
+    },
+  ],
 });
 
 const { response, html } = await renderRoute(app, "/users/123");
 ```
 
-`@kamod-ch/otok-test` uses Otok's real Hono handler and `app.request()` under the hood, so it is suitable for loaders, actions, middleware, redirects, cookies, headers, error routes, and SSR HTML. Use Playwright for hydration and browser behavior.
+Use Playwright for hydration, progressive enhancement, and browser behavior.
 
-## Release candidate (stabilization)
+## Project Status
 
-The 2026 stabilization bundle (cache, idempotency, progressive forms, prefetch, quality gates, Postgres queue reference) is documented as a **verifiable RC** — not an automatic npm release:
+Otok is currently pre-1.0. The stabilization bundle is documented as a verifiable release candidate, not an automatic npm release:
 
-- [docs/1.0/release-candidate.md](docs/1.0/release-candidate.md) — recommendation and blockers
-- [docs/1.0/release-checklist.md](docs/1.0/release-checklist.md) — maps to `pnpm release:check`
-- [docs/stabilization/status.md](docs/stabilization/status.md) — per-prompt evidence
+- [Release-candidate assessment](./docs/1.0/release-candidate.md)
+- [Release checklist](./docs/1.0/release-checklist.md)
+- [Stabilization evidence](./docs/stabilization/status.md)
+- [Changelog](./CHANGELOG.md)
 
-Historical 1.0 audit (2026-08-03): [docs/1.0/audit.md](docs/1.0/audit.md).
 
-## Learn More
 
-See `apps/docs` for the documentation site and `docs/conventions.md` for the complete route, layout, island, head, security, and error-handling conventions.
+## Resources
+
+- [Documentation site](https://kamod-ch.github.io/otok/)
+- [Framework conventions](./docs/conventions.md)
+- [Examples](./examples)
+- [Contributing guide](./CONTRIBUTING.md)
+- [Security policy](./SECURITY.md)
+- [GitHub Discussions](https://github.com/kamod-ch/otok/discussions)
+
+
+
+## Contributing
+
+Contributions are welcome. Read [CONTRIBUTING.md](./CONTRIBUTING.md), run the project checks locally, and include a changeset for user-visible package changes.
+
+## License
+
+Otok is available under the [MIT License](./LICENSE).
