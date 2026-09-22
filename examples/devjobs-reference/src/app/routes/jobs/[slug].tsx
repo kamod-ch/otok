@@ -8,12 +8,11 @@ import { notFound, type OtokPageProps } from "@kamod-ch/otok/server";
 import type { DevjobsDatabase } from "../../../db/types.js";
 import { canViewJob, resolveCompanyContext } from "../../../lib/tenant.js";
 
-export const loader = composeLoader(
-  async (ctx) => {
-    const { db, hono, params } = ctx as typeof ctx & {
-      db: import("kysely").Kysely<DevjobsDatabase>;
-      params: Record<string, string>;
-    };
+export const loader = composeLoader(async (ctx) => {
+  const { db, hono, params } = ctx as typeof ctx & {
+    db: import("kysely").Kysely<DevjobsDatabase>;
+    params: Record<string, string>;
+  };
   const slug = params.slug as string;
   const job = await db
     .selectFrom("job_posting")
@@ -53,9 +52,7 @@ export const loader = composeLoader(
     i18n: serializeI18n(hono),
     title: job.title,
   };
-  },
-  withDb<DevjobsDatabase>(),
-);
+}, withDb<DevjobsDatabase>());
 
 export const head = defineMeta(({ data }: { data: any }) => ({
   title: data.title,

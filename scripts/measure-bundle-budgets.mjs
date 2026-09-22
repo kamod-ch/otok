@@ -9,8 +9,7 @@ import { gzipSync } from "node:zlib";
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..");
 const playgroundDist = join(root, "apps/playground/dist");
-const outFile =
-  process.env.OTOK_BUNDLE_RESULTS_PATH ?? join(root, "benchmarks/results/bundles.json");
+const outFile = process.env.OTOK_BUNDLE_RESULTS_PATH ?? join(root, "benchmarks/results/bundles.json");
 
 function gzipSize(path) {
   return gzipSync(readFileSync(path)).length;

@@ -47,9 +47,7 @@ export async function configureQueueApp<TJobs extends JobPayloadMap = JobPayload
 }
 
 /** Register a pre-built provider (e.g. Postgres + Kysely) and expose the queue client. */
-export function activateQueueRuntime<TJobs extends JobPayloadMap>(
-  runtime: QueueRuntime<TJobs>,
-): QueueRuntime<TJobs> {
+export function activateQueueRuntime<TJobs extends JobPayloadMap>(runtime: QueueRuntime<TJobs>): QueueRuntime<TJobs> {
   registerQueueRuntime(runtime);
   client = createQueueClient(runtime) as QueueClient<JobPayloadMap>;
   return runtime;

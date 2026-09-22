@@ -60,7 +60,13 @@ export default function EditJobPage({ data, actionData }: OtokPageProps<any>) {
         <h1 class="mb-6 text-2xl font-semibold">{data.title}</h1>
         <form method="post" data-job-form class="grid gap-4 rounded-lg border border-border p-6">
           <FormAlert message={failure?.message} />
-          <FormField name="title" label="Title" defaultValue={values.title} errors={failure?.fieldErrors?.title} required />
+          <FormField
+            name="title"
+            label="Title"
+            defaultValue={values.title}
+            errors={failure?.fieldErrors?.title}
+            required
+          />
           <Island component={JobTitlePreview} props={{ initialTitle: values.title ?? "" }} strategy="load" />
           <label class="grid gap-1 text-sm">
             Description
@@ -70,7 +76,11 @@ export default function EditJobPage({ data, actionData }: OtokPageProps<any>) {
           </label>
           <label class="grid gap-1 text-sm">
             Visibility
-            <select name="visibility" class="rounded-md border border-border px-3 py-2" defaultValue={values.visibility}>
+            <select
+              name="visibility"
+              class="rounded-md border border-border px-3 py-2"
+              defaultValue={values.visibility}
+            >
               <option value="public">Public</option>
               <option value="private">Private</option>
             </select>

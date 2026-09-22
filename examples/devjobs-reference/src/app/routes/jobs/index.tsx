@@ -15,12 +15,11 @@ export const rendering = defineRendering({
   cache: { public: true, maxAge: 120, vary: ["Accept-Language"] },
 });
 
-export const loader = composeLoader(
-  async (ctx) => {
-    const { db, hono, i18n } = ctx as typeof ctx & {
-      db: import("kysely").Kysely<DevjobsDatabase>;
-      i18n: { t: (key: string) => string };
-    };
+export const loader = composeLoader(async (ctx) => {
+  const { db, hono, i18n } = ctx as typeof ctx & {
+    db: import("kysely").Kysely<DevjobsDatabase>;
+    i18n: { t: (key: string) => string };
+  };
   const url = new URL(hono.req.url);
   const q = url.searchParams.get("q") ?? undefined;
   const page = Math.max(1, Number(url.searchParams.get("page") ?? "1") || 1);
@@ -41,9 +40,7 @@ export const loader = composeLoader(
     user,
     i18n: serializeI18n(hono),
   };
-  },
-  withDb<DevjobsDatabase>(),
-);
+}, withDb<DevjobsDatabase>());
 
 export const head = defineMeta(({ data }: { data: any }) => ({
   title: data.copy.title,
@@ -61,12 +58,7 @@ export default function JobsIndex({ data }: OtokPageProps<any>) {
         <form method="get" class="flex flex-col gap-3 sm:flex-row sm:items-end" role="search">
           <label class="flex flex-1 flex-col gap-1 text-sm">
             {copy.search}
-            <input
-              name="q"
-              value={q}
-              class="rounded-md border border-border px-3 py-2"
-              aria-label={copy.search}
-            />
+            <input name="q" value={q} class="rounded-md border border-border px-3 py-2" aria-label={copy.search} />
           </label>
           <input type="hidden" name="page" value="1" />
           <Button type="submit">{copy.search}</Button>

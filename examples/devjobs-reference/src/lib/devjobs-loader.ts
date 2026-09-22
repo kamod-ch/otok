@@ -21,7 +21,11 @@ async function resolveDevjobsContext(ctx: DbContext): Promise<Pick<DevjobsLoader
   if (!runtime) throw new Error("auth plugin required");
   const auth = authFromOtokContext(ctx.hono, runtime.helpers);
   const baseUser = await auth.requireUser();
-  const user: DevjobsUser = { id: baseUser.id, email: baseUser.email ?? "", name: (baseUser as DevjobsUser).name ?? null };
+  const user: DevjobsUser = {
+    id: baseUser.id,
+    email: baseUser.email ?? "",
+    name: (baseUser as DevjobsUser).name ?? null,
+  };
   const companyUser = await resolveCompanyContext(ctx.db, user);
   if (!companyUser) throw new Response("Forbidden", { status: 403 });
   return { user: companyUser };

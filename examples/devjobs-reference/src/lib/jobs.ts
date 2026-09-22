@@ -6,10 +6,7 @@ const PAGE_SIZE = 5;
 
 export { PAGE_SIZE };
 
-export async function listPublicJobs(
-  db: Kysely<DevjobsDatabase>,
-  options: { q?: string; page: number },
-) {
+export async function listPublicJobs(db: Kysely<DevjobsDatabase>, options: { q?: string; page: number }) {
   const page = Math.max(1, options.page);
   const offset = (page - 1) * PAGE_SIZE;
   let query = db
@@ -41,9 +38,7 @@ export async function listPublicJobs(
     .where("visibility", "=", "public")
     .$if(Boolean(options.q?.trim()), (qb) => {
       const term = `%${options.q!.trim().toLowerCase()}%`;
-      return qb.where((eb) =>
-        eb.or([eb("title", "ilike", term), eb("description", "ilike", term)]),
-      );
+      return qb.where((eb) => eb.or([eb("title", "ilike", term), eb("description", "ilike", term)]));
     })
     .executeTakeFirst();
 

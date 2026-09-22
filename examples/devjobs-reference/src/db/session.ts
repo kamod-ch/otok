@@ -61,10 +61,7 @@ export function createDevjobsSessionAdapter(options: {
   };
 }
 
-export async function resolveUserByToken(
-  db: Kysely<DevjobsDatabase>,
-  tokenHash: string,
-): Promise<DevjobsUser | null> {
+export async function resolveUserByToken(db: Kysely<DevjobsDatabase>, tokenHash: string): Promise<DevjobsUser | null> {
   const row = await db
     .selectFrom("app_session")
     .innerJoin("app_user", "app_user.id", "app_session.user_id")

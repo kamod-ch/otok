@@ -65,7 +65,11 @@ describe("devjobs reference (HTTP)", () => {
     const res = await fetchApp("/employer/jobs/new", {
       method: "POST",
       headers: { cookie, "content-type": "application/x-www-form-urlencoded" },
-      body: new URLSearchParams({ title: "Valid Title Here", description: "Long enough description text.", visibility: "public" }),
+      body: new URLSearchParams({
+        title: "Valid Title Here",
+        description: "Long enough description text.",
+        visibility: "public",
+      }),
     });
     expect(res.status).toBeGreaterThanOrEqual(400);
     expect(res.status).toBeLessThan(500);

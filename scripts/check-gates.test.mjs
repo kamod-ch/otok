@@ -117,7 +117,10 @@ test("check-api-snapshot fails on removed export", () => {
     }),
   );
   mkdirSync(join(dir, "packages/demo/dist"), { recursive: true });
-  writeFileSync(join(dir, "packages/demo/package.json"), JSON.stringify({ name: "@test/pkg", exports: { ".": "./dist/index.d.ts" } }));
+  writeFileSync(
+    join(dir, "packages/demo/package.json"),
+    JSON.stringify({ name: "@test/pkg", exports: { ".": "./dist/index.d.ts" } }),
+  );
   writeFileSync(join(dir, "packages/demo/dist/index.d.ts"), "export declare function StillHere(): void;\n");
   const r = spawnSync(process.execPath, [join(scriptsDir, "check-api-snapshot.mjs")], {
     cwd: root,

@@ -13,8 +13,7 @@ import devjobsCore from "./src/plugins/devjobs-core.js";
 import type { DevjobsDatabase } from "./src/db/types.js";
 
 const appUrl = process.env.APP_URL ?? "http://localhost:5180";
-const connectionString =
-  process.env.DATABASE_URL ?? "postgres://otok:otok@localhost:5435/devjobs_reference";
+const connectionString = process.env.DATABASE_URL ?? "postgres://otok:otok@localhost:5435/devjobs_reference";
 
 const sessionAdapter = createDevjobsSessionAdapter({
   getDb: () => getKyselyRuntime<DevjobsDatabase>().db,

@@ -7,5 +7,8 @@ export const jobFormSchema = z.object({
 });
 
 export const importCsvSchema = z.object({
-  csv: z.string().min(1).max(32 * 1024),
+  csv: z
+    .string()
+    .min(1)
+    .max(32 * 1024),
 });

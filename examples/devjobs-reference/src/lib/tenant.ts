@@ -28,11 +28,7 @@ export async function requireJobOwnership(
   jobId: string,
   companyId: string,
 ): Promise<boolean> {
-  const row = await db
-    .selectFrom("job_posting")
-    .select("company_id")
-    .where("id", "=", jobId)
-    .executeTakeFirst();
+  const row = await db.selectFrom("job_posting").select("company_id").where("id", "=", jobId).executeTakeFirst();
   return row?.company_id === companyId;
 }
 
@@ -46,7 +42,10 @@ export async function canViewJob(
 }
 
 /** Verified tenant for cache scope — never read from client headers or form fields. */
-export async function resolveVerifiedTenantId(db: Kysely<DevjobsDatabase>, userId: string): Promise<string | undefined> {
+export async function resolveVerifiedTenantId(
+  db: Kysely<DevjobsDatabase>,
+  userId: string,
+): Promise<string | undefined> {
   const row = await db
     .selectFrom("company_member")
     .select("company_id")

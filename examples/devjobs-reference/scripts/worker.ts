@@ -8,8 +8,7 @@ import type { QueueDatabase } from "@kamod-ch/otok-queue/providers/postgres";
 import type { DevjobsDatabase } from "../src/db/types.js";
 import { processCsvImport, type DevjobsQueueJobs } from "../src/lib/import-worker.js";
 
-const connectionString =
-  process.env.DATABASE_URL ?? "postgres://otok:otok@localhost:5435/devjobs_reference";
+const connectionString = process.env.DATABASE_URL ?? "postgres://otok:otok@localhost:5435/devjobs_reference";
 
 const db = await createKyselyInstance<DevjobsDatabase>("postgres", connectionString);
 

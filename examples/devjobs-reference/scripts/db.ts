@@ -3,8 +3,7 @@ import { fileURLToPath } from "node:url";
 import { dirname, join } from "node:path";
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..");
-const connectionString =
-  process.env.DATABASE_URL ?? "postgres://otok:otok@localhost:5435/devjobs_reference";
+const connectionString = process.env.DATABASE_URL ?? "postgres://otok:otok@localhost:5435/devjobs_reference";
 
 const options = {
   dialect: "postgres" as const,

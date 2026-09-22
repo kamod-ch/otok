@@ -32,10 +32,10 @@ Open [http://localhost:5180/jobs](http://localhost:5180/jobs).
 
 ### Demo users
 
-| User | Password | Company |
-|------|----------|---------|
-| `alice@alpha.ch` | `seed-password` | Alpha AG |
-| `bob@beta.ch` | `seed-password` | Beta GmbH |
+| User             | Password        | Company   |
+| ---------------- | --------------- | --------- |
+| `alice@alpha.ch` | `seed-password` | Alpha AG  |
+| `bob@beta.ch`    | `seed-password` | Beta GmbH |
 
 Private job `internal-alpha-hr` is visible to Alpha members only (server-side membership, not headers).
 
@@ -71,12 +71,12 @@ pnpm --filter devjobs-reference test:e2e
 
 ## Environment
 
-| Variable | Default |
-|----------|---------|
-| `DATABASE_URL` | `postgres://otok:otok@localhost:5435/devjobs_reference` |
-| `AUTH_SECRET` | dev default in `otok.config.ts` |
-| `APP_URL` | `http://localhost:5180` |
-| `WORKER_HEALTH_PORT` | `9091` |
+| Variable             | Default                                                 |
+| -------------------- | ------------------------------------------------------- |
+| `DATABASE_URL`       | `postgres://otok:otok@localhost:5435/devjobs_reference` |
+| `AUTH_SECRET`        | dev default in `otok.config.ts`                         |
+| `APP_URL`            | `http://localhost:5180`                                 |
+| `WORKER_HEALTH_PORT` | `9091`                                                  |
 
 ## Architecture notes
 

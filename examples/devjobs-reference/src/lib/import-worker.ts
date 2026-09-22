@@ -10,11 +10,7 @@ export type DevjobsQueueJobs = {
 };
 
 export async function processCsvImport(db: Kysely<DevjobsDatabase>, importId: string): Promise<void> {
-  const record = await db
-    .selectFrom("job_import")
-    .selectAll()
-    .where("id", "=", importId)
-    .executeTakeFirst();
+  const record = await db.selectFrom("job_import").selectAll().where("id", "=", importId).executeTakeFirst();
   if (!record) throw new Error(`import ${importId} not found`);
 
   await db

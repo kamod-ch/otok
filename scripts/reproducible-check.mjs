@@ -56,7 +56,9 @@ function cleanBuild() {
   return hashTree(distPath);
 }
 
-console.log(`Lockfile hash: sha256:${createHash("sha256").update(readFileSync(lockfile, "utf8")).digest("hex").slice(0, 12)}`);
+console.log(
+  `Lockfile hash: sha256:${createHash("sha256").update(readFileSync(lockfile, "utf8")).digest("hex").slice(0, 12)}`,
+);
 console.log(`Node: ${process.version}`);
 console.log(`packageManager: ${pkg.packageManager ?? "not set"}`);
 console.log(`Repro target: ${filter} (${targetPackage})`);

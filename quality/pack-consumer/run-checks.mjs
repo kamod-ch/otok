@@ -15,7 +15,11 @@ function run(cmd, args) {
 if (!existsSync(join(here, "node_modules/@kamod-ch/otok"))) {
   errors.push("node_modules/@kamod-ch/otok missing — install packed tarballs first");
 } else {
-  run("node", ["--input-type=module", "-e", "import('@kamod-ch/otok/server'); import('@kamod-ch/otok/client'); console.log('imports ok');"]);
+  run("node", [
+    "--input-type=module",
+    "-e",
+    "await import('@kamod-ch/otok/server'); await import('@kamod-ch/otok/client'); process.stdout.write('imports ok\\n');",
+  ]);
   run("node", [
     "--input-type=module",
     "-e",
@@ -37,4 +41,4 @@ if (errors.length) {
   console.error(errors.join("\n\n"));
   process.exit(1);
 }
-console.log("✓ Pack consumer checks passed");
+process.stdout.write("✓ Pack consumer checks passed\n");

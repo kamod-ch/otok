@@ -1,11 +1,6 @@
 import type { Kysely } from "kysely";
 import type { DevjobsDatabase } from "../src/db/types.js";
-import {
-  COMPANY_ALPHA_ID,
-  COMPANY_BETA_ID,
-  USER_ALICE_ID,
-  USER_BOB_ID,
-} from "../src/db/types.js";
+import { COMPANY_ALPHA_ID, COMPANY_BETA_ID, USER_ALICE_ID, USER_BOB_ID } from "../src/db/types.js";
 import { hashPassword } from "../src/lib/password.js";
 import { newId } from "../src/lib/ids.js";
 
