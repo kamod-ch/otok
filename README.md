@@ -14,10 +14,7 @@ Build fast, progressively enhanced web apps with server-side rendering, file-bas
 > [!IMPORTANT]
 > Otok is under active development and has not reached 1.0 yet. Review the [release-candidate status](./docs/1.0/release-candidate.md) before using it in production.
 
-
-
 ## Why Otok?
-
 
 | Capability                  | What it gives you                                                                          |
 | --------------------------- | ------------------------------------------------------------------------------------------ |
@@ -28,7 +25,6 @@ Build fast, progressively enhanced web apps with server-side rendering, file-bas
 | Preact islands              | Hydrate components on load, idle, visibility, media query, or client-only                  |
 | Deployable architecture     | Node.js reference deployment plus Edge-safe and Cloudflare Workers foundations             |
 | Production-oriented tooling | Testing helpers, health checks, graceful shutdown, package checks, and reproducible builds |
-
 
 Otok keeps its core focused: routing, rendering, islands, actions, middleware, and deployment primitives. UI libraries, databases, authentication, validation, and CSS remain explicit application choices.
 
@@ -56,8 +52,6 @@ src/app/routes/        File-based pages, layouts, and special routes
 src/app/islands/       Interactive Preact components
 ```
 
-
-
 ## How It Works
 
 1. The Vite plugin scans `src/app/routes` and generates typed route definitions.
@@ -76,10 +70,6 @@ flowchart LR
   Server --> HTML["HTML response"]
   HTML --> Hydration["Selective hydration"]
 ```
-
-
-
-
 
 ## Routing
 
@@ -111,8 +101,6 @@ import { route } from "virtual:otok-routes";
 route("/users/[id]", { params: { id: "alice" } });
 route("/docs/[...slug]", { params: { slug: ["routing", "catch-all"] } });
 ```
-
-
 
 ## Loaders, Actions, and Forms
 
@@ -162,7 +150,6 @@ export default function Page() {
 
 Available hydration strategies:
 
-
 | Strategy      | Behavior                                       |
 | ------------- | ---------------------------------------------- |
 | `load`        | Hydrate immediately                            |
@@ -170,9 +157,6 @@ Available hydration strategies:
 | `visible`     | Hydrate when the island enters the viewport    |
 | `media`       | Hydrate when a media query matches             |
 | `client-only` | Skip SSR markup and render only in the browser |
-
-
-
 
 ## Soft Navigation
 
@@ -207,8 +191,6 @@ const app = new Hono();
 app.get("/api/health", (c) => c.json({ ok: true }));
 app.get("*", createOtokHandler({ routes }));
 ```
-
-
 
 ## Build and Deploy
 
@@ -252,8 +234,6 @@ Otok is currently pre-1.0. The stabilization bundle is documented as a verifiabl
 - [Stabilization evidence](./docs/stabilization/status.md)
 - [Changelog](./CHANGELOG.md)
 
-
-
 ## Resources
 
 - [Documentation site](https://kamod-ch.github.io/otok/)
@@ -262,8 +242,6 @@ Otok is currently pre-1.0. The stabilization bundle is documented as a verifiabl
 - [Contributing guide](./CONTRIBUTING.md)
 - [Security policy](./SECURITY.md)
 - [GitHub Discussions](https://github.com/kamod-ch/otok/discussions)
-
-
 
 ## Contributing
 
