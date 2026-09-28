@@ -1,9 +1,4 @@
 <p align="center">
-  <img src="./assets/logo-icon.svg#gh-light-mode-only" width="220" alt="Otok" />
-  <img src="./assets/logo-icon-dark.svg#gh-dark-mode-only" width="220" alt="Otok" />
-</p>
-
-<p align="center">
   <img src="./assets/logo-wordmark.svg" width="340" alt="Otok" />
 </p>
 
