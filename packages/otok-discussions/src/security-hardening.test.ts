@@ -14,15 +14,15 @@ import { DiscussionError } from "./types/errors.js";
 
 describe("content safety", () => {
   it("rejects HTML tags in comment bodies", () => {
-    expect(() =>
-      processCommentBodyForStorage('<script>alert(1)</script>', { maxCodePoints: 10_000 }),
-    ).toThrow(DiscussionError);
+    expect(() => processCommentBodyForStorage("<script>alert(1)</script>", { maxCodePoints: 10_000 })).toThrow(
+      DiscussionError,
+    );
   });
 
   it("rejects javascript: links in markdown", () => {
-    expect(() =>
-      processCommentBodyForStorage("[click](javascript:alert(1))", { maxCodePoints: 10_000 }),
-    ).toThrow(DiscussionError);
+    expect(() => processCommentBodyForStorage("[click](javascript:alert(1))", { maxCodePoints: 10_000 })).toThrow(
+      DiscussionError,
+    );
   });
 
   it("neutralizes XSS in rendered output", () => {
@@ -40,10 +40,34 @@ describe("content safety", () => {
 
 describe("cache isolation policy", () => {
   it("allows shared cache only for anonymous published views", () => {
-    expect(publicDiscussionCacheEligible({ isAuthenticated: false, isModerator: false, containsNonPublishedForViewer: false })).toBe(true);
-    expect(publicDiscussionCacheEligible({ isAuthenticated: true, isModerator: false, containsNonPublishedForViewer: false })).toBe(false);
-    expect(publicDiscussionCacheEligible({ isAuthenticated: false, isModerator: true, containsNonPublishedForViewer: false })).toBe(false);
-    expect(publicDiscussionCacheEligible({ isAuthenticated: false, isModerator: false, containsNonPublishedForViewer: true })).toBe(false);
+    expect(
+      publicDiscussionCacheEligible({
+        isAuthenticated: false,
+        isModerator: false,
+        containsNonPublishedForViewer: false,
+      }),
+    ).toBe(true);
+    expect(
+      publicDiscussionCacheEligible({
+        isAuthenticated: true,
+        isModerator: false,
+        containsNonPublishedForViewer: false,
+      }),
+    ).toBe(false);
+    expect(
+      publicDiscussionCacheEligible({
+        isAuthenticated: false,
+        isModerator: true,
+        containsNonPublishedForViewer: false,
+      }),
+    ).toBe(false);
+    expect(
+      publicDiscussionCacheEligible({
+        isAuthenticated: false,
+        isModerator: false,
+        containsNonPublishedForViewer: true,
+      }),
+    ).toBe(false);
   });
 });
 
@@ -70,13 +94,17 @@ describe("events", () => {
         }),
     };
     await expect(
-      emitDiscussionEvent(sink, {
-        name: "discussion.comment.created",
-        tenantId: "t1",
-        subject: { tenantId: "t1", subjectType: "job", subjectId: "1" },
-        payload: { v: 1, commentId: "c1" },
-        occurredAt: new Date().toISOString(),
-      }, { timeoutMs: 5 }),
+      emitDiscussionEvent(
+        sink,
+        {
+          name: "discussion.comment.created",
+          tenantId: "t1",
+          subject: { tenantId: "t1", subjectType: "job", subjectId: "1" },
+          payload: { v: 1, commentId: "c1" },
+          occurredAt: new Date().toISOString(),
+        },
+        { timeoutMs: 5 },
+      ),
     ).resolves.toBeUndefined();
   });
 });

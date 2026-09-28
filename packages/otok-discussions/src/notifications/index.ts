@@ -14,12 +14,6 @@ export { MemorySubscriptionStore } from "./subscription-store.js";
 export { parseMentionUserIds } from "./mention-parse.js";
 export { createLogNotificationProvider } from "./providers/log.js";
 export { deliverNotificationJob, createNotificationJobHandler } from "./delivery.js";
-export {
-  attachNotificationBridge,
-  createNotificationEventSink,
-} from "./enqueue-bridge.js";
+export { attachNotificationBridge, createNotificationEventSink } from "./enqueue-bridge.js";
 export { createQueueNotificationEnqueue, type QueueEnqueueLike } from "./queue-enqueue.js";
-export {
-  registerDiscussionNotificationRoutes,
-  type DiscussionNotificationRoutesOptions,
-} from "./routes.js";
+export { registerDiscussionNotificationRoutes, type DiscussionNotificationRoutesOptions } from "./routes.js";

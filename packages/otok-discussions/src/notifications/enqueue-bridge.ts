@@ -2,11 +2,7 @@ import type { DiscussionDomainEvent, EventSink } from "../types/ports.js";
 import { parseMentionUserIds } from "./mention-parse.js";
 import type { NotificationsBridgeConfig, NotificationJobPayload } from "./types.js";
 
-function deliveryKey(parts: {
-  kind: string;
-  commentId: string;
-  recipientUserId: string;
-}): string {
+function deliveryKey(parts: { kind: string; commentId: string; recipientUserId: string }): string {
   return `discussions:notify:${parts.kind}:${parts.commentId}:${parts.recipientUserId}`;
 }
 
@@ -23,8 +19,7 @@ async function handleCommentCreated(
   if (status !== "published") return;
 
   const parentAuthorId = payload.parentAuthorId ? String(payload.parentAuthorId) : null;
-  const bodyForMentions =
-    typeof payload.mentionScanBody === "string" ? payload.mentionScanBody : "";
+  const bodyForMentions = typeof payload.mentionScanBody === "string" ? payload.mentionScanBody : "";
 
   const jobs: NotificationJobPayload[] = [];
 

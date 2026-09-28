@@ -5,15 +5,18 @@ export async function deliverNotificationJob(
   provider: NotificationDeliveryProvider,
   subscriptions: SubscriptionStorePort,
   payload: NotificationJobPayload,
-  ctx: { idempotencyKey: string; attempt: number; isRecipientActive?: (tenantId: string, userId: string) => Promise<boolean> },
+  ctx: {
+    idempotencyKey: string;
+    attempt: number;
+    isRecipientActive?: (tenantId: string, userId: string) => Promise<boolean>;
+  },
 ): Promise<import("./types.js").NotificationDeliveryResult> {
   if (ctx.isRecipientActive && !(await ctx.isRecipientActive(payload.tenantId, payload.recipientUserId))) {
     return { status: "skipped", reason: "inactive_recipient" };
   }
 
   const prefs = await subscriptions.getPreferences(payload.tenantId, payload.recipientUserId);
-  const allowed =
-    (payload.kind === "reply" && prefs.replyOptIn) || (payload.kind === "mention" && prefs.mentionOptIn);
+  const allowed = (payload.kind === "reply" && prefs.replyOptIn) || (payload.kind === "mention" && prefs.mentionOptIn);
   if (!allowed) {
     return { status: "skipped", reason: "opt_out" };
   }

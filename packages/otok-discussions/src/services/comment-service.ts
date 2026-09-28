@@ -12,7 +12,12 @@ import type {
   PermalinkResult,
   ReactionCommand,
 } from "./types.js";
-import { filterCommentsForRole, projectCommentForRole, publicListStatuses, resolveCommentViewerRole } from "./visibility.js";
+import {
+  filterCommentsForRole,
+  projectCommentForRole,
+  publicListStatuses,
+  resolveCommentViewerRole,
+} from "./visibility.js";
 import { assertReactionRateLimit } from "./rate-limit-guard.js";
 import type { DiscussionsMetrics } from "../observability/metrics.js";
 import { DISCUSSION_METRIC_NAMES } from "../observability/metrics.js";

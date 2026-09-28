@@ -31,12 +31,7 @@ function ReactionForm(props: {
   const removing = props.active && props.reactionId;
   const Icon = props.icon === "heart" ? HeartIcon : BoltIcon;
   const tone = props.icon === "heart" ? "text-destructive" : "text-warning";
-  const activeTone =
-    props.active && props.icon === "heart"
-      ? "bg-destructive/15"
-      : props.active
-        ? "bg-warning/15"
-        : "";
+  const activeTone = props.active && props.icon === "heart" ? "bg-destructive/15" : props.active ? "bg-warning/15" : "";
 
   return (
     <form method="post" action={props.actionUrl} class="inline" data-reaction-form={props.commentId}>

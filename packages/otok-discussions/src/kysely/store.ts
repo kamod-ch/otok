@@ -82,10 +82,7 @@ export class KyselyDiscussionStore implements DiscussionStorePort {
       .where("id", "=", thread.id)
       .executeTakeFirst();
     if (!existing) {
-      await this.conn()
-        .insertInto("discussions_threads")
-        .values(threadToInsertRow(thread))
-        .execute();
+      await this.conn().insertInto("discussions_threads").values(threadToInsertRow(thread)).execute();
       return;
     }
     const result = await this.conn()

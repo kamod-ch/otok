@@ -118,8 +118,7 @@ export function ModerationDetailPage(props: OtokPageProps) {
         <ul class="list-disc pl-5 text-sm">
           {detail.actions.map((a) => (
             <li key={a.id}>
-              {a.action} by {a.actorId} at{" "}
-              <time dateTime={a.createdAt}>{a.createdAt}</time>
+              {a.action} by {a.actorId} at <time dateTime={a.createdAt}>{a.createdAt}</time>
             </li>
           ))}
         </ul>

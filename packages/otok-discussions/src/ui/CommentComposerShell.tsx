@@ -55,9 +55,7 @@ export function CommentComposerShell({
           <HiddenFormFields csrfToken={form.csrfToken} idempotencyKey={form.idempotencyKey} />
           <input type="hidden" name="intent" value={form.intent} />
           {form.redirectTo ? <input type="hidden" name="redirectTo" value={form.redirectTo} /> : null}
-          {form.parentCommentId ? (
-            <input type="hidden" name="parentCommentId" value={form.parentCommentId} />
-          ) : null}
+          {form.parentCommentId ? <input type="hidden" name="parentCommentId" value={form.parentCommentId} /> : null}
           <label class="sr-only" for={textareaId}>
             {labels.composerLabel}
           </label>

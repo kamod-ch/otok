@@ -14,8 +14,7 @@ import type { RefDatabase } from "./src/db/types.js";
 import type { DiscussionsDatabase } from "@kamod-ch/otok-discussions/kysely";
 
 const appUrl = process.env.APP_URL ?? "http://localhost:5195";
-const connectionString =
-  process.env.DATABASE_URL ?? "postgres://otok:otok@localhost:5437/discussions_reference";
+const connectionString = process.env.DATABASE_URL ?? "postgres://otok:otok@localhost:5437/discussions_reference";
 
 const sessionAdapter = createRefSessionAdapter({
   getDb: () => getKyselyRuntime<RefDatabase & DiscussionsDatabase>().db,

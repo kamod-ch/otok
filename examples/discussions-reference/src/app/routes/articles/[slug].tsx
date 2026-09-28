@@ -7,11 +7,7 @@ import type { RefDatabase } from "../../../db/types.js";
 
 export const loader = defineLoader(async ({ hono, i18n, params }) => {
   const db = dbFromHono<RefDatabase>(hono);
-  const article = await db
-    .selectFrom("article")
-    .selectAll()
-    .where("slug", "=", params.slug!)
-    .executeTakeFirst();
+  const article = await db.selectFrom("article").selectAll().where("slug", "=", params.slug!).executeTakeFirst();
   if (!article) notFound();
   return {
     article,
@@ -54,10 +50,7 @@ export default function ArticleDetail({ data }: OtokPageProps<any>) {
             <h2 id="discussion-preview-heading" class="text-sm font-semibold uppercase tracking-wide">
               {data.copy.preview}
             </h2>
-            <a
-              href={`${prefix}/discussions/${slug}/thread`}
-              class="text-sm font-medium text-primary hover:underline"
-            >
+            <a href={`${prefix}/discussions/${slug}/thread`} class="text-sm font-medium text-primary hover:underline">
               {data.copy.full} →
             </a>
           </div>

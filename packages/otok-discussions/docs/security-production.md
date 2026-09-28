@@ -10,13 +10,13 @@ Rejected at write time: HTML tags, disallowed URL schemes, excess length (Unicod
 
 Implement `RateLimitProvider` (see `createCapabilityRateLimiter` in `@kamod-ch/otok-discussions` exports) or a distributed provider.
 
-| Capability | Default window | Default max |
-|------------|----------------|-------------|
-| `comment:create` | 60s | 30 |
-| `thread:create` | 60s | 10 |
-| `reaction:mutate` | 60s | 120 |
-| `report:create` | 60s | 20 |
-| `moderation:apply` | 60s | 200 |
+| Capability         | Default window | Default max |
+| ------------------ | -------------- | ----------- |
+| `comment:create`   | 60s            | 30          |
+| `thread:create`    | 60s            | 10          |
+| `reaction:mutate`  | 60s            | 120         |
+| `report:create`    | 60s            | 20          |
+| `moderation:apply` | 60s            | 200         |
 
 Primary key: **verified actor id**. Optional anonymous bucket uses a short-lived hashed fingerprint — not authentication.
 

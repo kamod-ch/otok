@@ -17,11 +17,7 @@ export function discussionsRepliesUrl(basePath: string, subjectId: string, paren
   return `${normalize(basePath)}/${encodeURIComponent(subjectId)}/replies/${encodeURIComponent(parentCommentId)}`;
 }
 
-export function discussionsThreadViewUrl(
-  basePath: string,
-  subjectId: string,
-  options: ThreadUrlOptions = {},
-): string {
+export function discussionsThreadViewUrl(basePath: string, subjectId: string, options: ThreadUrlOptions = {}): string {
   const base = `${normalize(basePath)}/${encodeURIComponent(subjectId)}/thread`;
   const params = new URLSearchParams();
   if (options.sort && options.sort !== "newest") params.set("sort", options.sort);

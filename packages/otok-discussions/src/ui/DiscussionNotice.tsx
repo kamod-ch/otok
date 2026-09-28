@@ -20,9 +20,7 @@ function threadNotice(
       return {
         variant: "info",
         title: labels.scheduledTitle,
-        description: opensAt
-          ? `${labels.scheduledDescription} (${opensAt})`
-          : labels.scheduledDescription,
+        description: opensAt ? `${labels.scheduledDescription} (${opensAt})` : labels.scheduledDescription,
       };
     case "read_only":
       return { variant: "warning", title: labels.readOnlyTitle, description: labels.readOnlyDescription };

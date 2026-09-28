@@ -61,11 +61,7 @@ export async function listCommentsPage(
   } else if (sort === "oldest") {
     qb = qb.orderBy("created_at asc").orderBy("id asc");
   } else {
-    qb = qb
-      .orderBy("score_positive desc")
-      .orderBy("score_negative asc")
-      .orderBy("created_at desc")
-      .orderBy("id desc");
+    qb = qb.orderBy("score_positive desc").orderBy("score_negative asc").orderBy("created_at desc").orderBy("id desc");
   }
 
   const fetchLimit = limit + 1 + (query.cursor ? 50 : 0);

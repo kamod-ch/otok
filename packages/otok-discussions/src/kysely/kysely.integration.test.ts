@@ -45,9 +45,9 @@ function registerSharedIntegrationTests(label: string, getDb: () => Kysely<Discu
         authorId: "u1",
         bodyMarkdown: "hello",
       });
-      await expect(
-        adapter.mutate!.addReaction(subjectB, comment.id, "evil", "👍"),
-      ).rejects.toMatchObject({ code: "NOT_FOUND" });
+      await expect(adapter.mutate!.addReaction(subjectB, comment.id, "evil", "👍")).rejects.toMatchObject({
+        code: "NOT_FOUND",
+      });
     });
 
     it("keeps reply counters when creating comments in parallel", async () => {
@@ -214,10 +214,14 @@ describe.skipIf(!pgUrl)("kysely postgres integration", () => {
     await destroy();
   }, hookTimeout);
 
-  it("migrates up and down on postgres", async () => {
-    await rollbackDiscussionsSchema(db, "postgres");
-    await migrateDiscussionsSchema(db, "postgres", "up");
-  }, hookTimeout);
+  it(
+    "migrates up and down on postgres",
+    async () => {
+      await rollbackDiscussionsSchema(db, "postgres");
+      await migrateDiscussionsSchema(db, "postgres", "up");
+    },
+    hookTimeout,
+  );
 
   registerSharedIntegrationTests("postgres", () => db);
 });

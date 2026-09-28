@@ -2,10 +2,7 @@ import type { DiscussionSubject } from "../types/domain.js";
 
 const ROOM_PREFIX = "v1";
 
-export function discussionThreadRoomKey(
-  subject: DiscussionSubject,
-  threadId: string,
-): string {
+export function discussionThreadRoomKey(subject: DiscussionSubject, threadId: string): string {
   return [
     ROOM_PREFIX,
     encodeURIComponent(subject.tenantId),

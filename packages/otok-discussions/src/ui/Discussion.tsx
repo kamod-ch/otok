@@ -42,114 +42,112 @@ export function Discussion({ model, showComposer = true }: DiscussionProps) {
         data-discussion-shell={model.shell}
         data-discussion-locale={model.locale ?? "de"}
       >
-      {model.shell === "loading" ? <DiscussionLoading labels={labels} /> : null}
+        {model.shell === "loading" ? <DiscussionLoading labels={labels} /> : null}
 
-      {model.shell === "error" ? (
-        <DiscussionNotice labels={labels} errorMessage={model.errorMessage ?? labels.errorTitle} />
-      ) : null}
+        {model.shell === "error" ? (
+          <DiscussionNotice labels={labels} errorMessage={model.errorMessage ?? labels.errorTitle} />
+        ) : null}
 
-      {model.shell === "ready" ? (
-        <>
-          <DiscussionHeader model={model} labels={labels} headingId={HEADING_ID} />
-          <DiscussionNotice
-            labels={labels}
-            threadStatus={model.thread?.status}
-            notices={model.notices}
-            opensAt={model.thread?.opensAt}
-          />
-          {model.reportAcknowledged ? (
-            <Alert variant="success">
-              <AlertTitle>{labels.reportTitle}</AlertTitle>
-              <AlertDescription>{labels.reportAck}</AlertDescription>
-            </Alert>
-          ) : null}
-
-          {isThread && model.basePath && model.subjectId ? (
-            <DiscussionSortNav
-              basePath={model.basePath}
-              subjectId={model.subjectId}
-              active={model.sort ?? "newest"}
+        {model.shell === "ready" ? (
+          <>
+            <DiscussionHeader model={model} labels={labels} headingId={HEADING_ID} />
+            <DiscussionNotice
               labels={labels}
+              threadStatus={model.thread?.status}
+              notices={model.notices}
+              opensAt={model.thread?.opensAt}
             />
-          ) : null}
+            {model.reportAcknowledged ? (
+              <Alert variant="success">
+                <AlertTitle>{labels.reportTitle}</AlertTitle>
+                <AlertDescription>{labels.reportAck}</AlertDescription>
+              </Alert>
+            ) : null}
 
-          {isThread ? (
-            <>
-              {model.comments.length ? (
-                <CommentThreadList
-                  comments={model.comments}
-                  labels={labels}
-                  model={model}
-                  canReact={canReact}
-                  actionUrl={actionUrl}
-                  csrfToken={csrfToken}
-                />
-              ) : (
+            {isThread && model.basePath && model.subjectId ? (
+              <DiscussionSortNav
+                basePath={model.basePath}
+                subjectId={model.subjectId}
+                active={model.sort ?? "newest"}
+                labels={labels}
+              />
+            ) : null}
+
+            {isThread ? (
+              <>
+                {model.comments.length ? (
+                  <CommentThreadList
+                    comments={model.comments}
+                    labels={labels}
+                    model={model}
+                    canReact={canReact}
+                    actionUrl={actionUrl}
+                    csrfToken={csrfToken}
+                  />
+                ) : (
+                  <TopCommentsPreview
+                    comments={[]}
+                    labels={labels}
+                    viewerUserId={model.viewer.userId}
+                    canReact={canReact}
+                    actionUrl={actionUrl}
+                    csrfToken={csrfToken}
+                  />
+                )}
+                {model.basePath && model.subjectId ? (
+                  <ThreadPagination
+                    basePath={model.basePath}
+                    subjectId={model.subjectId}
+                    sort={model.sort ?? "newest"}
+                    nextCursor={model.nextCursor}
+                    labels={labels}
+                  />
+                ) : null}
+              </>
+            ) : (
+              <>
                 <TopCommentsPreview
-                  comments={[]}
+                  comments={model.comments}
                   labels={labels}
                   viewerUserId={model.viewer.userId}
                   canReact={canReact}
                   actionUrl={actionUrl}
                   csrfToken={csrfToken}
                 />
-              )}
-              {model.basePath && model.subjectId ? (
-                <ThreadPagination
-                  basePath={model.basePath}
-                  subjectId={model.subjectId}
-                  sort={model.sort ?? "newest"}
-                  nextCursor={model.nextCursor}
-                  labels={labels}
-                />
-              ) : null}
-            </>
-          ) : (
-            <>
-              <TopCommentsPreview
-                comments={model.comments}
-                labels={labels}
-                viewerUserId={model.viewer.userId}
-                canReact={canReact}
-                actionUrl={actionUrl}
-                csrfToken={csrfToken}
-              />
-              {model.layout === "preview" && model.urls.fullDiscussion ? (
-                <ShowAllCommentsCta href={model.urls.fullDiscussion} labels={labels} />
-              ) : null}
-            </>
-          )}
+                {model.layout === "preview" && model.urls.fullDiscussion ? (
+                  <ShowAllCommentsCta href={model.urls.fullDiscussion} labels={labels} />
+                ) : null}
+              </>
+            )}
 
-          {showComposer ? (
-            model.viewer.isAuthenticated ? (
-              canComment && model.form ? (
-                <CommentComposerShell
-                  labels={labels}
-                  form={model.form}
-                  defaultValue={model.values?.bodyMarkdown}
-                  fieldErrors={model.fieldErrors?.bodyMarkdown}
-                  formErrors={model.formErrors}
-                  maxCommentLength={maxCommentLength}
-                  draftScope={model.draftScope}
-                />
+            {showComposer ? (
+              model.viewer.isAuthenticated ? (
+                canComment && model.form ? (
+                  <CommentComposerShell
+                    labels={labels}
+                    form={model.form}
+                    defaultValue={model.values?.bodyMarkdown}
+                    fieldErrors={model.fieldErrors?.bodyMarkdown}
+                    formErrors={model.formErrors}
+                    maxCommentLength={maxCommentLength}
+                    draftScope={model.draftScope}
+                  />
+                ) : (
+                  <CommentComposerShell
+                    labels={labels}
+                    form={model.form ?? { actionUrl, intent: "comment", csrfToken }}
+                    disabled
+                    disabledReason={
+                      model.thread?.status === "scheduled" ? labels.scheduledDescription : labels.closedDescription
+                    }
+                  />
+                )
               ) : (
-                <CommentComposerShell
-                  labels={labels}
-                  form={model.form ?? { actionUrl, intent: "comment", csrfToken }}
-                  disabled
-                  disabledReason={
-                    model.thread?.status === "scheduled"
-                      ? labels.scheduledDescription
-                      : labels.closedDescription
-                  }
-                />
+                <LoginPrompt labels={labels} loginHref={model.urls.login} />
               )
-            ) : (
-              <LoginPrompt labels={labels} loginHref={model.urls.login} />
-            )
-          ) : null}
-        </>
-      ) : null}
+            ) : null}
+          </>
+        ) : null}
       </section>
     </>
   );

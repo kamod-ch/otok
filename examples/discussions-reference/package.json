@@ -20,6 +20,7 @@
   },
   "dependencies": {
     "@hono/node-server": "^2.0.4",
+    "@kamod-ch/icons": "^1.1.0",
     "@kamod-ch/otok": "workspace:*",
     "@kamod-ch/otok-auth": "workspace:*",
     "@kamod-ch/otok-discussions": "workspace:*",
@@ -30,13 +31,12 @@
     "@kamod-ch/otok-seo": "workspace:*",
     "@kamod-ch/otok-test": "workspace:*",
     "@kamod-ch/otok-validation": "workspace:*",
-    "@kamod-ch/icons": "^1.1.0",
     "@kamod-ch/ui": "^1.3.0",
+    "@preact/signals": "^2.5.1",
     "hono": "^4.13.8",
     "kysely": "^0.29.2",
     "otok-adapter-node": "workspace:*",
     "pg": "^8.16.0",
-    "@preact/signals": "^2.5.1",
     "preact": "^10.28.2",
     "zod": "^4.0.0"
   },

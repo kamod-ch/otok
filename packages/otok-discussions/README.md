@@ -6,11 +6,11 @@ Subject-scoped discussions for [Otok](https://github.com/kamod-ch/otok): threads
 
 ## When to use this package
 
-| Use discussions | Use `@kamod-ch/otok-forum` instead |
-| --------------- | ----------------------------------- |
-| Comments on a **specific app entity** | Global categories, forum-first UX |
-| Embed preview + full thread on entity pages | Standalone community product |
-| Shared auth/tenant/CSRF with Otok routes | Forum-specific navigation |
+| Use discussions                             | Use `@kamod-ch/otok-forum` instead |
+| ------------------------------------------- | ---------------------------------- |
+| Comments on a **specific app entity**       | Global categories, forum-first UX  |
+| Embed preview + full thread on entity pages | Standalone community product       |
+| Shared auth/tenant/CSRF with Otok routes    | Forum-specific navigation          |
 
 **Features (verified in 0.1.0):**
 
@@ -120,11 +120,11 @@ UI guide: [`docs/ui.md`](./docs/ui.md).
 
 ## Moderation modes and auto-close
 
-| `moderationMode` | New comment default status |
-| ---------------- | --------------------------- |
-| `post` | `published` (spam provider may force `pending`) |
-| `pre` | `pending` |
-| `trusted` | `published` if actor has configured `trustedRole` |
+| `moderationMode` | New comment default status                        |
+| ---------------- | ------------------------------------------------- |
+| `post`           | `published` (spam provider may force `pending`)   |
+| `pre`            | `pending`                                         |
+| `trusted`        | `published` if actor has configured `trustedRole` |
 
 Thread **auto-close**: set `closesAt` ISO timestamp on thread create/update. On each read/mutation, effective status becomes `closed` when `now >= closesAt` (see [`docs/moderation.md`](./docs/moderation.md)). Example: `closesAt = new Date(Date.now() + 24 * 3600_000).toISOString()` for a 24h window.
 
@@ -146,14 +146,14 @@ Thread **auto-close**: set `closesAt` ISO timestamp on thread create/update. On 
 
 ## Tested runtimes and databases
 
-| Runtime | Support |
-| ------- | ------- |
-| Node.js | `>=20` (22.x in monorepo CI) |
-| Edge | Not targeted for Kysely adapter (use HTTP API to Node backend) |
+| Runtime | Support                                                        |
+| ------- | -------------------------------------------------------------- |
+| Node.js | `>=20` (22.x in monorepo CI)                                   |
+| Edge    | Not targeted for Kysely adapter (use HTTP API to Node backend) |
 
-| Database | Tests |
-| -------- | ----- |
-| SQLite | Default integration suite |
+| Database   | Tests                               |
+| ---------- | ----------------------------------- |
+| SQLite     | Default integration suite           |
 | PostgreSQL | With `OTOK_DISCUSSIONS_PG_TEST_URL` |
 
 ## Known limitations (0.1.0)

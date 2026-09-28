@@ -5,9 +5,7 @@ export function HiddenFormFields(props: { csrfToken?: string; idempotencyKey?: s
   return (
     <>
       {props.csrfToken ? <input type="hidden" name={CSRF_FIELD} value={props.csrfToken} /> : null}
-      {props.idempotencyKey ? (
-        <input type="hidden" name={OTOK_IDEMPOTENCY_FIELD} value={props.idempotencyKey} />
-      ) : null}
+      {props.idempotencyKey ? <input type="hidden" name={OTOK_IDEMPOTENCY_FIELD} value={props.idempotencyKey} /> : null}
     </>
   );
 }

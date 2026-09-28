@@ -4,11 +4,11 @@
 
 The app **always** supplies trust — the plugin does not compute hidden reputation.
 
-| App signal | Default when missing | `pre` mode | `post` mode | `trusted` mode |
-|------------|----------------------|------------|-------------|----------------|
-| `standard` | **default** | pending | published | published |
-| `trusted` (role or explicit level) | — | pending | published | published |
-| `restricted` | — | pending | pending | pending |
+| App signal                         | Default when missing | `pre` mode | `post` mode | `trusted` mode |
+| ---------------------------------- | -------------------- | ---------- | ----------- | -------------- |
+| `standard`                         | **default**          | pending    | published   | published      |
+| `trusted` (role or explicit level) | —                    | pending    | published   | published      |
+| `restricted`                       | —                    | pending    | pending     | pending        |
 
 Map roles via `authorTrustLevelFromRoles()` or pass explicit trust on comment create (future host hook).  
 Configured trusted role defaults to `discussions_trusted` in runtime rules (`trustedRole`).

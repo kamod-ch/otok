@@ -182,7 +182,11 @@ export class MemoryDiscussionStore implements DiscussionStorePort {
     return [...this.reports.values()].filter((r) => r.subject.tenantId === tenantId && r.status === "open");
   }
 
-  async listModerationActionsForTarget(tenantId: string, targetType: string, targetId: string): Promise<ModerationAction[]> {
+  async listModerationActionsForTarget(
+    tenantId: string,
+    targetType: string,
+    targetId: string,
+  ): Promise<ModerationAction[]> {
     return this.moderationActions.filter(
       (a) => a.tenantId === tenantId && a.targetType === targetType && a.targetId === targetId,
     );

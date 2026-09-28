@@ -63,14 +63,7 @@ export interface PluginDiscussionPageData {
   items?: Array<
     Pick<
       DiscussionComment,
-      | "id"
-      | "bodyMarkdown"
-      | "authorId"
-      | "status"
-      | "isPlaceholder"
-      | "scorePositive"
-      | "scoreNegative"
-      | "createdAt"
+      "id" | "bodyMarkdown" | "authorId" | "status" | "isPlaceholder" | "scorePositive" | "scoreNegative" | "createdAt"
     > & {
       authorDisplayName?: string;
       authorAvatarUrl?: string;

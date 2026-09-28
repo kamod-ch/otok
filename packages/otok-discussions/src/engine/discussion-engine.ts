@@ -27,12 +27,7 @@ import type {
   Report,
 } from "../types/domain.js";
 import { DiscussionError } from "../types/errors.js";
-import type {
-  CreateCommentInput,
-  CreateThreadInput,
-  ListCommentsQuery,
-  UpdateCommentInput,
-} from "../types/ports.js";
+import type { CreateCommentInput, CreateThreadInput, ListCommentsQuery, UpdateCommentInput } from "../types/ports.js";
 import { processCommentBodyForStorage } from "../security/process-body.js";
 import { emitDiscussionEvent } from "../events/emit.js";
 import {
@@ -300,7 +295,11 @@ export class DiscussionEngine {
     });
   }
 
-  async setCommentStatus(subject: DiscussionComment["subject"], commentId: string, to: CommentStatus): Promise<DiscussionComment> {
+  async setCommentStatus(
+    subject: DiscussionComment["subject"],
+    commentId: string,
+    to: CommentStatus,
+  ): Promise<DiscussionComment> {
     return this.store.runAtomic(async () => {
       const comment = await this.store.findComment(subject, commentId);
       if (!comment) throw new DiscussionError("NOT_FOUND", "Comment not found");
@@ -333,7 +332,10 @@ export class DiscussionEngine {
     });
   }
 
-  async deleteCommentWithPlaceholder(subject: DiscussionComment["subject"], commentId: string): Promise<DiscussionComment> {
+  async deleteCommentWithPlaceholder(
+    subject: DiscussionComment["subject"],
+    commentId: string,
+  ): Promise<DiscussionComment> {
     return this.store.runAtomic(async () => {
       const comment = await this.store.findComment(subject, commentId);
       if (!comment) throw new DiscussionError("NOT_FOUND", "Comment not found");
@@ -391,7 +393,12 @@ export class DiscussionEngine {
     });
   }
 
-  async addReaction(subject: DiscussionComment["subject"], commentId: string, actorId: string, emoji: string): Promise<Reaction> {
+  async addReaction(
+    subject: DiscussionComment["subject"],
+    commentId: string,
+    actorId: string,
+    emoji: string,
+  ): Promise<Reaction> {
     return this.store.runAtomic(async () => {
       const comment = await this.store.findComment(subject, commentId);
       if (!comment) throw new DiscussionError("NOT_FOUND", "Comment not found");

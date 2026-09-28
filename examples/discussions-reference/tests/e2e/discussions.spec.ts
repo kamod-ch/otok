@@ -1,8 +1,7 @@
 import { test, expect } from "@playwright/test";
 import pg from "pg";
 
-const DATABASE_URL =
-  process.env.DATABASE_URL ?? "postgres://otok:otok@localhost:5437/discussions_reference";
+const DATABASE_URL = process.env.DATABASE_URL ?? "postgres://otok:otok@localhost:5437/discussions_reference";
 
 async function withDb<T>(fn: (client: pg.Client) => Promise<T>): Promise<T> {
   const client = new pg.Client({ connectionString: DATABASE_URL });
@@ -73,7 +72,10 @@ test.describe("discussions reference e2e", () => {
 
     await page.goto("/discussions/open-debate/thread");
     await page.locator('textarea[name="bodyMarkdown"]').fill("");
-    const submit = page.locator('form[method="post"]').first().getByRole("button", { name: /Senden|Post|Submit/i });
+    const submit = page
+      .locator('form[method="post"]')
+      .first()
+      .getByRole("button", { name: /Senden|Post|Submit/i });
     await submit.click();
     await expect(page.locator("body")).toContainText(/(leer|empty|required|Pflicht)/i);
     await submit.click();
@@ -93,7 +95,10 @@ test.describe("discussions reference e2e", () => {
     await expect(page.getByText("Trusted sofort live")).toBeVisible();
 
     await page.goto("/auth/logout");
-    await page.locator('form[method="post"]').first().evaluate((f: HTMLFormElement) => f.submit());
+    await page
+      .locator('form[method="post"]')
+      .first()
+      .evaluate((f: HTMLFormElement) => f.submit());
     await login(page, "reader.a@ref.local");
     await page.goto("/discussions/moderated-piece/thread");
     await page.locator('textarea[name="bodyMarkdown"]').fill("Pending Leser Kommentar");

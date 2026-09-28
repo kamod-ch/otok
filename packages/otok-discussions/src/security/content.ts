@@ -59,10 +59,7 @@ export function validateCommentBodyNormalized(text: string, options: ProcessComm
   }
   const points = countUnicodeCodePoints(text);
   if (points > options.maxCodePoints) {
-    throw new DiscussionError(
-      "INVALID_INPUT",
-      `Comment exceeds maximum length of ${options.maxCodePoints} characters`,
-    );
+    throw new DiscussionError("INVALID_INPUT", `Comment exceeds maximum length of ${options.maxCodePoints} characters`);
   }
   if (options.rejectHtml !== false) {
     assertNoHtml(text);

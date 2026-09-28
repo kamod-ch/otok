@@ -74,7 +74,10 @@ export function assertMutationCsrf(ctx: OtokActionContext, state: DiscussionsCon
   assertCsrf(ctx.hono, ctx.formData, resolveCsrfOptions(state) ?? {});
 }
 
-export async function assertMutationAuth(ctx: OtokActionContext, state: DiscussionsContextState): Promise<DiscussionRequestContext> {
+export async function assertMutationAuth(
+  ctx: OtokActionContext,
+  state: DiscussionsContextState,
+): Promise<DiscussionRequestContext> {
   assertMutationCsrf(ctx, state);
   const reqCtx = await buildDiscussionRequestContext(ctx, state);
   if (!reqCtx.sessionUserId) {

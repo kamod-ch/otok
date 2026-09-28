@@ -62,20 +62,22 @@ export class ModerationService {
   async listQueue(ctx: DiscussionRequestContext, query: ModerationQueueQuery) {
     const actor = await this.access.requireActor(ctx);
     await this.modAccess.assertTenantScope(actor, query.tenantId, this.deps.moderation);
-    await this.access.assertPolicy("comment:moderate", {
-      tenantId: query.tenantId,
-      subjectType: query.subjectType ?? ctx.subjectType,
-      subjectId: query.subjectId ?? ctx.subjectId,
-    }, actor);
+    await this.access.assertPolicy(
+      "comment:moderate",
+      {
+        tenantId: query.tenantId,
+        subjectType: query.subjectType ?? ctx.subjectType,
+        subjectId: query.subjectId ?? ctx.subjectId,
+      },
+      actor,
+    );
 
     const store = this.deps.store;
     if (!store) {
       throw new DiscussionError("CAPABILITY_MISSING", "Moderation queue requires storePort on createDiscussions()");
     }
 
-    const threads = new Map(
-      (await store.listCommentsByTenant(query.tenantId)).map((c) => [c.threadId, c.threadId]),
-    );
+    const threads = new Map((await store.listCommentsByTenant(query.tenantId)).map((c) => [c.threadId, c.threadId]));
     const threadsById = new Map<string, import("../types/domain.js").DiscussionThread>();
     for (const threadId of new Set(threads.keys())) {
       const sample = (await store.listCommentsByTenant(query.tenantId)).find((c) => c.threadId === threadId);
@@ -95,14 +97,10 @@ export class ModerationService {
     await this.access.assertPolicy("comment:moderate", subject, actor, { thread, comment });
 
     const store = this.deps.store;
-    const parent = comment.parentCommentId
-      ? await this.access.read.getComment(subject, comment.parentCommentId)
-      : null;
+    const parent = comment.parentCommentId ? await this.access.read.getComment(subject, comment.parentCommentId) : null;
     const revisions = await this.access.read.listRevisions(subject, commentId);
     const reports = store ? await store.listReportsForTarget("comment", commentId) : [];
-    const actions = store
-      ? await store.listModerationActionsForTarget(subject.tenantId, "comment", commentId)
-      : [];
+    const actions = store ? await store.listModerationActionsForTarget(subject.tenantId, "comment", commentId) : [];
 
     return {
       comment: projectCommentForRole(comment, "moderator")!,
@@ -208,7 +206,10 @@ export class ModerationService {
     return updated;
   }
 
-  async applyBulk(ctx: DiscussionRequestContext, command: ModerationBulkApplyCommand): Promise<ModerationBulkApplyResult> {
+  async applyBulk(
+    ctx: DiscussionRequestContext,
+    command: ModerationBulkApplyCommand,
+  ): Promise<ModerationBulkApplyResult> {
     const results: ModerationBulkApplyResult["results"] = [];
     for (const item of command.items) {
       try {

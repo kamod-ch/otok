@@ -1,9 +1,5 @@
 import { useEffect, useRef } from "preact/hooks";
-import {
-  clearDiscussionDraft,
-  readDiscussionDraft,
-  writeDiscussionDraft,
-} from "../browser/draft-storage.js";
+import { clearDiscussionDraft, readDiscussionDraft, writeDiscussionDraft } from "../browser/draft-storage.js";
 
 import { createDiscussionsI18n, type DiscussionLocale } from "../../i18n/create.js";
 import { discussionLabelsFromI18n } from "../../i18n/labels.js";
@@ -41,9 +37,7 @@ export default function DiscussionComposerIsland({
     }
     mounted.current = true;
 
-    const counter = textarea
-      .closest("form")
-      ?.querySelector<HTMLElement>("[data-discussion-char-count]");
+    const counter = textarea.closest("form")?.querySelector<HTMLElement>("[data-discussion-char-count]");
 
     const sync = () => {
       const len = textarea.value.length;

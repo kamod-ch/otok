@@ -1,10 +1,4 @@
-import type {
-  CommentRevision,
-  DiscussionComment,
-  DiscussionThread,
-  Reaction,
-  Report,
-} from "../types/domain.js";
+import type { CommentRevision, DiscussionComment, DiscussionThread, Reaction, Report } from "../types/domain.js";
 import type {
   DiscussionsCommentRevisionsTable,
   DiscussionsCommentsTable,
@@ -82,10 +76,7 @@ export function rowToComment(row: DiscussionsCommentsTable): DiscussionComment {
   };
 }
 
-export function commentToInsertRow(
-  comment: DiscussionComment,
-  rootCommentId: string | null,
-): DiscussionsCommentsTable {
+export function commentToInsertRow(comment: DiscussionComment, rootCommentId: string | null): DiscussionsCommentsTable {
   return {
     id: comment.id,
     thread_id: comment.threadId,

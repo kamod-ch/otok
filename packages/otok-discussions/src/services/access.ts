@@ -1,11 +1,6 @@
 import type { DiscussionsRuntime } from "../config.js";
 import { assertThreadAcceptsReplies, resolveEffectiveThreadStatus } from "../domain/index.js";
-import type {
-  DiscussionActor,
-  DiscussionComment,
-  DiscussionSubject,
-  DiscussionThread,
-} from "../types/domain.js";
+import type { DiscussionActor, DiscussionComment, DiscussionSubject, DiscussionThread } from "../types/domain.js";
 import { DiscussionError } from "../types/errors.js";
 import type {
   ActorResolver,

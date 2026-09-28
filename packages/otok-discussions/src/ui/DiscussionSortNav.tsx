@@ -9,12 +9,14 @@ export interface DiscussionSortNavProps {
   labels: DiscussionLabels;
 }
 
-const SORTS: Array<{ id: CommentSort; labelKey: keyof Pick<DiscussionLabels, "sortNewest" | "sortOldest" | "sortPopular"> }> =
-  [
-    { id: "newest", labelKey: "sortNewest" },
-    { id: "oldest", labelKey: "sortOldest" },
-    { id: "top", labelKey: "sortPopular" },
-  ];
+const SORTS: Array<{
+  id: CommentSort;
+  labelKey: keyof Pick<DiscussionLabels, "sortNewest" | "sortOldest" | "sortPopular">;
+}> = [
+  { id: "newest", labelKey: "sortNewest" },
+  { id: "oldest", labelKey: "sortOldest" },
+  { id: "top", labelKey: "sortPopular" },
+];
 
 export function DiscussionSortNav({ basePath, subjectId, active, labels }: DiscussionSortNavProps) {
   return (

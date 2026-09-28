@@ -41,13 +41,43 @@ export default async function seed(db: SeedDb) {
   await db
     .insertInto("app_user")
     .values([
-      { id: USER_A_READER, email: "reader.a@ref.local", display_name: "Leser A", password_hash: passwordHash, created_at: now },
-      { id: USER_A_TRUSTED, email: "trusted.a@ref.local", display_name: "Trusted A", password_hash: passwordHash, created_at: now },
+      {
+        id: USER_A_READER,
+        email: "reader.a@ref.local",
+        display_name: "Leser A",
+        password_hash: passwordHash,
+        created_at: now,
+      },
+      {
+        id: USER_A_TRUSTED,
+        email: "trusted.a@ref.local",
+        display_name: "Trusted A",
+        password_hash: passwordHash,
+        created_at: now,
+      },
       { id: USER_A_MOD, email: "mod.a@ref.local", display_name: "Mod A", password_hash: passwordHash, created_at: now },
-      { id: USER_A_ADMIN, email: "admin.a@ref.local", display_name: "Admin A", password_hash: passwordHash, created_at: now },
-      { id: USER_B_READER, email: "reader.b@ref.local", display_name: "Leser B", password_hash: passwordHash, created_at: now },
+      {
+        id: USER_A_ADMIN,
+        email: "admin.a@ref.local",
+        display_name: "Admin A",
+        password_hash: passwordHash,
+        created_at: now,
+      },
+      {
+        id: USER_B_READER,
+        email: "reader.b@ref.local",
+        display_name: "Leser B",
+        password_hash: passwordHash,
+        created_at: now,
+      },
       { id: USER_B_MOD, email: "mod.b@ref.local", display_name: "Mod B", password_hash: passwordHash, created_at: now },
-      { id: USER_B_ADMIN, email: "admin.b@ref.local", display_name: "Admin B", password_hash: passwordHash, created_at: now },
+      {
+        id: USER_B_ADMIN,
+        email: "admin.b@ref.local",
+        display_name: "Admin B",
+        password_hash: passwordHash,
+        created_at: now,
+      },
     ])
     .execute();
 

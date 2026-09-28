@@ -3,12 +3,7 @@ import type { DiscussionsContextState } from "./types.js";
 import { buildDiscussionRequestContext } from "./context.js";
 import { httpStatusForDiscussionError, jsonErrorBody } from "./errors.js";
 import { DiscussionError } from "../types/errors.js";
-import {
-  createCommentFormSchema,
-  reactionFormSchema,
-  reportFormSchema,
-  validationErrorFromZod,
-} from "./validation.js";
+import { createCommentFormSchema, reactionFormSchema, reportFormSchema, validationErrorFromZod } from "./validation.js";
 
 export interface JsonApiOptions {
   pathPrefix: string;
@@ -43,7 +38,13 @@ export function registerDiscussionsJsonApi(app: Hono, options: JsonApiOptions): 
     try {
       const state = options.getState(c);
       const reqCtx = await buildDiscussionRequestContext(
-        { hono: c, request: c.req.raw, params: { subjectId: c.req.param("subjectId") }, route: c.req.path, signal: c.req.raw.signal },
+        {
+          hono: c,
+          request: c.req.raw,
+          params: { subjectId: c.req.param("subjectId") },
+          route: c.req.path,
+          signal: c.req.raw.signal,
+        },
         state,
       );
       const threadId = c.req.query("threadId");
@@ -74,7 +75,13 @@ export function registerDiscussionsJsonApi(app: Hono, options: JsonApiOptions): 
         return jsonResponse(c, 422, jsonErrorBody("INVALID_INPUT", "Validation failed", err));
       }
       const reqCtx = await buildDiscussionRequestContext(
-        { hono: c, request: c.req.raw, params: { subjectId: c.req.param("subjectId") }, route: c.req.path, signal: c.req.raw.signal },
+        {
+          hono: c,
+          request: c.req.raw,
+          params: { subjectId: c.req.param("subjectId") },
+          route: c.req.path,
+          signal: c.req.raw.signal,
+        },
         state,
       );
       if (!reqCtx.sessionUserId) {
@@ -101,10 +108,20 @@ export function registerDiscussionsJsonApi(app: Hono, options: JsonApiOptions): 
       const body = await c.req.json();
       const parsed = reactionFormSchema.safeParse(body);
       if (!parsed.success) {
-        return jsonResponse(c, 422, jsonErrorBody("INVALID_INPUT", "Validation failed", validationErrorFromZod(parsed.error)));
+        return jsonResponse(
+          c,
+          422,
+          jsonErrorBody("INVALID_INPUT", "Validation failed", validationErrorFromZod(parsed.error)),
+        );
       }
       const reqCtx = await buildDiscussionRequestContext(
-        { hono: c, request: c.req.raw, params: { subjectId: c.req.param("subjectId") }, route: c.req.path, signal: c.req.raw.signal },
+        {
+          hono: c,
+          request: c.req.raw,
+          params: { subjectId: c.req.param("subjectId") },
+          route: c.req.path,
+          signal: c.req.raw.signal,
+        },
         state,
       );
       if (!reqCtx.sessionUserId) {
@@ -126,10 +143,20 @@ export function registerDiscussionsJsonApi(app: Hono, options: JsonApiOptions): 
       const body = await c.req.json();
       const parsed = reportFormSchema.safeParse(body);
       if (!parsed.success) {
-        return jsonResponse(c, 422, jsonErrorBody("INVALID_INPUT", "Validation failed", validationErrorFromZod(parsed.error)));
+        return jsonResponse(
+          c,
+          422,
+          jsonErrorBody("INVALID_INPUT", "Validation failed", validationErrorFromZod(parsed.error)),
+        );
       }
       const reqCtx = await buildDiscussionRequestContext(
-        { hono: c, request: c.req.raw, params: { subjectId: c.req.param("subjectId") }, route: c.req.path, signal: c.req.raw.signal },
+        {
+          hono: c,
+          request: c.req.raw,
+          params: { subjectId: c.req.param("subjectId") },
+          route: c.req.path,
+          signal: c.req.raw.signal,
+        },
         state,
       );
       if (!reqCtx.sessionUserId) {

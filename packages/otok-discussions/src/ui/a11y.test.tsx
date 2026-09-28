@@ -12,7 +12,7 @@ describe("discussion a11y markup", () => {
     expect(html).toContain('href="#discussion-region"');
     expect(html).toContain('id="discussion-region"');
     expect(html).toContain('role="list"');
-    expect(html).toContain('aria-pressed=');
+    expect(html).toContain("aria-pressed=");
   });
 
   it("renders English labels when locale is en", () => {

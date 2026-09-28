@@ -1,10 +1,6 @@
 import type { OtokRoute, RouteModule } from "@kamod-ch/otok/server";
 import type { OtokContext } from "@kamod-ch/otok/server";
-import {
-  buildDiscussionRequestContext,
-  ensureLoaderCsrf,
-  getDiscussionsState,
-} from "../http/context.js";
+import { buildDiscussionRequestContext, ensureLoaderCsrf, getDiscussionsState } from "../http/context.js";
 import { runDiscussionThreadAction, discussionsThreadUrl } from "../http/actions.js";
 import { rethrowDiscussionError } from "../http/errors.js";
 import { parseThreadViewQuery } from "../http/thread-query.js";
@@ -260,7 +256,13 @@ export function createDiscussionRoutes(
     makeDiscussionRoute("discussions-preview", basePath, "/:subjectId", previewModule, middleware),
     makeDiscussionRoute("discussions-thread", basePath, "/:subjectId/thread", threadModule, middleware),
     makeDiscussionRoute("discussions-replies", basePath, "/:subjectId/replies/:commentId", repliesModule, middleware),
-    makeDiscussionRoute("discussions-permalink", basePath, "/:subjectId/comment/:commentId", permalinkModule, middleware),
+    makeDiscussionRoute(
+      "discussions-permalink",
+      basePath,
+      "/:subjectId/comment/:commentId",
+      permalinkModule,
+      middleware,
+    ),
   ];
 
   if (options?.ui?.fixturesRoute) {

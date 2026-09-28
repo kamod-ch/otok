@@ -46,13 +46,7 @@ export interface ModerationCommentDetail {
   actions: import("./domain.js").ModerationAction[];
 }
 
-export type ModerationCommentAction =
-  | "publish"
-  | "reject"
-  | "hide"
-  | "restore"
-  | "delete"
-  | "anonymize";
+export type ModerationCommentAction = "publish" | "reject" | "hide" | "restore" | "delete" | "anonymize";
 
 export type ModerationThreadAction = "open" | "read_only" | "closed" | "reopen";
 

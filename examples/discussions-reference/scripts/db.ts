@@ -7,8 +7,7 @@ import type { RefDatabase } from "../src/db/types.js";
 import type { DiscussionsDatabase } from "@kamod-ch/otok-discussions/kysely";
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..");
-const connectionString =
-  process.env.DATABASE_URL ?? "postgres://otok:otok@localhost:5437/discussions_reference";
+const connectionString = process.env.DATABASE_URL ?? "postgres://otok:otok@localhost:5437/discussions_reference";
 
 const options = {
   dialect: "postgres" as const,

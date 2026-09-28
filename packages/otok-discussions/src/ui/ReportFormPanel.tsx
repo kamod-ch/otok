@@ -49,7 +49,11 @@ export function ReportFormPanel({
         <input type="hidden" name="intent" value="report" />
         <input type="hidden" name="targetType" value="comment" />
         <input type="hidden" name="targetId" value={commentId} />
-        <input type="hidden" name="redirectTo" value={discussionsThreadViewUrl(basePath, subjectId, { sort, reportAck: true })} />
+        <input
+          type="hidden"
+          name="redirectTo"
+          value={discussionsThreadViewUrl(basePath, subjectId, { sort, reportAck: true })}
+        />
         <label class="grid gap-1 text-sm" for={`report-reason-${commentId}`}>
           {labels.reportReasonLabel}
           <select

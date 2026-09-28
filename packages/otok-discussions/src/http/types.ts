@@ -56,7 +56,9 @@ export interface CreateDiscussionsOptions {
   i18n?: {
     defaultLocale?: import("../i18n/create.js").DiscussionLocale;
     fallbackLocale?: import("../i18n/create.js").DiscussionLocale;
-    resolveLocale?: (ctx: OtokContext) => import("../i18n/create.js").DiscussionLocale | Promise<import("../i18n/create.js").DiscussionLocale>;
+    resolveLocale?: (
+      ctx: OtokContext,
+    ) => import("../i18n/create.js").DiscussionLocale | Promise<import("../i18n/create.js").DiscussionLocale>;
   };
   /** Optional UI hints for bundled discussion pages (`./ui`). */
   ui?: {
@@ -90,9 +92,7 @@ export interface CreateDiscussionsOptions {
   notificationPreferences?: {
     subscriptions: import("../notifications/types.js").SubscriptionStorePort;
     pathPrefix?: string;
-    resolveTenantUser: (
-      ctx: import("hono").Context,
-    ) => Promise<{ tenantId: string; userId: string } | null>;
+    resolveTenantUser: (ctx: import("hono").Context) => Promise<{ tenantId: string; userId: string } | null>;
   };
 }
 

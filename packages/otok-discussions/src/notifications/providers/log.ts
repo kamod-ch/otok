@@ -19,7 +19,10 @@ export function createLogNotificationProvider(
 
   return {
     name: "log",
-    async deliver(payload: NotificationJobPayload, ctx: NotificationDeliveryContext): Promise<NotificationDeliveryResult> {
+    async deliver(
+      payload: NotificationJobPayload,
+      ctx: NotificationDeliveryContext,
+    ): Promise<NotificationDeliveryResult> {
       if (seen.has(ctx.idempotencyKey)) {
         return { status: "skipped", reason: "duplicate" };
       }

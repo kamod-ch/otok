@@ -40,7 +40,10 @@ function ctx(tenantId: string, userId: string | null) {
   return { tenantId, subjectType: "job", subjectId: "job-1", sessionUserId: userId };
 }
 
-function buildServices(options?: { spam?: SpamModerationProvider; policy?: import("../types/ports.js").DiscussionPolicy }) {
+function buildServices(options?: {
+  spam?: SpamModerationProvider;
+  policy?: import("../types/ports.js").DiscussionPolicy;
+}) {
   const deps = createTestProviders({ iso: "2026-06-01T12:00:00.000Z" });
   const runtime = createDiscussionsRuntime({ editWindowMs: 60_000, moderationMode: "post", maxDepth: 3 }, deps);
   const adapter = createMemoryDiscussionAdapter({ deps, config: runtime.config });
@@ -93,9 +96,9 @@ describe("CommentService", () => {
   it("denies anonymous read when policy requires auth", async () => {
     const { discussion, comments } = buildServices({ policy: denyAnonymousReadPolicy() });
     const { thread } = await discussion.getOrCreateThread(ctx("tenant-a", "user-1"), { title: "T" });
-    await expect(
-      comments.listComments(ctx("tenant-a", null), { threadId: thread.id }),
-    ).rejects.toMatchObject({ code: "FORBIDDEN" });
+    await expect(comments.listComments(ctx("tenant-a", null), { threadId: thread.id })).rejects.toMatchObject({
+      code: "FORBIDDEN",
+    });
   });
 
   it("allows anonymous read when policy permits", async () => {
@@ -254,7 +257,11 @@ describe("ModerationService", () => {
       subjectResolver: staticSubjectResolver(subjectA),
       actorResolver: actorDirectory({ "user-1": user1, "mod-a": modA }),
     });
-    const commentsA = new CommentService({ ...base, subjectResolver: staticSubjectResolver(subjectA), actorResolver: actorDirectory({ "user-1": user1 }) });
+    const commentsA = new CommentService({
+      ...base,
+      subjectResolver: staticSubjectResolver(subjectA),
+      actorResolver: actorDirectory({ "user-1": user1 }),
+    });
     const moderationB = new ModerationService({
       ...base,
       subjectResolver: staticSubjectResolver(subjectB),

@@ -2,25 +2,18 @@ import type { Kysely } from "kysely";
 import type { OtokContext } from "@kamod-ch/otok/server";
 import type { CreateDiscussionsOptions } from "@kamod-ch/otok-discussions/plugin";
 import { createCapabilityRateLimiter, createDiscussionsRuntime } from "@kamod-ch/otok-discussions";
-import {
-  createKyselyDiscussionAdapter,
-  type DiscussionsDatabase,
-} from "@kamod-ch/otok-discussions/kysely";
+import { createKyselyDiscussionAdapter, type DiscussionsDatabase } from "@kamod-ch/otok-discussions/kysely";
 import type { DiscussionActor, DiscussionPolicy, DiscussionSubject } from "@kamod-ch/otok-discussions";
 import { pickDiscussionLocale } from "@kamod-ch/otok-discussions/i18n";
 import { authFromOtokContext, tryGetAuthRuntime } from "@kamod-ch/otok-auth";
-import {
-  ARTICLE_MODERATED,
-  TENANT_A,
-} from "../db/types.js";
+import { ARTICLE_MODERATED, TENANT_A } from "../db/types.js";
 import type { RefDb } from "../db/client.js";
 
 function runtimeDeps() {
   return {
     clock: { now: () => new Date() },
     ids: {
-      createId: (prefix?: string) =>
-        `${prefix ?? "id"}_${crypto.randomUUID().replace(/-/g, "").slice(0, 12)}`,
+      createId: (prefix?: string) => `${prefix ?? "id"}_${crypto.randomUUID().replace(/-/g, "").slice(0, 12)}`,
     },
     events: { emit: () => {} },
   };
@@ -41,11 +34,7 @@ async function loadMemberRoles(db: RefDb, tenantId: string, userId: string): Pro
 }
 
 async function loadAllRoles(db: RefDb, userId: string): Promise<string[]> {
-  const rows = await db
-    .selectFrom("tenant_member")
-    .select(["roles"])
-    .where("user_id", "=", userId)
-    .execute();
+  const rows = await db.selectFrom("tenant_member").select(["roles"]).where("user_id", "=", userId).execute();
   const set = new Set<string>();
   for (const row of rows) {
     for (const role of row.roles) set.add(role);
@@ -132,11 +121,7 @@ export function buildDiscussionsOptions(getDb: () => RefDb): CreateDiscussionsOp
     },
     actorResolver: {
       async resolveActor(ctx) {
-        const user = await getDb()
-          .selectFrom("app_user")
-          .selectAll()
-          .where("id", "=", ctx.userId)
-          .executeTakeFirst();
+        const user = await getDb().selectFrom("app_user").selectAll().where("id", "=", ctx.userId).executeTakeFirst();
         if (!user) return null;
         const roles = mapRoles(await loadAllRoles(getDb(), user.id));
         return {
@@ -174,8 +159,7 @@ export function buildDiscussionsOptions(getDb: () => RefDb): CreateDiscussionsOp
     },
     i18n: {
       defaultLocale: "de",
-      resolveLocale: (ctx) =>
-        pickDiscussionLocale(ctx.request.headers.get("accept-language"), "de"),
+      resolveLocale: (ctx) => pickDiscussionLocale(ctx.request.headers.get("accept-language"), "de"),
     },
     ui: {
       loginUrl: "/login",

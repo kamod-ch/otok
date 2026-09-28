@@ -31,16 +31,16 @@ async function invalidateAfterThreadMutation(
 
 const REPORT_DUPLICATE_MESSAGE = "Du hast diesen Beitrag bereits gemeldet.";
 
-export type DiscussionActionIntent =
-  | "comment"
-  | "reply"
-  | "edit"
-  | "delete"
-  | "react"
-  | "report";
+export type DiscussionActionIntent = "comment" | "reply" | "edit" | "delete" | "react" | "report";
 
 /** Intents that should include `_idempotency` in HTML forms (see docs/http-idempotency.md). */
-export const IDEMPOTENT_FORM_INTENTS: readonly DiscussionActionIntent[] = ["comment", "reply", "edit", "delete", "report"];
+export const IDEMPOTENT_FORM_INTENTS: readonly DiscussionActionIntent[] = [
+  "comment",
+  "reply",
+  "edit",
+  "delete",
+  "report",
+];
 
 export async function runDiscussionThreadAction(ctx: OtokActionContext): Promise<void> {
   const state = getDiscussionsState(ctx.hono);
@@ -75,7 +75,7 @@ export async function runDiscussionThreadAction(ctx: OtokActionContext): Promise
         await comments.createComment(reqCtx, {
           threadId: thread.id,
           bodyMarkdown: parsed.data.bodyMarkdown,
-          parentCommentId: intent === "reply" ? parsed.data.parentCommentId ?? null : null,
+          parentCommentId: intent === "reply" ? (parsed.data.parentCommentId ?? null) : null,
         });
         await invalidateAfterThreadMutation(state, reqCtx, subjectId);
         redirect(redirectTo, 303);
@@ -142,10 +142,7 @@ export async function runDiscussionThreadAction(ctx: OtokActionContext): Promise
           }
           throw error;
         }
-        redirect(
-          discussionsThreadViewUrl(basePath, subjectId, { reportAck: true }),
-          303,
-        );
+        redirect(discussionsThreadViewUrl(basePath, subjectId, { reportAck: true }), 303);
       }
       default:
         discussionsValidationFail({ formErrors: [`Unknown intent: ${intent}`] });

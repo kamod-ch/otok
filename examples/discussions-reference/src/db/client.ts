@@ -17,12 +17,10 @@ export function refConnectionString(): string {
 export function getRefDb(): RefDb {
   if (shared) return shared;
   if (!opening) {
-    opening = createKyselyInstance<RefDatabase & DiscussionsDatabase>("postgres", refConnectionString()).then(
-      (db) => {
-        shared = db as RefDb;
-        return shared;
-      },
-    );
+    opening = createKyselyInstance<RefDatabase & DiscussionsDatabase>("postgres", refConnectionString()).then((db) => {
+      shared = db as RefDb;
+      return shared;
+    });
   }
   throw new Error("Database still connecting — call await ensureRefDb() before getRefDb() in async contexts");
 }
@@ -30,12 +28,10 @@ export function getRefDb(): RefDb {
 export async function ensureRefDb(): Promise<RefDb> {
   if (shared) return shared;
   if (!opening) {
-    opening = createKyselyInstance<RefDatabase & DiscussionsDatabase>("postgres", refConnectionString()).then(
-      (db) => {
-        shared = db as RefDb;
-        return shared;
-      },
-    );
+    opening = createKyselyInstance<RefDatabase & DiscussionsDatabase>("postgres", refConnectionString()).then((db) => {
+      shared = db as RefDb;
+      return shared;
+    });
   }
   return opening;
 }

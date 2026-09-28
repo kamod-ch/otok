@@ -12,7 +12,11 @@ export interface ModerationAccessOptions {
 export interface ModerationAccess {
   isSuperAdmin(actor: DiscussionActor): boolean;
   assertTenantScope(actor: DiscussionActor, tenantId: string, provider: ModerationProvider): Promise<void>;
-  assertSubjectModeration(actor: DiscussionActor, subject: DiscussionSubject, provider: ModerationProvider): Promise<void>;
+  assertSubjectModeration(
+    actor: DiscussionActor,
+    subject: DiscussionSubject,
+    provider: ModerationProvider,
+  ): Promise<void>;
 }
 
 export function createModerationAccess(options: ModerationAccessOptions = {}): ModerationAccess {

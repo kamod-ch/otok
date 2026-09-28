@@ -10,14 +10,14 @@ Authentication must be resolved before the action body runs on the **first** req
 
 ## Recommended idempotency keys (HTML forms)
 
-| Intent   | Stable key suggestion   | Notes                                      |
-| -------- | ----------------------- | ------------------------------------------ |
-| comment  | `comment-create`        | Same key + body → replay 303 or 422        |
-| reply    | `reply-create`          | Include parent in form body fingerprint    |
-| edit     | `comment-edit:{id}`     | Fingerprint includes `bodyMarkdown`        |
-| delete   | `comment-delete:{id}`   |                                            |
-| report   | `report:{targetId}`     | Domain dedupe + idempotency                  |
-| react    | optional                | Service enforces one active reaction/actor |
+| Intent  | Stable key suggestion | Notes                                      |
+| ------- | --------------------- | ------------------------------------------ |
+| comment | `comment-create`      | Same key + body → replay 303 or 422        |
+| reply   | `reply-create`        | Include parent in form body fingerprint    |
+| edit    | `comment-edit:{id}`   | Fingerprint includes `bodyMarkdown`        |
+| delete  | `comment-delete:{id}` |                                            |
+| report  | `report:{targetId}`   | Domain dedupe + idempotency                |
+| react   | optional              | Service enforces one active reaction/actor |
 
 ## Natural idempotence (no Exactly-once claim)
 

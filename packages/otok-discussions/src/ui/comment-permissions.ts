@@ -36,10 +36,7 @@ export function resolveCommentPermissions(input: {
     (isAuthor || input.isModerator) &&
     (input.comment.status === "published" || input.comment.status === "pending");
 
-  const canReply =
-    input.threadAllowsMutation &&
-    published &&
-    input.comment.depth < input.maxDepth;
+  const canReply = input.threadAllowsMutation && published && input.comment.depth < input.maxDepth;
 
   const canReport = Boolean(input.viewerUserId) && published;
 

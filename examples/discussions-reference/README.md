@@ -23,11 +23,11 @@ App: [http://localhost:5195](http://localhost:5195)
 
 ## Migration & Seed
 
-| Befehl | Beschreibung |
-|--------|----------------|
+| Befehl            | Beschreibung                                          |
+| ----------------- | ----------------------------------------------------- |
 | `pnpm db:migrate` | App-Migrationen + `migrateDiscussionsSchema` (Kysely) |
-| `pnpm db:seed` | Idempotenter Seed (Tenants, User, Artikel, Threads) |
-| `pnpm db:status` | Migrationsstatus |
+| `pnpm db:seed`    | Idempotenter Seed (Tenants, User, Artikel, Threads)   |
+| `pnpm db:status`  | Migrationsstatus                                      |
 
 `DATABASE_URL` (Default): `postgres://otok:otok@localhost:5437/discussions_reference`
 
@@ -35,22 +35,22 @@ App: [http://localhost:5195](http://localhost:5195)
 
 Passwort für alle: **`reference`** (fiktive `@ref.local`-Adressen, keine PII)
 
-| E-Mail | Rolle |
-|--------|--------|
-| `reader.a@ref.local` | Tenant A Leser |
+| E-Mail                | Rolle                                                        |
+| --------------------- | ------------------------------------------------------------ |
+| `reader.a@ref.local`  | Tenant A Leser                                               |
 | `trusted.a@ref.local` | Tenant A trusted (sofort publiziert auf moderiertem Artikel) |
-| `mod.a@ref.local` | Tenant A Moderator |
-| `admin.a@ref.local` | Tenant A Admin |
-| `reader.b@ref.local` | Tenant B Leser |
-| `mod.b@ref.local` | Tenant B Moderator |
-| `admin.b@ref.local` | Tenant B Admin |
+| `mod.a@ref.local`     | Tenant A Moderator                                           |
+| `admin.a@ref.local`   | Tenant A Admin                                               |
+| `reader.b@ref.local`  | Tenant B Leser                                               |
+| `mod.b@ref.local`     | Tenant B Moderator                                           |
+| `admin.b@ref.local`   | Tenant B Admin                                               |
 
 ## Artikel & Diskussion
 
-| Slug | Modus |
-|------|--------|
-| `open-debate` | Offener Thread |
-| `closed-archive` | Geschlossener Thread |
+| Slug              | Modus                                                                  |
+| ----------------- | ---------------------------------------------------------------------- |
+| `open-debate`     | Offener Thread                                                         |
+| `closed-archive`  | Geschlossener Thread                                                   |
 | `moderated-piece` | Moderiert (Leser → pending via Referenz-Spam-Provider, trusted → live) |
 
 - Vorschau: `/discussions/:slug` (in Artikel eingebettet)

@@ -37,10 +37,7 @@ export async function resolveDiscussionsLocale(
 ): Promise<DiscussionLocale> {
   const custom = state.options.i18n?.resolveLocale;
   if (custom) return custom(ctx);
-  return pickDiscussionLocale(
-    ctx.request.headers.get("accept-language"),
-    state.options.i18n?.defaultLocale ?? "de",
-  );
+  return pickDiscussionLocale(ctx.request.headers.get("accept-language"), state.options.i18n?.defaultLocale ?? "de");
 }
 
 export function discussionsNowIso(state: DiscussionsContextState): string {

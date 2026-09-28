@@ -83,8 +83,6 @@ export function moderationWithSuperAdmin(...tenantIds: string[]): {
 }
 
 /** Test helper — memory adapter attaches `_store` at runtime. */
-export function memoryAdapterStore(
-  adapter: ReturnType<typeof createMemoryDiscussionAdapter>,
-): MemoryDiscussionStore {
+export function memoryAdapterStore(adapter: ReturnType<typeof createMemoryDiscussionAdapter>): MemoryDiscussionStore {
   return (adapter as ReturnType<typeof createMemoryDiscussionAdapter> & { _store: MemoryDiscussionStore })._store;
 }

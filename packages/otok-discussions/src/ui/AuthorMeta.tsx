@@ -31,7 +31,10 @@ export function AuthorMeta({ author, createdAt, displayTime, permalinkHref, perm
           {permalinkHref ? (
             <>
               {" · "}
-              <a href={permalinkHref} class="underline-offset-2 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">
+              <a
+                href={permalinkHref}
+                class="underline-offset-2 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+              >
                 {permalinkLabel}
               </a>
             </>

@@ -190,7 +190,8 @@ function layout(page) {
   <title>${escapeHtml(page.title)} | ${escapeHtml(config.title)}</title>
   <meta name="description" content="${escapeHtml(page.description)}">
   <link rel="canonical" href="${canonical}">
-  <link rel="icon" href="${config.base}favicon.svg" type="image/svg+xml">
+  <link rel="icon" href="${config.base}favicon.svg" type="image/svg+xml" media="(prefers-color-scheme: light)">
+  <link rel="icon" href="${config.base}favicon-dark.svg" type="image/svg+xml" media="(prefers-color-scheme: dark)">
   <meta property="og:title" content="${escapeHtml(page.title)}">
   <meta property="og:description" content="${escapeHtml(page.description)}">
   <meta property="og:type" content="website">
@@ -199,7 +200,7 @@ function layout(page) {
 </head>
 <body>
   <header class="topbar">
-    <a class="brand" href="${config.base}"><img class="brand-mark" src="${config.base}favicon.svg" width="28" height="28" alt=""> Otok</a>
+    <a class="brand" href="${config.base}"><picture><source media="(prefers-color-scheme: dark)" srcset="${config.base}favicon-dark.svg"><img class="brand-mark" src="${config.base}favicon.svg" width="28" height="28" alt=""></picture> Otok</a>
     <span>Lightweight Hono + Preact SSR with islands</span>
     <input id="search" type="search" placeholder="Search docs" aria-label="Search docs">
   </header>
@@ -230,6 +231,7 @@ for (const page of pages) {
 write(path.join(outDir, "assets/style.css"), fs.readFileSync(path.join(root, "public/style.css"), "utf8"));
 write(path.join(outDir, "assets/search.js"), fs.readFileSync(path.join(root, "public/search.js"), "utf8"));
 write(path.join(outDir, "favicon.svg"), fs.readFileSync(path.join(brandAssetsDir, "favicon.svg"), "utf8"));
+write(path.join(outDir, "favicon-dark.svg"), fs.readFileSync(path.join(brandAssetsDir, "favicon-dark.svg"), "utf8"));
 write(
   path.join(outDir, "robots.txt"),
   `User-agent: *\nAllow: /\nSitemap: ${config.canonicalOrigin}${config.base}sitemap.xml\n`,

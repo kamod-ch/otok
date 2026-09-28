@@ -1,4 +1,10 @@
-import type { CommentSort, DiscussionActor, DiscussionComment, DiscussionSubject, DiscussionThread } from "../types/domain.js";
+import type {
+  CommentSort,
+  DiscussionActor,
+  DiscussionComment,
+  DiscussionSubject,
+  DiscussionThread,
+} from "../types/domain.js";
 
 /** Route + session facts — never trust client-supplied tenant or user ids. */
 export interface DiscussionRequestContext {
