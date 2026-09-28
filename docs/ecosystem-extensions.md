@@ -1,130 +1,59 @@
-# Otok Ecosystem Extensions — Architecture & Priority
+# Otok ecosystem extensions — architecture overview
 
-This document defines the rollout plan for 16 independent Otok extensions. Each package follows the established `@kamod-ch/otok-*` pattern: small public contract, provider architecture, plugin integration, runtime capability checks, secure defaults, no client secrets, production + test providers, tests, docs, and a realistic example.
+> **Live inventory:** [Ecosystem catalog](../apps/docs/content/guides/ecosystem.md) (generated from [`docs/ecosystem-catalog.json`](./ecosystem-catalog.json)) lists every published package, version, and integration mode. Use that catalog for current status — not this document's historical tier list.
 
-## Design principles (all packages)
+Optional packages follow a shared shape: typed public contract, provider backends, optional `definePlugin` integration, runtime capability checks, secure defaults, tests, and examples.
 
-| Principle | Implementation |
-|-----------|----------------|
-| Public contract | `define*` helpers + typed service interface + `./plugin` subpath |
-| Providers | `memory` (dev/test) + at least one production backend |
-| Plugin API | `definePlugin` → `configureApp` → registry singleton |
-| Request context | `AsyncLocalStorage` bridge (actor, tenant, requestId) |
-| Capability check | `tryGet*Runtime()` / `has*Capability()` — fail gracefully in edge |
-| Secure defaults | Redaction, no secrets in exports, server-only plugin routes |
-| Tests | Unit + integration + `*.test-d.ts` type tests |
-| Examples | `examples/<name>/` or bundled `./crm` preset |
+## Design principles
 
-## Dependency graph
+| Principle        | Implementation                                                        |
+| ---------------- | --------------------------------------------------------------------- |
+| Public contract  | `define*` helpers + typed service interface + documented entry points |
+| Providers        | In-memory or test providers plus production backends where applicable |
+| Plugin API       | `definePlugin` → `configureApp` → registry singleton (when supported) |
+| Request context  | AsyncLocalStorage bridge (actor, tenant, requestId) where needed      |
+| Capability check | Adapter/runtime checks — fail with readable errors                    |
+| Secure defaults  | Redaction, no secrets in client bundles, server-only routes           |
+| Tests            | Unit + integration + type tests in package                            |
+
+## Shipped platform packages (examples)
+
+These packages exist in the monorepo today; see the catalog for the full set:
+
+- `@kamod-ch/otok-audit` — immutable audit trail
+- `@kamod-ch/otok-events` — domain events and outbox
+- `@kamod-ch/otok-search` — search indexes and queries
+- `@kamod-ch/otok-queue` / `@kamod-ch/otok-workflows` — jobs and durable workflows
+- `@kamod-ch/otok-realtime` — SSE/WebSocket channels
+
+## Not yet published as standalone packages
+
+The diagram below includes **future** extension names that are not packages in this repository. Do not install them until they appear in the ecosystem catalog.
 
 ```mermaid
 flowchart TB
-  audit[otok-audit]
-  export[otok-export]
-  search[otok-search]
-  webhooks[otok-webhooks]
-  health[otok-health]
-  notifications[otok-notifications]
-  api[otok-api]
-  openapi[otok-openapi]
-  flags[otok-flags]
-  analytics[otok-analytics]
-  consent[otok-consent]
-  cms[otok-cms]
-  image[otok-image]
-  pdf[otok-pdf]
-  rpc[otok-rpc]
+  export[otok-export future]
+  webhooks[otok-webhooks future]
+  health[otok-health future]
+  notifications[otok-notifications future]
+  api[otok-api future]
+  openapi[otok-openapi future]
 
-  events[otok-events]
-  workflows[otok-workflows]
-  auth[otok-auth]
-  observability[otok-observability]
+  audit[@kamod-ch/otok-audit]
+  search[@kamod-ch/otok-search]
+  events[@kamod-ch/otok-events]
 
   audit --> export
-  audit --> search
   events --> search
   events --> webhooks
-  events --> notifications
-  audit --> notifications
   api --> openapi
-  openapi --> rpc
-  export --> pdf
-  cms --> image
-  consent --> analytics
 ```
 
-## Priority tiers
+## Adding a new extension
 
-### Tier 1 — Platform foundations (implement first)
+1. Add the package under `packages/` and publish metadata.
+2. Add an entry to `docs/ecosystem-catalog.json`.
+3. For CLI-discoverable plugins, update `packages/otok-registry/registry/v1/extensions.json` and run `pnpm --filter @kamod-ch/otok-registry registry:checksum`.
+4. Run `pnpm docs:ecosystem:generate` and `pnpm docs:check`.
 
-| # | Package | Rationale | Depends on |
-|---|---------|-----------|------------|
-| 1 | **otok-audit** | Compliance, traceability; feeds export/search | events (optional) |
-| 2 | **otok-export** | Data egress; uses audit for export logging | audit |
-| 3 | **otok-search** | Discovery; indexes via events | events |
-| 4 | **otok-webhooks** | Outbound integrations; shares retry/idempotency patterns with events | events |
-| 5 | **otok-health** | Ops/K8s; minimal deps, high deployment value | — |
-| 6 | **otok-notifications** | User-facing comms; uses events + audit | events, audit |
-| 7 | **otok-api** + **otok-openapi** | API consistency layer for all HTTP surfaces | validation |
-
-### Tier 2 — Product features
-
-| # | Package | Rationale |
-|---|---------|-----------|
-| 8 | **otok-flags** | Feature toggles; needed before staged rollouts |
-| 9 | **otok-analytics** | Product metrics; consent-gated |
-| 10 | **otok-consent** | GDPR/legal prerequisite for analytics |
-| 11 | **otok-cms** | Structured content beyond otok-content collections |
-| 12 | **otok-image** | Media pipeline for CMS |
-| 13 | **otok-pdf** | Document generation; uses export patterns |
-| 14 | **otok-rpc** | Typed internal APIs atop openapi client |
-
-## Per-package scope summary
-
-### otok-audit ✅ (Tier 1 #1)
-Actor, action, resource, timestamp, changes. Multi-tenant. Append-only immutable log. Redaction. Search + export (JSON/CSV).
-
-### otok-export (Tier 1 #2)
-CSV, JSON, XLSX. Streaming. Large datasets. Locale/timezone. Background export via workflows.
-
-### otok-search (Tier 1 #3)
-PostgreSQL FTS, Meilisearch, Typesense providers. Event-driven indexing. Filters, sort, facets. Reindex command.
-
-### otok-webhooks (Tier 1 #4)
-HMAC-signed payloads. Secret rotation. Retry/backoff. Idempotency keys. Delivery log. Manual replay.
-
-### otok-health (Tier 1 #5)
-`/health/live`, `/health/ready`. Dependency checks (DB, redis, external APIs). K8s probe-compatible JSON.
-
-### otok-notifications (Tier 1 #6)
-In-app inbox. Email via otok-mail. Push provider contract. Preferences. Read status. Templates.
-
-### otok-api + otok-openapi (Tier 1 #7)
-REST conventions. Typed req/res (Zod). Standard error envelope. Cursor pagination. OpenAPI 3.1 spec generation. Typed client export.
-
-### Remaining (Tier 2)
-See tier 2 table above. Each gets the same quality bar before publish.
-
-## Rollout checklist (per package)
-
-- [ ] Architecture section in this doc updated
-- [ ] `packages/otok-<name>/` scaffold
-- [ ] Public API + providers (memory + production)
-- [ ] Plugin + registry + context
-- [ ] Unit, integration, type tests passing
-- [ ] `pnpm run build && typecheck && test`
-- [ ] README + `docs/architecture.md`
-- [ ] Example under `examples/`
-
-## Current status
-
-| Package | Status |
-|---------|--------|
-| otok-audit | **Complete** (v0.1.0) |
-| otok-export | Planned |
-| otok-search | Planned |
-| otok-webhooks | Planned |
-| otok-health | Planned |
-| otok-notifications | Planned |
-| otok-api / otok-openapi | Planned |
-| Tier 2 packages | Planned |
+See [CONTRIBUTING.md](../CONTRIBUTING.md#documentation).

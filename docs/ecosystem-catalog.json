@@ -1,0 +1,515 @@
+{
+  "schemaVersion": "1.0.0",
+  "entries": [
+    {
+      "package": "@kamod-ch/otok",
+      "directory": "otok",
+      "category": "core",
+      "integration": ["core"],
+      "audience": "application",
+      "summary": "Hono + Preact Islands framework runtime.",
+      "docs": "apps/docs/content/index.md",
+      "featured": true
+    },
+    {
+      "package": "@kamod-ch/otok-config",
+      "directory": "otok-config",
+      "category": "core",
+      "integration": ["core", "plugin"],
+      "audience": "extension-author",
+      "summary": "Typed plugin API and config resolution for Otok apps.",
+      "docs": "packages/otok-config/README.md",
+      "featured": false
+    },
+    {
+      "package": "@kamod-ch/otok-vite-plugin",
+      "directory": "vite-plugin-otok",
+      "category": "core",
+      "integration": ["core"],
+      "audience": "application",
+      "summary": "Vite plugin for Otok file routes and Preact islands.",
+      "docs": "packages/vite-plugin-otok/README.md",
+      "featured": true
+    },
+    {
+      "package": "otok-adapter-cloudflare",
+      "directory": "otok-adapter-cloudflare",
+      "category": "adapter",
+      "integration": ["adapter"],
+      "audience": "application",
+      "summary": "Cloudflare Workers deployment adapter for Otok with worker-safe bundles and Workers Assets.",
+      "docs": "packages/otok-adapter-cloudflare/README.md",
+      "featured": false
+    },
+    {
+      "package": "otok-adapter-node",
+      "directory": "otok-adapter-node",
+      "category": "adapter",
+      "integration": ["adapter"],
+      "audience": "application",
+      "summary": "Node.js deployment adapter for Otok with standalone server builds, static assets, and graceful shutdown.",
+      "docs": "packages/otok-adapter-node/README.md",
+      "featured": false
+    },
+    {
+      "package": "otok-adapter-static",
+      "directory": "otok-adapter-static",
+      "category": "adapter",
+      "integration": ["adapter"],
+      "audience": "application",
+      "summary": "Static hosting adapter for Otok that prerenders known routes for generic static deploys.",
+      "docs": "packages/otok-adapter-static/README.md",
+      "featured": false
+    },
+    {
+      "package": "@kamod-ch/otok-ai",
+      "directory": "otok-ai",
+      "category": "extension",
+      "integration": ["composition", "plugin"],
+      "audience": "application",
+      "summary": "Framework-wide AI integration for Otok — streaming, tools, agents, RAG, budgets, MCP.",
+      "docs": "packages/otok-ai/README.md",
+      "featured": true
+    },
+    {
+      "package": "@kamod-ch/otok-audit",
+      "directory": "otok-audit",
+      "category": "extension",
+      "integration": ["composition", "plugin"],
+      "audience": "application",
+      "summary": "Immutable audit trail for Otok — actor, action, resource, changes, multi-tenant search and export.",
+      "docs": "packages/otok-audit/README.md",
+      "featured": false
+    },
+    {
+      "package": "@kamod-ch/otok-auth",
+      "directory": "otok-auth",
+      "category": "extension",
+      "integration": ["composition", "plugin"],
+      "audience": "application",
+      "summary": "Cookie sessions, CSRF, and route middleware helpers for Otok apps.",
+      "docs": "packages/otok-auth/README.md",
+      "featured": true
+    },
+    {
+      "package": "@kamod-ch/otok-content",
+      "directory": "otok-content",
+      "category": "extension",
+      "integration": ["composition", "plugin"],
+      "audience": "application",
+      "summary": "Typed content collections for Otok — markdown, MDX, taxonomies, and build-time manifests.",
+      "docs": "packages/otok-content/README.md",
+      "featured": false
+    },
+    {
+      "package": "@kamod-ch/otok-devtools",
+      "directory": "otok-devtools",
+      "category": "extension",
+      "integration": ["composition", "plugin"],
+      "audience": "application",
+      "summary": "Development-only diagnostics and inspector UI for Otok apps.",
+      "docs": "packages/otok-devtools/README.md",
+      "featured": false
+    },
+    {
+      "package": "@kamod-ch/otok-discussions",
+      "directory": "otok-discussions",
+      "category": "extension",
+      "integration": ["composition", "plugin"],
+      "audience": "application",
+      "summary": "Subject-scoped discussions for Otok — headless domain core, adapters, optional Kamod UI, and plugin routes.",
+      "docs": "packages/otok-discussions/README.md",
+      "featured": false
+    },
+    {
+      "package": "@kamod-ch/otok-events",
+      "directory": "otok-events",
+      "category": "extension",
+      "integration": ["composition", "plugin"],
+      "audience": "application",
+      "summary": "Typed domain events for Otok — in-process bus, transactional outbox, and Kysely integration.",
+      "docs": "packages/otok-events/README.md",
+      "featured": false
+    },
+    {
+      "package": "@kamod-ch/otok-flash",
+      "directory": "otok-flash",
+      "category": "extension",
+      "integration": ["composition", "plugin"],
+      "audience": "application",
+      "summary": "Signed flash cookies for Otok PRG redirects and SSR toasts.",
+      "docs": "packages/otok-flash/README.md",
+      "featured": false
+    },
+    {
+      "package": "@kamod-ch/otok-forum",
+      "directory": "otok-forum",
+      "category": "extension",
+      "integration": ["composition", "plugin"],
+      "audience": "application",
+      "summary": "Production-ready optional forum extension for Otok — SSR, Kysely, permissions, moderation.",
+      "docs": "packages/otok-forum/README.md",
+      "featured": false
+    },
+    {
+      "package": "@kamod-ch/otok-i18n",
+      "directory": "otok-i18n",
+      "category": "extension",
+      "integration": ["composition", "plugin"],
+      "audience": "application",
+      "summary": "Locale resolution, message catalogs, and i18n helpers for Otok apps.",
+      "docs": "apps/docs/content/guides/i18n.md",
+      "featured": false
+    },
+    {
+      "package": "@kamod-ch/otok-kamod",
+      "directory": "otok-kamod",
+      "category": "extension",
+      "integration": ["composition", "plugin"],
+      "audience": "application",
+      "summary": "Optional Kamod UI integration for Otok — Tailwind, themes, forms, and ecosystem helpers.",
+      "docs": "apps/docs/content/guides/kamod.md",
+      "featured": true
+    },
+    {
+      "package": "@kamod-ch/otok-kysely",
+      "directory": "otok-kysely",
+      "category": "extension",
+      "integration": ["composition", "plugin"],
+      "audience": "application",
+      "summary": "Kysely database integration for Otok — typed db context, migrations, seeds, and CLI.",
+      "docs": "apps/docs/content/guides/kysely.md",
+      "featured": true
+    },
+    {
+      "package": "@kamod-ch/otok-mail",
+      "directory": "otok-mail",
+      "category": "extension",
+      "integration": ["composition", "plugin"],
+      "audience": "application",
+      "summary": "Provider-based mail integration for Otok — SMTP, Resend, Mailpit, and test providers.",
+      "docs": "apps/docs/content/guides/otok-mail.md",
+      "featured": false
+    },
+    {
+      "package": "@kamod-ch/otok-oauth",
+      "directory": "otok-oauth",
+      "category": "extension",
+      "integration": ["composition", "plugin"],
+      "audience": "application",
+      "summary": "OAuth login helpers (GitHub, Google, Microsoft, GitLab) for Otok apps.",
+      "docs": "packages/otok-oauth/README.md",
+      "featured": false
+    },
+    {
+      "package": "@kamod-ch/otok-observability",
+      "directory": "otok-observability",
+      "category": "extension",
+      "integration": ["composition", "plugin"],
+      "audience": "application",
+      "summary": "Structured logging, tracing, and error reporting for Otok apps.",
+      "docs": "apps/docs/content/guides/seo-security-observability.md",
+      "featured": false
+    },
+    {
+      "package": "@kamod-ch/otok-plugin-hello",
+      "directory": "otok-plugin-hello",
+      "category": "extension",
+      "integration": ["composition", "plugin"],
+      "audience": "extension-author",
+      "summary": "Minimal Otok plugin example that registers a health-style API route.",
+      "docs": "packages/otok-plugin-hello/README.md",
+      "featured": false
+    },
+    {
+      "package": "@kamod-ch/otok-queue",
+      "directory": "otok-queue",
+      "category": "extension",
+      "integration": ["composition", "plugin"],
+      "audience": "application",
+      "summary": "Provider-based job queue for Otok — typed jobs, retry, idempotency, cron, and in-memory dev provider.",
+      "docs": "apps/docs/content/guides/otok-queue.md",
+      "featured": false
+    },
+    {
+      "package": "@kamod-ch/otok-realtime",
+      "directory": "otok-realtime",
+      "category": "extension",
+      "integration": ["composition", "plugin"],
+      "audience": "application",
+      "summary": "Typed SSE and WebSocket realtime for Otok — channels, rooms, presence, and scalable providers.",
+      "docs": "packages/otok-realtime/README.md",
+      "featured": false
+    },
+    {
+      "package": "@kamod-ch/otok-search",
+      "directory": "otok-search",
+      "category": "extension",
+      "integration": ["composition", "plugin"],
+      "audience": "application",
+      "summary": "Lightweight full-text search index for Otok apps — CRM company indexing.",
+      "docs": "packages/otok-search/README.md",
+      "featured": false
+    },
+    {
+      "package": "@kamod-ch/otok-security",
+      "directory": "otok-security",
+      "category": "extension",
+      "integration": ["composition", "plugin"],
+      "audience": "application",
+      "summary": "Secure defaults and configurable security middleware for Otok apps.",
+      "docs": "apps/docs/content/guides/seo-security-observability.md",
+      "featured": false
+    },
+    {
+      "package": "@kamod-ch/otok-seo",
+      "directory": "otok-seo",
+      "category": "extension",
+      "integration": ["composition", "plugin"],
+      "audience": "application",
+      "summary": "Typed route metadata, sitemaps, feeds, and SEO helpers for Otok apps.",
+      "docs": "apps/docs/content/guides/seo-security-observability.md",
+      "featured": false
+    },
+    {
+      "package": "@kamod-ch/otok-storage",
+      "directory": "otok-storage",
+      "category": "extension",
+      "integration": ["composition", "plugin"],
+      "audience": "application",
+      "summary": "Provider-based object storage for Otok — local filesystem, S3, R2, and MinIO.",
+      "docs": "apps/docs/content/guides/otok-storage.md",
+      "featured": false
+    },
+    {
+      "package": "@kamod-ch/otok-stripe",
+      "directory": "otok-stripe",
+      "category": "extension",
+      "integration": ["composition", "plugin"],
+      "audience": "application",
+      "summary": "Stripe Checkout and webhook helpers for Otok apps.",
+      "docs": "apps/docs/content/guides/otok-stripe-plugin.md",
+      "featured": false
+    },
+    {
+      "package": "@kamod-ch/otok-supabase",
+      "directory": "otok-supabase",
+      "category": "extension",
+      "integration": ["composition", "plugin"],
+      "audience": "application",
+      "summary": "Supabase SSR, cookie auth, and middleware integration for Otok apps.",
+      "docs": "packages/otok-supabase/README.md",
+      "featured": true
+    },
+    {
+      "package": "@kamod-ch/otok-validation",
+      "directory": "otok-validation",
+      "category": "extension",
+      "integration": ["composition", "plugin"],
+      "audience": "application",
+      "summary": "Standard Schema validation for Otok — typed inputs, field errors, and defineAction integration.",
+      "docs": "apps/docs/content/guides/validation.md",
+      "featured": false
+    },
+    {
+      "package": "@kamod-ch/otok-workflows",
+      "directory": "otok-workflows",
+      "category": "extension",
+      "integration": ["composition", "plugin"],
+      "audience": "application",
+      "summary": "Durable multi-step workflows for Otok — typed steps, retries, cron, and persistent providers.",
+      "docs": "packages/otok-workflows/README.md",
+      "featured": false
+    },
+    {
+      "package": "@kamod-ch/otok-kit-admin",
+      "directory": "otok-kit-admin",
+      "category": "kit",
+      "integration": ["composition"],
+      "audience": "application",
+      "summary": "Admin shell kit — users, roles, org settings.",
+      "docs": "packages/otok-kit-admin/README.md",
+      "featured": false
+    },
+    {
+      "package": "@kamod-ch/otok-kit-content",
+      "directory": "otok-kit-content",
+      "category": "kit",
+      "integration": ["composition"],
+      "audience": "application",
+      "summary": "Otok package @kamod-ch/otok-kit-content",
+      "docs": "packages/otok-kit-content/README.md",
+      "featured": false
+    },
+    {
+      "package": "@kamod-ch/otok-kit-crm",
+      "directory": "otok-kit-crm",
+      "category": "kit",
+      "integration": ["composition"],
+      "audience": "application",
+      "summary": "Composable Swiss B2B CRM kit for Otok — organizations, companies, contacts, pipelines, audit, search, import/export.",
+      "docs": "packages/otok-kit-crm/README.md",
+      "featured": false
+    },
+    {
+      "package": "@kamod-ch/otok-kit-marketplace",
+      "directory": "otok-kit-marketplace",
+      "category": "kit",
+      "integration": ["composition"],
+      "audience": "application",
+      "summary": "Otok package @kamod-ch/otok-kit-marketplace",
+      "docs": "packages/otok-kit-marketplace/README.md",
+      "featured": false
+    },
+    {
+      "package": "@kamod-ch/otok-kit-saas",
+      "directory": "otok-kit-saas",
+      "category": "kit",
+      "integration": ["composition"],
+      "audience": "application",
+      "summary": "Billing kit — Stripe checkout, portal, webhooks, and subscriptions.",
+      "docs": "packages/otok-kit-saas/README.md",
+      "featured": false
+    },
+    {
+      "package": "@kamod-ch/otok-preset-crm",
+      "directory": "otok-preset-crm",
+      "category": "preset",
+      "integration": ["scaffold"],
+      "audience": "application",
+      "summary": "Official Otok crm preset.",
+      "docs": "packages/otok-preset-crm/README.md",
+      "featured": false
+    },
+    {
+      "package": "@kamod-ch/otok-preset-dashboard",
+      "directory": "otok-preset-dashboard",
+      "category": "preset",
+      "integration": ["scaffold"],
+      "audience": "application",
+      "summary": "Official Otok dashboard preset.",
+      "docs": "packages/otok-preset-dashboard/README.md",
+      "featured": false
+    },
+    {
+      "package": "@kamod-ch/otok-preset-kamod",
+      "directory": "otok-preset-kamod",
+      "category": "preset",
+      "integration": ["scaffold"],
+      "audience": "application",
+      "summary": "Official Otok kamod preset.",
+      "docs": "packages/otok-preset-kamod/README.md",
+      "featured": false
+    },
+    {
+      "package": "@kamod-ch/otok-preset-minimal",
+      "directory": "otok-preset-minimal",
+      "category": "preset",
+      "integration": ["scaffold"],
+      "audience": "application",
+      "summary": "Official Otok minimal preset.",
+      "docs": "packages/otok-preset-minimal/README.md",
+      "featured": false
+    },
+    {
+      "package": "@kamod-ch/otok-preset-saas",
+      "directory": "otok-preset-saas",
+      "category": "preset",
+      "integration": ["scaffold"],
+      "audience": "application",
+      "summary": "Official Otok saas preset.",
+      "docs": "packages/otok-preset-saas/README.md",
+      "featured": false
+    },
+    {
+      "package": "@kamod-ch/otok-registry",
+      "directory": "otok-registry",
+      "category": "tooling",
+      "integration": ["cli", "composition"],
+      "audience": "extension-author",
+      "summary": "Versioned extension registry for Otok — schema, cache, search, and compatibility checks.",
+      "docs": "packages/otok-registry/README.md",
+      "featured": false
+    },
+    {
+      "package": "@kamod-ch/otok-route-typegen",
+      "directory": "otok-route-typegen",
+      "category": "tooling",
+      "integration": ["core"],
+      "audience": "extension-author",
+      "summary": "Route tree parsing, conflict detection, and TypeScript type generation for Otok apps.",
+      "docs": "packages/otok-route-typegen/README.md",
+      "featured": false
+    },
+    {
+      "package": "@kamod-ch/otok-test",
+      "directory": "otok-test",
+      "category": "tooling",
+      "integration": ["testing"],
+      "audience": "extension-author",
+      "summary": "Official server-side and client testing utilities for Otok apps.",
+      "docs": "packages/otok-test/README.md",
+      "featured": false
+    },
+    {
+      "package": "create-otok",
+      "directory": "create-otok",
+      "category": "tooling",
+      "integration": ["cli", "scaffold"],
+      "audience": "application",
+      "summary": "Scaffold a new Otok app with presets, layers, and reproducible versions.",
+      "docs": "packages/create-otok/docs/cli.md",
+      "featured": true
+    },
+    {
+      "package": "otok-cli",
+      "directory": "otok-cli",
+      "category": "tooling",
+      "integration": ["cli"],
+      "audience": "application",
+      "summary": "CLI for Otok apps — add plugins, manage configuration.",
+      "docs": "apps/docs/content/guides/cli-add.md",
+      "featured": false
+    },
+    {
+      "package": "@kamod-ch/preactpress-compat",
+      "directory": "preactpress-compat",
+      "category": "migration",
+      "integration": ["composition"],
+      "audience": "application",
+      "summary": "Compatibility layer for migrating PreactPress sites to Otok and @kamod-ch/otok-content.",
+      "docs": "packages/preactpress-compat/README.md",
+      "featured": false
+    },
+    {
+      "package": "@kamod-ch/otok-plugin-contract",
+      "directory": "otok-plugin-contract",
+      "category": "contract",
+      "integration": ["plugin"],
+      "audience": "extension-author",
+      "summary": "Shared contract tests for Otok plugins — validates definePlugin hooks and lifecycle.",
+      "docs": "packages/otok-plugin-contract/README.md",
+      "featured": false
+    },
+    {
+      "package": "@kamod-ch/otok-plugin-fixture",
+      "directory": "otok-plugin-fixture",
+      "category": "contract",
+      "integration": ["plugin"],
+      "audience": "maintainer",
+      "summary": "Otok plugin fixture used by tests to exercise multiple plugin hooks.",
+      "docs": "packages/otok-plugin-fixture/README.md",
+      "featured": false
+    },
+    {
+      "package": "otok-adapter-contract",
+      "directory": "otok-adapter-contract",
+      "category": "contract",
+      "integration": ["adapter"],
+      "audience": "maintainer",
+      "summary": "Shared contract tests and fixtures for Otok deployment adapters.",
+      "docs": "packages/otok-adapter-contract/README.md",
+      "featured": false
+    }
+  ]
+}

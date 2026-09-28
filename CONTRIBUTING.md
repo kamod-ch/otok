@@ -27,12 +27,25 @@ Node.js 20+ and pnpm 10 are expected.
 
 ```bash
 pnpm dev              # playground dev server
-pnpm check            # scaffold, lint, format, typecheck, unit tests, build
+pnpm check            # scaffold, lint, format, docs, typecheck, unit tests, build
 pnpm test:e2e         # Playwright playground matrix
 pnpm pack:check       # package metadata, build, npm pack dry run
 pnpm metadata:check   # package metadata audit only
+pnpm docs:check       # local doc links, catalog, registry, ecosystem generator, docs app
 pnpm sync:scaffold    # sync playground changes into templates
 ```
+
+## Documentation
+
+When you add or rename a publishable package:
+
+1. Add or update `packages/<name>/README.md`.
+2. Add exactly one entry to `docs/ecosystem-catalog.json` (category, integration, audience, docs target).
+3. For CLI-discoverable official plugins, update `packages/otok-registry/registry/v1/extensions.json` and run `pnpm --filter @kamod-ch/otok-registry registry:checksum`.
+4. Regenerate docs: `pnpm docs:ecosystem:generate`.
+5. Run `pnpm docs:check` before opening a PR.
+
+The generated [ecosystem catalog](./apps/docs/content/guides/ecosystem.md) is the exhaustive package list; curated guides link from there.
 
 ## Local Kamod UI (optional)
 

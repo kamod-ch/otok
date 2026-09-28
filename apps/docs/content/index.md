@@ -22,6 +22,10 @@ It focuses on a small core:
 
 Otok does not require Kamod UI, Tailwind, a validation library, a database, or an auth framework. Those belong in applications, not in the framework core.
 
+## Ecosystem
+
+Roughly fifty optional packages extend Otok (adapters, plugins, kits, presets, and tooling). The [ecosystem catalog](./guides/ecosystem.md) lists every published package with integration modes and install commands. Curated guides group capabilities by topic ([data and platform](./guides/ecosystem-data-and-platform.md), [auth and security](./guides/ecosystem-auth-and-security.md), [content and product](./guides/ecosystem-content-and-product.md), [AI and operations](./guides/ecosystem-ai-and-operations.md), [kits and presets](./guides/ecosystem-kits-and-presets.md)).
+
 ## Why Otok?
 
 Use Otok when you want server-rendered pages, simple Hono composition, and client JavaScript only where interactivity is needed.

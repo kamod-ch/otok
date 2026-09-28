@@ -56,6 +56,9 @@ jobs:
       - name: Package metadata
         run: pnpm metadata:check
 
+      - name: Documentation quality
+        run: pnpm docs:check
+
       - name: API stability
         run: pnpm api:check
 
