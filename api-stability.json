@@ -118,6 +118,8 @@
         "./ui": "experimental",
         "./ui/islands": "experimental",
         "./i18n": "experimental",
+        "./notifications": "experimental",
+        "./live": "experimental",
         "./testing": "internal"
       },
       "symbols": {}
