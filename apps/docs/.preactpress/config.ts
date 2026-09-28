@@ -13,6 +13,7 @@ export default defineConfig({
   favicon: {
     svg: "/favicon.svg",
   },
+  head: [["link", { rel: "stylesheet", href: "/otok/theme.css" }]],
   ai: {
     llmsTxt: true,
     llmsFullTxt: true,

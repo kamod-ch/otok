@@ -1,0 +1,48 @@
+/* Preserve the Otok docs palette from before the PreactPress migration. */
+html:root,
+html:root[data-theme="light"] {
+  --pp-bg: #f8fafc;
+  --pp-text: #0f172a;
+  --pp-muted: #64748b;
+  --pp-border: #e2e8f0;
+  --pp-border-strong: #cbd5e1;
+  --pp-accent: #0369a1;
+  --pp-accent-strong: #075985;
+  --pp-sidebar-bg: #f8fafc;
+  --pp-surface: #ffffff;
+  --pp-code-bg: #f1f5f9;
+  --pp-code-text: #0f172a;
+  --pp-focus: #0284c7;
+}
+
+@media (prefers-color-scheme: dark) {
+  html:root:not([data-theme]) {
+    --pp-bg: #020617;
+    --pp-text: #e2e8f0;
+    --pp-muted: #94a3b8;
+    --pp-border: #1e293b;
+    --pp-border-strong: #334155;
+    --pp-accent: #38bdf8;
+    --pp-accent-strong: #7dd3fc;
+    --pp-sidebar-bg: #020617;
+    --pp-surface: #0f172a;
+    --pp-code-bg: #0f172a;
+    --pp-code-text: #e2e8f0;
+    --pp-focus: #38bdf8;
+  }
+}
+
+html:root[data-theme="dark"] {
+  --pp-bg: #020617;
+  --pp-text: #e2e8f0;
+  --pp-muted: #94a3b8;
+  --pp-border: #1e293b;
+  --pp-border-strong: #334155;
+  --pp-accent: #38bdf8;
+  --pp-accent-strong: #7dd3fc;
+  --pp-sidebar-bg: #020617;
+  --pp-surface: #0f172a;
+  --pp-code-bg: #0f172a;
+  --pp-code-text: #e2e8f0;
+  --pp-focus: #38bdf8;
+}
