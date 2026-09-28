@@ -10,7 +10,7 @@
     "start": "node dist/server/server.js",
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
-    "test:integration": "vitest run tests/integration.test.ts",
+    "test:integration": "DISCUSSIONS_INTEGRATION=1 vitest run tests/integration.test.ts",
     "test:e2e": "playwright test",
     "db:migrate": "tsx scripts/db.ts migrate",
     "db:seed": "tsx scripts/db.ts seed",

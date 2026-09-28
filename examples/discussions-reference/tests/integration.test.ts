@@ -1,13 +1,12 @@
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
 import { createKyselyDiscussionAdapter } from "@kamod-ch/otok-discussions/kysely";
 import { createDiscussionsRuntime } from "@kamod-ch/otok-discussions";
-import { ensureRefDb, refConnectionString, destroyRefDb } from "../src/db/client.js";
+import { ensureRefDb, destroyRefDb } from "../src/db/client.js";
 import { ARTICLE_OPEN, TENANT_A } from "../src/db/types.js";
 
-const pgUrl = refConnectionString();
-const canPg = pgUrl.includes("localhost") || pgUrl.includes("127.0.0.1");
+const runIntegration = process.env.DISCUSSIONS_INTEGRATION === "1";
 
-describe.skipIf(!canPg)("discussions-reference integration (postgres)", () => {
+describe.skipIf(!runIntegration)("discussions-reference integration (postgres)", () => {
   beforeAll(async () => {
     await ensureRefDb();
   });
