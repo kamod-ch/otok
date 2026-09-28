@@ -67,6 +67,28 @@ jobs:
       - name: Add .nojekyll
         run: touch apps/docs/dist/.nojekyll
 
+      - name: Add Matomo image tracker
+        run: |
+          python3 <<'PY'
+          from pathlib import Path
+
+          snippet = '''<!-- Matomo Image Tracker-->
+          <img referrerpolicy="no-referrer-when-downgrade" src="https://matomo.kamod.ch/matomo.php?idsite=14&amp;rec=1"
+          style="border:0" alt="" />
+
+          <!-- End Matomo -->'''
+
+          for html_file in Path('apps/docs/dist').rglob('*.html'):
+              html = html_file.read_text(encoding='utf-8')
+              if 'matomo.kamod.ch/matomo.php?idsite=14' in html:
+                  continue
+              if '</body>' in html:
+                  html = html.replace('</body>', f'{snippet}\n</body>', 1)
+              else:
+                  html = f'{html}\n{snippet}\n'
+              html_file.write_text(html, encoding='utf-8')
+          PY
+
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v4
         env:
