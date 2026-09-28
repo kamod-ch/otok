@@ -1,0 +1,154 @@
+{
+  "name": "@kamod-ch/otok-discussions",
+  "version": "0.1.0",
+  "description": "Subject-scoped discussions for Otok — headless domain core, adapters, optional Kamod UI, and plugin routes.",
+  "homepage": "https://github.com/kamod-ch/otok/tree/main/packages/otok-discussions#readme",
+  "bugs": {
+    "url": "https://github.com/kamod-ch/otok/issues"
+  },
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kamod-ch/otok.git",
+    "directory": "packages/otok-discussions"
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "RELEASE-NOTES-0.1.0-next.md",
+    "docs/api.md",
+    "docs/upgrades.md",
+    "docs/maturity-matrix.md",
+    "docs/kysely.md",
+    "docs/moderation.md",
+    "docs/security-threat-model.md",
+    "docs/security-production.md",
+    "docs/i18n-a11y.md",
+    "docs/ui.md",
+    "docs/http-idempotency.md"
+  ],
+  "type": "module",
+  "sideEffects": false,
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    },
+    "./adapters/memory": {
+      "types": "./dist/adapters/memory/index.d.ts",
+      "default": "./dist/adapters/memory/index.js"
+    },
+    "./testing": {
+      "types": "./dist/testing/index.d.ts",
+      "default": "./dist/testing/index.js"
+    },
+    "./kysely": {
+      "types": "./dist/kysely/index.d.ts",
+      "default": "./dist/kysely/index.js"
+    },
+    "./plugin": {
+      "types": "./dist/plugin.d.ts",
+      "default": "./dist/plugin.js"
+    },
+    "./ui": {
+      "types": "./dist/ui/index.d.ts",
+      "default": "./dist/ui/index.js"
+    },
+    "./ui/islands": {
+      "types": "./dist/ui/islands/index.d.ts",
+      "default": "./dist/ui/islands/index.js"
+    },
+    "./i18n": {
+      "types": "./dist/i18n/index.d.ts",
+      "default": "./dist/i18n/index.js"
+    },
+    "./notifications": {
+      "types": "./dist/notifications/index.d.ts",
+      "default": "./dist/notifications/index.js"
+    },
+    "./live": {
+      "types": "./dist/live/index.d.ts",
+      "default": "./dist/live/index.js"
+    }
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "build": "rm -rf dist && tsc -p tsconfig.build.json",
+    "typecheck": "tsc -p tsconfig.json --noEmit && pnpm typecheck:fixtures",
+    "typecheck:fixtures": "tsc -p fixtures/tsconfig.json --noEmit",
+    "test": "vitest run",
+    "verify:ui": "node ./scripts/verify-ui-artifacts.mjs",
+    "test:pack-consumer": "node ./scripts/test-pack-consumer.mjs",
+    "release:preflight": "pnpm build && pnpm typecheck && pnpm test && pnpm verify:ui && pnpm test:pack-consumer"
+  },
+  "dependencies": {
+    "@kamod-ch/i18n": "^0.1.1",
+    "@kamod-ch/otok-config": "workspace:*",
+    "zod": "^3.24.0"
+  },
+  "devDependencies": {
+    "@kamod-ch/icons": "^1.1.0",
+    "@kamod-ch/otok": "workspace:*",
+    "@kamod-ch/otok-auth": "workspace:*",
+    "@kamod-ch/otok-queue": "workspace:*",
+    "@kamod-ch/otok-realtime": "workspace:*",
+    "@kamod-ch/otok-test": "workspace:*",
+    "@kamod-ch/ui": "^1.3.0",
+    "@types/better-sqlite3": "^7.6.13",
+    "@types/node": "^24.12.2",
+    "@types/pg": "^8.15.5",
+    "better-sqlite3": "^12.6.2",
+    "hono": "^4.13.8",
+    "kysely": "^0.29.3",
+    "pg": "^8.16.3",
+    "preact": "^10.28.2",
+    "preact-render-to-string": "^6.7.0",
+    "typescript": "~6.0.2",
+    "vitest": "^4.1.2"
+  },
+  "peerDependencies": {
+    "@kamod-ch/icons": ">=1.0.0",
+    "@kamod-ch/otok": ">=1.0.0",
+    "@kamod-ch/otok-auth": ">=1.0.0",
+    "@kamod-ch/otok-queue": ">=0.1.0",
+    "@kamod-ch/otok-realtime": ">=0.1.0",
+    "@kamod-ch/ui": ">=1.0.0",
+    "hono": ">=4",
+    "kysely": ">=0.27.0",
+    "preact": ">=10.26.0"
+  },
+  "peerDependenciesMeta": {
+    "@kamod-ch/otok": {
+      "optional": true
+    },
+    "@kamod-ch/icons": {
+      "optional": true
+    },
+    "@kamod-ch/otok-auth": {
+      "optional": true
+    },
+    "@kamod-ch/ui": {
+      "optional": true
+    },
+    "hono": {
+      "optional": true
+    },
+    "kysely": {
+      "optional": true
+    },
+    "preact": {
+      "optional": true
+    },
+    "@kamod-ch/otok-queue": {
+      "optional": true
+    },
+    "@kamod-ch/otok-realtime": {
+      "optional": true
+    }
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

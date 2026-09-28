@@ -1,7 +1,7 @@
 {
   "version": 1,
   "baselineRelease": "1.0.0-draft",
-  "generatedAt": "2026-09-22T14:13:13.037Z",
+  "generatedAt": "2026-09-26T22:34:47.832Z",
   "note": "Review aid for public/experimental export surfaces — not a semver proof.",
   "packages": {
     "@kamod-ch/otok": {
@@ -391,11 +391,154 @@
         ]
       }
     },
+    "@kamod-ch/otok-discussions": {
+      ".": {
+        "classification": "experimental",
+        "typesFile": "dist/index.d.ts",
+        "exports": [
+          "CommentService",
+          "CommentServiceOptions",
+          "DISCUSSION_LOCALES",
+          "DISCUSSION_METRIC_NAMES",
+          "DiscussionAccess",
+          "DiscussionError",
+          "DiscussionErrorCode",
+          "DiscussionRequestContext",
+          "DiscussionService",
+          "DiscussionServiceOptions",
+          "DiscussionsConfig",
+          "DiscussionsConfigInput",
+          "DiscussionsRuntime",
+          "DiscussionsRuntimeDeps",
+          "MODERATION_REASON_CODES",
+          "ModerationService",
+          "NoopDiscussionsMetrics",
+          "ProviderFailureBehavior",
+          "SpamCheckResult",
+          "SpamModerationProvider",
+          "authorTrustLevelFromRoles",
+          "buildThreadCacheInvalidation",
+          "canonicalThreadId",
+          "createCapabilityRateLimiter",
+          "createDiscussionsI18n",
+          "createDiscussionsRuntime",
+          "discussionLabelsFromI18n",
+          "discussionMessagesDe",
+          "discussionMessagesEn",
+          "discussionTenantCacheTag",
+          "discussionThreadCacheTag",
+          "discussionsConfigSchema",
+          "filterCommentsForRole",
+          "parseDiscussionsConfig",
+          "pickDiscussionLocale",
+          "processCommentBodyForStorage",
+          "projectCommentForRole",
+          "publicDiscussionCacheEligible",
+          "redactDiscussionLogRecord",
+          "requireAdapterPort",
+          "resolveInitialStatusFromTrust",
+          "runSpamCheck",
+          "toDiscussionRules"
+        ]
+      },
+      "./adapters/memory": {
+        "classification": "experimental",
+        "typesFile": "dist/adapters/memory/index.d.ts",
+        "exports": [
+          "MEMORY_ADAPTER_LOCALITY",
+          "MemoryDiscussionAdapterOptions",
+          "MemoryDiscussionEngine",
+          "MemoryDiscussionStore",
+          "createMemoryDiscussionAdapter"
+        ]
+      },
+      "./kysely": {
+        "classification": "experimental",
+        "typesFile": "dist/kysely/index.d.ts",
+        "exports": [
+          "DISCUSSIONS_MIGRATION_ID",
+          "KyselyDiscussionAdapterOptions",
+          "KyselyDiscussionStore",
+          "TENANT_KEY_NONE",
+          "createKyselyDiscussionAdapter",
+          "decodeTenantId",
+          "encodeTenantKey",
+          "getDiscussionsMigration",
+          "listCommentsPage",
+          "listReplyPreviewsByParents",
+          "migrateDiscussionsSchema",
+          "rollbackDiscussionsSchema"
+        ]
+      },
+      "./plugin": {
+        "classification": "experimental",
+        "typesFile": "dist/plugin.d.ts",
+        "exports": []
+      },
+      "./ui": {
+        "classification": "experimental",
+        "typesFile": "dist/ui/index.d.ts",
+        "exports": [
+          "AuthorMeta",
+          "CommentActions",
+          "CommentBody",
+          "CommentCard",
+          "CommentComposerShell",
+          "CommentThreadList",
+          "DISCUSSION_UI_KAMOD_MAP",
+          "Discussion",
+          "DiscussionFixturesPage",
+          "DiscussionHeader",
+          "DiscussionLoading",
+          "DiscussionNotice",
+          "DiscussionSortNav",
+          "LoginPrompt",
+          "ReportFormPanel",
+          "ShowAllCommentsCta",
+          "TopCommentsPreview",
+          "defaultDiscussionLabels",
+          "discussionFixtureKeys",
+          "discussionFixtureViewModels",
+          "discussionViewModelFromPageData",
+          "discussionsPermalinkUrl",
+          "discussionsRepliesUrl",
+          "discussionsThreadViewUrl",
+          "resolveDiscussionLabels"
+        ]
+      },
+      "./ui/islands": {
+        "classification": "experimental",
+        "typesFile": "dist/ui/islands/index.d.ts",
+        "exports": []
+      },
+      "./i18n": {
+        "classification": "experimental",
+        "typesFile": "dist/i18n/index.d.ts",
+        "exports": [
+          "DISCUSSION_LOCALES",
+          "DiscussionLocale",
+          "DiscussionMessageKey",
+          "DiscussionsI18n",
+          "createDiscussionsI18n",
+          "discussionLabelsFromI18n",
+          "discussionMessagesDe",
+          "discussionMessagesEn",
+          "formatCommentDateTime",
+          "formatCommentRelativeTime",
+          "pickDiscussionLocale"
+        ]
+      }
+    },
     "@kamod-ch/otok-plugin-contract": {
       ".": {
         "classification": "public",
         "typesFile": "dist/index.d.ts",
-        "exports": ["PluginContractExpectation", "PluginContractOptions", "assertPluginContract", "env"]
+        "exports": [
+          "PluginContractExpectation",
+          "PluginContractOptions",
+          "assertPluginContract",
+          "env"
+        ]
       }
     },
     "@kamod-ch/otok-queue": {
@@ -425,7 +568,11 @@
       "./providers/memory": {
         "classification": "public",
         "typesFile": "dist/providers/memory.d.ts",
-        "exports": ["createMemoryQueueProvider", "createTestQueueProvider", "getMemoryProviderInternals"]
+        "exports": [
+          "createMemoryQueueProvider",
+          "createTestQueueProvider",
+          "getMemoryProviderInternals"
+        ]
       },
       "./providers/postgres": {
         "classification": "public",
@@ -444,7 +591,11 @@
       "./worker": {
         "classification": "public",
         "typesFile": "dist/worker/run-worker.d.ts",
-        "exports": ["QueueWorkerHandle", "QueueWorkerOptions", "runQueueWorker"]
+        "exports": [
+          "QueueWorkerHandle",
+          "QueueWorkerOptions",
+          "runQueueWorker"
+        ]
       }
     },
     "@kamod-ch/otok-registry": {
@@ -603,7 +754,12 @@
       "./plugin": {
         "classification": "public",
         "typesFile": "dist/plugin.d.ts",
-        "exports": ["WorkflowProviderConfig", "WorkflowsPluginOptions", "configureWorkflowsApp", "createWorkflowStore"]
+        "exports": [
+          "WorkflowProviderConfig",
+          "WorkflowsPluginOptions",
+          "configureWorkflowsApp",
+          "createWorkflowStore"
+        ]
       },
       "./providers/kysely": {
         "classification": "public",
@@ -619,7 +775,11 @@
       "./crm": {
         "classification": "experimental",
         "typesFile": "dist/crm/index.d.ts",
-        "exports": ["companyInputSchema", "crmWorkflows", "enrichCompany"]
+        "exports": [
+          "companyInputSchema",
+          "crmWorkflows",
+          "enrichCompany"
+        ]
       }
     },
     "@kamod-ch/otok-vite-plugin": {

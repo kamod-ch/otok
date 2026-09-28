@@ -1,0 +1,6 @@
+DROP TABLE IF EXISTS article;
+DROP TABLE IF EXISTS tenant_member;
+DROP TABLE IF EXISTS tenant;
+DROP TABLE IF EXISTS app_session;
+DROP TABLE IF EXISTS app_user;
+DROP TABLE IF EXISTS otok_migrations;

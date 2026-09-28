@@ -1,0 +1,12 @@
+{
+  "articles.title": "Articles",
+  "articles.lead": "Watson-style preview with embedded discussion — open, closed, and moderated threads.",
+  "articles.read": "Read article",
+  "article.preview": "Top comments",
+  "article.fullThread": "Full discussion",
+  "article.back": "Back to list",
+  "login.title": "Sign in",
+  "login.submit": "Sign in",
+  "login.demo": "Fictional test accounts (@ref.local) — two tenants, no real personal data.",
+  "login.passwordHint": "Password for all demo accounts: reference"
+}

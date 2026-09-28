@@ -1,0 +1,19 @@
+{
+  "extends": "../../../tsconfig.base.json",
+  "compilerOptions": {
+    "noEmit": true,
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+    "paths": {
+      "@kamod-ch/otok-discussions": ["../dist/index.d.ts"],
+      "@kamod-ch/otok-discussions/adapters/memory": ["../dist/adapters/memory/index.d.ts"],
+      "@kamod-ch/otok-discussions/testing": ["../dist/testing/index.d.ts"],
+      "@kamod-ch/otok-discussions/kysely": ["../dist/kysely/index.d.ts"],
+      "@kamod-ch/otok-discussions/plugin": ["../dist/plugin.d.ts"],
+      "@kamod-ch/otok-discussions/ui": ["../dist/ui/index.d.ts"],
+      "@kamod-ch/otok-discussions/ui/islands": ["../dist/ui/islands/index.d.ts"],
+      "@kamod-ch/otok-discussions/i18n": ["../dist/i18n/index.d.ts"]
+    }
+  },
+  "include": ["consumer-imports.ts"]
+}

@@ -444,6 +444,106 @@ importers:
         specifier: ^8.0.16
         version: 8.3.0(@types/node@24.13.6)(esbuild@0.28.2)(jiti@2.7.0)(tsx@4.23.15)
 
+  examples/discussions-reference:
+    dependencies:
+      '@hono/node-server':
+        specifier: ^2.0.4
+        version: 2.1.1(hono@4.13.8)
+      '@kamod-ch/icons':
+        specifier: ^1.1.0
+        version: 1.1.0(preact@10.29.8)
+      '@kamod-ch/otok':
+        specifier: workspace:*
+        version: link:../../packages/otok
+      '@kamod-ch/otok-auth':
+        specifier: workspace:*
+        version: link:../../packages/otok-auth
+      '@kamod-ch/otok-discussions':
+        specifier: workspace:*
+        version: link:../../packages/otok-discussions
+      '@kamod-ch/otok-i18n':
+        specifier: workspace:*
+        version: link:../../packages/otok-i18n
+      '@kamod-ch/otok-kamod':
+        specifier: workspace:*
+        version: link:../../packages/otok-kamod
+      '@kamod-ch/otok-kysely':
+        specifier: workspace:*
+        version: link:../../packages/otok-kysely
+      '@kamod-ch/otok-security':
+        specifier: workspace:*
+        version: link:../../packages/otok-security
+      '@kamod-ch/otok-seo':
+        specifier: workspace:*
+        version: link:../../packages/otok-seo
+      '@kamod-ch/otok-test':
+        specifier: workspace:*
+        version: link:../../packages/otok-test
+      '@kamod-ch/otok-validation':
+        specifier: workspace:*
+        version: link:../../packages/otok-validation
+      '@kamod-ch/ui':
+        specifier: ^1.3.0
+        version: 1.3.0(@kamod-ch/themes@0.2.1(@preact/signals@2.11.2(preact@10.29.8))(preact@10.29.8))(@preact/signals@2.11.2(preact@10.29.8))(preact@10.29.8)(tailwindcss@4.3.3)
+      '@preact/signals':
+        specifier: ^2.5.1
+        version: 2.11.2(preact@10.29.8)
+      hono:
+        specifier: ^4.13.8
+        version: 4.13.8
+      kysely:
+        specifier: ^0.29.2
+        version: 0.29.6
+      otok-adapter-node:
+        specifier: workspace:*
+        version: link:../../packages/otok-adapter-node
+      pg:
+        specifier: ^8.16.0
+        version: 8.23.0
+      preact:
+        specifier: ^10.28.2
+        version: 10.29.8(preact-render-to-string@6.7.0)
+      zod:
+        specifier: ^4.0.0
+        version: 4.6.5
+    devDependencies:
+      '@hono/vite-dev-server':
+        specifier: ^0.26.1
+        version: 0.26.1(hono@4.13.8)
+      '@kamod-ch/otok-vite-plugin':
+        specifier: workspace:*
+        version: link:../../packages/vite-plugin-otok
+      '@playwright/test':
+        specifier: ^1.55.0
+        version: 1.63.0
+      '@preact/preset-vite':
+        specifier: ^2.10.5
+        version: 2.10.6(@babel/core@7.29.7)(preact@10.29.8)(rollup@4.63.4)(vite@8.3.0(@types/node@24.13.6)(esbuild@0.28.2)(jiti@2.7.0)(tsx@4.23.15))
+      '@tailwindcss/vite':
+        specifier: ^4.2.4
+        version: 4.3.3(vite@8.3.0(@types/node@24.13.6)(esbuild@0.28.2)(jiti@2.7.0)(tsx@4.23.15))
+      '@types/node':
+        specifier: ^24.12.2
+        version: 24.13.6
+      otok-cli:
+        specifier: workspace:*
+        version: link:../../packages/otok-cli
+      tailwindcss:
+        specifier: ^4.2.4
+        version: 4.3.3
+      tsx:
+        specifier: ^4.20.3
+        version: 4.23.15
+      typescript:
+        specifier: ~6.0.2
+        version: 6.0.3
+      vite:
+        specifier: ^8.0.10
+        version: 8.3.0(@types/node@24.13.6)(esbuild@0.28.2)(jiti@2.7.0)(tsx@4.23.15)
+      vitest:
+        specifier: ^4.1.2
+        version: 4.1.11(@opentelemetry/api@1.9.1)(@types/node@24.13.6)(jsdom@29.1.1)(vite@8.3.0(@types/node@24.13.6)(esbuild@0.28.2)(jiti@2.7.0)(tsx@4.23.15))
+
   examples/extensions-demo:
     dependencies:
       '@kamod-ch/otok':
@@ -1305,6 +1405,73 @@ importers:
       vite:
         specifier: ^8.0.16
         version: 8.3.0(@types/node@24.13.6)(esbuild@0.28.2)(jiti@2.7.0)(tsx@4.23.15)
+      vitest:
+        specifier: ^4.1.2
+        version: 4.1.11(@opentelemetry/api@1.9.1)(@types/node@24.13.6)(jsdom@29.1.1)(vite@8.3.0(@types/node@24.13.6)(esbuild@0.28.2)(jiti@2.7.0)(tsx@4.23.15))
+
+  packages/otok-discussions:
+    dependencies:
+      '@kamod-ch/i18n':
+        specifier: ^0.1.1
+        version: 0.1.1(preact@10.29.8)
+      '@kamod-ch/otok-config':
+        specifier: workspace:*
+        version: link:../otok-config
+      zod:
+        specifier: ^3.24.0
+        version: 3.25.76
+    devDependencies:
+      '@kamod-ch/icons':
+        specifier: ^1.1.0
+        version: 1.1.0(preact@10.29.8)
+      '@kamod-ch/otok':
+        specifier: workspace:*
+        version: link:../otok
+      '@kamod-ch/otok-auth':
+        specifier: workspace:*
+        version: link:../otok-auth
+      '@kamod-ch/otok-queue':
+        specifier: workspace:*
+        version: link:../otok-queue
+      '@kamod-ch/otok-realtime':
+        specifier: workspace:*
+        version: link:../otok-realtime
+      '@kamod-ch/otok-test':
+        specifier: workspace:*
+        version: link:../otok-test
+      '@kamod-ch/ui':
+        specifier: ^1.3.0
+        version: 1.3.0(@kamod-ch/themes@0.2.1(@preact/signals@2.11.2(preact@10.29.8))(preact@10.29.8))(@preact/signals@2.11.2(preact@10.29.8))(preact@10.29.8)(tailwindcss@4.3.3)
+      '@types/better-sqlite3':
+        specifier: ^7.6.13
+        version: 7.6.13
+      '@types/node':
+        specifier: ^24.12.2
+        version: 24.13.6
+      '@types/pg':
+        specifier: ^8.15.5
+        version: 8.23.1
+      better-sqlite3:
+        specifier: ^12.6.2
+        version: 12.11.1
+      hono:
+        specifier: ^4.13.8
+        version: 4.13.8
+      kysely:
+        specifier: ^0.29.3
+        version: 0.29.6
+      pg:
+        specifier: ^8.16.3
+        version: 8.23.0
+      preact:
+        specifier: ^10.28.2
+        version: 10.29.8(preact-render-to-string@6.7.0)
+      preact-render-to-string:
+        specifier: ^6.7.0
+        version: 6.7.0(preact@10.29.8)
+      typescript:
+        specifier: ~6.0.2
+        version: 6.0.3
       vitest:
         specifier: ^4.1.2
         version: 4.1.11(@opentelemetry/api@1.9.1)(@types/node@24.13.6)(jsdom@29.1.1)(vite@8.3.0(@types/node@24.13.6)(esbuild@0.28.2)(jiti@2.7.0)(tsx@4.23.15))
@@ -2653,6 +2820,14 @@ packages:
     resolution: {integrity: sha512-LzcZ/hXh9/1KuVw1rJeV6V9tGAZ+hbLh2mJlOwjUq0wZzZZ0x4BOPU32JI2uZQX045ChpLdOQ76D8GpQeOiHpw==}
     peerDependencies:
       preact: ^10.29.2
+
+  '@kamod-ch/i18n@0.1.1':
+    resolution: {integrity: sha512-M01e9g+Ks9OVx7irzCCQy0/D9XK4ZnAMUW8q3goFNrwBynGNdZzSpUQBIOwDQ9eOOmPxRQ7xlmn8orPCvQ2Htw==}
+    peerDependencies:
+      preact: '>=10.0.0'
+    peerDependenciesMeta:
+      preact:
+        optional: true
 
   '@kamod-ch/icons@1.1.0':
     resolution: {integrity: sha512-urO01rf1PPH55C/HybPk1tzKavG5eL1LGZFuBmx3XiIUwqHp0fg9cOsvyn+oiEN2beWZvAnREJzN2ljWSP4maA==}
@@ -5201,6 +5376,10 @@ snapshots:
 
   '@kamod-ch/hooks@1.0.0(preact@10.29.8)':
     dependencies:
+      preact: 10.29.8(preact-render-to-string@6.7.0)
+
+  '@kamod-ch/i18n@0.1.1(preact@10.29.8)':
+    optionalDependencies:
       preact: 10.29.8(preact-render-to-string@6.7.0)
 
   '@kamod-ch/icons@1.1.0(preact@10.29.8)':

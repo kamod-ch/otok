@@ -1,0 +1,12 @@
+{
+  "articles.title": "Artikel",
+  "articles.lead": "Watson-inspirierte Vorschau mit eingebetteter Diskussion — drei Thread-Modi (offen, geschlossen, moderiert).",
+  "articles.read": "Artikel lesen",
+  "article.preview": "Top-Kommentare",
+  "article.fullThread": "Ganze Diskussion",
+  "article.back": "Zurück zur Liste",
+  "login.title": "Anmelden",
+  "login.submit": "Login",
+  "login.demo": "Fiktive Testkonten (@ref.local) — zwei Tenants, keine echten Personen.",
+  "login.passwordHint": "Passwort für alle Demo-Konten: reference"
+}
