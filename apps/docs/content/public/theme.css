@@ -46,3 +46,54 @@ html:root[data-theme="dark"] {
   --pp-code-text: #e2e8f0;
   --pp-focus: #38bdf8;
 }
+
+/* Logo: theme.css loads before the main bundle; keep light/dark swap rules here too. */
+.pp-title .pp-logo-themeable.pp-logo {
+  position: relative;
+  display: inline-block;
+  flex-shrink: 0;
+  height: 1.75rem;
+  width: 7.375rem;
+  max-width: min(12rem, 40vw);
+}
+
+.pp-title .pp-logo-themeable img {
+  position: absolute;
+  inset: 0;
+  display: block;
+  height: 100%;
+  width: auto;
+  max-width: min(12rem, 40vw);
+  object-fit: contain;
+  object-position: left center;
+}
+
+.pp-title .pp-logo-dark {
+  display: none;
+}
+
+@media (prefers-color-scheme: dark) {
+  html:root:not([data-theme]) .pp-title .pp-logo-light {
+    display: none;
+  }
+
+  html:root:not([data-theme]) .pp-title .pp-logo-dark {
+    display: block;
+  }
+}
+
+html:root[data-theme="dark"] .pp-title .pp-logo-light {
+  display: none;
+}
+
+html:root[data-theme="dark"] .pp-title .pp-logo-dark {
+  display: block;
+}
+
+html:root[data-theme="light"] .pp-title .pp-logo-light {
+  display: block;
+}
+
+html:root[data-theme="light"] .pp-title .pp-logo-dark {
+  display: none;
+}

@@ -13,8 +13,6 @@ Build fast, progressively enhanced web apps with server-side rendering, file-bas
 
 [Documentation](https://kamod-ch.github.io/otok/) · [Quick start](#quick-start) · [Examples](./examples) · [Roadmap](./apps/docs/content/project/roadmap.md) · [Discussions](https://github.com/kamod-ch/otok/discussions)
 
-> [!IMPORTANT]
-> Otok is under active development and has not reached 1.0 yet. Review the [release-candidate status](./docs/1.0/release-candidate.md) before using it in production.
 
 ## Why Otok?
 

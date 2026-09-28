@@ -1,6 +1,23 @@
+import path from "node:path";
+import { fileURLToPath } from "node:url";
 import { defineConfig } from "@kamod-ch/preactpress/config";
 
+const configDir = path.dirname(fileURLToPath(import.meta.url));
+const docsRoot = path.resolve(configDir, "..");
+const preactpressPackage = path.resolve(docsRoot, "node_modules/@kamod-ch/preactpress");
+const preactpressClient = path.join(preactpressPackage, "src/client");
+const preactpressTheme = path.join(preactpressClient, "theme-default");
+
 export default defineConfig({
+  theme: "./theme/Layout.tsx",
+  vite: {
+    resolve: {
+      alias: [
+        { find: "@preactpress-internal/client", replacement: preactpressClient },
+        { find: "@preactpress-internal/theme-default", replacement: preactpressTheme },
+      ],
+    },
+  },
   srcDir: "content",
   site: {
     title: "Otok Docs",
@@ -22,8 +39,8 @@ export default defineConfig({
   },
   themeConfig: {
     logo: {
-      light: "/logo-icon.svg",
-      dark: "/logo-icon-dark.svg",
+      light: "/logo-wordmark.svg",
+      dark: "/logo-wordmark-dark.svg",
     },
     outline: true,
     search: true,

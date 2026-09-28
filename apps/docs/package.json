@@ -5,6 +5,9 @@
   "description": "Otok documentation site built with PreactPress.",
   "type": "module",
   "scripts": {
+    "brand:sync": "kamod-brand-sync-docs --target content/public",
+    "predev": "pnpm run brand:sync",
+    "prebuild": "pnpm run brand:sync",
     "dev": "preactpress dev",
     "build": "preactpress build",
     "preview": "preactpress preview",
@@ -13,6 +16,9 @@
     "test": "preactpress check"
   },
   "devDependencies": {
-    "@kamod-ch/preactpress": "^2.2.1"
+    "@kamod-ch/brand": "^0.1.0",
+    "@kamod-ch/preactpress": "^2.2.1",
+    "preact": "^10.26.0",
+    "typescript": "^5.7.0"
   }
 }

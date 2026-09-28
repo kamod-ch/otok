@@ -1,0 +1,43 @@
+.kiw-footer {
+  width: min(100% - 2rem, 1320px);
+  margin: 0 auto;
+  padding: 2rem 0 3rem;
+  color: var(--pp-muted, #64748b);
+  text-align: center;
+  display: grid;
+  justify-items: center;
+  gap: 1rem;
+}
+
+.kiw-footer-logo {
+  display: inline-flex;
+  color: inherit;
+  text-decoration: none;
+}
+
+.kiw-footer-built,
+.kiw-footer-copy {
+  margin: 0;
+  font-size: 0.875rem;
+  line-height: 1.6;
+}
+
+.kiw-footer-built a,
+.kiw-footer-copy a {
+  color: var(--pp-accent, #206bc4);
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.kiw-footer-built a:hover,
+.kiw-footer-copy a:hover {
+  text-decoration: underline;
+}
+
+.pp-title .kamod-logo {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--pp-text);
+  text-decoration: none;
+}

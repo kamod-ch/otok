@@ -184,9 +184,18 @@ importers:
 
   apps/docs:
     devDependencies:
+      '@kamod-ch/brand':
+        specifier: ^0.1.0
+        version: 0.1.9(preact@10.29.8)
       '@kamod-ch/preactpress':
         specifier: ^2.2.1
         version: 2.2.1(@babel/core@7.29.7)(@types/node@24.13.6)(esbuild@0.28.2)(jiti@2.7.0)(rollup@4.63.4)(tsx@4.23.15)
+      preact:
+        specifier: ^10.26.0
+        version: 10.29.8(preact-render-to-string@6.7.0)
+      typescript:
+        specifier: ^5.7.0
+        version: 5.9.3
 
   apps/playground:
     dependencies:
@@ -2840,6 +2849,12 @@ packages:
 
   '@jridgewell/trace-mapping@0.3.31':
     resolution: {integrity: sha512-zzNR+SdQSDJzc8joaeP8QQoCQr8NuYx2dIIytl1QeBEZHJ9uW6hebsrYgbz8hJwUQao3TWCMtmfV8Nu1twOLAw==}
+
+  '@kamod-ch/brand@0.1.9':
+    resolution: {integrity: sha512-yMSqkEDO5qOYaMzy9fyj1BfN4mv50k06uFjdF0PKtl9NHgv8P+PAVJM/SZ3oGagCSIizjLPLTixnfchZJzb7ug==}
+    hasBin: true
+    peerDependencies:
+      preact: '>=10'
 
   '@kamod-ch/hooks@1.0.0':
     resolution: {integrity: sha512-LzcZ/hXh9/1KuVw1rJeV6V9tGAZ+hbLh2mJlOwjUq0wZzZZ0x4BOPU32JI2uZQX045ChpLdOQ76D8GpQeOiHpw==}
@@ -5530,6 +5545,11 @@ packages:
     resolution: {integrity: sha512-TeTSQ6H5YHvpqVwBRcnLDCBnDOHWYu7IvGbHT6N8AOymcr9PJGjc1GTtiWZTYg0NCgYwvnYWEkVChQAr9bjfwA==}
     engines: {node: '>=16'}
 
+  typescript@5.9.3:
+    resolution: {integrity: sha512-jl1vZzPDinLr9eUt3J/t7V6FgNEw9QjvBPdysz9KfQDD41fQrC2Y4vKQdiaUpFT4bXlb1RHhLpp8wtm6M5TgSw==}
+    engines: {node: '>=14.17'}
+    hasBin: true
+
   typescript@6.0.3:
     resolution: {integrity: sha512-y2TvuxSZPDyQakkFRPZHKFm+KKVqIisdg9/CZwm9ftvKXLP8NRWj38/ODjNbr43SsoXqNuAisEf1GdCxqWcdBw==}
     engines: {node: '>=14.17'}
@@ -6299,6 +6319,10 @@ snapshots:
     dependencies:
       '@jridgewell/resolve-uri': 3.1.2
       '@jridgewell/sourcemap-codec': 1.6.0
+
+  '@kamod-ch/brand@0.1.9(preact@10.29.8)':
+    dependencies:
+      preact: 10.29.8(preact-render-to-string@6.7.0)
 
   '@kamod-ch/hooks@1.0.0(preact@10.29.8)':
     dependencies:
@@ -9116,6 +9140,8 @@ snapshots:
       safe-buffer: 5.2.1
 
   type-fest@4.41.0: {}
+
+  typescript@5.9.3: {}
 
   typescript@6.0.3: {}
 
