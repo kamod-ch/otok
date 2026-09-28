@@ -4,30 +4,53 @@ section: Guides
 order: 33
 ---
 
-# Composition Packages
+# Composition packages
 
-Optional packages around Otok core. Use them directly (**composition**) or through **`otok.config.ts` plugins** where a package exposes a plugin entry point. Core stays free of auth, validation, database, billing, and OAuth dependencies.
+Optional packages around Otok core. Use them by **importing and wiring** server routes, loaders, middleware, and helpers (**composition**), or register a **plugin** when the package exposes `definePlugin` and you want `otok.config.ts` integration.
 
-| Package                                                                                            | Purpose                                                                                       |
-| -------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------- |
-| `@kamod-ch/otok-config`                                                                            | Typed plugin API (`defineConfig`, `definePlugin`)                                             |
-| `@kamod-ch/otok-plugin-hello`                                                                      | Minimal example plugin                                                                        |
-| [`@kamod-ch/otok-auth`](https://github.com/kamod-ch/otok/tree/main/packages/otok-auth)             | Cookie sessions, CSRF, password hashing, route/API middleware, memory/Kysely session adapters |
-| [`@kamod-ch/otok-validation`](https://github.com/kamod-ch/otok/tree/main/packages/otok-validation) | Standard Schema validation with `defineAction`, field errors, Zod/Valibot/ArkType adapters    |
-| [`@kamod-ch/otok-flash`](https://github.com/kamod-ch/otok/tree/main/packages/otok-flash)           | Signed one-time flash cookies for PRG redirects and SSR toasts                                |
-| [`@kamod-ch/otok-stripe`](https://github.com/kamod-ch/otok/tree/main/packages/otok-stripe)         | Checkout, Customer Portal, webhooks, `BillingAdapter`                                         |
-| [`@kamod-ch/otok-mail`](https://github.com/kamod-ch/otok/tree/main/packages/otok-mail)             | Provider-based mail — SMTP, Resend, Mailpit, test provider                                    |
-| [`@kamod-ch/otok-storage`](https://github.com/kamod-ch/otok/tree/main/packages/otok-storage)       | Object storage — local, S3, R2, MinIO                                                         |
-| [`@kamod-ch/otok-queue`](https://github.com/kamod-ch/otok/tree/main/packages/otok-queue)           | Typed jobs, retry, idempotency, cron, in-memory provider                                      |
-| [`@kamod-ch/otok-oauth`](https://github.com/kamod-ch/otok/tree/main/packages/otok-oauth)           | GitHub/Google OAuth login with signed state/PKCE cookies and `OAuthAdapter`                   |
+The core framework stays free of auth, validation, database, billing, and OAuth dependencies.
 
-See also [Plugins](./plugins.md), [`docs/extension-roadmap.md`](https://github.com/kamod-ch/otok/blob/main/docs/extension-roadmap.md) in the repository, and [`docs/adr/0006-plugin-system.md`](https://github.com/kamod-ch/otok/blob/main/docs/adr/0006-plugin-system.md).
+**Complete inventory:** [Ecosystem catalog](./ecosystem.md) (taxonomy, versions, install commands).
 
-## Typical wiring
+**Curated groups:** [Data and platform](./ecosystem-data-and-platform.md) · [Auth and security](./ecosystem-auth-and-security.md) · [Content and product](./ecosystem-content-and-product.md) · [AI and operations](./ecosystem-ai-and-operations.md).
 
-1. Persist users/sessions in your app (or use `otok-auth` adapters).
-2. Validate forms with `otok-validation`.
+## Choosing an integration mode
+
+| Mode            | Choose when                                                                                             |
+| --------------- | ------------------------------------------------------------------------------------------------------- |
+| **Plugin**      | Package supports `otok add` / `plugins: []` and you want build + runtime hooks.                         |
+| **Composition** | You mount handlers, middleware, or helpers manually in `createOtokApp({ configure })` or route modules. |
+| **Both**        | Many official packages support either path; pick one consistent approach per app.                       |
+
+## Server-only vs browser-safe
+
+Import server utilities from package `/server` or documented server entry points. Do not import secrets, session stores, or provider clients into island/client bundles.
+
+## Runtime and adapters
+
+Check whether a package needs Node APIs (filesystem, long-lived workers, native drivers). Match your [deployment adapter](./adapters.md) — Cloudflare and static adapters reject unsupported capabilities at config time when plugins call `assertAdapterCapability`.
+
+## Registry and CLI
+
+Official plugins are discoverable through `@kamod-ch/otok-registry`. Use [`pnpm otok add`](./cli-add.md) for registry-backed packages; use `pnpm add <package>` for composition-only wiring.
+
+## Security and configuration
+
+Keep API keys, webhook secrets, and session material in environment variables. Follow security notes on registry entries (OAuth redirect allowlists, storage credentials, AI provider keys).
+
+## Example wiring (composition)
+
+Typical stack wired explicitly:
+
+1. Persist users/sessions with `@kamod-ch/otok-auth` adapters.
+2. Validate forms with `@kamod-ch/otok-validation`.
 3. Mount OAuth/Stripe handlers in `createOtokApp({ configure })`.
-4. Show one-shot messages after redirects with `otok-flash`.
+4. Show one-shot messages after redirects with `@kamod-ch/otok-flash`.
 
-Apps keep schema and business rules. Packages provide protocol helpers and middleware only.
+Dedicated guides cover common packages: [validation](./validation.md), [mail](./otok-mail.md), [storage](./otok-storage.md), [queue](./otok-queue.md), [Stripe](./otok-stripe-plugin.md), [i18n](./i18n.md), [Kysely](./kysely.md).
+
+## Plugins
+
+For hook lifecycle and authoring, see [Plugins](./plugins.md).
+
+Repository design notes: [`docs/adr/0006-plugin-system.md`](https://github.com/kamod-ch/otok/blob/main/docs/adr/0006-plugin-system.md).

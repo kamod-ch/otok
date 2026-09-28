@@ -13,7 +13,8 @@
     "directory": "packages/otok-preset-dashboard"
   },
   "files": [
-    "dist"
+    "dist",
+    "README.md"
   ],
   "type": "module",
   "exports": {

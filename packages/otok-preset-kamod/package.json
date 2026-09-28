@@ -13,7 +13,8 @@
     "directory": "packages/otok-preset-kamod"
   },
   "files": [
-    "dist"
+    "dist",
+    "README.md"
   ],
   "type": "module",
   "exports": {

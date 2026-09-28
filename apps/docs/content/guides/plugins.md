@@ -6,15 +6,19 @@ order: 34
 
 # Plugins
 
-Otok ships a typed plugin API for official extensions and app-specific integrations. Plugins are optional — existing composition packages and manual `createOtokApp({ configure })` wiring continue to work.
+Otok plugins extend the build and runtime through typed hooks in `otok.config.ts`. They are one integration mode — many packages also support direct **composition** imports. See [Composition packages](./extensions.md) and the [complete ecosystem catalog](./ecosystem.md) for every official package.
 
-## Quick start
+## When to use a plugin
+
+Use a plugin when a package exposes `definePlugin` and you want Vite/server hooks applied automatically:
 
 ```bash
-pnpm otok add hello
+pnpm otok add kysely
 ```
 
-Or manually in `otok.config.ts`:
+The CLI installs the npm package and registers it in `otok.config.ts` ([CLI — otok add](./cli-add.md)). Registry entries list compatible Otok versions and adapters.
+
+## Manual registration
 
 ```ts
 // otok.config.ts
@@ -63,6 +67,16 @@ Plugins run in declared order:
 
 `buildEnd` runs in reverse order.
 
+## Authoring
+
+| Topic          | Guide                                                                                                       |
+| -------------- | ----------------------------------------------------------------------------------------------------------- |
+| Plugin API     | `@kamod-ch/otok-config` — [package README](https://github.com/kamod-ch/otok/tree/main/packages/otok-config) |
+| First plugin   | [Create your first Otok plugin](./create-your-first-plugin.md)                                              |
+| Setup hooks    | [Plugin setup hooks](./plugin-setup-hooks.md)                                                               |
+| Example plugin | `@kamod-ch/otok-plugin-hello`                                                                               |
+| Test fixture   | `@kamod-ch/otok-plugin-fixture` (maintainers only)                                                          |
+
 ## Public vs internal API
 
 | Public                            | Internal                      |
@@ -72,12 +86,4 @@ Plugins run in declared order:
 | `virtual:otok-config`             | generated temp config bundles |
 | `virtual:otok-plugin/<name>/<id>` | devtools metadata (reserved)  |
 
-## Packages
-
-| Package                         | Purpose                        |
-| ------------------------------- | ------------------------------ |
-| `@kamod-ch/otok-config`         | Plugin contract and resolution |
-| `@kamod-ch/otok-plugin-hello`   | Minimal example plugin         |
-| `@kamod-ch/otok-plugin-fixture` | Test fixture plugin            |
-
-See also [Create your first Otok plugin](./create-your-first-plugin.md), [CLI — otok add](./cli-add.md), and [Composition Packages](./extensions.md).
+The small table above lists **examples**, not the full ecosystem. For every published plugin and extension, use the [ecosystem catalog](./ecosystem.md).

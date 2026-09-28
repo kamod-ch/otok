@@ -182,7 +182,7 @@ Use Playwright for hydration and browser behavior. See [testing](./apps/docs/con
 
 ## Ecosystem
 
-Opt-in packages cover adapters/deployment, auth and data, content/i18n/SEO, queues and workflows, testing and observability, and business kits. See [extensions](./apps/docs/content/guides/extensions.md), [business kits](./docs/business-kits.md), and [examples](./examples).
+Opt-in packages cover adapters/deployment, auth and data, content/i18n/SEO, queues and workflows, testing and observability, and business kits. Start with the [ecosystem catalog](./apps/docs/content/guides/ecosystem.md) (every published package), then [composition](./apps/docs/content/guides/extensions.md), [business kits](./docs/business-kits.md), and [examples](./examples).
 
 ## Project Status
 

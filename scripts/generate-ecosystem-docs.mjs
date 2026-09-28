@@ -13,19 +13,60 @@ const CATEGORIES = ["core", "adapter", "extension", "kit", "preset", "tooling", 
 const INTEGRATIONS = ["core", "plugin", "composition", "adapter", "scaffold", "cli", "testing"];
 const AUDIENCES = ["application", "extension-author", "maintainer"];
 
-/** Docs targets plan 015 will add; allowed before the file exists. */
-const PLANNED_DOCS_TARGETS = new Set([
-  "packages/otok-adapter-contract/README.md",
-  "packages/otok-kit-content/README.md",
-  "packages/otok-kit-marketplace/README.md",
-  "packages/otok-plugin-fixture/README.md",
-  "packages/otok-search/README.md",
-  "packages/otok-preset-crm/README.md",
-  "packages/otok-preset-dashboard/README.md",
-  "packages/otok-preset-kamod/README.md",
-  "packages/otok-preset-minimal/README.md",
-  "packages/otok-preset-saas/README.md",
-]);
+const PLANNED_DOCS_TARGETS = new Set();
+
+const CATEGORY_INTRO = {
+  core: "Framework runtime, config resolution, and the Vite plugin.",
+  adapter: "Deployment targets configured in `otok.config.ts`. See [Ecosystem — adapters](./ecosystem-adapters.md).",
+  extension: "Optional capabilities — register as plugins, import explicitly, or both.",
+  kit: "Composable business layers merged at scaffold or runtime. See [Kits and presets](./ecosystem-kits-and-presets.md).",
+  preset:
+    "Scaffold-time bundles selected with `create otok --variant`. See [Kits and presets](./ecosystem-kits-and-presets.md).",
+  tooling: "CLI, registry, scaffolds, and test helpers for authors and maintainers.",
+  migration: "Compatibility shims for migrating existing apps.",
+  contract: "Contributor-facing contracts and fixtures — not recommended application dependencies.",
+};
+
+function loadRegistryAliases() {
+  const registryPath = path.join(repoRoot, "packages/otok-registry/registry/v1/extensions.json");
+  const aliases = new Map();
+  if (!fs.existsSync(registryPath)) return aliases;
+  const bundle = JSON.parse(fs.readFileSync(registryPath, "utf8"));
+  for (const ext of bundle.extensions ?? []) {
+    const primary = ext.aliases?.[0];
+    if (primary) aliases.set(ext.name, primary);
+  }
+  return aliases;
+}
+
+function installHint(entry, registryAliases) {
+  if (entry.audience === "maintainer" || entry.category === "contract") {
+    return "— (contributor)";
+  }
+  if (entry.category === "preset") {
+    const variant = entry.directory.replace(/^otok-preset-/, "");
+    return `\`pnpm create otok@latest my-app --variant ${variant}\``;
+  }
+  if (entry.category === "adapter") {
+    return `\`pnpm add ${entry.package}\``;
+  }
+  if (entry.package === "create-otok") {
+    return `\`pnpm create otok@latest my-app\``;
+  }
+  if (entry.package === "@kamod-ch/otok") {
+    return "included in scaffold";
+  }
+  if (entry.integration.includes("plugin") && registryAliases.has(entry.package)) {
+    return `\`pnpm otok add ${registryAliases.get(entry.package)}\``;
+  }
+  if (entry.category === "kit") {
+    return "scaffold / `mergeKits`";
+  }
+  if (entry.integration.includes("composition") || entry.category === "extension") {
+    return `\`pnpm add ${entry.package}\``;
+  }
+  return "—";
+}
 
 function loadPublishablePackages() {
   const dirs = fs
@@ -146,12 +187,31 @@ export function validateCatalog(catalog, publishable) {
   return true;
 }
 
+function renderDocLink(entry) {
+  if (entry.docs.startsWith("apps/docs/content/guides/")) {
+    const base = path.basename(entry.docs, ".md");
+    return `[${base}](./${base}.md)`;
+  }
+  if (entry.docs === "apps/docs/content/index.md") {
+    return "[Overview](../index.md)";
+  }
+  if (entry.docs.startsWith("apps/docs/content/")) {
+    return `[docs](${entry.docs.replace("apps/docs/content/", "../")})`;
+  }
+  if (entry.docs.startsWith("packages/")) {
+    return `[README](https://github.com/kamod-ch/otok/tree/main/${entry.docs})`;
+  }
+  return `\`${entry.docs}\``;
+}
+
 function renderEcosystemMarkdown(catalog, publishable) {
   const byCategory = new Map();
   for (const entry of catalog.entries) {
     if (!byCategory.has(entry.category)) byCategory.set(entry.category, []);
     byCategory.get(entry.category).push(entry);
   }
+
+  const registryAliases = loadRegistryAliases();
 
   const lines = [
     "---",
@@ -162,9 +222,33 @@ function renderEcosystemMarkdown(catalog, publishable) {
     "",
     "# Ecosystem catalog",
     "",
-    "Machine-generated inventory of every published Otok package. Versions come from package manifests at generation time.",
+    "Complete inventory of every published Otok package. Versions are read from package manifests when this page is generated.",
     "",
-    "> Regenerate with `pnpm docs:ecosystem:generate`. Source: [`docs/ecosystem-catalog.json`](../../../docs/ecosystem-catalog.json).",
+    "> Regenerate with `pnpm docs:ecosystem:generate`. Source: [`docs/ecosystem-catalog.json`](https://github.com/kamod-ch/otok/blob/main/docs/ecosystem-catalog.json).",
+    "",
+    "## Taxonomy",
+    "",
+    "| Kind | Meaning |",
+    "| --- | --- |",
+    "| **Core** | Framework runtime and Vite integration. |",
+    "| **Adapter** | Deployment target wired in `otok.config.ts`. |",
+    "| **Plugin** | Registers through `otok.config.ts` / plugin hooks (`integration` includes `plugin`). |",
+    "| **Composition** | Imported and wired explicitly by the application. |",
+    "| **Kit** | Composable business/application layer. |",
+    "| **Preset** | Scaffold-time selection via `create otok --variant`. |",
+    "| **Tooling / testing** | CLI, registry, scaffolds, and test helpers. |",
+    "| **Contract / fixture** | Extension-author or maintainer packages — not app recommendations. |",
+    "",
+    "Curated guides: [Data and platform](./ecosystem-data-and-platform.md) · [Auth and security](./ecosystem-auth-and-security.md) · [Content and product](./ecosystem-content-and-product.md) · [AI and operations](./ecosystem-ai-and-operations.md) · [Kits and presets](./ecosystem-kits-and-presets.md) · [Adapters](./ecosystem-adapters.md).",
+    "",
+    "## How to add capabilities",
+    "",
+    "1. **Presets** — `pnpm create otok@latest my-app --variant <name>` (see [Kits and presets](./ecosystem-kits-and-presets.md)).",
+    "2. **Registry plugins** — `pnpm otok add <alias>` for official extensions in the registry (see [CLI — otok add](./cli-add.md)).",
+    "3. **Composition packages** — `pnpm add <package>` and wire imports in server routes, loaders, or `configure`.",
+    "4. **Adapters** — install an adapter package and set `adapter` in `otok.config.ts` (see [Deployment adapters](./adapters.md)).",
+    "",
+    "Not every package is a plugin. Check the **Integration** column below.",
     "",
   ];
 
@@ -172,36 +256,33 @@ function renderEcosystemMarkdown(catalog, publishable) {
     const entries = byCategory.get(category);
     if (!entries?.length) continue;
 
-    lines.push(`## ${category.charAt(0).toUpperCase()}${category.slice(1)}`, "");
+    const title = category.charAt(0).toUpperCase() + category.slice(1);
+    lines.push(`## ${title}`, "", CATEGORY_INTRO[category] ?? "", "");
+
+    if (category === "contract") {
+      lines.push("*Contributor-only — do not add these as casual application dependencies.*", "");
+    }
 
     const sortedEntries = [...entries].sort((a, b) => {
+      const aContributor = a.audience !== "application" ? 1 : 0;
+      const bContributor = b.audience !== "application" ? 1 : 0;
+      if (aContributor !== bContributor) return aContributor - bContributor;
       if (a.featured !== b.featured) return a.featured ? -1 : 1;
       return a.package.localeCompare(b.package);
     });
 
     lines.push(
-      "| Package | Version | Integration | Audience | Summary | Docs |",
-      "| --- | --- | --- | --- | --- | --- |",
+      "| Package | Version | Integration | Audience | Install | Summary | Docs |",
+      "| --- | --- | --- | --- | --- | --- | --- |",
     );
 
     for (const entry of sortedEntries) {
       const version = publishable.get(entry.package).manifest.version;
       const integration = entry.integration.map((mode) => `\`${mode}\``).join(", ");
-      let docCell = entry.docs;
-      if (entry.docs.startsWith("apps/docs/content/guides/")) {
-        const base = path.basename(entry.docs, ".md");
-        docCell = `[${base}](./${base}.md)`;
-      } else if (entry.docs === "apps/docs/content/index.md") {
-        docCell = "[Overview](../index.md)";
-      } else if (entry.docs.startsWith("apps/docs/content/")) {
-        docCell = `[docs](${entry.docs.replace("apps/docs/content/", "../")})`;
-      } else if (entry.docs.startsWith("packages/")) {
-        docCell = `[package docs](https://github.com/kamod-ch/otok/tree/main/${entry.docs})`;
-      } else {
-        docCell = `\`${entry.docs}\``;
-      }
+      const audience = entry.audience === "application" ? entry.audience : `**${entry.audience}**`;
+      const install = installHint(entry, registryAliases);
       lines.push(
-        `| \`${entry.package}\` | ${version} | ${integration} | ${entry.audience} | ${entry.summary} | ${docCell} |`,
+        `| \`${entry.package}\` | ${version} | ${integration} | ${audience} | ${install} | ${entry.summary} | ${renderDocLink(entry)} |`,
       );
     }
     lines.push("");

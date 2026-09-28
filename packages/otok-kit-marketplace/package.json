@@ -14,7 +14,8 @@
   },
   "files": [
     "dist",
-    "kit-files"
+    "kit-files",
+    "README.md"
   ],
   "type": "module",
   "exports": {
