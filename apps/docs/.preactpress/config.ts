@@ -30,7 +30,10 @@ export default defineConfig({
   favicon: {
     svg: "/favicon.svg",
   },
-  head: [["link", { rel: "stylesheet", href: "/otok/theme.css" }]],
+  head: [
+    ["link", { rel: "stylesheet", href: "/otok/theme.css" }],
+    ["link", { rel: "stylesheet", href: "/otok/styles/logo.css" }],
+  ],
   ai: {
     llmsTxt: true,
     llmsFullTxt: true,
