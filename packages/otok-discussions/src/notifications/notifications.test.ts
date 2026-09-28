@@ -43,8 +43,7 @@ describe("discussions notifications", () => {
     const first = await handler(payload);
     const second = await handler(payload);
     expect(first.status).toBe("delivered");
-    expect(second.status).toBe("skipped");
-    expect(second.reason).toBe("duplicate");
+    expect(second).toEqual({ status: "skipped", reason: "duplicate" });
   });
 
   it("respects opt-out at delivery time", async () => {
