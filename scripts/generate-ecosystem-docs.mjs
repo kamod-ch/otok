@@ -68,7 +68,7 @@ function installHint(entry, registryAliases) {
   return "—";
 }
 
-function loadPublishablePackages() {
+export function loadPublishablePackages() {
   const dirs = fs
     .readdirSync(packagesDir, { withFileTypes: true })
     .filter((entry) => entry.isDirectory())
@@ -99,10 +99,11 @@ function assertDocsTarget(target) {
   throw new Error(`Catalog docs target missing: ${target}`);
 }
 
-export function validateCatalog(catalog, publishable) {
+export function getCatalogValidationErrors(catalog, publishable) {
   const errors = [];
   if (!catalog?.entries || !Array.isArray(catalog.entries)) {
-    throw new Error("Catalog must contain an entries array.");
+    errors.push("Catalog must contain an entries array.");
+    return errors;
   }
 
   const seenPackages = new Set();
@@ -178,6 +179,11 @@ export function validateCatalog(catalog, publishable) {
     }
   }
 
+  return errors;
+}
+
+export function validateCatalog(catalog, publishable) {
+  const errors = getCatalogValidationErrors(catalog, publishable);
   if (errors.length > 0) {
     console.error("Ecosystem catalog validation failed:");
     for (const error of errors) console.error(`- ${error}`);
@@ -335,4 +341,5 @@ function main() {
   }
 }
 
-main();
+const isMain = process.argv[1] && fileURLToPath(import.meta.url) === path.resolve(process.argv[1]);
+if (isMain) main();

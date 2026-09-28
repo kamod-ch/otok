@@ -136,6 +136,14 @@ test("check-api-snapshot fails on removed export", () => {
   rmSync(dir, { recursive: true, force: true });
 });
 
+test("check-docs passes on the canonical repository", () => {
+  const r = spawnSync(process.execPath, [join(scriptsDir, "check-docs.mjs")], {
+    cwd: root,
+    encoding: "utf8",
+  });
+  assert.equal(r.status, 0, r.stderr + r.stdout);
+});
+
 test("docs:ecosystem:check passes on the canonical catalog", () => {
   const check = spawnSync(process.execPath, [join(scriptsDir, "generate-ecosystem-docs.mjs"), "--check"], {
     cwd: root,
