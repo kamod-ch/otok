@@ -1,4 +1,4 @@
-import { describe, expect, it, vi } from "vitest";
+import { describe, expect, it } from "vitest";
 import { processCommentBodyForStorage } from "./security/process-body.js";
 import { isAllowedDiscussionUrl } from "./security/urls.js";
 import { renderSafeDiscussionMarkdownHtml } from "./security/markdown-render.js";

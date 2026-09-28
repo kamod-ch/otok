@@ -5,7 +5,9 @@ import { fileURLToPath } from "node:url";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const root = path.resolve(__dirname, "..");
+const repoRoot = path.resolve(root, "../..");
 const contentDir = path.join(root, "content");
+const brandAssetsDir = path.join(repoRoot, "assets");
 const outDir = path.join(root, "dist");
 const config = JSON.parse(fs.readFileSync(path.join(root, "site.config.json"), "utf8"));
 const checkMode = process.argv.includes("--check");
@@ -188,6 +190,7 @@ function layout(page) {
   <title>${escapeHtml(page.title)} | ${escapeHtml(config.title)}</title>
   <meta name="description" content="${escapeHtml(page.description)}">
   <link rel="canonical" href="${canonical}">
+  <link rel="icon" href="${config.base}favicon.svg" type="image/svg+xml">
   <meta property="og:title" content="${escapeHtml(page.title)}">
   <meta property="og:description" content="${escapeHtml(page.description)}">
   <meta property="og:type" content="website">
@@ -196,7 +199,7 @@ function layout(page) {
 </head>
 <body>
   <header class="topbar">
-    <a class="brand" href="${config.base}">Otok</a>
+    <a class="brand" href="${config.base}"><img class="brand-mark" src="${config.base}favicon.svg" width="28" height="28" alt=""> Otok</a>
     <span>Lightweight Hono + Preact SSR with islands</span>
     <input id="search" type="search" placeholder="Search docs" aria-label="Search docs">
   </header>
@@ -226,6 +229,7 @@ for (const page of pages) {
 
 write(path.join(outDir, "assets/style.css"), fs.readFileSync(path.join(root, "public/style.css"), "utf8"));
 write(path.join(outDir, "assets/search.js"), fs.readFileSync(path.join(root, "public/search.js"), "utf8"));
+write(path.join(outDir, "favicon.svg"), fs.readFileSync(path.join(brandAssetsDir, "favicon.svg"), "utf8"));
 write(
   path.join(outDir, "robots.txt"),
   `User-agent: *\nAllow: /\nSitemap: ${config.canonicalOrigin}${config.base}sitemap.xml\n`,

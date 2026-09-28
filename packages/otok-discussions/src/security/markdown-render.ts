@@ -52,7 +52,7 @@ export function parseSafeDiscussionMarkdown(source: string): SafeMarkdownSegment
       i += em[0]!.length;
       continue;
     }
-    const nextSpecial = rest.search(/[\[*`]/);
+    const nextSpecial = rest.search(/[[*`]/);
     const chunk = nextSpecial === -1 ? rest : rest.slice(0, nextSpecial);
     if (chunk) segments.push({ kind: "text", value: chunk });
     i += chunk.length || 1;

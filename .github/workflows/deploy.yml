@@ -6,6 +6,7 @@ on:
       - main
     paths:
       - "apps/docs/**"
+      - "assets/**"
       - "packages/**"
       - ".github/workflows/deploy.yml"
       - "package.json"

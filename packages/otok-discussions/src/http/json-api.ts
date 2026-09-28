@@ -5,7 +5,6 @@ import { httpStatusForDiscussionError, jsonErrorBody } from "./errors.js";
 import { DiscussionError } from "../types/errors.js";
 import {
   createCommentFormSchema,
-  editCommentFormSchema,
   reactionFormSchema,
   reportFormSchema,
   validationErrorFromZod,

@@ -1,4 +1,4 @@
-import type { DiscussionCommentView, DiscussionFormConfig, DiscussionLabels, DiscussionViewModel } from "./types.js";
+import type { DiscussionCommentView, DiscussionLabels, DiscussionViewModel } from "./types.js";
 import { CommentCard } from "./CommentCard.js";
 import { InlineReplyComposer } from "./InlineReplyComposer.js";
 import { ReportFormPanel } from "./ReportFormPanel.js";

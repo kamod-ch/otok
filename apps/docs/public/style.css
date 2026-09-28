@@ -39,6 +39,18 @@ body {
   color: var(--text);
   line-height: 1.65;
 }
+.topbar .brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-weight: 600;
+  text-decoration: none;
+  color: inherit;
+}
+.topbar .brand-mark {
+  display: block;
+  flex-shrink: 0;
+}
 .topbar {
   position: sticky;
   top: 0;

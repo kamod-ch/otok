@@ -45,7 +45,7 @@ function assertMarkdownLinksSafe(text: string): void {
       throw new DiscussionError("INVALID_INPUT", "Link URL is not allowed");
     }
   }
-  const autolinkPattern = /(?<![(\[])(https?:\/\/[^\s<>\])]+)/gi;
+  const autolinkPattern = /(?<![([])(https?:\/\/[^\s<>\])]+)/gi;
   while ((match = autolinkPattern.exec(text)) !== null) {
     if (!isAllowedDiscussionUrl(match[0]!)) {
       throw new DiscussionError("INVALID_INPUT", "Link URL is not allowed");

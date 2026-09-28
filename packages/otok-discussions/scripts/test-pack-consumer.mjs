@@ -2,7 +2,7 @@
 /**
  * Pack @kamod-ch/otok-discussions and verify subpath imports from isolated consumers.
  */
-import { mkdtempSync, rmSync, readFileSync, writeFileSync, cpSync, mkdirSync } from "node:fs";
+import { mkdtempSync, rmSync, readFileSync, writeFileSync, cpSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { spawnSync } from "node:child_process";

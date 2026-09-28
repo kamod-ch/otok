@@ -1,7 +1,6 @@
 import { describe, expect, it, vi } from "vitest";
 import { createDiscussionsRuntime } from "../config.js";
 import { createMemoryDiscussionAdapter } from "../adapters/memory/index.js";
-import { DiscussionError } from "../types/errors.js";
 import { createTestProviders } from "../testing/providers.js";
 import {
   actorDirectory,
@@ -250,9 +249,6 @@ describe("ModerationService", () => {
       policy: allowPolicy(),
       moderation: moderationForTenants("tenant-a", "tenant-b"),
     };
-    const discussion = new DiscussionService(base);
-    const comments = new CommentService(base);
-    const moderation = new ModerationService({ ...base, store: memoryAdapterStore(adapter) });
     const discussionA = new DiscussionService({
       ...base,
       subjectResolver: staticSubjectResolver(subjectA),

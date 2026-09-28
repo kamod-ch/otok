@@ -1,4 +1,10 @@
-# Otok
+<p align="center">
+  <img src="./assets/logo-icon.svg" width="220" alt="" />
+</p>
+
+<p align="center">
+  <img src="./assets/logo-wordmark.svg" width="340" alt="Otok" />
+</p>
 
 **A server-first full-stack framework built on Hono, Preact, and Vite.**
 

@@ -12,7 +12,6 @@ import { authFromOtokContext, tryGetAuthRuntime } from "@kamod-ch/otok-auth";
 import {
   ARTICLE_MODERATED,
   TENANT_A,
-  type RefDatabase,
 } from "../db/types.js";
 import type { RefDb } from "../db/client.js";
 
