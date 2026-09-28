@@ -18,6 +18,8 @@
     "lint:fix": "oxlint --fix .",
     "lint:policy": "node ./scripts/lint.mjs",
     "metadata:check": "node ./scripts/verify-package-metadata.mjs",
+    "docs:ecosystem:generate": "node ./scripts/generate-ecosystem-docs.mjs",
+    "docs:ecosystem:check": "node ./scripts/generate-ecosystem-docs.mjs --check",
     "pack:check": "pnpm metadata:check && pnpm -r --filter './packages/*' build && pnpm -r --filter './packages/*' exec npm pack --dry-run",
     "preview": "pnpm --filter playground preview",
     "release:check": "node ./scripts/release-check.mjs",

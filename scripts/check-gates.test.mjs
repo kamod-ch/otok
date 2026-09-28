@@ -135,3 +135,52 @@ test("check-api-snapshot fails on removed export", () => {
   assert.notEqual(r.status, 0);
   rmSync(dir, { recursive: true, force: true });
 });
+
+test("docs:ecosystem:check passes on the canonical catalog", () => {
+  const check = spawnSync(process.execPath, [join(scriptsDir, "generate-ecosystem-docs.mjs"), "--check"], {
+    cwd: root,
+    encoding: "utf8",
+  });
+  assert.equal(check.status, 0, check.stderr + check.stdout);
+});
+
+test("ecosystem catalog validation rejects duplicate package entries", () => {
+  const dir = mkdtempSync(join(tmpdir(), "otok-gate-eco-"));
+  const catalogFile = join(dir, "ecosystem-catalog.json");
+  writeFileSync(
+    catalogFile,
+    JSON.stringify({
+      schemaVersion: "1.0.0",
+      entries: [
+        {
+          package: "@kamod-ch/otok",
+          directory: "otok",
+          category: "core",
+          integration: ["core"],
+          audience: "application",
+          summary: "Core runtime.",
+          docs: "apps/docs/content/index.md",
+          featured: true,
+        },
+        {
+          package: "@kamod-ch/otok",
+          directory: "otok",
+          category: "core",
+          integration: ["core"],
+          audience: "application",
+          summary: "Duplicate.",
+          docs: "apps/docs/content/index.md",
+          featured: false,
+        },
+      ],
+    }),
+  );
+  const r = spawnSync(process.execPath, [join(scriptsDir, "generate-ecosystem-docs.mjs"), "--check"], {
+    cwd: root,
+    env: { ...process.env, OTOK_ECOSYSTEM_CATALOG_PATH: catalogFile },
+    encoding: "utf8",
+  });
+  assert.notEqual(r.status, 0);
+  assert.match(r.stderr + r.stdout, /Duplicate catalog package/);
+  rmSync(dir, { recursive: true, force: true });
+});

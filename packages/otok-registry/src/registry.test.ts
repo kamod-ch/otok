@@ -4,9 +4,29 @@ import { loadBundledRegistry, parseRegistryPayload } from "./client.js";
 import { searchExtensions, resolveExtension, formatExtensionDetail } from "./search.js";
 import { checkCompatibility, findOutdated } from "./compatibility.js";
 import { sha256Checksum, verifyBundleChecksum } from "./validate.js";
+import { satisfiesRange } from "./semver.js";
 import fs from "node:fs/promises";
+import fsSync from "node:fs";
 import path from "node:path";
+import { fileURLToPath } from "node:url";
 import { bundledRegistryDir } from "./client.js";
+
+const repoRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../../..");
+const packagesDir = path.join(repoRoot, "packages");
+const coreVersion = JSON.parse(fsSync.readFileSync(path.join(packagesDir, "otok/package.json"), "utf8"))
+  .version as string;
+
+function registryNameToDirectory(name: string): string {
+  if (!name.startsWith("@kamod-ch/")) return name;
+  return name.slice("@kamod-ch/".length);
+}
+
+function githubDocsToLocal(docs: string | undefined): string | undefined {
+  if (!docs) return undefined;
+  const prefix = "https://github.com/kamod-ch/otok/tree/main/";
+  if (!docs.startsWith(prefix)) return undefined;
+  return docs.slice(prefix.length);
+}
 
 describe("registry schema", () => {
   it("validates bundled index and extensions", async () => {
@@ -59,11 +79,30 @@ describe("registry search", () => {
   });
 });
 
+describe("bundled registry drift", () => {
+  it("matches monorepo manifests for official kamod-ch extensions", async () => {
+    const registry = await loadBundledRegistry();
+    for (const entry of registry.extensions) {
+      if (entry.publisher !== "kamod-ch" || !entry.name.startsWith("@kamod-ch/")) continue;
+      const dir = registryNameToDirectory(entry.name);
+      const manifestPath = path.join(packagesDir, dir, "package.json");
+      expect(fsSync.existsSync(manifestPath), `${entry.name} manifest`).toBe(true);
+      const manifest = JSON.parse(fsSync.readFileSync(manifestPath, "utf8"));
+      expect(entry.version).toBe(manifest.version);
+      expect(satisfiesRange(coreVersion, entry.otokVersion)).toBe(true);
+      const localDocs = githubDocsToLocal(entry.docs);
+      if (localDocs) {
+        expect(fsSync.existsSync(path.join(repoRoot, localDocs)), `${entry.name} docs`).toBe(true);
+      }
+    }
+  });
+});
+
 describe("compatibility", () => {
   it("passes for matching otok version", async () => {
     const registry = await loadBundledRegistry();
     const entry = resolveExtension(registry, "kysely")!;
-    const result = checkCompatibility(entry, { otokVersion: "0.4.5", adapter: "node" });
+    const result = checkCompatibility(entry, { otokVersion: coreVersion, adapter: "node" });
     expect(result.compatible).toBe(true);
   });
 
