@@ -1,6 +1,6 @@
 {
   "name": "@kamod-ch/otok-discussions",
-  "version": "0.1.0",
+  "version": "2.0.0",
   "description": "Subject-scoped discussions for Otok — headless domain core, adapters, optional Kamod UI, and plugin routes.",
   "homepage": "https://github.com/kamod-ch/otok/tree/main/packages/otok-discussions#readme",
   "bugs": {

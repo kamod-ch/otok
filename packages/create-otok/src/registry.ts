@@ -68,7 +68,7 @@ export const layerPresets: Record<string, OtokPresetDefinition> = {
   "layer:auth": definePreset({
     name: "layer:auth",
     packageJson: {
-      dependencies: { "@kamod-ch/otok-auth": "^1.1.0" },
+      dependencies: { "@kamod-ch/otok-auth": "^2.0.0" },
     },
   }),
   "layer:i18n": definePreset({
@@ -81,7 +81,7 @@ export const layerPresets: Record<string, OtokPresetDefinition> = {
     name: "layer:kysely-sqlite",
     packageJson: {
       dependencies: {
-        "@kamod-ch/otok-kysely": "^1.0.0",
+        "@kamod-ch/otok-kysely": "^2.0.0",
         kysely: "^0.28.2",
         "better-sqlite3": "^11.10.0",
       },
@@ -91,7 +91,7 @@ export const layerPresets: Record<string, OtokPresetDefinition> = {
     name: "layer:kysely-postgres",
     packageJson: {
       dependencies: {
-        "@kamod-ch/otok-kysely": "^1.0.0",
+        "@kamod-ch/otok-kysely": "^2.0.0",
         kysely: "^0.28.2",
         pg: "^8.16.0",
       },
@@ -100,20 +100,20 @@ export const layerPresets: Record<string, OtokPresetDefinition> = {
   "layer:validation": definePreset({
     name: "layer:validation",
     packageJson: {
-      dependencies: { "@kamod-ch/otok-validation": "^1.0.0", zod: "^3.24.0" },
+      dependencies: { "@kamod-ch/otok-validation": "^2.0.0", zod: "^3.24.0" },
     },
   }),
   "layer:adapter-node": definePreset({
     name: "layer:adapter-node",
-    packageJson: { dependencies: { "otok-adapter-node": "^1.0.0" } },
+    packageJson: { dependencies: { "otok-adapter-node": "^2.0.0" } },
   }),
   "layer:adapter-cloudflare": definePreset({
     name: "layer:adapter-cloudflare",
-    packageJson: { dependencies: { "otok-adapter-cloudflare": "^1.0.0" } },
+    packageJson: { dependencies: { "otok-adapter-cloudflare": "^2.0.0" } },
   }),
   "layer:adapter-static": definePreset({
     name: "layer:adapter-static",
-    packageJson: { dependencies: { "otok-adapter-static": "^1.0.0" } },
+    packageJson: { dependencies: { "otok-adapter-static": "^2.0.0" } },
   }),
 };
 
