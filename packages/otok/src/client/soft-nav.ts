@@ -71,6 +71,34 @@ export interface SoftNavigateOptions {
 let activeNavigation: AbortController | null = null;
 let activeFormSubmissionGeneration = 0;
 const inFlightForms = new WeakSet<HTMLFormElement>();
+const formSubmissionLocks = new Map<string, number>();
+const FORM_SUBMISSION_COOLDOWN_MS = 500;
+
+function formSubmissionLockKey(
+  form: HTMLFormElement,
+  submitter: HTMLElement | undefined,
+  analysis: Extract<ReturnType<typeof analyzeSoftNavFormSupport>, { ok: true }>,
+): string {
+  const action = new URL(analysis.action.href);
+  // A form without an explicit action posts to the current document. Ignore its
+  // query here so a redirect cannot turn a queued second click into a new submit.
+  const actionKey = form.hasAttribute("action") ? action.href : `${action.origin}${action.pathname}`;
+  const explicitControl =
+    submitter instanceof HTMLButtonElement || submitter instanceof HTMLInputElement ? submitter : undefined;
+  const defaultControl = form.querySelector<HTMLButtonElement | HTMLInputElement>(
+    "button[type='submit'],button:not([type]),input[type='submit'],input[type='image']",
+  );
+  const control = explicitControl ?? defaultControl ?? undefined;
+  return `${analysis.method}:${analysis.enctype}:${actionKey}:${control?.name ?? ""}=${control?.value ?? ""}`;
+}
+
+function coolDownFormSubmission(key: string): void {
+  const expiresAt = Date.now() + FORM_SUBMISSION_COOLDOWN_MS;
+  formSubmissionLocks.set(key, expiresAt);
+  window.setTimeout(() => {
+    if (formSubmissionLocks.get(key) === expiresAt) formSubmissionLocks.delete(key);
+  }, FORM_SUBMISSION_COOLDOWN_MS);
+}
 
 function dispatchCancelHydration(root: ParentNode): void {
   cancelPendingHydration(root);
@@ -448,11 +476,14 @@ export function setupSoftNavigation(registry: IslandRegistry, options: SoftNavOp
     if (!analysis.ok) return;
 
     event.preventDefault();
-    if (inFlightForms.has(form)) return;
+    const submissionLockKey = formSubmissionLockKey(form, submitter, analysis);
+    if (inFlightForms.has(form) || (formSubmissionLocks.get(submissionLockKey) ?? 0) > Date.now()) return;
     inFlightForms.add(form);
+    formSubmissionLocks.set(submissionLockKey, Number.POSITIVE_INFINITY);
     setFormSubmitting(form, true);
     clearFormSubmitError(form);
 
+    let shouldCoolDown = false;
     void submitSoftNavigationFormResult(form, submitter, registry, {
       onError: options.onError,
       scroll: options.scroll,
@@ -463,6 +494,7 @@ export function setupSoftNavigation(registry: IslandRegistry, options: SoftNavOp
           return;
         }
         if (result.kind === "handled" || result.kind === "validation") {
+          shouldCoolDown = result.kind === "handled";
           options.onNavigate?.({ url: form.action || window.location.href });
           return;
         }
@@ -479,6 +511,10 @@ export function setupSoftNavigation(registry: IslandRegistry, options: SoftNavOp
       .finally(() => {
         setFormSubmitting(form, false);
         inFlightForms.delete(form);
+        if (shouldCoolDown) coolDownFormSubmission(submissionLockKey);
+        else if (formSubmissionLocks.get(submissionLockKey) === Number.POSITIVE_INFINITY) {
+          formSubmissionLocks.delete(submissionLockKey);
+        }
       });
   };
 
