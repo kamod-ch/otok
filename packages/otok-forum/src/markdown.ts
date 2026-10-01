@@ -1,9 +1,11 @@
 import MarkdownIt from "markdown-it";
 import type { ForumMarkdownAdapter } from "./types.js";
 
-let mdInstance: MarkdownIt | undefined;
+type MarkdownItInstance = InstanceType<typeof MarkdownIt>;
 
-function getMarkdownIt(): MarkdownIt {
+let mdInstance: MarkdownItInstance | undefined;
+
+function getMarkdownIt(): MarkdownItInstance {
   if (!mdInstance) {
     mdInstance = new MarkdownIt({
       html: false,

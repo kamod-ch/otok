@@ -13,16 +13,16 @@
   "dependencies": {
     "@kamod-ch/otok": "workspace:*",
     "@kamod-ch/otok-vite-plugin": "workspace:*",
-    "@preact/preset-vite": "^2.10.2",
-    "hono": "^4.13.8",
+    "@preact/preset-vite": "^2.10.6",
+    "hono": "^4.13.12",
     "otok-adapter-cloudflare": "workspace:*",
-    "preact": "^10.28.2",
-    "vite": "^8.0.10"
+    "preact": "^11.0.0",
+    "vite": "^8.3.2"
   },
   "devDependencies": {
-    "@cloudflare/workers-types": "^5.20260722.1",
-    "@types/node": "^24.12.2",
-    "typescript": "~6.0.2",
-    "wrangler": "^4.14.0"
+    "@cloudflare/workers-types": "^5.20261001.1",
+    "@types/node": "^26.6.3",
+    "typescript": "~7.0.2",
+    "wrangler": "^4.145.0"
   }
 }

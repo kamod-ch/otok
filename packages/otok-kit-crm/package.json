@@ -56,12 +56,12 @@
     "@kamod-ch/otok-kit-admin": "workspace:*",
     "@kamod-ch/otok-kit-marketplace": "workspace:*",
     "@kamod-ch/otok-kit-saas": "workspace:*",
-    "@types/better-sqlite3": "^7.6.13",
-    "@types/node": "^24.12.2",
-    "better-sqlite3": "^11.10.0",
-    "kysely": "^0.29.2",
-    "typescript": "~6.0.2",
-    "vitest": "^4.1.2"
+    "@types/better-sqlite3": "^9.6.0",
+    "@types/node": "^26.6.3",
+    "better-sqlite3": "^13.0.3",
+    "kysely": "^0.29.6",
+    "typescript": "~7.0.2",
+    "vitest": "^5.0.3"
   },
   "peerDependencies": {
     "@kamod-ch/otok": ">=0.6.1",

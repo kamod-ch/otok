@@ -10,12 +10,12 @@
   "dependencies": {
     "@kamod-ch/otok": "workspace:*",
     "@kamod-ch/otok-supabase": "workspace:*",
-    "hono": "^4.13.8",
-    "preact": "^10.28.2"
+    "hono": "^4.13.12",
+    "preact": "^11.0.0"
   },
   "devDependencies": {
     "@kamod-ch/otok-vite-plugin": "workspace:*",
-    "typescript": "~6.0.2",
-    "vite": "^8.0.10"
+    "typescript": "~7.0.2",
+    "vite": "^8.3.1"
   }
 }

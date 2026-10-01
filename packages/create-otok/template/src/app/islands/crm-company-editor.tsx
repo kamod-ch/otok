@@ -41,7 +41,7 @@ export default function CompanyEditor({ company, fieldErrors }: CompanyEditorPro
             <span>Company name</span>
             <Input
               value={name}
-              onInput={(e) => {
+              onInput={(e: Event) => {
                 setName((e.target as HTMLInputElement).value);
                 setDirty(true);
               }}
@@ -52,7 +52,7 @@ export default function CompanyEditor({ company, fieldErrors }: CompanyEditorPro
             <span>Industry</span>
             <Input
               value={industry}
-              onInput={(e) => {
+              onInput={(e: Event) => {
                 setIndustry((e.target as HTMLInputElement).value);
                 setDirty(true);
               }}

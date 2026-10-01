@@ -28,7 +28,7 @@ export default defineConfig({
     lang: "en",
   },
   favicon: {
-    svg: "/favicon.svg",
+    svg: "/logo-icon.svg",
   },
   head: [
     ["link", { rel: "stylesheet", href: "/otok/theme.css" }],
