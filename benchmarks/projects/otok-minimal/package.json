@@ -11,10 +11,10 @@
   "dependencies": {
     "@kamod-ch/otok": "workspace:*",
     "otok-adapter-node": "workspace:*",
-    "preact": "^10.26.0"
+    "preact": "^11.0.0"
   },
   "devDependencies": {
     "@kamod-ch/otok-vite-plugin": "workspace:*",
-    "vite": "^6.0.0"
+    "vite": "^8.3.2"
   }
 }

@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useState } from "preact/hooks";
-import type { JSX } from "preact";
+import type { FormHTMLAttributes, JSX } from "preact";
 import {
   createIdempotencyKey,
   OTOK_FETCHER_ATTR,
@@ -78,7 +78,7 @@ export function useAction<TAction = unknown, TLoader = unknown>(
   };
 }
 
-export interface FetcherFormProps extends JSX.HTMLAttributes<HTMLFormElement> {
+export interface FetcherFormProps extends FormHTMLAttributes<HTMLFormElement> {
   method?: "get" | "post";
   action?: string;
 }
@@ -94,7 +94,7 @@ export interface FetcherHandle<TAction = unknown, TLoader = unknown> {
     options?: MutationSubmitOptions,
   ) => Promise<OtokDataResponse<TAction, TLoader>>;
   load: (url?: string) => Promise<OtokDataResponse<TLoader>>;
-  Form: (props: JSX.HTMLAttributes<HTMLFormElement>) => JSX.Element;
+  Form: (props: FormHTMLAttributes<HTMLFormElement>) => JSX.Element;
 }
 
 export function useFetcher<TAction = unknown, TLoader = unknown>(action?: string): FetcherHandle<TAction, TLoader> {
@@ -137,7 +137,7 @@ export function useFetcher<TAction = unknown, TLoader = unknown>(action?: string
   }, [actionPath, entry?.state, fetcherKey, submit]);
 
   const Form = useCallback(
-    (props: JSX.HTMLAttributes<HTMLFormElement>) => <form {...formProps} {...props} />,
+    (props: FormHTMLAttributes<HTMLFormElement>) => <form {...formProps} {...props} />,
     [formProps],
   );
 

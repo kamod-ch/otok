@@ -11,13 +11,13 @@
     "@kamod-ch/otok": "workspace:*",
     "@kamod-ch/otok-auth": "workspace:*",
     "@kamod-ch/otok-oauth": "workspace:*",
-    "@node-rs/argon2": "^2.0.2",
-    "hono": "^4.13.8",
-    "preact": "^10.28.2"
+    "@node-rs/argon2": "^2.2.1",
+    "hono": "^4.13.12",
+    "preact": "^11.0.0"
   },
   "devDependencies": {
     "@kamod-ch/otok-vite-plugin": "workspace:*",
-    "typescript": "~6.0.2",
-    "vite": "^8.0.10"
+    "typescript": "~7.0.2",
+    "vite": "^8.3.1"
   }
 }

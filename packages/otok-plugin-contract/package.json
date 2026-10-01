@@ -37,9 +37,9 @@
   },
   "devDependencies": {
     "@kamod-ch/otok-plugin-fixture": "workspace:*",
-    "@types/node": "^24.12.2",
-    "typescript": "~6.0.2",
-    "vitest": "^4.1.2"
+    "@types/node": "^26.6.3",
+    "typescript": "~7.0.2",
+    "vitest": "^5.0.3"
   },
   "peerDependencies": {
     "vitest": ">=2"

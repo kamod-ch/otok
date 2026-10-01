@@ -32,11 +32,11 @@
     "test": "vitest run"
   },
   "devDependencies": {
-    "@types/node": "^24.12.2",
-    "hono": "^4.13.8",
-    "typescript": "~6.0.2",
-    "vite": "^8.0.10",
-    "vitest": "^4.1.2"
+    "@types/node": "^26.6.3",
+    "hono": "^4.13.12",
+    "typescript": "~7.0.2",
+    "vite": "^8.3.1",
+    "vitest": "^5.0.3"
   },
   "peerDependencies": {
     "hono": ">=4",

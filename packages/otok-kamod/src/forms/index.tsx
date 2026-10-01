@@ -1,4 +1,4 @@
-import type { ComponentChildren, JSX } from "preact";
+import type { ComponentChildren, InputHTMLAttributes } from "preact";
 import { Input } from "@kamod-ch/ui/input";
 import { Label } from "@kamod-ch/ui/label";
 import { Button } from "@kamod-ch/ui/button";
@@ -8,7 +8,7 @@ export type FieldErrors = Record<string, string[] | undefined>;
 export interface FormFieldProps {
   name: string;
   label: string;
-  type?: JSX.InputHTMLAttributes<HTMLInputElement>["type"];
+  type?: InputHTMLAttributes<HTMLInputElement>["type"];
   defaultValue?: string;
   errors?: string[];
   description?: string;

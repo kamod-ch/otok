@@ -1,4 +1,5 @@
-import ts from "typescript";
+// TypeScript 7's public package no longer exposes the legacy compiler AST API.
+import ts from "typescript-legacy";
 
 export type ConfigPatchReason = "added" | "already-installed" | "no-define-config";
 

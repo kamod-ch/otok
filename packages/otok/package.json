@@ -69,16 +69,17 @@
   },
   "dependencies": {
     "@kamod-ch/otok-config": "workspace:*",
-    "hono": "^4.13.8",
+    "hono": "^4.13.12",
     "preact-render-to-string": "^6.7.0"
   },
   "devDependencies": {
-    "@hono/node-server": "^2.0.1",
-    "@types/node": "^24.12.2",
-    "kysely": "^0.29.3",
-    "preact": "^10.28.2",
-    "typescript": "~6.0.2",
-    "vitest": "^4.1.2"
+    "@hono/node-server": "^2.1.3",
+    "@types/node": "^26.6.3",
+    "jsdom": "^26.1.0",
+    "kysely": "^0.29.6",
+    "preact": "^11.0.0",
+    "typescript": "~7.0.2",
+    "vitest": "^5.0.3"
   },
   "peerDependencies": {
     "@hono/node-server": ">=2.0.0",

@@ -55,8 +55,8 @@ export default function ChatCard({
           <Input
             placeholder="Type your message..."
             value={draft}
-            onInput={(event) => setDraft((event.currentTarget as HTMLInputElement).value)}
-            onKeyDown={(event) => {
+            onInput={(event: Event) => setDraft((event.currentTarget as HTMLInputElement).value)}
+            onKeyDown={(event: KeyboardEvent) => {
               if (event.key === "Enter") {
                 event.preventDefault();
                 send();

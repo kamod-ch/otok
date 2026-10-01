@@ -77,21 +77,18 @@ function createTestDb() {
     dialect: new SqliteDialect({ database: sqlite }),
   });
 
-  return { db, close: () => sqlite.close() };
+  return db;
 }
 
 describe("KyselyCrmRepository", () => {
   let db: Kysely<CrmDatabase>;
-  let close: () => void;
 
   beforeEach(() => {
-    const test = createTestDb();
-    db = test.db;
-    close = test.close;
+    db = createTestDb();
   });
 
-  afterEach(() => {
-    close();
+  afterEach(async () => {
+    await db.destroy();
   });
 
   it("imports zefix records and tracks created companies", async () => {

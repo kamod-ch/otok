@@ -15,8 +15,12 @@ const rateLimitSchema = z.object({
 });
 
 export const discussionsConfigSchema = z.object({
-  pagination: paginationSchema.default({}),
-  rateLimit: rateLimitSchema.default({}),
+  pagination: paginationSchema.default({ defaultPageSize: 20, maxPageSize: 100 }),
+  rateLimit: rateLimitSchema.default({
+    windowMs: 60_000,
+    maxCommentsPerWindow: 30,
+    maxThreadsPerWindow: 10,
+  }),
   moderationMode: z.enum(["pre", "post", "trusted"]).default("post"),
   trustedRole: z.string().min(1).default("trusted"),
   maxCommentLength: z.number().int().min(1).max(100_000).default(10_000),
