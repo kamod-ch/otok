@@ -2,9 +2,9 @@
   <img src="./assets/logo-wordmark.svg" width="340" alt="Otok" />
 </p>
 
-**A server-first full-stack framework built on Hono, Preact, and Vite.**
+**A server-first full-stack framework built on Hono, Preact 11, and Vite.**
 
-Build fast, progressively enhanced web apps with server-side rendering, file-based routing, typed routes, route actions, middleware, and opt-in islands. Pages ship browser JavaScript only where interactivity is needed.
+Build fast, progressively enhanced web apps with server-side rendering, file-based routing, typed routes, server actions, middleware, and opt-in islands. Otok ships HTML first and sends browser JavaScript only where interactivity is needed.
 
 ![CI](https://github.com/kamod-ch/otok/actions/workflows/ci.yml/badge.svg)
 ![npm](https://img.shields.io/npm/v/@kamod-ch/otok?label=%40kamod-ch%2Fotok)
@@ -21,13 +21,15 @@ Build fast, progressively enhanced web apps with server-side rendering, file-bas
 | File-based routing          | Pages, nested layouts, middleware, error boundaries, and typed URL generation              |
 | Progressive enhancement     | Native forms and links work without JavaScript; soft navigation enhances them when enabled |
 | Full-stack Hono foundation  | Add APIs, authentication, uploads, and Hono middleware beside SSR routes                   |
-| Preact islands              | Hydrate components on load, idle, visibility, media query, or client-only                  |
+| Preact 11 included          | Build islands with Preact 11 and hydrate them on load, idle, visibility, or a media query  |
 | Deployable architecture     | Node.js reference deployment plus Edge-safe and Cloudflare Workers foundations             |
 | Production-oriented tooling | Testing helpers, health checks, graceful shutdown, package checks, and reproducible builds |
 
 Otok keeps its core focused: routing, rendering, islands, actions, middleware, and deployment primitives. UI libraries, databases, authentication, validation, and CSS remain explicit application choices.
 
 ## Quick Start
+
+**Prerequisite:** Node.js 20 or newer.
 
 ```bash
 pnpm create otok@latest my-app
@@ -36,7 +38,9 @@ pnpm install
 pnpm dev
 ```
 
-Use the full dashboard starter with Kamod UI:
+The generated project includes **Preact 11** and is ready for server rendering and island hydration—no separate Preact setup is required.
+
+For a full dashboard starter with Kamod UI, run:
 
 ```bash
 pnpm create otok@latest my-app --template full
@@ -55,7 +59,7 @@ src/app/islands/       Interactive Preact components
 
 1. The Vite plugin scans `src/app/routes` and generates typed route definitions.
 2. Hono handles requests, middleware, loaders, actions, and API endpoints.
-3. Preact renders pages to HTML on the server.
+3. Preact 11 renders pages to HTML on the server.
 4. `<Island>` marks only the interactive parts of a page.
 5. The client hydrates those islands using the selected loading strategy.
 6. Optional soft navigation swaps page regions without remounting persistent layout chrome.
