@@ -99,7 +99,7 @@
     "@types/better-sqlite3": "^9.6.0",
     "@types/node": "^26.6.3",
     "@types/pg": "^8.23.1",
-    "better-sqlite3": "^13.0.3",
+    "better-sqlite3": "^12.11.1",
     "hono": "^4.13.12",
     "kysely": "^0.29.6",
     "pg": "^8.23.0",
