@@ -2,6 +2,7 @@ node_modules/
 **/dist/
 **/test-results/
 **/playwright-report/
+**/.wrangler/tmp/
 /tmp
 /plans
 *.tsbuildinfo

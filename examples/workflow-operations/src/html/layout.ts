@@ -48,7 +48,6 @@ export function loginPage(csrf: string, error?: string): string {
 export function listPage(
   items: InstanceListItem[],
   query: { status?: string; workflowName?: string; limit: number },
-  csrf: string,
 ): string {
   const rows = items
     .map(

@@ -1,4 +1,4 @@
-import { describe, expect, it, vi } from "vitest";
+import { describe, expect, it } from "vitest";
 import { teeAsyncIterable } from "./sse.js";
 
 async function ensurePumpSettled(): Promise<void> {

@@ -67,16 +67,11 @@ function isAnimationAbort(error: unknown): boolean {
 
 export async function withViewTransition(update: () => void | Promise<void>): Promise<void> {
   if (typeof document !== "undefined" && "startViewTransition" in document && !prefersReducedMotion()) {
-    let transition: ViewTransitionLike;
-    try {
-      transition = (
-        document as Document & {
-          startViewTransition: (cb: () => void | Promise<void>) => ViewTransitionLike;
-        }
-      ).startViewTransition(() => Promise.resolve().then(update));
-    } catch (error) {
-      throw error;
-    }
+    const transition = (
+      document as Document & {
+        startViewTransition: (cb: () => void | Promise<void>) => ViewTransitionLike;
+      }
+    ).startViewTransition(() => Promise.resolve().then(update));
 
     const finishedOutcome = transition.finished.then(
       () => ({ ok: true as const }),

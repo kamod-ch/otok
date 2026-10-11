@@ -79,7 +79,7 @@ describe.skipIf(!databaseUrl)("kysely session adapter postgres integration", () 
     return createKyselySessionAdapter<User>({
       db,
       table,
-      resolveUser: (tokenHash) => (users.has("u1") ? { id: "u1" } : null),
+      resolveUser: (_tokenHash) => (users.has("u1") ? { id: "u1" } : null),
     });
   }
 

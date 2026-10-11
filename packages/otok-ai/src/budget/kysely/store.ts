@@ -1,5 +1,4 @@
 import type { Kysely, Transaction } from "kysely";
-import { sql } from "kysely";
 import type {
   AcquireReservationInput,
   AiBudgetKey,

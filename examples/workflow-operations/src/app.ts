@@ -3,7 +3,7 @@ import type { WorkflowEngine, WorkflowInstance, WorkflowStatus, WorkflowStore } 
 import { WorkflowException } from "@kamod-ch/otok-workflows";
 import { hasPermission, parseSessionCookie, sessionCookieName, encodeSession } from "./auth/session.js";
 import { AuditLog } from "./audit.js";
-import { csrfMiddleware, csrfToken, CSRF_FIELD } from "./csrf.js";
+import { csrfMiddleware, csrfToken } from "./csrf.js";
 import { toDetail, toListItem, toStepItem } from "./dto/redact.js";
 import { detailPage, listPage, loginPage } from "./html/layout.js";
 import { IdempotencyStore } from "./idempotency.js";
@@ -114,7 +114,7 @@ export function createWorkflowOpsApp(deps: WorkflowOpsDeps): Hono {
     const items = list.map(toListItem);
 
     if (wantsJson(c)) return c.json({ instances: items });
-    return c.html(listPage(items, { status, workflowName, limit }, csrfToken(c)));
+    return c.html(listPage(items, { status, workflowName, limit }));
   });
 
   app.get("/ops/workflows/instances/:id", async (c) => {
