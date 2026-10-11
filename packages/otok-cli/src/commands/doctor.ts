@@ -3,6 +3,7 @@ import type { Dirent } from "node:fs";
 import { checkCompatibility, findOutdated, resolveExtension } from "@kamod-ch/otok-registry";
 import { runRouteTypegen } from "@kamod-ch/otok-route-typegen";
 import { loadOtokAppConfig } from "../load-config.js";
+import { hasConflictingCorePackages } from "../package-identities.js";
 import { extractRequiredEnvVars, loadProjectSnapshot, loadRegistryForProject } from "../registry-context.js";
 import { join } from "node:path";
 import { confirm, fail, findProjectRoot, ok } from "../utils.js";
@@ -46,7 +47,8 @@ async function scanClientLeaks(root: string): Promise<DoctorFinding[]> {
   const findings: DoctorFinding[] = [];
   const clientDirs = ["src/client", "src/app/client"].map((d) => join(root, d));
   const leakPatterns = [
-    { re: /from\s+["']otok\/server["']/, label: "@kamod-ch/otok/server" },
+    { re: /from\s+["']@kamod-ch\/otok\/server["']/, label: "@kamod-ch/otok/server" },
+    { re: /from\s+["']otok\/server["']/, label: "otok/server (legacy import path)" },
     { re: /from\s+["']@kamod-ch\/otok-kysely["']/, label: "@kamod-ch/otok-kysely" },
     { re: /process\.env\.[A-Z0-9_]+/, label: "process.env" },
   ];
@@ -222,6 +224,15 @@ export async function runDoctorChecks(root: string): Promise<DoctorReport> {
   const registry = await loadRegistryForProject(root);
   const installed = { ...project.dependencies, ...project.devDependencies };
   const findings: DoctorFinding[] = [];
+
+  if (hasConflictingCorePackages(installed)) {
+    findings.push({
+      id: "core-conflict",
+      severity: "error",
+      message:
+        "Both @kamod-ch/otok and legacy otok appear in package.json — keep only @kamod-ch/otok unless migrating deliberately.",
+    });
+  }
 
   if (project.otokVersion) {
     findings.push({

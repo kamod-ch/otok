@@ -273,9 +273,8 @@ function scanIslands(root: string, appDir: string, islandsDir: string, routesDir
     ...walk(absoluteRoutesDir).filter((file) => path.basename(file).startsWith("$")),
   ];
   const seen = new Set<string>();
-  const idOwners = new Map<string, string>();
 
-  return files
+  const islands = files
     .filter((file) => {
       if (seen.has(file)) return false;
       seen.add(file);
@@ -285,14 +284,6 @@ function scanIslands(root: string, appDir: string, islandsDir: string, routesDir
       const base = path.basename(stripExtension(file));
       const exportName = pascalCase(base);
       const relative = normalizePath(path.relative(path.resolve(root, appDir), stripExtension(file)));
-      const existing = idOwners.get(exportName);
-      if (existing) {
-        console.warn(
-          `[otok] Island id collision "${exportName}": ${existing} and ${file}. Hydration may load the wrong component.`,
-        );
-      } else {
-        idOwners.set(exportName, file);
-      }
       return {
         id: exportName,
         altId: base.replace(/^\$/, ""),
@@ -301,6 +292,26 @@ function scanIslands(root: string, appDir: string, islandsDir: string, routesDir
         importPath: relative,
       };
     });
+
+  assertUniqueIslandRegistryKeys(islands);
+  return islands;
+}
+
+function assertUniqueIslandRegistryKeys(islands: IslandEntry[]): void {
+  const owners = new Map<string, string>();
+  for (const island of islands) {
+    const keys = [island.id];
+    if (island.altId !== island.id) keys.push(island.altId);
+    for (const key of keys) {
+      const prior = owners.get(key);
+      if (prior && prior !== island.file) {
+        throw new Error(
+          `[otok] Island registry key collision "${key}": ${prior} and ${island.file}. Rename one island file to continue.`,
+        );
+      }
+      owners.set(key, island.file);
+    }
+  }
 }
 
 function modulePath(file: string): string {
@@ -520,6 +531,7 @@ export const errorRoute = ${errorRoute};
 }
 
 function generateIslandsModule(islands: IslandEntry[]): string {
+  assertUniqueIslandRegistryKeys(islands);
   const entries = islands.flatMap((island) => {
     const load = `() => import("${modulePath(island.file)}")`;
     return [
@@ -728,14 +740,14 @@ export default function otok(options: OtokPluginOptions = {}): Plugin[] {
         }
       });
     },
-    buildStart() {
+    async buildStart() {
       if (typegenEnabled) {
         runPluginTypegen(root, routesDir, typesDir, true);
       }
-      void pluginContainer?.runBuildStart(ssrBuild);
+      await pluginContainer?.runBuildStart(ssrBuild);
     },
-    buildEnd() {
-      void pluginContainer?.runBuildEnd(ssrBuild);
+    async buildEnd() {
+      await pluginContainer?.runBuildEnd(ssrBuild);
     },
   };
 
@@ -745,7 +757,9 @@ export default function otok(options: OtokPluginOptions = {}): Plugin[] {
 export { otok };
 export const __testing = {
   buildRoutePath,
+  generateIslandsModule,
   generateRoutesModule,
   injectIslandId,
+  scanIslands,
   scanRoutes,
 };

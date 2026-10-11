@@ -7,6 +7,8 @@
   "scripts": {
     "build": "pnpm -r --filter './packages/*' build && pnpm --filter playground build && pnpm --filter docs build",
     "check:examples": "node ./scripts/check-examples.mjs",
+    "check:workflow-operations": "node ./scripts/check-workflow-operations.mjs",
+    "check:realtime-cloudflare": "node ./scripts/check-realtime-cloudflare.mjs",
     "check:scaffold": "node ./scripts/sync-scaffold.mjs --check",
     "changeset": "pnpm dlx @changesets/cli",
     "dev": "pnpm --filter playground dev",
@@ -18,6 +20,8 @@
     "lint:fix": "oxlint --fix .",
     "lint:policy": "node ./scripts/lint.mjs",
     "metadata:check": "node ./scripts/verify-package-metadata.mjs",
+    "docs:release:check": "node ./scripts/check-release-docs.mjs",
+    "test:release-docs": "node --test scripts/check-release-docs.test.mjs",
     "pack:check": "pnpm metadata:check && pnpm -r --filter './packages/*' build && pnpm -r --filter './packages/*' exec npm pack --dry-run",
     "preview": "pnpm --filter playground preview",
     "release:check": "node ./scripts/release-check.mjs",

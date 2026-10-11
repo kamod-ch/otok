@@ -1,6 +1,7 @@
 import { readFile } from "node:fs/promises";
 import { join } from "node:path";
 import { createRegistryClient, type LoadedRegistry } from "@kamod-ch/otok-registry";
+import { resolveOtokVersion } from "./package-identities.js";
 import { findOtokConfigFile } from "./project.js";
 import { readJsonFile } from "./utils.js";
 
@@ -28,7 +29,7 @@ export async function loadProjectSnapshot(root: string): Promise<ProjectSnapshot
 
   return {
     root,
-    otokVersion: deps.otok?.replace(/^[\^~>=<]*/, ""),
+    otokVersion: resolveOtokVersion(deps),
     adapter: detectAdapter(deps),
     dependencies: pkg.dependencies ?? {},
     devDependencies: pkg.devDependencies ?? {},

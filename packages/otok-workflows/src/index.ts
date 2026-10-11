@@ -11,6 +11,8 @@ export type {
   EventTrigger,
   WebhookTrigger,
   WorkflowStore,
+  RenewLeaseOptions,
+  HeldLeaseWriteOptions,
   WorkflowDeadLetter,
   RetryPolicy,
   CloudWorkflowProviderContract,

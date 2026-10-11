@@ -99,6 +99,19 @@
       },
       "symbols": {}
     },
+    "@kamod-ch/otok-realtime": {
+      "exports": {
+        ".": "public",
+        "./plugin": "public",
+        "./client": "public",
+        "./providers/redis": "public",
+        "./providers/durable-objects": "public",
+        "./cloudflare": "experimental",
+        "./testing": "internal",
+        "./crm": "experimental"
+      },
+      "symbols": {}
+    },
     "@kamod-ch/otok-workflows": {
       "exports": {
         ".": "public",
@@ -108,6 +121,29 @@
         "./crm": "experimental"
       },
       "symbols": {}
+    },
+    "@kamod-ch/otok-ai": {
+      "exports": {
+        ".": "public",
+        "./loader": "public",
+        "./plugin": "public",
+        "./providers/test": "internal",
+        "./testing": "internal",
+        "./cli": "experimental",
+        "./tools": "public",
+        "./mcp": "public",
+        "./rag": "experimental",
+        "./budget/kysely": "public"
+      },
+      "symbols": {
+        "AiClient": "public",
+        "createMemoryBudgetStore": "public",
+        "createKyselyAiBudgetStore": "public",
+        "migrateAiBudgetSchema": "public",
+        "isAiBudgetReservationStore": "public",
+        "beginBilledRound": "public",
+        "OtokAiBudgetExceededError": "public"
+      }
     },
     "@kamod-ch/otok-discussions": {
       "exports": {

@@ -19,6 +19,11 @@ export type {
   AiUsage,
   AiBudgetKey,
   AiBudgetStore,
+  AiBudgetReservationStore,
+  AcquireReservationInput,
+  ReservationResult,
+  SettleReservationInput,
+  ReleaseReservationInput,
   AiProvider,
   AiProviderFactoryConfig,
   OpenAiProviderConfig,
@@ -38,7 +43,13 @@ export {
   OtokAiValidationError,
   OtokAiMcpPermissionError,
 } from "./errors.js";
-export { createMemoryBudgetStore } from "./budget/memory-store.js";
+export {
+  createMemoryBudgetStore,
+  createMemoryBudgetStoreWithReset,
+  resetMemoryBudgetStore,
+} from "./budget/memory-store.js";
+export { isAiBudgetReservationStore } from "./budget/guards.js";
+export { beginBilledRound } from "./budget/billed-round.js";
 export { createMemoryConversationStore } from "./conversation/memory-store.js";
 export { redactText, redactMessages, containsSecrets, stripEnvValues } from "./redaction/redact.js";
 export { aiSseResponse, aiStreamToSse, collectStreamEvents } from "./stream/sse.js";

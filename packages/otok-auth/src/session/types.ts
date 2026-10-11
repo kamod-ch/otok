@@ -26,13 +26,28 @@ export interface ResolvedSessionRecord {
   expiresAt: Date;
 }
 
+/** Replacement row for {@link SessionAdapter.rotateRecord} (hashed token only, never raw). */
+export interface SessionRotationReplacement {
+  newTokenHash: string;
+  userId: string;
+  expiresAt: Date;
+  userAgent: string | null;
+  ipAddress: string | null;
+}
+
 export interface SessionAdapter<TUser> {
   createRecord(input: CreateSessionRecordInput): Promise<void>;
   revokeRecord(tokenHash: string): Promise<void>;
   resolveUser(tokenHash: string): Promise<TUser | null>;
   touchRecord?(tokenHash: string): Promise<void>;
-  /** Return session metadata for rotation decisions. */
+  /** Active, unrevoked, unexpired session metadata for rotation decisions. */
   resolveRecord?(tokenHash: string): Promise<ResolvedSessionRecord | null>;
+  /**
+   * Atomically revoke the active session for `oldTokenHash` and insert `replacement` in one transaction.
+   * `true` when this call committed the rotation; `false` when the old session is no longer active.
+   * Not safe under concurrency unless implemented (Kysely/Memory adapters do); legacy revoke+create is not atomic.
+   */
+  rotateRecord?(oldTokenHash: string, replacement: SessionRotationReplacement): Promise<boolean>;
 }
 
 export interface SessionManager<TUser> {

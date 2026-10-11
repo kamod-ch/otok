@@ -62,10 +62,14 @@ export interface AiUsage {
 export interface AiBudgetKey {
   userId?: string;
   orgId?: string;
-  /** Per-request cap */
+  /** Per-request / per-round completion cap (not monthly aggregate). */
   maxTokens?: number;
-  /** Per-period cap in USD */
+  /** Per-period token cap for the user dimension. */
+  maxTokensPerPeriod?: number;
+  /** Per-period cap in USD (legacy; stored as micro-USD internally). */
   maxCostUsd?: number;
+  maxCostMicroUsdPerUser?: number;
+  maxCostMicroUsdPerOrg?: number;
 }
 
 export interface AiBudgetRecord {
@@ -80,6 +84,36 @@ export interface AiBudgetStore {
   check(key: AiBudgetKey, estimatedTokens?: number): Promise<void>;
   record(key: AiBudgetKey, usage: AiUsage): Promise<void>;
   getUsage(key: AiBudgetKey): Promise<AiBudgetRecord | null>;
+}
+
+export interface AcquireReservationInput {
+  requestId: string;
+  key: AiBudgetKey;
+  estimatedTokens: number;
+  estimatedCostMicroUsd?: number;
+  expiresAt: string;
+}
+
+export interface ReservationResult {
+  requestId: string;
+  status: "held" | "existing";
+}
+
+export interface SettleReservationInput {
+  requestId: string;
+  usage: AiUsage | null;
+  /** Provider ended without reliable usage — releases hold without zero-cost billing. */
+  unknownUsage?: boolean;
+}
+
+export interface ReleaseReservationInput {
+  requestId: string;
+}
+
+export interface AiBudgetReservationStore extends AiBudgetStore {
+  acquireReservation(input: AcquireReservationInput): Promise<ReservationResult>;
+  settleReservation(input: SettleReservationInput): Promise<void>;
+  releaseReservation(input: ReleaseReservationInput): Promise<void>;
 }
 
 export type AiStreamEvent =

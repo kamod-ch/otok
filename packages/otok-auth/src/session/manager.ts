@@ -15,6 +15,10 @@ function defaultRotationInterval(maxAgeSeconds: number): number {
   return Math.floor(maxAgeSeconds / 2);
 }
 
+function remainingMaxAgeSeconds(expiresAt: Date, nowMs = Date.now()): number {
+  return Math.max(0, Math.floor((expiresAt.getTime() - nowMs) / 1000));
+}
+
 export function createSessionManager<TUser>(
   config: SessionConfig,
   adapter: SessionAdapter<TUser>,
@@ -31,14 +35,18 @@ export function createSessionManager<TUser>(
     rotationIntervalSeconds,
   };
 
-  function setSessionCookies(c: Context, token: string): void {
+  function setSessionCookies(c: Context, token: string, absoluteExpiresAt?: Date): void {
+    const cookieMaxAge =
+      absoluteExpiresAt !== undefined ? remainingMaxAgeSeconds(absoluteExpiresAt) : maxAgeSeconds;
+    if (cookieMaxAge <= 0) return;
+
     const secure = resolveSecure(c, config.secure);
     setCookie(c, config.sessionCookie, token, {
       httpOnly: true,
       secure,
       sameSite,
       path,
-      maxAge: maxAgeSeconds,
+      maxAge: cookieMaxAge,
     });
     if (config.csrfCookie) {
       setCookie(c, config.csrfCookie, randomToken(), {
@@ -46,7 +54,7 @@ export function createSessionManager<TUser>(
         secure,
         sameSite,
         path,
-        maxAge: maxAgeSeconds,
+        maxAge: cookieMaxAge,
       });
     }
   }
@@ -62,7 +70,7 @@ export function createSessionManager<TUser>(
       userAgent: c.req.header("user-agent") ?? null,
       ipAddress: null,
     });
-    setSessionCookies(c, token);
+    setSessionCookies(c, token, expiresAt);
   }
 
   async function revokeSession(c: Context): Promise<void> {
@@ -76,24 +84,43 @@ export function createSessionManager<TUser>(
     const token = getCookie(c, config.sessionCookie);
     if (!token) return;
 
+    if (!adapter.resolveRecord) {
+      return;
+    }
+
     const tokenHash = sha256(token);
-    const record = adapter.resolveRecord ? await adapter.resolveRecord(tokenHash) : null;
+    const record = await adapter.resolveRecord(tokenHash);
     if (!record) {
-      await revokeSession(c);
+      return;
+    }
+
+    const userAgent = c.req.header("user-agent") ?? null;
+    const newToken = randomToken();
+    const replacement = {
+      newTokenHash: sha256(newToken),
+      userId: record.userId,
+      expiresAt: record.expiresAt,
+      userAgent,
+      ipAddress: null,
+    };
+
+    if (adapter.rotateRecord) {
+      const won = await adapter.rotateRecord(tokenHash, replacement);
+      if (won) {
+        setSessionCookies(c, newToken, record.expiresAt);
+      }
       return;
     }
 
     await adapter.revokeRecord(tokenHash);
-    const newToken = randomToken();
-    const newHash = sha256(newToken);
     await adapter.createRecord({
-      tokenHash: newHash,
-      userId: record.userId,
-      expiresAt: record.expiresAt,
-      userAgent: c.req.header("user-agent") ?? null,
-      ipAddress: null,
+      tokenHash: replacement.newTokenHash,
+      userId: replacement.userId,
+      expiresAt: replacement.expiresAt,
+      userAgent: replacement.userAgent,
+      ipAddress: replacement.ipAddress,
     });
-    setSessionCookies(c, newToken);
+    setSessionCookies(c, newToken, record.expiresAt);
   }
 
   async function getSessionUser(c: Context): Promise<TUser | null> {
@@ -105,13 +132,13 @@ export function createSessionManager<TUser>(
 
     if (adapter.resolveRecord) {
       const record = await adapter.resolveRecord(tokenHash);
-      if (record) {
-        const ageSeconds = (Date.now() - record.createdAt.getTime()) / 1000;
-        if (ageSeconds >= rotationIntervalSeconds) {
-          await rotateSession(c);
-        } else {
-          await adapter.touchRecord?.(tokenHash);
-        }
+      if (!record) return null;
+
+      const ageSeconds = (Date.now() - record.createdAt.getTime()) / 1000;
+      if (ageSeconds >= rotationIntervalSeconds) {
+        await rotateSession(c);
+      } else {
+        await adapter.touchRecord?.(tokenHash);
       }
     } else {
       await adapter.touchRecord?.(tokenHash);

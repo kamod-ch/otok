@@ -81,6 +81,17 @@ const sessions = createSessionManager<User>(
 export const { createSession, revokeSession, getSessionUser } = sessions;
 ```
 
+### Session rotation (at-least-once, not exactly-once)
+
+Built-in adapters implement optional `resolveRecord` and atomic `rotateRecord(oldTokenHash, replacement)`. A successful rotation revokes the active old row and inserts exactly one replacement in a single database transaction (Postgres-verified in CI). The session manager sets new session/CSRF cookies only when `rotateRecord` returns `true`; concurrent losers leave cookies unchanged and keep serving the already-resolved user for the current request.
+
+- **Absolute expiry:** rotation preserves `expiresAt`; cookie `Max-Age` is capped to remaining lifetime (no sliding extension).
+- **Legacy adapters** without `resolveRecord`: `rotateSession` is a no-op (no logout, no cookies).
+- **Legacy adapters** with `resolveRecord` but without `rotateRecord`: non-atomic revoke+create remains supported with a documented concurrency gap.
+- **Kysely:** use `CamelCasePlugin` with the reference `app_session` snake_case columns; `resolveUser` only calls your app callback for active rows.
+
+Integration tests: `OTOK_AUTH_PG_TEST_URL` (disposable DB). With `OTOK_REQUIRE_DATABASE_TESTS=1`, missing URL fails fast (same convention as queue/events DB jobs).
+
 ## Route middleware
 
 ```ts

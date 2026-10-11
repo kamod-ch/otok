@@ -62,10 +62,16 @@ Use `engine.processRunnable()` on an interval (or a dedicated worker process) wi
 | `memory` | Development and unit tests                                                  |
 | `kysely` | SQLite / PostgreSQL (`createKyselyWorkflowStore`, `migrateWorkflowsSchema`) |
 
+## Leases
+
+Claimed runs (`execute(id, { leaseToken })`) renew the lease on an interval and fence instance/step writes with `updateInstanceIfHeld` / `saveStepIfHeld`. Losing the lease yields `LEASE_LOST` instead of stale completion. Direct `execute` without a token is rejected while another worker holds an active lease.
+
+Postgres integration: `OTOK_WORKFLOWS_PG_TEST_URL` (see CI database job). With `OTOK_REQUIRE_DATABASE_TESTS=1`, a missing URL fails fast.
+
 ## Guarantees (tested)
 
 - Step output replay after restart (memory + SQLite Kysely)
-- Exclusive `claimRunnable` with lease release
+- Exclusive `claimRunnable` with lease release and token-fenced writes after reclaim
 - `runAttempts` on the instance for workflow-level retries
 - Pause / cancel via DB visible across engine instances
 - Cron dedupe (same UTC minute)

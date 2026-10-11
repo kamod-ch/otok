@@ -44,7 +44,7 @@ Still deferred:
 - Broader Edge support notes for native Node addons (prefer Web Crypto password helpers on Workers)
 - Generic OIDC / Better Auth adapters
 
-Otok avoids premature abstractions such as a general plugin system until real applications prove the need.
+Otok ships a **config-time plugin registry** (`packages/otok-config` container composition) and CLI/registry-tracked `@kamod-ch/otok-*` extensions — prefer extending those instead of adding parallel plugin frameworks. See [repository status](https://github.com/kamod-ch/otok/blob/main/docs/2.0/status.md) (also `./docs/2.0/status.md` in-tree).
 
 ## Release Policy
 

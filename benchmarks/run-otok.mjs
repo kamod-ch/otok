@@ -1,135 +1,252 @@
 #!/usr/bin/env node
 /**
- * Otok self-benchmark — measures playground as reference app.
- * Writes benchmarks/results/latest.json
+ * Otok production benchmark — builds playground, starts production server, measures SSR + bundles.
  */
 import { spawn, spawnSync } from "node:child_process";
-import { mkdirSync, writeFileSync, readFileSync, existsSync, rmSync } from "node:fs";
+import { mkdirSync, writeFileSync, readFileSync, existsSync, rmSync, renameSync } from "node:fs";
 import { join, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
-import { createHash } from "node:crypto";
+import { createHash, randomUUID } from "node:crypto";
 import { performance } from "node:perf_hooks";
+import { setTimeout as delay } from "node:timers/promises";
+import { cpus } from "node:os";
+import { measureLatencySeries, measureThroughputRps } from "./request-metrics.mjs";
+import { platformSupportsProcRss, samplePeakTreeRss } from "./process-metrics.mjs";
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..");
 const playground = join(root, "apps/playground");
 const resultsDir = join(dirname(fileURLToPath(import.meta.url)), "results");
-const outFile = join(resultsDir, "latest.json");
+const profile = process.env.BENCH_PROFILE ?? "production";
 
-function run(cmd, args, opts = {}) {
-  return new Promise((resolve, reject) => {
-    const start = performance.now();
-    const child = spawn(cmd, args, { stdio: "inherit", cwd: opts.cwd ?? root, shell: false });
-    child.on("error", reject);
-    child.on("close", (code) => {
-      if (code !== 0) reject(new Error(`${cmd} exited ${code}`));
-      else resolve(performance.now() - start);
-    });
-  });
-}
+const profileRunners = {
+  "dev-start": () => import("./profiles/dev-start.mjs").then((m) => m.runDevStartProfile()),
+  "worker-bundle": () => import("./profiles/worker-bundle.mjs").then((m) => m.runWorkerBundleProfile()),
+  database: () => import("./profiles/database.mjs").then((m) => m.runDatabaseProfile()),
+};
 
-function gitSha() {
-  try {
-    return readFileSync(join(root, ".git/HEAD"), "utf8").trim();
-  } catch {
-    return process.env.BENCH_GIT_SHA ?? "unknown";
+async function runSelectedProfile() {
+  const runner = profileRunners[profile];
+  if (runner) {
+    await runner();
+    return true;
   }
+  return false;
 }
 
-function lockHash() {
+function gitInfo() {
+  const sha = spawnSync("git", ["rev-parse", "HEAD"], { cwd: root, encoding: "utf8" });
+  const dirty = spawnSync("git", ["status", "--porcelain"], { cwd: root, encoding: "utf8" });
+  return {
+    gitSha: sha.status === 0 ? sha.stdout.trim() : process.env.BENCH_GIT_SHA ?? "unknown",
+    dirty: dirty.status === 0 ? dirty.stdout.trim().length > 0 : null,
+  };
+}
+
+function lockSha256() {
   const lock = join(root, "pnpm-lock.yaml");
   if (!existsSync(lock)) return "unknown";
-  return createHash("sha256").update(readFileSync(lock, "utf8")).digest("hex").slice(0, 12);
+  return createHash("sha256").update(readFileSync(lock, "utf8")).digest("hex");
 }
 
-async function measureSsrLatency(url, { warmup = 2, samples = 7 } = {}) {
-  const timings = [];
-  for (let i = 0; i < warmup + samples; i++) {
-    const t0 = performance.now();
-    const res = await fetch(url, { headers: { accept: "text/html" } });
-    await res.text();
-    if (i >= warmup) timings.push(performance.now() - t0);
+async function waitForHealth(baseUrl, deadlineMs = 30_000) {
+  const deadline = Date.now() + deadlineMs;
+  while (Date.now() < deadline) {
+    try {
+      const res = await fetch(`${baseUrl}/api/health`);
+      if (res.ok) {
+        const json = await res.json();
+        if (json?.ok === true) return;
+      }
+    } catch {
+      // retry
+    }
+    await delay(250);
   }
-  timings.sort((a, b) => a - b);
-  return timings[Math.floor(timings.length / 2)];
+  throw new Error(`Timed out waiting for health at ${baseUrl}`);
 }
 
-async function measureThroughput(url, durationS = 10) {
+async function killProcessTree(child) {
+  if (!child?.pid) return;
   try {
-    const { default: autocannon } = await import("autocannon");
-    const result = await autocannon({ url, duration: durationS, connections: 10 });
-    return result.requests.average;
+    process.kill(-child.pid, "SIGTERM");
   } catch {
-    return null;
+    child.kill("SIGTERM");
   }
+  await delay(500);
+  try {
+    process.kill(-child.pid, "SIGKILL");
+  } catch {
+    if (!child.killed) child.kill("SIGKILL");
+  }
+  await new Promise((resolve) => child.on("close", resolve));
 }
 
 async function main() {
-  mkdirSync(resultsDir, { recursive: true });
+  if (await runSelectedProfile()) return;
 
-  process.stdout.write("Building playground (production)...\n");
+  if (!platformSupportsProcRss()) {
+    console.error("✗ Production benchmark requires Linux /proc for process-tree RSS (no controller fallback).");
+    process.exit(1);
+  }
+
+  const runId = randomUUID();
+  const stagingDir = join(resultsDir, `.staging-${runId}`);
+  mkdirSync(stagingDir, { recursive: true });
+  const outFile = join(stagingDir, "latest.json");
+  const bundlesStaging = join(stagingDir, "bundles.json");
+
   const distDir = join(playground, "dist");
   if (existsSync(distDir)) rmSync(distDir, { recursive: true, force: true });
 
-  const buildMs = await run("pnpm", ["--filter", "playground", "build"]);
+  process.stdout.write("Building playground (production) with RSS sampling...\n");
+  const buildStartedMs = Date.now();
+  const buildTimerStart = performance.now();
+  const child = spawn("pnpm", ["--filter", "playground", "build"], {
+    cwd: root,
+    stdio: "inherit",
+    detached: true,
+  });
+  let buildSamplingStop = false;
+  const buildRssPromise = samplePeakTreeRss(child.pid, {
+    intervalMs: 10,
+    shouldStop: () => buildSamplingStop,
+  });
+  await new Promise((resolve, reject) => {
+    child.on("error", reject);
+    child.on("close", (code) => (code === 0 ? resolve() : reject(new Error(`build exited ${code}`))));
+  });
+  buildSamplingStop = true;
+  const buildRss = await buildRssPromise;
+  const productionBuildMs = Math.round(performance.now() - buildTimerStart);
 
-  const metrics = {
-    productionBuildMs: Math.round(buildMs),
-    devServerStartMs: null,
-    ssrLatencyP50Ms: null,
-    ssrThroughputRps: null,
-    clientJsKb: null,
-    edgeBundleKb: null,
-    peakRssMb: Math.round(process.memoryUsage().rss / 1024 / 1024),
-  };
+  const port = Number(process.env.BENCH_PORT ?? 4188);
+  const baseUrl = `http://127.0.0.1:${port}`;
+  const server = spawn("node", ["dist/server/server.js"], {
+    cwd: playground,
+    env: { ...process.env, NODE_ENV: "production", HOST: "127.0.0.1", PORT: String(port) },
+    stdio: ["ignore", "inherit", "inherit"],
+    detached: true,
+  });
 
-  const baseUrl = process.env.BENCH_URL;
-  if (baseUrl) {
-    process.stdout.write(`Measuring SSR at ${baseUrl}...\n`);
-    metrics.ssrLatencyP50Ms = Math.round(await measureSsrLatency(baseUrl));
-    const rps = await measureThroughput(baseUrl);
-    if (rps) metrics.ssrThroughputRps = Math.round(rps);
-  } else {
-    process.stdout.write("Set BENCH_URL to measure SSR latency/throughput (dev/preview server must be running).\n");
-  }
+  let serverSamplingStop = false;
+  const serverRssPromise = samplePeakTreeRss(server.pid, {
+    intervalMs: 10,
+    shouldStop: () => serverSamplingStop,
+  });
 
-  const clientAssets = join(playground, "dist/client");
-  if (existsSync(clientAssets)) {
-    let total = 0;
-    const { gzipSync } = await import("node:zlib");
-    const { readdirSync, statSync } = await import("node:fs");
-    function walk(dir) {
-      for (const name of readdirSync(dir)) {
-        const p = join(dir, name);
-        if (statSync(p).isDirectory()) walk(p);
-        else if (name.endsWith(".js")) total += gzipSync(readFileSync(p)).length;
+  try {
+    await waitForHealth(baseUrl);
+
+    const scenarios = {};
+    for (const [key, spec] of Object.entries({
+      home: { path: "/", marker: "Dashboard" },
+      about: { path: "/about", marker: "Zero JS" },
+    })) {
+      const url = `${baseUrl}${spec.path}`;
+      const latency = await measureLatencySeries(url, { warmup: 20, samples: 200, marker: spec.marker });
+      const throughput = await measureThroughputRps(url, {
+        durationMs: 10_000,
+        concurrency: 10,
+        marker: spec.marker,
+      });
+      scenarios[key] = {
+        ssrLatencyP50Ms: Math.round(latency.p50Ms * 100) / 100,
+        ssrLatencyP95Ms: Math.round(latency.p95Ms * 100) / 100,
+        ssrThroughputRps: Math.round(throughput.rps * 100) / 100,
+        requestErrors: throughput.errors,
+      };
+    }
+
+    serverSamplingStop = true;
+    const serverRss = await serverRssPromise;
+
+    const { gitSha, dirty } = gitInfo();
+    const report = {
+      runId,
+      profile,
+      generatedAt: new Date().toISOString(),
+      startedAt: new Date(buildStartedMs).toISOString(),
+      gitSha,
+      dirty,
+      lockfileSha256: lockSha256(),
+      nodeVersion: process.version,
+      pnpmVersion: process.env.npm_config_user_agent ?? null,
+      os: { platform: process.platform, arch: process.arch, cpus: osCpus() },
+      runnerProfile: profile,
+      project: "apps/playground",
+      buildCommand: "pnpm --filter playground build",
+      serverCommand: "node dist/server/server.js",
+      baseUrl,
+      methodology: {
+        rss: buildRss.method,
+        rssSamplingIntervalMs: buildRss.samplingIntervalMs,
+        ssrWarmupRequests: 20,
+        ssrSampleCount: 200,
+        throughputDurationMs: 10_000,
+        throughputConcurrency: 10,
+        quantile: "nearest-rank p50/p95",
+      },
+      artifactHash: null,
+      metrics: {
+        productionBuildMs,
+        buildPeakRssMb: Math.round((buildRss.peakRssKb / 1024) * 100) / 100,
+        serverPeakRssMb: Math.round((serverRss.peakRssKb / 1024) * 100) / 100,
+        clientJsGzipKiB: null,
+      },
+      scenarios,
+      navigation: null,
+    };
+
+    process.env.OTOK_BENCH_RUN_ID = runId;
+    process.env.BENCH_URL = baseUrl;
+    process.env.OTOK_BUNDLE_RESULTS_PATH = bundlesStaging;
+    const measure = spawnSync(process.execPath, [join(root, "scripts/measure-bundle-budgets.mjs")], {
+      cwd: root,
+      stdio: "inherit",
+      env: process.env,
+    });
+    if (measure.status !== 0) throw new Error("bundle measurement failed");
+
+    const bundles = JSON.parse(readFileSync(bundlesStaging, "utf8"));
+    report.artifactHash = bundles.artifactHash ?? null;
+    report.metrics.clientJsGzipKiB = bundles.aggregates?.clientJsGzipKiB;
+
+    if (profile === "navigation") {
+      const nav = spawnSync(
+        "pnpm",
+        ["exec", "playwright", "test", "--config", "benchmark/playwright.config.ts"],
+        {
+          cwd: playground,
+          stdio: "inherit",
+          env: { ...process.env, BENCH_URL: baseUrl },
+        },
+      );
+      if (nav.status !== 0) throw new Error("navigation profile playwright tests failed");
+      const navFile = join(resultsDir, "navigation.json");
+      if (existsSync(navFile)) {
+        report.navigation = JSON.parse(readFileSync(navFile, "utf8"));
       }
     }
-    walk(clientAssets);
-    metrics.clientJsKb = Math.round(total / 1024);
+
+    writeFileSync(outFile, `${JSON.stringify(report, null, 2)}\n`);
+    const finalLatest = join(resultsDir, "latest.json");
+    const finalBundles = join(resultsDir, "bundles.json");
+    if (existsSync(finalLatest)) rmSync(finalLatest);
+    if (existsSync(finalBundles)) rmSync(finalBundles);
+    renameSync(outFile, finalLatest);
+    renameSync(bundlesStaging, finalBundles);
+    rmSync(stagingDir, { recursive: true, force: true });
+
+    process.stdout.write(`\nWrote ${finalLatest}\n`);
+    process.stdout.write(`${JSON.stringify(report.metrics, null, 2)}\n`);
+  } finally {
+    serverSamplingStop = true;
+    await killProcessTree(server);
   }
+}
 
-  const report = {
-    generatedAt: new Date().toISOString(),
-    gitSha: gitSha(),
-    nodeVersion: process.version,
-    lockfileHash: lockHash(),
-    project: "apps/playground",
-    methodology: {
-      ssrWarmupRequests: 2,
-      ssrSampleCount: 7,
-      note: "Budget check uses configured max + tolerancePercent; small runner noise below tolerance is not a regression.",
-    },
-    metrics,
-  };
-
-  writeFileSync(outFile, JSON.stringify(report, null, 2));
-  process.stdout.write(`\nWrote ${outFile}\n`);
-  process.stdout.write(`${JSON.stringify(metrics, null, 2)}\n`);
-
-  const measureBundles = join(root, "scripts/measure-bundle-budgets.mjs");
-  if (existsSync(measureBundles)) {
-    spawnSync(process.execPath, [measureBundles], { cwd: root, stdio: "inherit" });
-  }
+function osCpus() {
+  return cpus().length;
 }
 
 main().catch((err) => {

@@ -1,21 +1,52 @@
 {
-  "generatedAt": "2026-09-22T13:47:32.909Z",
-  "gitSha": "ref: refs/heads/main",
-  "nodeVersion": "v22.20.0",
-  "lockfileHash": "3fd7d022d0b4",
-  "project": "apps/playground",
-  "methodology": {
-    "ssrWarmupRequests": 2,
-    "ssrSampleCount": 7,
-    "note": "Budget check uses configured max + tolerancePercent; small runner noise below tolerance is not a regression."
+  "runId": "a0f64590-95c9-4bc8-b0b3-dc74c7f9ddfc",
+  "profile": "production",
+  "generatedAt": "2026-10-11T22:03:11.347Z",
+  "startedAt": "2026-10-11T22:02:44.528Z",
+  "gitSha": "f917210e29fc44395c8c80cefa41ae87bde219f1",
+  "dirty": true,
+  "lockfileSha256": "92bbc913dd18828f007ebdac1485a860e07a763f22e4a7fd79f081eeac12a8ec",
+  "nodeVersion": "v24.18.0",
+  "pnpmVersion": "pnpm/12.5.1 npm/? node/? linux x64",
+  "os": {
+    "platform": "linux",
+    "arch": "x64",
+    "cpus": 20
   },
+  "runnerProfile": "production",
+  "project": "apps/playground",
+  "buildCommand": "pnpm --filter playground build",
+  "serverCommand": "node dist/server/server.js",
+  "baseUrl": "http://127.0.0.1:4188",
+  "methodology": {
+    "rss": "sampled-peak-process-tree-rss",
+    "rssSamplingIntervalMs": 10,
+    "ssrWarmupRequests": 20,
+    "ssrSampleCount": 200,
+    "throughputDurationMs": 10000,
+    "throughputConcurrency": 10,
+    "quantile": "nearest-rank p50/p95"
+  },
+  "artifactHash": "80ab4605d16a1b65",
   "metrics": {
-    "productionBuildMs": 1679,
-    "devServerStartMs": null,
-    "ssrLatencyP50Ms": null,
-    "ssrThroughputRps": null,
-    "clientJsKb": 60,
-    "edgeBundleKb": null,
-    "peakRssMb": 47
-  }
+    "productionBuildMs": 2084,
+    "buildPeakRssMb": 617.57,
+    "serverPeakRssMb": 329.52,
+    "clientJsGzipKiB": 59.619140625
+  },
+  "scenarios": {
+    "home": {
+      "ssrLatencyP50Ms": 5.21,
+      "ssrLatencyP95Ms": 29.69,
+      "ssrThroughputRps": 372.29,
+      "requestErrors": 0
+    },
+    "about": {
+      "ssrLatencyP50Ms": 2.23,
+      "ssrLatencyP95Ms": 22.81,
+      "ssrThroughputRps": 1302.85,
+      "requestErrors": 0
+    }
+  },
+  "navigation": null
 }

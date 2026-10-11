@@ -56,6 +56,12 @@ jobs:
       - name: Package metadata
         run: pnpm metadata:check
 
+      - name: Release docs consistency
+        run: pnpm docs:release:check
+
+      - name: Release docs gate tests
+        run: pnpm test:release-docs
+
       - name: API stability
         run: pnpm api:check
 
@@ -90,6 +96,62 @@ jobs:
 
       - name: Vitest
         run: pnpm test
+
+  database:
+    name: Postgres queue integration
+    runs-on: ubuntu-latest
+    needs: [static]
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: otok
+          POSTGRES_PASSWORD: otok_ci_test
+          POSTGRES_DB: otok_queue_test
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U otok -d otok_queue_test"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+    env:
+      OTOK_QUEUE_PG_TEST_URL: postgresql://otok:otok_ci_test@localhost:5432/otok_queue_test
+      OTOK_EVENTS_PG_TEST_URL: postgresql://otok:otok_ci_test@localhost:5432/otok_queue_test
+      OTOK_AUTH_PG_TEST_URL: postgresql://otok:otok_ci_test@localhost:5432/otok_queue_test
+      OTOK_WORKFLOWS_PG_TEST_URL: postgresql://otok:otok_ci_test@localhost:5432/otok_queue_test
+      OTOK_AI_BUDGET_PG_TEST_URL: postgresql://otok:otok_ci_test@localhost:5432/otok_queue_test
+      OTOK_REQUIRE_DATABASE_TESTS: "1"
+      KYSELY_SQLITE_TESTS: "1"
+    steps:
+      - uses: actions/checkout@v6
+
+      - uses: pnpm/action-setup@v4
+
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 22
+          cache: pnpm
+
+      - run: pnpm install --frozen-lockfile
+
+      - name: Build packages (for type-aware tests)
+        run: pnpm -r --filter './packages/*' build
+
+      - name: Postgres queue integration tests
+        run: pnpm --filter @kamod-ch/otok-queue exec vitest run src/providers/postgres/postgres.integration.test.ts
+
+      - name: Outbox leased store integration tests
+        run: pnpm --filter @kamod-ch/otok-events exec vitest run src/outbox/kysely/store.integration.test.ts
+
+      - name: Auth session rotation integration tests
+        run: pnpm --filter @kamod-ch/otok-auth exec vitest run src/adapters/kysely.integration.test.ts
+
+      - name: Workflow lease integration tests
+        run: pnpm --filter @kamod-ch/otok-workflows exec vitest run src/providers/kysely/store.postgres.test.ts
+
+      - name: AI budget reservation integration tests
+        run: pnpm --filter @kamod-ch/otok-ai exec vitest run src/budget/kysely.integration.test.ts
 
   build:
     name: Build and packaging
@@ -128,6 +190,12 @@ jobs:
       - name: Reference examples
         run: pnpm check:examples
 
+      - name: Workflow operations reference app
+        run: pnpm check:workflow-operations
+
+      - name: Realtime Cloudflare adapter
+        run: pnpm check:realtime-cloudflare
+
   integration:
     name: Integration smoke
     runs-on: ubuntu-latest
@@ -149,6 +217,9 @@ jobs:
 
       - name: Cloudflare Workers smoke
         run: pnpm smoke:cloudflare
+
+      - name: Node production smoke
+        run: pnpm smoke:node
 
   e2e:
     name: Playwright E2E

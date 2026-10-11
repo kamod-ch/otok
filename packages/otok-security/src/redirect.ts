@@ -4,16 +4,41 @@ import type { OpenRedirectOptions } from "./types.js";
 
 const DEFAULT_PARAMS = ["redirect", "returnTo", "next", "url", "return", "continue"];
 
-function isSafeRedirect(target: string, origin: string): boolean {
-  if (!target) return false;
-  if (target.startsWith("/") && !target.startsWith("//")) return true;
-  try {
-    const parsed = new URL(target, origin);
-    const base = new URL(origin);
-    return parsed.origin === base.origin;
-  } catch {
-    return false;
+function redirectHasInvalidChars(target: string): boolean {
+  if (target.includes("\\")) return true;
+  for (let index = 0; index < target.length; index++) {
+    const code = target.charCodeAt(index);
+    if (code <= 0x20 || code === 0x7f) return true;
   }
+  return false;
+}
+
+function canonicalSafeRedirect(target: string, origin: string): string | null {
+  if (!target || redirectHasInvalidChars(target)) return null;
+
+  try {
+    const base = new URL(origin);
+    const parsed = new URL(target, origin);
+
+    if (parsed.username || parsed.password) return null;
+    if (parsed.protocol !== "http:" && parsed.protocol !== "https:") return null;
+    if (parsed.origin !== base.origin) return null;
+
+    const isRootRelative = target.startsWith("/") && !target.startsWith("//");
+    if (isRootRelative) {
+      const relative = `${parsed.pathname}${parsed.search}${parsed.hash}`;
+      if (relative.startsWith("//")) return null;
+      return relative;
+    }
+
+    return parsed.href;
+  } catch {
+    return null;
+  }
+}
+
+function isSafeRedirect(target: string, origin: string): boolean {
+  return canonicalSafeRedirect(target, origin) !== null;
 }
 
 export function createOpenRedirectGuard(options: OpenRedirectOptions = {}): OtokMiddleware {
@@ -34,10 +59,11 @@ export function createOpenRedirectGuard(options: OpenRedirectOptions = {}): Otok
 /** Validate a redirect URL before sending a Location header. */
 export function safeRedirectTarget(target: string, c: Context): string {
   const origin = new URL(c.req.url).origin;
-  if (!isSafeRedirect(target, origin)) {
+  const canonical = canonicalSafeRedirect(target, origin);
+  if (!canonical) {
     throw new Error(`otok-security: unsafe redirect target "${target}"`);
   }
-  return target;
+  return canonical;
 }
 
 export { isSafeRedirect };

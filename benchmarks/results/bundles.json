@@ -1,101 +1,118 @@
 {
-  "generatedAt": "2026-09-22T13:47:32.965Z",
+  "generatedAt": "2026-10-11T22:03:11.472Z",
+  "runId": "a0f64590-95c9-4bc8-b0b3-dc74c7f9ddfc",
+  "artifactHash": "80ab4605d16a1b65",
   "project": "apps/playground",
+  "unit": "kibibytes (1024 bytes) for KiB fields",
   "entries": {
-    "client/assets/chat-card-xCb8Vz4u.js": {
+    "client/assets/chat-card-C0JmE-TE.js": {
       "rawBytes": 1451,
-      "gzipBytes": 781
+      "gzipBytes": 783
     },
-    "client/assets/chunk-4BJJOHZT-CxpHLE9W.js": {
-      "rawBytes": 13240,
-      "gzipBytes": 5190
+    "client/assets/chunk-4BJJOHZT-CcgE9Ixk.js": {
+      "rawBytes": 10067,
+      "gzipBytes": 4066
     },
-    "client/assets/chunk-5FBD2NTR-CYb9-Cyk.js": {
+    "client/assets/chunk-5FBD2NTR-rfwHJ_QQ.js": {
       "rawBytes": 30159,
-      "gzipBytes": 9523
+      "gzipBytes": 9522
     },
-    "client/assets/chunk-67J4KBOW-D7N2ZkcG.js": {
+    "client/assets/chunk-67J4KBOW-C1-C9TjT.js": {
       "rawBytes": 1621,
       "gzipBytes": 695
     },
-    "client/assets/chunk-6RASPU5N-BYQQvzZ4.js": {
+    "client/assets/chunk-6RASPU5N-CzKWnGGG.js": {
       "rawBytes": 882,
-      "gzipBytes": 484
+      "gzipBytes": 485
     },
-    "client/assets/chunk-MJG6UKD4-CAaI4bPE.js": {
+    "client/assets/chunk-MJG6UKD4-MsQzpiMv.js": {
       "rawBytes": 1473,
-      "gzipBytes": 701
+      "gzipBytes": 705
     },
-    "client/assets/chunk-PGOCR4LG-DKac3h5j.js": {
-      "rawBytes": 2306,
-      "gzipBytes": 1025
+    "client/assets/chunk-PGOCR4LG-CVPXdoXc.js": {
+      "rawBytes": 2311,
+      "gzipBytes": 1030
     },
-    "client/assets/chunk-PPYJQNE5-D-QAbIoe.js": {
+    "client/assets/chunk-PPYJQNE5-DMoxCir2.js": {
       "rawBytes": 2187,
       "gzipBytes": 1009
     },
-    "client/assets/cleanup-probe-BVt5CtQK.js": {
+    "client/assets/cleanup-probe-BhC0O7JB.js": {
       "rawBytes": 541,
       "gzipBytes": 331
     },
-    "client/assets/client-uU8gEG2K.js": {
-      "rawBytes": 44666,
-      "gzipBytes": 15673
+    "client/assets/client--DYTK7jx.js": {
+      "rawBytes": 45523,
+      "gzipBytes": 16078
     },
-    "client/assets/counter-BLplzcIP.js": {
+    "client/assets/counter-EO24PYwh.js": {
       "rawBytes": 363,
-      "gzipBytes": 284
+      "gzipBytes": 283
     },
-    "client/assets/crm-activity-panel-VgsyaISE.js": {
+    "client/assets/crm-activity-panel-CxoVIIrD.js": {
       "rawBytes": 1431,
-      "gzipBytes": 773
+      "gzipBytes": 774
     },
-    "client/assets/crm-companies-table-BlhID3jH.js": {
+    "client/assets/crm-companies-table-8yDrJtec.js": {
       "rawBytes": 2003,
-      "gzipBytes": 858
+      "gzipBytes": 859
     },
-    "client/assets/crm-company-editor-CnPeqQoN.js": {
+    "client/assets/crm-company-editor-CxXKzs_X.js": {
       "rawBytes": 1733,
       "gzipBytes": 901
     },
-    "client/assets/dashboard-toolbar-DY85uTFG.js": {
+    "client/assets/dashboard-toolbar-CGnH2otI.js": {
       "rawBytes": 5581,
-      "gzipBytes": 2253
+      "gzipBytes": 2252
     },
-    "client/assets/demo-dialog-Bki-EQ1O.js": {
+    "client/assets/demo-dialog-_6z1YBmY.js": {
       "rawBytes": 880,
-      "gzipBytes": 476
+      "gzipBytes": 474
     },
     "client/assets/dist-BHqbPkih.js": {
       "rawBytes": 39941,
       "gzipBytes": 12633
     },
-    "client/assets/payment-form-DI6fVmWk.js": {
+    "client/assets/payment-form-V_xuedk1.js": {
       "rawBytes": 4238,
-      "gzipBytes": 1670
+      "gzipBytes": 1671
     },
-    "client/assets/signals.module-CBwyh93z.js": {
-      "rawBytes": 7760,
-      "gzipBytes": 2957
+    "client/assets/signals.module-P1m5H5gj.js": {
+      "rawBytes": 7770,
+      "gzipBytes": 2967
     },
-    "client/assets/strategy-lab-CGq25gCU.js": {
+    "client/assets/strategy-lab-BcmL8nAf.js": {
       "rawBytes": 390,
       "gzipBytes": 289
     },
-    "client/assets/team-members-Cr7IsrmX.js": {
+    "client/assets/team-members-BAy6oLNc.js": {
       "rawBytes": 7951,
-      "gzipBytes": 2999
+      "gzipBytes": 3000
     },
-    "client/assets/theme-island-e6svI7og.js": {
+    "client/assets/theme-island-ChJbD6f8.js": {
       "rawBytes": 297,
-      "gzipBytes": 244
+      "gzipBytes": 243
     },
     "server/server.js": {
-      "rawBytes": 401847,
-      "gzipBytes": 84837
+      "rawBytes": 402389,
+      "gzipBytes": 84988
     }
   },
   "aggregates": {
-    "clientJsGzipKb": 60
+    "clientJsGzipKiB": 59.619140625
+  },
+  "routes": {
+    "home": {
+      "initialJsGzipKiB": 15.701171875,
+      "assetCount": 1,
+      "executableUrls": [
+        "/assets/client--DYTK7jx.js"
+      ]
+    },
+    "about": {
+      "initialJsGzipKiB": 0,
+      "assetCount": 0,
+      "executableUrls": []
+    }
   }
 }

@@ -38,6 +38,10 @@
       "types": "./dist/providers/durable-objects.d.ts",
       "default": "./dist/providers/durable-objects.js"
     },
+    "./cloudflare": {
+      "types": "./dist/providers/cloudflare/index.d.ts",
+      "default": "./dist/providers/cloudflare/index.js"
+    },
     "./testing": {
       "types": "./dist/testing/index.d.ts",
       "default": "./dist/testing/index.js"
@@ -51,8 +55,9 @@
     "access": "public"
   },
   "scripts": {
-    "build": "rm -rf dist && tsc -p tsconfig.build.json",
+    "build": "rm -rf dist && tsc -p tsconfig.build.json && tsc -p tsconfig.cloudflare.json",
     "typecheck": "tsc -p tsconfig.json --noEmit",
+    "typecheck:cloudflare": "tsc -p tsconfig.cloudflare.json --noEmit",
     "test": "vitest run"
   },
   "dependencies": {
@@ -61,6 +66,7 @@
   },
   "devDependencies": {
     "@kamod-ch/otok": "workspace:*",
+    "@cloudflare/workers-types": "^5.20261001.1",
     "@types/node": "^26.6.3",
     "@types/ws": "^8.18.2",
     "hono": "^4.13.12",

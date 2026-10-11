@@ -1,7 +1,7 @@
 {
   "version": 1,
   "baselineRelease": "1.0.0-draft",
-  "generatedAt": "2026-09-26T22:34:47.832Z",
+  "generatedAt": "2026-10-11T22:27:50.934Z",
   "note": "Review aid for public/experimental export surfaces — not a semver proof.",
   "packages": {
     "@kamod-ch/otok": {
@@ -343,6 +343,120 @@
         ]
       }
     },
+    "@kamod-ch/otok-ai": {
+      ".": {
+        "classification": "public",
+        "typesFile": "dist/index.d.ts",
+        "exports": [
+          "AiClient",
+          "OtokAiAbortedError",
+          "OtokAiBudgetExceededError",
+          "OtokAiConfigError",
+          "OtokAiError",
+          "OtokAiMcpPermissionError",
+          "OtokAiProviderError",
+          "OtokAiRateLimitError",
+          "OtokAiTimeoutError",
+          "OtokAiValidationError",
+          "aiSseResponse",
+          "aiStreamToSse",
+          "beginBilledRound",
+          "collectAiContext",
+          "collectStreamEvents",
+          "configureAiApp",
+          "containsSecrets",
+          "createAiProvider",
+          "createAiWorkflowClient",
+          "createMemoryBudgetStore",
+          "createMemoryBudgetStoreWithReset",
+          "createMemoryConversationStore",
+          "createOpenAiProvider",
+          "defineAiTool",
+          "generateAiContext",
+          "generateLlmsTxt",
+          "getAiClient",
+          "getAiRuntime",
+          "isAiBudgetReservationStore",
+          "redactMessages",
+          "redactText",
+          "registerAiRuntime",
+          "resetAiRuntimeForTests",
+          "resetMemoryBudgetStore",
+          "sanitizeContextOutput",
+          "stripEnvValues",
+          "tryGetAiRuntime"
+        ]
+      },
+      "./loader": {
+        "classification": "public",
+        "typesFile": "dist/loader.d.ts",
+        "exports": [
+          "defineAiAction",
+          "defineAiLoader",
+          "getAiClient",
+          "tryGetAiRuntime"
+        ]
+      },
+      "./plugin": {
+        "classification": "public",
+        "typesFile": "dist/plugin.d.ts",
+        "exports": [
+          "configureAiApp"
+        ]
+      },
+      "./cli": {
+        "classification": "experimental",
+        "typesFile": "dist/cli/index.d.ts",
+        "exports": [
+          "AI_CONTEXT_HELP",
+          "parseAiContextArgv",
+          "runAiContextCommand"
+        ]
+      },
+      "./tools": {
+        "classification": "public",
+        "typesFile": "dist/tools/define-tool.d.ts",
+        "exports": [
+          "InferToolInput",
+          "InferToolOutput",
+          "aiSchema",
+          "defineAiTool"
+        ]
+      },
+      "./mcp": {
+        "classification": "public",
+        "typesFile": "dist/mcp/index.d.ts",
+        "exports": [
+          "isRouteMcpAllowed",
+          "mountMcpRoutes"
+        ]
+      },
+      "./rag": {
+        "classification": "experimental",
+        "typesFile": "dist/rag/index.d.ts",
+        "exports": [
+          "EmbeddingProvider",
+          "RagAdapter",
+          "RagDocument",
+          "VectorStore",
+          "createMemoryVectorStore",
+          "createRagAdapter"
+        ]
+      },
+      "./budget/kysely": {
+        "classification": "public",
+        "typesFile": "dist/budget/kysely/index.d.ts",
+        "exports": [
+          "AiBudgetDatabase",
+          "AiBudgetDialect",
+          "KyselyAiBudgetStoreOptions",
+          "RESERVATIONS_TABLE",
+          "USAGE_TABLE",
+          "createKyselyAiBudgetStore",
+          "migrateAiBudgetSchema"
+        ]
+      }
+    },
     "otok-cli": {},
     "@kamod-ch/otok-config": {
       ".": {
@@ -459,6 +573,7 @@
           "DISCUSSIONS_MIGRATION_ID",
           "KyselyDiscussionAdapterOptions",
           "KyselyDiscussionStore",
+          "KyselySubscriptionStore",
           "TENANT_KEY_NONE",
           "createKyselyDiscussionAdapter",
           "decodeTenantId",
@@ -527,13 +642,53 @@
           "formatCommentRelativeTime",
           "pickDiscussionLocale"
         ]
+      },
+      "./notifications": {
+        "classification": "experimental",
+        "typesFile": "dist/notifications/index.d.ts",
+        "exports": [
+          "DiscussionNotificationRoutesOptions",
+          "MemorySubscriptionStore",
+          "NOTIFICATION_JOB_NAME",
+          "QueueEnqueueLike",
+          "attachNotificationBridge",
+          "createLogNotificationProvider",
+          "createNotificationEventSink",
+          "createNotificationJobHandler",
+          "createQueueNotificationEnqueue",
+          "deliverNotificationJob",
+          "parseMentionUserIds",
+          "registerDiscussionNotificationRoutes"
+        ]
+      },
+      "./live": {
+        "classification": "experimental",
+        "typesFile": "dist/live/index.d.ts",
+        "exports": [
+          "CreateDiscussionsLiveChannelOptions",
+          "DiscussionLiveEvent",
+          "DiscussionsLiveBridgeConfig",
+          "DiscussionsThreadAccessContext",
+          "attachLiveUpdatesBridge",
+          "createDiscussionsLiveChannel",
+          "createLiveEventSink",
+          "discussionLiveEventSchema",
+          "discussionThreadRoomKey",
+          "parseDiscussionThreadRoomKey",
+          "toDiscussionLiveEvent"
+        ]
       }
     },
     "@kamod-ch/otok-plugin-contract": {
       ".": {
         "classification": "public",
         "typesFile": "dist/index.d.ts",
-        "exports": ["PluginContractExpectation", "PluginContractOptions", "assertPluginContract", "env"]
+        "exports": [
+          "PluginContractExpectation",
+          "PluginContractOptions",
+          "assertPluginContract",
+          "env"
+        ]
       }
     },
     "@kamod-ch/otok-queue": {
@@ -563,7 +718,11 @@
       "./providers/memory": {
         "classification": "public",
         "typesFile": "dist/providers/memory.d.ts",
-        "exports": ["createMemoryQueueProvider", "createTestQueueProvider", "getMemoryProviderInternals"]
+        "exports": [
+          "createMemoryQueueProvider",
+          "createTestQueueProvider",
+          "getMemoryProviderInternals"
+        ]
       },
       "./providers/postgres": {
         "classification": "public",
@@ -582,7 +741,125 @@
       "./worker": {
         "classification": "public",
         "typesFile": "dist/worker/run-worker.d.ts",
-        "exports": ["QueueWorkerHandle", "QueueWorkerOptions", "runQueueWorker"]
+        "exports": [
+          "QueueWorkerHandle",
+          "QueueWorkerOptions",
+          "runQueueWorker"
+        ]
+      }
+    },
+    "@kamod-ch/otok-realtime": {
+      ".": {
+        "classification": "public",
+        "typesFile": "dist/index.d.ts",
+        "exports": [
+          "DEFAULT_DURABLE_OBJECT_CONTRACT",
+          "DEFAULT_REALTIME_LIMITS",
+          "RealtimeClient",
+          "RealtimeException",
+          "RealtimeHub",
+          "companiesChannel",
+          "createBearerVerifier",
+          "createMemoryProvider",
+          "createRedisProvider",
+          "createSharedBrokerProviders",
+          "createSseStream",
+          "crmChannels",
+          "crmPresenceChannel",
+          "decodeWsFrame",
+          "defineChannel",
+          "defineDurableObjectProvider",
+          "encodeWsFrame",
+          "fetchSseClient",
+          "formatRealtimeError",
+          "formatSseEvent",
+          "getRealtimeRuntime",
+          "handleWebSocketConnection",
+          "isChannelDefinition",
+          "isRealtimeError",
+          "realtime",
+          "redactTokens",
+          "registerRealtimeRoutes",
+          "registerRealtimeRuntime",
+          "resetRealtimeRuntimeForTests",
+          "resolveAuthToken",
+          "sseResponse",
+          "z"
+        ]
+      },
+      "./plugin": {
+        "classification": "public",
+        "typesFile": "dist/plugin.d.ts",
+        "exports": [
+          "RealtimePluginOptions",
+          "RealtimeProviderConfig",
+          "configureRealtimeApp",
+          "createRealtimeProvider"
+        ]
+      },
+      "./client": {
+        "classification": "public",
+        "typesFile": "dist/client/index.d.ts",
+        "exports": [
+          "RealtimeClient",
+          "RealtimeClientError",
+          "RealtimeClientEvent",
+          "RealtimeClientOptions",
+          "fetchSseClient"
+        ]
+      },
+      "./providers/redis": {
+        "classification": "public",
+        "typesFile": "dist/providers/redis.d.ts",
+        "exports": [
+          "RedisPubSubAdapter",
+          "RedisRealtimeConfig",
+          "createRedisProvider"
+        ]
+      },
+      "./providers/durable-objects": {
+        "classification": "public",
+        "typesFile": "dist/providers/durable-objects.d.ts",
+        "exports": [
+          "DEFAULT_DURABLE_OBJECT_CONTRACT",
+          "DurableObjectProviderOptions",
+          "DurableObjectProviderSpec",
+          "defineDurableObjectProvider"
+        ]
+      },
+      "./cloudflare": {
+        "classification": "experimental",
+        "typesFile": "dist/providers/cloudflare/index.d.ts",
+        "exports": [
+          "CLOUDFLARE_REALTIME_LIFECYCLE",
+          "CLOUDFLARE_REALTIME_RETENTION",
+          "CloudflareRealtimeWorkerEnv",
+          "CloudflareRealtimeWorkerOptions",
+          "INTERNAL_HEADER",
+          "RealtimeRoom",
+          "RealtimeRoomEnv",
+          "RealtimeRoomNamespace",
+          "assertInternalRequest",
+          "base64urlDecodeUtf8",
+          "base64urlEncodeUtf8",
+          "createCloudflareRealtimeApp",
+          "decodeRouteSegments",
+          "formatGapEvent",
+          "formatSseComment",
+          "formatSseEvent",
+          "internalHeaders",
+          "objectName",
+          "routeSegments"
+        ]
+      },
+      "./crm": {
+        "classification": "experimental",
+        "typesFile": "dist/crm/index.d.ts",
+        "exports": [
+          "companiesChannel",
+          "crmChannels",
+          "crmPresenceChannel"
+        ]
       }
     },
     "@kamod-ch/otok-registry": {
@@ -741,7 +1018,12 @@
       "./plugin": {
         "classification": "public",
         "typesFile": "dist/plugin.d.ts",
-        "exports": ["WorkflowProviderConfig", "WorkflowsPluginOptions", "configureWorkflowsApp", "createWorkflowStore"]
+        "exports": [
+          "WorkflowProviderConfig",
+          "WorkflowsPluginOptions",
+          "configureWorkflowsApp",
+          "createWorkflowStore"
+        ]
       },
       "./providers/kysely": {
         "classification": "public",
@@ -757,7 +1039,11 @@
       "./crm": {
         "classification": "experimental",
         "typesFile": "dist/crm/index.d.ts",
-        "exports": ["companyInputSchema", "crmWorkflows", "enrichCompany"]
+        "exports": [
+          "companyInputSchema",
+          "crmWorkflows",
+          "enrichCompany"
+        ]
       }
     },
     "@kamod-ch/otok-vite-plugin": {

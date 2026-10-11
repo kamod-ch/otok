@@ -53,6 +53,25 @@ await fetchSseClient({
 });
 ```
 
+## Cloudflare Workers (SSE + Durable Objects)
+
+Optional subpath for Plan 036 — **not** a remote `RealtimeProvider.subscribe()` bridge.
+
+```ts
+import {
+  RealtimeRoom,
+  createCloudflareRealtimeApp,
+  objectName,
+} from "@kamod-ch/otok-realtime/cloudflare";
+```
+
+- SSE MVP with DO-backed replay (`Last-Event-ID`), retention, heartbeat, backpressure
+- **No WebSocket / presence** on this path (see capability flags in `plans/cloudflare-realtime-contract.json`)
+- Example + integration tests: `examples/realtime-cloudflare` (`pnpm check:realtime-cloudflare`)
+- Auth: session/Bearer at the Worker; publish via `x-realtime-publish-secret` or app policy — never query tokens
+
+`defineDurableObjectProvider()` spec export is unchanged; use `objectName()` from `/cloudflare` for DO shard IDs (`rt/v1/...`).
+
 ## Security
 
 - Tokens **must not** be passed via query parameters (rejected with 400)

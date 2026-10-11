@@ -72,11 +72,14 @@ Production delivery is **at-least-once** with lease tokens and idempotent handle
 2. Run a worker: `runQueueWorker` from `@kamod-ch/otok-queue/worker` with the same `DATABASE_URL`.
 3. Local stack: [`examples/queue-postgres`](../../examples/queue-postgres) (Postgres on host port **54329**).
 
-Integration tests (real Postgres only):
+Integration tests (real Postgres only — **destructive**: `beforeAll` runs queue migrations down/up on the target database; use a disposable DB never shared with dev data):
 
 ```bash
-OTOK_QUEUE_PG_TEST_URL=postgres://otok:otok@127.0.0.1:54329/otok_queue pnpm --filter @kamod-ch/otok-queue test
+export OTOK_QUEUE_PG_TEST_URL=postgres://otok:otok@127.0.0.1:54329/otok_queue
+pnpm --filter @kamod-ch/otok-queue exec vitest run src/providers/postgres/postgres.integration.test.ts
 ```
+
+CI sets `OTOK_REQUIRE_DATABASE_TESTS=1` together with `OTOK_QUEUE_PG_TEST_URL` on an isolated Postgres 16 service. Locally, omit both variables to skip the suite during routine unit runs; set `OTOK_REQUIRE_DATABASE_TESTS=1` without a URL to fail fast when you intended to run DB tests.
 
 HTTP action idempotency uses `PostgresIdempotencyStore` from `@kamod-ch/otok` (same DB, separate table and TTL — not job idempotency keys).
 

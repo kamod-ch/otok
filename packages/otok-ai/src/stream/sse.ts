@@ -6,6 +6,9 @@ export function teeAsyncIterable<T>(source: AsyncIterable<T>): [AsyncIterable<T>
   let finished = false;
   let streamError: unknown;
   let pumpPromise: Promise<void> | null = null;
+  let sourceIterator: AsyncIterator<T> | null = null;
+  let cancelRequested = false;
+  let branchesOpen = 2;
   const waiters = new Set<() => void>();
 
   function notifyWaiters(): void {
@@ -13,12 +16,32 @@ export function teeAsyncIterable<T>(source: AsyncIterable<T>): [AsyncIterable<T>
     waiters.clear();
   }
 
+  async function cancelSource(): Promise<void> {
+    if (cancelRequested) return;
+    cancelRequested = true;
+    try {
+      await sourceIterator?.return?.();
+    } catch {
+      // best-effort cleanup for cooperative sources
+    }
+  }
+
+  function branchClosed(): void {
+    branchesOpen -= 1;
+    if (branchesOpen <= 0 && !cancelRequested) {
+      void cancelSource();
+    }
+  }
+
   function ensurePump(): Promise<void> {
     if (!pumpPromise) {
+      sourceIterator = source[Symbol.asyncIterator]();
       pumpPromise = (async () => {
         try {
-          for await (const item of source) {
-            buffer.push(item);
+          while (!cancelRequested) {
+            const next = await sourceIterator!.next();
+            if (next.done) break;
+            buffer.push(next.value);
             notifyWaiters();
           }
         } catch (error) {
@@ -36,16 +59,20 @@ export function teeAsyncIterable<T>(source: AsyncIterable<T>): [AsyncIterable<T>
     let index = 0;
     return {
       async *[Symbol.asyncIterator]() {
-        await ensurePump();
-        while (true) {
-          while (index < buffer.length) {
-            yield buffer[index++] as T;
+        try {
+          await ensurePump();
+          while (true) {
+            while (index < buffer.length) {
+              yield buffer[index++] as T;
+            }
+            if (finished) {
+              if (streamError) throw streamError;
+              return;
+            }
+            await new Promise<void>((resolve) => waiters.add(resolve));
           }
-          if (finished) {
-            if (streamError) throw streamError;
-            return;
-          }
-          await new Promise<void>((resolve) => waiters.add(resolve));
+        } finally {
+          branchClosed();
         }
       },
     };

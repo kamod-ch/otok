@@ -49,7 +49,7 @@ describe("AI budgets", () => {
     await expect(
       client.stream({
         messages: [{ role: "user", content: "hello" }],
-        budget: { userId: "u1", maxTokens: 5 },
+        budget: { userId: "u1", maxTokensPerPeriod: 5 },
       }).usage,
     ).rejects.toBeInstanceOf(OtokAiBudgetExceededError);
   });

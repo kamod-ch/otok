@@ -1,9 +1,11 @@
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 import { defineEvent, z, eventKey } from "../define-event.js";
 import { createEventBus } from "../bus/event-bus.js";
 import { enqueueOutboxEvent, OutboxProcessor } from "./processor.js";
 import { metadataFromContext } from "../context.js";
+import { FakeClock } from "../clock.js";
 import { MemoryOutboxStore, withOutboxTransaction, withOutboxTransactionRollback } from "../testing/memory-outbox.js";
+import { OutboxLeaseError } from "../types.js";
 
 const orderCreated = defineEvent({
   name: "order.created",
@@ -63,6 +65,59 @@ describe("transactional outbox boundaries", () => {
     await processor.processOnce();
     expect(handled).toEqual([]);
     expect(outbox.records).toHaveLength(0);
+  });
+});
+
+describe("leased outbox processor (memory)", () => {
+  it("renews leases during a slow handler and clears the timer", async () => {
+    const outbox = new MemoryOutboxStore();
+    const clock = new FakeClock(new Date("2026-01-01T00:00:00.000Z"));
+    const bus = createEventBus();
+    const slow = defineEvent({ name: "slow.event", version: 1, schema: z.object({ id: z.string() }) });
+    bus.subscribe(slow, async () => {
+      await new Promise((resolve) => setTimeout(resolve, 280));
+    });
+
+    const now = clock.now().toISOString();
+    await outbox.insert({
+      id: "slow-1",
+      eventName: "slow.event",
+      eventVersion: 1,
+      payload: { id: "x" },
+      metadata: { correlationId: "c1" },
+      availableAt: now,
+      createdAt: now,
+    });
+
+    const renewSpy = vi.spyOn(outbox, "renewLease");
+    const processor = new OutboxProcessor({
+      store: outbox,
+      bus,
+      definitions: new Map([[eventKey(slow), slow]]),
+      clock,
+      leaseMs: 400,
+      batchSize: 1,
+    });
+    const result = await processor.processOnce();
+    expect(result.published).toBe(1);
+    expect(renewSpy.mock.calls.length).toBeGreaterThan(0);
+    renewSpy.mockRestore();
+  });
+
+  it("does not ack with tokenless marks when a lease is active", async () => {
+    const outbox = new MemoryOutboxStore();
+    const now = new Date().toISOString();
+    await outbox.insert({
+      id: "leased-1",
+      eventName: "x",
+      eventVersion: 1,
+      payload: {},
+      metadata: { correlationId: "c" },
+      availableAt: now,
+      createdAt: now,
+    });
+    const [claimed] = await outbox.claimLeased(1);
+    await expect(outbox.markPublished(claimed!.id)).rejects.toBeInstanceOf(OutboxLeaseError);
   });
 });
 

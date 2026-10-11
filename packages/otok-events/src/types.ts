@@ -123,10 +123,47 @@ export interface IdempotencyStore {
 
 export interface OutboxStore {
   insert(record: Omit<OutboxRecord, "status" | "attempts" | "processedAt" | "lastError">): Promise<void>;
+  /** Legacy single-worker claim. Not safe under concurrent workers — use {@link LeasedOutboxStore.claimLeased}. */
   claimPending(limit: number, now?: Date): Promise<OutboxRecord[]>;
   markPublished(id: string, processedAt?: string): Promise<void>;
   markFailed(id: string, error: string, availableAt: string): Promise<void>;
   markDead(id: string, error: string): Promise<void>;
+}
+
+/** Outbox row after an atomic leased claim (attempts already incremented in the store). */
+export interface ClaimedOutboxRecord extends OutboxRecord {
+  leaseToken: string;
+  leaseExpiresAt: string;
+}
+
+/** Default processing lease when not configured on {@link OutboxProcessor}. */
+export const DEFAULT_OUTBOX_LEASE_MS = 30_000;
+
+/**
+ * Multi-worker outbox: atomic claim with lease tokens and token-bound completion.
+ * Kysely and in-memory test stores implement this; custom {@link OutboxStore} implementations
+ * may stay on legacy {@link OutboxStore.claimPending} for single-worker deployments only.
+ */
+export interface LeasedOutboxStore extends OutboxStore {
+  claimLeased(limit: number, now?: Date, leaseMs?: number): Promise<ClaimedOutboxRecord[]>;
+  renewLease(id: string, leaseToken: string, leaseMs?: number, now?: Date): Promise<boolean>;
+  markPublishedLeased(id: string, leaseToken: string, processedAt?: string): Promise<void>;
+  markFailedLeased(id: string, leaseToken: string, error: string, availableAt: string): Promise<void>;
+  markDeadLeased(id: string, leaseToken: string, error: string): Promise<void>;
+}
+
+export function isLeasedOutboxStore(store: OutboxStore): store is LeasedOutboxStore {
+  return (
+    typeof (store as LeasedOutboxStore).claimLeased === "function" &&
+    typeof (store as LeasedOutboxStore).markPublishedLeased === "function"
+  );
+}
+
+export class OutboxLeaseError extends Error {
+  constructor(message = "outbox lease invalid or expired") {
+    super(message);
+    this.name = "OutboxLeaseError";
+  }
 }
 
 export interface EventBus {

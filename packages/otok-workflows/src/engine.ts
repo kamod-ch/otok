@@ -15,6 +15,8 @@ import { cronFireAtUtc, cronMatches } from "./utils/cron.js";
 
 export interface ExecuteOptions {
   leaseToken?: string;
+  /** Lease duration used by `renewLease` during claimed execution (default 30s). */
+  leaseMs?: number;
 }
 
 export class WorkflowEngine {
@@ -28,12 +30,15 @@ export class WorkflowEngine {
     { workflowName: string; mapInput?: (payload: unknown) => unknown }[]
   >();
   private readonly now: () => Date;
+  private readonly leaseRenewalIntervalMs: number;
+  private readonly defaultLeaseMs = 30_000;
 
   constructor(options: WorkflowEngineOptions) {
     this.store = options.store;
     this.defaultRetry = resolveRetryPolicy(options.retry);
     this.observability = options.observability;
     this.now = options.now ?? (() => new Date());
+    this.leaseRenewalIntervalMs = options.leaseRenewalIntervalMs ?? 5_000;
   }
 
   register<TInput, TOutput>(definition: WorkflowDefinition<TInput, TOutput>): void {
@@ -110,6 +115,9 @@ export class WorkflowEngine {
       if (error instanceof WorkflowException && (error.code === "PAUSED" || error.code === "CANCELLED")) {
         return;
       }
+      if (error instanceof WorkflowException && error.code === "LEASE_LOST") {
+        return;
+      }
       this.observability?.onExecutionError?.(instanceId, error);
     });
   }
@@ -120,6 +128,24 @@ export class WorkflowEngine {
 
     if (options.leaseToken && instance.leaseToken !== options.leaseToken) {
       throw new WorkflowException("NOT_FOUND", `Lease lost for workflow "${instanceId}"`);
+    }
+
+    if (
+      !options.leaseToken &&
+      instance.leaseToken &&
+      instance.leaseUntil &&
+      new Date(instance.leaseUntil).getTime() > this.now().getTime()
+    ) {
+      throw new WorkflowException("NOT_FOUND", `Workflow "${instanceId}" is leased by another worker`);
+    }
+
+    const held = options.leaseToken ? { leaseToken: options.leaseToken } : undefined;
+    const leaseMs = options.leaseMs ?? this.defaultLeaseMs;
+    let heartbeat: ReturnType<typeof setInterval> | undefined;
+    if (held) {
+      heartbeat = setInterval(() => {
+        void this.store.renewLease(instanceId, held.leaseToken, { leaseMs, now: this.now() });
+      }, this.leaseRenewalIntervalMs);
     }
 
     const definition = this.definitions.get(instance.workflowName);
@@ -139,6 +165,8 @@ export class WorkflowEngine {
       throw new WorkflowException("VERSION_MISMATCH", message);
     }
 
+    instance = (await this.store.getInstance(instanceId)) ?? instance;
+
     if (instance.status === "cancelled" || instance.status === "completed" || instance.status === "dead") {
       return instance;
     }
@@ -152,11 +180,30 @@ export class WorkflowEngine {
       return instance;
     }
 
-    await this.store.updateInstance(instanceId, {
-      status: "running",
-      startedAt: instance.startedAt ?? this.now().toISOString(),
-      updatedAt: this.now().toISOString(),
-    });
+    if (held) {
+      const ok = await this.store.updateInstanceIfHeld(
+        instanceId,
+        {
+          status: "running",
+          startedAt: instance.startedAt ?? this.now().toISOString(),
+          updatedAt: this.now().toISOString(),
+        },
+        held,
+      );
+      if (!ok) {
+        return (await this.store.getInstance(instanceId)) ?? instance;
+      }
+    } else {
+      const fresh = await this.store.getInstance(instanceId);
+      if (fresh?.status === "paused" || fresh?.status === "cancelled") {
+        return fresh;
+      }
+      await this.store.updateInstance(instanceId, {
+        status: "running",
+        startedAt: instance.startedAt ?? this.now().toISOString(),
+        updatedAt: this.now().toISOString(),
+      });
+    }
 
     instance = (await this.store.getInstance(instanceId)) ?? instance;
     this.observability?.onWorkflowStart?.(instance);
@@ -166,6 +213,7 @@ export class WorkflowEngine {
       this.store,
       resolveRetryPolicy(definition.retry ?? this.defaultRetry),
       this.observability,
+      held,
     );
 
     try {
@@ -186,15 +234,27 @@ export class WorkflowEngine {
         validated = parsed.data;
       }
 
+      const latest = await this.store.getInstance(instanceId);
+      if (latest?.status === "paused" || latest?.status === "cancelled") {
+        return latest;
+      }
+
       const completed: WorkflowInstance = {
-        ...instance,
+        ...(latest ?? instance),
         status: "completed",
         output: validated,
         progress: 100,
         completedAt: this.now().toISOString(),
         updatedAt: this.now().toISOString(),
       };
-      await this.store.updateInstance(instanceId, completed);
+      if (held) {
+        const ok = await this.store.updateInstanceIfHeld(instanceId, completed, held);
+        if (!ok) {
+          throw new WorkflowException("LEASE_LOST", `Lease lost for workflow "${instanceId}"`);
+        }
+      } else {
+        await this.store.updateInstance(instanceId, completed);
+      }
       this.observability?.onWorkflowComplete?.(redactForLog(completed, definition.redactFields));
       return completed;
     } catch (error) {
@@ -203,6 +263,10 @@ export class WorkflowEngine {
       }
 
       if (error instanceof WorkflowException && (error.code === "CANCELLED" || error.code === "PAUSED")) {
+        return (await this.store.getInstance(instanceId)) ?? instance;
+      }
+
+      if (error instanceof WorkflowException && error.code === "LEASE_LOST") {
         return (await this.store.getInstance(instanceId)) ?? instance;
       }
 
@@ -216,6 +280,20 @@ export class WorkflowEngine {
 
       if (nextRunAttempts >= (instance.maxRunAttempts ?? policy.maxAttempts)) {
         const steps = await this.store.listSteps(instanceId);
+        const deadPatch = {
+          status: "dead" as const,
+          error: message,
+          runAttempts: nextRunAttempts,
+          updatedAt: this.now().toISOString(),
+        };
+        if (held) {
+          const ok = await this.store.updateInstanceIfHeld(instanceId, deadPatch, held);
+          if (!ok) {
+            throw new WorkflowException("LEASE_LOST", `Lease lost for workflow "${instanceId}"`);
+          }
+        } else {
+          await this.store.updateInstance(instanceId, deadPatch);
+        }
         if (definition.compensate) {
           await definition.compensate({
             input: instance.input,
@@ -230,27 +308,30 @@ export class WorkflowEngine {
           failedAt: this.now().toISOString(),
           steps,
         });
-        await this.store.updateInstance(instanceId, {
-          status: "dead",
-          error: message,
-          runAttempts: nextRunAttempts,
-          updatedAt: this.now().toISOString(),
-        });
       } else {
         const delay = retryDelay(policy, nextRunAttempts);
         const available = new Date(this.now().getTime() + delay).toISOString();
-        await this.store.updateInstance(instanceId, {
-          status: "failed",
+        const failedPatch = {
+          status: "failed" as const,
           error: message,
           runAttempts: nextRunAttempts,
           metadata: { ...instance.metadata, availableAt: available },
           updatedAt: this.now().toISOString(),
-        });
+        };
+        if (held) {
+          const ok = await this.store.updateInstanceIfHeld(instanceId, failedPatch, held);
+          if (!ok) {
+            throw new WorkflowException("LEASE_LOST", `Lease lost for workflow "${instanceId}"`);
+          }
+        } else {
+          await this.store.updateInstance(instanceId, failedPatch);
+        }
       }
 
       this.observability?.onWorkflowFailed?.(instance, error);
       throw error;
     } finally {
+      if (heartbeat) clearInterval(heartbeat);
       if (options.leaseToken) {
         await this.store.releaseClaim(instanceId, options.leaseToken);
       }
@@ -301,11 +382,14 @@ export class WorkflowEngine {
     let processed = 0;
     for (const instance of runnable) {
       try {
-        await this.execute(instance.id, { leaseToken: instance.leaseToken });
+        await this.execute(instance.id, { leaseToken: instance.leaseToken, leaseMs: this.defaultLeaseMs });
         processed += 1;
       } catch (error) {
         if (isWaitingApproval(error)) {
           processed += 1;
+          continue;
+        }
+        if (error instanceof WorkflowException && error.code === "LEASE_LOST") {
           continue;
         }
         this.observability?.onExecutionError?.(instance.id, error);

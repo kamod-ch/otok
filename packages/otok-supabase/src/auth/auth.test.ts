@@ -101,13 +101,37 @@ describe("requireSupabaseUser", () => {
 });
 
 describe("safeRedirectPath", () => {
+  const ORIGIN = "https://example.com";
+
   it("accepts allowlisted relative paths", () => {
     expect(safeRedirectPath("/dashboard", ["/", "/dashboard"])).toBe("/dashboard");
+    expect(safeRedirectPath("/dashboard/settings", ["/dashboard"])).toBe("/dashboard/settings");
+    expect(safeRedirectPath("/dashboard?tab=x", ["/dashboard"])).toBe("/dashboard?tab=x");
   });
 
   it("rejects protocol-relative and external paths", () => {
     expect(safeRedirectPath("//evil.example", ["/"])).toBeNull();
     expect(safeRedirectPath("https://evil.example", ["/"])).toBeNull();
+  });
+
+  it("rejects traversal outside allowlist", () => {
+    expect(safeRedirectPath("/dashboard/../admin", ["/dashboard"])).toBeNull();
+    expect(safeRedirectPath("/dashboard/%2e%2e/admin", ["/dashboard"])).toBeNull();
+  });
+
+  it("rejects backslashes and control characters", () => {
+    expect(safeRedirectPath("/dash\\evil", ["/"])).toBeNull();
+    expect(safeRedirectPath("/x\u0000", ["/"])).toBeNull();
+  });
+
+  it("rejects protocol-relative normalization", () => {
+    expect(safeRedirectPath("/.//evil.test", ["/"])).toBeNull();
+  });
+
+  it("accepted paths stay same-origin when resolved", () => {
+    const result = safeRedirectPath("/caf%C3%A9", ["/"]);
+    expect(result).toBe("/caf%C3%A9");
+    expect(new URL(result!, ORIGIN).origin).toBe(ORIGIN);
   });
 });
 

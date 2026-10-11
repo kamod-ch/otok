@@ -8,10 +8,11 @@ exports[`registry cli commands > doctor runs read-only checks 1`] = `
 · Detected adapter: node.
 ! @kamod-ch/otok-kysely: Installed 0.9.0, registry latest 1.0.0.
 ! @kamod-ch/otok-kysely is outdated (0.9.0 → 1.0.0).
+! otok-adapter-node is outdated (^0.4.0 → 2.0.0).
 ! No generated route types found. Run \`otok typegen\` to generate .otok/types/routes.d.ts.
 ! Kysely plugin registered but no migrations/ directory found.
 
-6 check(s): 0 error(s), 4 warning(s).
+7 check(s): 0 error(s), 5 warning(s).
 
 Tip: run \`otok upgrade --dry-run\` to see available package upgrades.
 "

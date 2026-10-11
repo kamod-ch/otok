@@ -44,6 +44,16 @@ export interface ClaimRunnableOptions {
   now?: Date;
 }
 
+export interface RenewLeaseOptions {
+  leaseMs?: number;
+  now?: Date;
+}
+
+/** When set, instance writes succeed only while the store still holds this lease token. */
+export interface HeldLeaseWriteOptions {
+  leaseToken: string;
+}
+
 export type ClaimedWorkflowInstance = WorkflowInstance & { leaseToken: string };
 
 export interface StepRecord {
@@ -153,6 +163,15 @@ export interface WorkflowStore {
   getInstance(id: string): Promise<WorkflowInstance | null>;
   findByIdempotencyKey(key: string): Promise<WorkflowInstance | null>;
   updateInstance(id: string, patch: Partial<WorkflowInstance>): Promise<void>;
+  /** Extend lease while the token still matches. Returns false when reclaimed or expired. */
+  renewLease(instanceId: string, leaseToken: string, options?: RenewLeaseOptions): Promise<boolean>;
+  /** Unconditional when `held` is omitted; otherwise fenced on matching `lease_token`. */
+  updateInstanceIfHeld(
+    id: string,
+    patch: Partial<WorkflowInstance>,
+    held?: HeldLeaseWriteOptions,
+  ): Promise<boolean>;
+  saveStepIfHeld(step: StepRecord, held?: HeldLeaseWriteOptions): Promise<boolean>;
   listInstances(filter?: {
     status?: WorkflowStatus;
     workflowName?: string;
@@ -185,6 +204,8 @@ export interface WorkflowEngineOptions {
   retry?: Partial<RetryPolicy>;
   observability?: WorkflowObservability;
   now?: () => Date;
+  /** Interval for `renewLease` during claimed `execute()` (default 5s). */
+  leaseRenewalIntervalMs?: number;
 }
 
 export interface WorkflowObservability {

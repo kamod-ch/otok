@@ -54,6 +54,10 @@
     "./rag": {
       "types": "./dist/rag/index.d.ts",
       "default": "./dist/rag/index.js"
+    },
+    "./budget/kysely": {
+      "types": "./dist/budget/kysely/index.d.ts",
+      "default": "./dist/budget/kysely/index.js"
     }
   },
   "publishConfig": {
@@ -68,8 +72,13 @@
     "@kamod-ch/otok": "workspace:*",
     "@kamod-ch/otok-test": "workspace:*",
     "@kamod-ch/otok-workflows": "workspace:*",
+    "@types/better-sqlite3": "^9.6.0",
     "@types/node": "^26.6.3",
+    "@types/pg": "^8.23.1",
+    "better-sqlite3": "^12.11.1",
     "hono": "^4.13.12",
+    "kysely": "^0.29.6",
+    "pg": "^8.23.0",
     "typescript": "~7.0.2",
     "vitest": "^5.0.3",
     "zod": "^4.6.5"
@@ -77,13 +86,17 @@
   "peerDependencies": {
     "@kamod-ch/otok": ">=0.6.1",
     "@kamod-ch/otok-workflows": ">=0.1.1",
-    "hono": ">=4"
+    "hono": ">=4",
+    "kysely": ">=0.27.0"
   },
   "peerDependenciesMeta": {
     "hono": {
       "optional": true
     },
     "@kamod-ch/otok-workflows": {
+      "optional": true
+    },
+    "kysely": {
       "optional": true
     }
   },

@@ -1,0 +1,23 @@
+{
+  "name": "realtime-cloudflare",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Cloudflare Workers + DO integration tests for @kamod-ch/otok-realtime/cloudflare",
+  "type": "module",
+  "scripts": {
+    "build": "tsc -p tsconfig.json --noEmit",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "test": "node --test tests/integration.test.mjs",
+    "smoke": "wrangler deploy --dry-run"
+  },
+  "dependencies": {
+    "@kamod-ch/otok-realtime": "workspace:*",
+    "hono": "^4.13.12"
+  },
+  "devDependencies": {
+    "@cloudflare/workers-types": "^5.20261001.1",
+    "@types/node": "^26.6.3",
+    "typescript": "~7.0.2",
+    "wrangler": "^4.145.0"
+  }
+}

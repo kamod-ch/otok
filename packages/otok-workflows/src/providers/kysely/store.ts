@@ -300,6 +300,84 @@ export function createKyselyWorkflowStore(
         .execute();
     },
 
+    async renewLease(instanceId: string, leaseToken: string, renewOptions: import("../../types.js").RenewLeaseOptions = {}) {
+      const now = renewOptions.now ?? new Date();
+      const leaseMs = renewOptions.leaseMs ?? defaultLeaseMs;
+      const until = new Date(now.getTime() + leaseMs);
+      const updated = await db
+        .updateTable(INSTANCES_TABLE)
+        .set({ lease_until: until.toISOString(), updated_at: now.toISOString() })
+        .where("id", "=", instanceId)
+        .where("lease_token", "=", leaseToken)
+        .executeTakeFirst();
+      return updated.numUpdatedRows > 0n;
+    },
+
+    async updateInstanceIfHeld(
+      id: string,
+      patch: Partial<WorkflowInstance>,
+      held?: import("../../types.js").HeldLeaseWriteOptions,
+    ) {
+      const values: Record<string, unknown> = { updated_at: new Date().toISOString() };
+      if (patch.status) values.status = patch.status;
+      if (patch.output !== undefined) values.output = toDbJson(patch.output, dialect);
+      if (patch.progress !== undefined) values.progress = patch.progress;
+      if (patch.currentStep !== undefined) values.current_step = patch.currentStep;
+      if (patch.error !== undefined) values.error = patch.error;
+      if (patch.completedAt !== undefined) values.completed_at = patch.completedAt;
+      if (patch.startedAt !== undefined) values.started_at = patch.startedAt;
+      if (patch.metadata !== undefined) values.metadata = toDbJson(patch.metadata, dialect);
+      if (patch.runAttempts !== undefined) values.run_attempts = patch.runAttempts;
+      if (patch.leaseOwner !== undefined) values.lease_owner = patch.leaseOwner;
+      if (patch.leaseToken !== undefined) values.lease_token = patch.leaseToken;
+      if (patch.leaseUntil !== undefined) values.lease_until = patch.leaseUntil;
+
+      let q = db.updateTable(INSTANCES_TABLE).set(values as never).where("id", "=", id);
+      if (held?.leaseToken) {
+        q = q.where("lease_token", "=", held.leaseToken);
+      }
+      const updated = await q.executeTakeFirst();
+      return updated.numUpdatedRows > 0n;
+    },
+
+    async saveStepIfHeld(step: StepRecord, held?: import("../../types.js").HeldLeaseWriteOptions) {
+      if (held?.leaseToken) {
+        const row = await db
+          .selectFrom(INSTANCES_TABLE)
+          .select("lease_token")
+          .where("id", "=", step.instanceId)
+          .executeTakeFirst();
+        if (!row || (row.lease_token && row.lease_token !== held.leaseToken)) {
+          return false;
+        }
+      }
+      await db
+        .insertInto(STEPS_TABLE)
+        .values({
+          instance_id: step.instanceId,
+          step_name: step.stepName,
+          status: step.status,
+          attempt: step.attempt,
+          output: step.output != null ? toDbJson(step.output, dialect) : null,
+          error: step.error ?? null,
+          started_at: step.startedAt ?? null,
+          completed_at: step.completedAt ?? null,
+          idempotency_key: step.idempotencyKey ?? null,
+        })
+        .onConflict((oc) =>
+          oc.columns(["instance_id", "step_name"]).doUpdateSet({
+            status: step.status,
+            attempt: step.attempt,
+            output: step.output != null ? toDbJson(step.output, dialect) : null,
+            error: step.error ?? null,
+            started_at: step.startedAt ?? null,
+            completed_at: step.completedAt ?? null,
+          }),
+        )
+        .execute();
+      return true;
+    },
+
     async listInstances(filter?: { status?: WorkflowStatus; workflowName?: string; limit?: number }) {
       let q = db.selectFrom(INSTANCES_TABLE).selectAll();
       if (filter?.status) q = q.where("status", "=", filter.status);

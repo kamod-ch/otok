@@ -14,6 +14,20 @@ function requireField(formData: FormData | undefined, name: string): string {
   return value;
 }
 
+function requirePasswordField(formData: FormData | undefined, name: string): string {
+  const raw = formData?.get(name);
+  if (raw === null || raw === undefined) {
+    validationError({ fieldErrors: { [name]: [`${name} is required.`] } });
+  }
+  if (typeof raw !== "string") {
+    validationError({ fieldErrors: { [name]: [`${name} is required.`] } });
+  }
+  if (raw.length === 0) {
+    validationError({ fieldErrors: { [name]: [`${name} is required.`] } });
+  }
+  return raw;
+}
+
 function actionRedirectOrJson(c: OtokActionContext, target: string, data?: unknown): SupabaseActionResult {
   if (isDataRequest(c.request)) {
     return { ok: true, data, redirect: target };
@@ -37,7 +51,7 @@ export interface SupabasePasswordActionOptions {
 export function signInWithPasswordAction(options: SupabasePasswordActionOptions = {}) {
   return async (ctx: OtokActionContext): Promise<SupabaseActionResult> => {
     const email = requireField(ctx.formData, "email");
-    const password = requireField(ctx.formData, "password");
+    const password = requirePasswordField(ctx.formData, "password");
     const supabase = supabaseFromHono(ctx.hono);
 
     const { data, error } = await supabase.auth.signInWithPassword({ email, password });
@@ -55,7 +69,7 @@ export function signInWithPasswordAction(options: SupabasePasswordActionOptions 
 export function signUpAction(options: SupabasePasswordActionOptions = {}) {
   return async (ctx: OtokActionContext): Promise<SupabaseActionResult> => {
     const email = requireField(ctx.formData, "email");
-    const password = requireField(ctx.formData, "password");
+    const password = requirePasswordField(ctx.formData, "password");
     const supabase = supabaseFromHono(ctx.hono);
 
     const { data, error } = await supabase.auth.signUp({ email, password });
@@ -111,7 +125,7 @@ export function requestPasswordResetAction(options: SupabasePasswordActionOption
 
 export function updatePasswordAction(options: SupabasePasswordActionOptions = {}) {
   return async (ctx: OtokActionContext): Promise<SupabaseActionResult> => {
-    const password = requireField(ctx.formData, "password");
+    const password = requirePasswordField(ctx.formData, "password");
     const supabase = supabaseFromHono(ctx.hono);
 
     const { data, error } = await supabase.auth.updateUser({ password });

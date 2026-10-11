@@ -230,11 +230,12 @@ Use Playwright for hydration, progressive enhancement, and browser behavior.
 
 ## Project Status
 
-Otok is currently pre-1.0. The stabilization bundle is documented as a verifiable release candidate, not an automatic npm release:
+The framework core in this repository is **`@kamod-ch/otok` 2.0.0** — active monorepo development, **not** proof that npm already serves that version or that every extension is production-ready. Read the current status before upgrading apps:
 
-- [Release-candidate assessment](./docs/1.0/release-candidate.md)
-- [Release checklist](./docs/1.0/release-checklist.md)
-- [Stabilization evidence](./docs/stabilization/status.md)
+- **[Otok 2.x repository status](./docs/2.0/status.md)** — supported tooling, verified gates, honest limits
+- **[2.x migration notes](./docs/2.0/migration.md)** — names, imports, and doc map from 0.x-era material
+- [Release-candidate assessment (historical)](./docs/1.0/release-candidate.md)
+- [Stabilization evidence log (historical)](./docs/stabilization/status.md)
 - [Changelog](./CHANGELOG.md)
 
 ## Resources

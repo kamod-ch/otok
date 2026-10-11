@@ -1,70 +1,67 @@
 # Otok Benchmarks
 
-Reproducible performance measurements for Otok 1.0 readiness.
+Reproducible measurements for CI gates and scheduled performance profiles.
 
-## Principles
-
-- **Fair comparison:** Each framework uses a minimal SSR page with equivalent HTML output
-- **No unfair configs:** Default production settings; no debug middleware disabled on competitors only
-- **Reproducible:** Record git SHA, Node version, lockfile hash
-
-## Quick start (Otok self-benchmark)
+## Quick start (production — default PR gate)
 
 ```bash
-pnpm bench:otok
+pnpm -r --filter './packages/*' build
+pnpm bench:otok          # BENCH_PROFILE=production
 pnpm budget:check
 ```
 
-Results written to `benchmarks/results/latest.json`.
+Results: `benchmarks/results/latest.json`, `benchmarks/results/bundles.json`.
 
-## Metrics
+## Profiles
 
-| Metric              | Description                          |
-| ------------------- | ------------------------------------ |
-| `devServerStartMs`  | Time until dev server accepts HTTP   |
-| `productionBuildMs` | `vite build` duration                |
-| `ssrLatencyP50Ms`   | Median SSR response time (local)     |
-| `ssrThroughputRps`  | Requests/sec (autocannon, 10s)       |
-| `clientJsKb`        | Gzipped client JS for home route     |
-| `edgeBundleKb`      | Worker bundle size (when applicable) |
-| `peakRssMb`         | Peak RSS during production build     |
+| `BENCH_PROFILE` | What it measures | Bundles file required |
+| --------------- | ---------------- | --------------------- |
+| `production` (default) | Playground production build, RSS, SSR `/` + `/about`, client JS | yes |
+| `navigation` | Above + Playwright soft navigation | yes |
+| `dev-start` | Vite dev cold spawn (5×) + warm HTML refetch on `apps/playground` | no |
+| `worker-bundle` | Wrangler `deploy --dry-run` upload module sizes (`examples/deployment/cloudflare`) | no |
+| `database` | `devjobs-reference` production `/jobs` with isolated Postgres | no |
 
-Budgets: [`budgets.json`](./budgets.json). See [performance-budgets.md](../docs/governance/performance-budgets.md).
-
-## Cross-framework comparison
-
-Compare against equivalent minimal projects:
-
-| Framework        | Project path                    | Notes                   |
-| ---------------- | ------------------------------- | ----------------------- |
-| **Otok**         | `projects/otok-minimal`         | Reference               |
-| **Hono**         | `projects/hono-minimal`         | Raw Hono + JSX SSR      |
-| **Astro**        | `projects/astro-minimal`        | Default SSR, no islands |
-| **React Router** | `projects/react-router-minimal` | Framework mode          |
-| **Next.js**      | `projects/next-minimal`         | App router              |
-| **SvelteKit**    | `projects/sveltekit-minimal`    | Adapter-node            |
+Profiles are **not comparable** to each other (different origins, units, and runtime assumptions).
 
 ```bash
-pnpm bench:compare
+BENCH_PROFILE=dev-start pnpm bench:otok && BENCH_PROFILE=dev-start pnpm budget:check
+BENCH_PROFILE=worker-bundle pnpm bench:otok && BENCH_PROFILE=worker-bundle pnpm budget:check
+OTOK_BENCH_DATABASE_URL='postgres://…/otok_bench_test' BENCH_PROFILE=database pnpm bench:otok
 ```
 
-See [`specs/minimal-ssr.md`](./specs/minimal-ssr.md) for equivalence rules.
+## What production measures
+
+- Production build duration + **sampled peak process-tree RSS** (Linux `/proc` only).
+- Self-started `node dist/server/server.js` with health-checked readiness.
+- SSR latency (p50/p95) and throughput for `/` (marker `Dashboard`) and `/about` (marker `Zero JS`).
+- Total client JS gzip (KiB) and per-route **initial transfer** JS.
+
+## Environment
+
+| Variable | Default | Purpose |
+| -------- | ------- | ------- |
+| `BENCH_PROFILE` | `production` | See table above |
+| `BENCH_PORT` | `4188` | Production playground server |
+| `BENCH_DEV_PORT` | `5198` | Base port for dev-start cold runs |
+| `OTOK_BENCH_DATABASE_URL` | _(required for database)_ | Isolated Postgres; DB name must match allowlist |
+| `OTOK_BENCH_DATABASE_ALLOWLIST` | `bench,test,…` | Override isolation tokens |
+
+## Tests
+
+```bash
+node --test benchmarks/profiles/*.test.mjs
+pnpm test:gates
+```
 
 ## CI
 
-Benchmark workflow runs on `workflow_dispatch` and weekly schedule.
-PR CI runs `budget:check` only when `benchmarks/results/latest.json` exists (optional artifact).
+- PR/build: `production` when benchmark results are present.
+- Weekly [`benchmark.yml`](../.github/workflows/benchmark.yml): separate jobs per profile; artifacts uploaded `if: always()`.
 
-## Environment variables
+## Not gated here
 
-| Variable           | Default                 | Purpose                  |
-| ------------------ | ----------------------- | ------------------------ |
-| `BENCH_GIT_SHA`    | `git rev-parse HEAD`    | Reproducibility          |
-| `BENCH_URL`        | `http://127.0.0.1:3000` | SSR target               |
-| `BENCH_DURATION_S` | `10`                    | Throughput test duration |
+- `benchmarks/projects/otok-minimal` cross-framework comparator (incomplete).
+- Cloud edge geographic latency (worker profile is local bundle size only).
 
-## Adding a framework
-
-1. Create `projects/<name>-minimal` following `specs/minimal-ssr.md`
-2. Add entry to `bench-compare.mjs`
-3. Document install size and config in project README
+See [`docs/governance/performance-budgets.md`](../docs/governance/performance-budgets.md) and [`budgets.json`](./budgets.json).

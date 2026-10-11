@@ -35,8 +35,8 @@ export function toOutboxRecord(row: {
   id: string;
   event_name: string;
   event_version: number;
-  payload: string;
-  metadata: string;
+  payload: string | unknown;
+  metadata: string | import("../types.js").EventMetadata;
   status: OutboxStatus;
   attempts: number;
   available_at: string;
@@ -49,8 +49,8 @@ export function toOutboxRecord(row: {
     id: row.id,
     eventName: row.event_name,
     eventVersion: row.event_version,
-    payload: parseOutboxPayload(row.payload),
-    metadata: parseOutboxMetadata(row.metadata),
+    payload: typeof row.payload === "string" ? parseOutboxPayload(row.payload) : row.payload,
+    metadata: typeof row.metadata === "string" ? parseOutboxMetadata(row.metadata) : row.metadata,
     status: row.status,
     attempts: row.attempts,
     availableAt: row.available_at,
@@ -75,6 +75,8 @@ export interface EventsDatabase {
     processed_at: string | null;
     last_error: string | null;
     idempotency_key: string | null;
+    lease_token: string | null;
+    lease_expires_at: string | null;
   };
   [PROCESSED_TABLE]: {
     consumer_name: string;
@@ -108,9 +110,12 @@ CREATE TABLE IF NOT EXISTS ${OUTBOX_TABLE} (
   created_at TEXT NOT NULL,
   processed_at TEXT,
   last_error TEXT,
-  idempotency_key TEXT UNIQUE
+  idempotency_key TEXT UNIQUE,
+  lease_token TEXT,
+  lease_expires_at TEXT
 );
 CREATE INDEX IF NOT EXISTS idx_outbox_pending ON ${OUTBOX_TABLE}(status, available_at);
+CREATE INDEX IF NOT EXISTS idx_outbox_lease_reclaim ON ${OUTBOX_TABLE}(status, lease_expires_at);
 
 CREATE TABLE IF NOT EXISTS ${PROCESSED_TABLE} (
   consumer_name TEXT NOT NULL,
@@ -131,6 +136,22 @@ CREATE TABLE IF NOT EXISTS ${DEAD_LETTER_TABLE} (
 );
 `;
 
+/** Idempotent lease columns for existing SQLite outbox tables (run after {@link SQLITE_MIGRATION}). */
+export const SQLITE_LEASE_MIGRATION_STATEMENTS = [
+  `ALTER TABLE ${OUTBOX_TABLE} ADD COLUMN lease_token TEXT`,
+  `ALTER TABLE ${OUTBOX_TABLE} ADD COLUMN lease_expires_at TEXT`,
+  `CREATE INDEX IF NOT EXISTS idx_outbox_lease_reclaim ON ${OUTBOX_TABLE}(status, lease_expires_at)`,
+  `UPDATE ${OUTBOX_TABLE} SET status = 'pending', lease_token = NULL, lease_expires_at = NULL WHERE status = 'processing' AND lease_token IS NULL`,
+];
+
+/** Idempotent lease columns for existing Postgres outbox tables (run after {@link POSTGRES_MIGRATION}). */
+export const POSTGRES_LEASE_MIGRATION_STATEMENTS = [
+  `ALTER TABLE ${OUTBOX_TABLE} ADD COLUMN IF NOT EXISTS lease_token TEXT`,
+  `ALTER TABLE ${OUTBOX_TABLE} ADD COLUMN IF NOT EXISTS lease_expires_at TIMESTAMPTZ`,
+  `CREATE INDEX IF NOT EXISTS idx_outbox_lease_reclaim ON ${OUTBOX_TABLE}(status, lease_expires_at)`,
+  `UPDATE ${OUTBOX_TABLE} SET status = 'pending', lease_token = NULL, lease_expires_at = NULL WHERE status = 'processing' AND lease_token IS NULL`,
+];
+
 export const POSTGRES_MIGRATION = `
 CREATE TABLE IF NOT EXISTS ${OUTBOX_TABLE} (
   id TEXT PRIMARY KEY,
@@ -144,9 +165,12 @@ CREATE TABLE IF NOT EXISTS ${OUTBOX_TABLE} (
   created_at TIMESTAMPTZ NOT NULL,
   processed_at TIMESTAMPTZ,
   last_error TEXT,
-  idempotency_key TEXT UNIQUE
+  idempotency_key TEXT UNIQUE,
+  lease_token TEXT,
+  lease_expires_at TIMESTAMPTZ
 );
 CREATE INDEX IF NOT EXISTS idx_outbox_pending ON ${OUTBOX_TABLE}(status, available_at);
+CREATE INDEX IF NOT EXISTS idx_outbox_lease_reclaim ON ${OUTBOX_TABLE}(status, lease_expires_at);
 
 CREATE TABLE IF NOT EXISTS ${PROCESSED_TABLE} (
   consumer_name TEXT NOT NULL,

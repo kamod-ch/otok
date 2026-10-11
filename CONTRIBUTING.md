@@ -12,7 +12,7 @@ pnpm check
 pnpm test:e2e
 ```
 
-Node.js 20+ and pnpm 10 are expected.
+Node.js 20+ and **pnpm 12** are expected (exact version in the root `package.json` `packageManager` field — enable Corepack or install that release). Current framework line: see [docs/2.0/status.md](./docs/2.0/status.md).
 
 ## Project Principles
 

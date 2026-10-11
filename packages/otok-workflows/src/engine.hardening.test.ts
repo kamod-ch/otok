@@ -171,6 +171,109 @@ describe("workflow hardening", () => {
   });
 });
 
+function createGate() {
+  let open!: () => void;
+  const gate = new Promise<void>((resolve) => {
+    open = resolve;
+  });
+  return { gate, open };
+}
+
+describe("workflow lease fencing", () => {
+  it("blocks stale worker completion after another worker reclaims the lease", async () => {
+    const store = createMemoryWorkflowStore();
+    let nowMs = 1_700_000_000_000;
+    const now = () => new Date(nowMs);
+    const { gate, open } = createGate();
+    let entered: () => void;
+    const enteredGate = new Promise<void>((resolve) => {
+      entered = resolve;
+    });
+
+    const wf = defineWorkflow({
+      name: "lease.stale",
+      input: z.object({}),
+      run: async ({ step }) => {
+        await step.run("block", async () => {
+          entered();
+          await gate;
+          return "done";
+        });
+        return { ok: true };
+      },
+    });
+
+    const engineA = new WorkflowEngine({ store, now, leaseRenewalIntervalMs: 60_000 });
+    engineA.register(wf);
+    const instance = await engineA.start(wf, {}, manual);
+    const [claimedA] = await store.claimRunnable(1, {
+      workerId: "a",
+      leaseMs: 100,
+      now: now(),
+    });
+    expect(claimedA?.leaseToken).toBeTruthy();
+
+    const runA = engineA.execute(instance.id, { leaseToken: claimedA!.leaseToken, leaseMs: 100 });
+    await enteredGate;
+
+    nowMs += 200;
+    const [claimedB] = await store.claimRunnable(1, { workerId: "b", leaseMs: 5_000, now: now() });
+    expect(claimedB?.leaseToken).not.toBe(claimedA!.leaseToken);
+
+    open();
+    const resultA = await runA;
+    expect(resultA?.status).not.toBe("completed");
+
+    const engineB = new WorkflowEngine({ store, now });
+    engineB.register(wf);
+    const resultB = await engineB.execute(instance.id, { leaseToken: claimedB!.leaseToken, leaseMs: 5_000 });
+    expect(resultB?.status).toBe("completed");
+  });
+
+  it("does not overwrite paused status when a blocked step finishes", async () => {
+    const store = createMemoryWorkflowStore();
+    const { gate, open } = createGate();
+    const wf = defineWorkflow({
+      name: "pause.midstep",
+      input: z.object({}),
+      run: async ({ step }) => {
+        await step.run("block", async () => {
+          await gate;
+          return 1;
+        });
+        return { ok: true };
+      },
+    });
+
+    const engine1 = new WorkflowEngine({ store });
+    engine1.register(wf);
+    const instance = await engine1.start(wf, {}, manual);
+    const run = engine1.execute(instance.id);
+
+    const engine2 = new WorkflowEngine({ store });
+    engine2.register(wf);
+    await engine2.pause(instance.id);
+
+    open();
+    const result = await run;
+    expect(result?.status).toBe("paused");
+  });
+
+  it("rejects unclaimed execute while another worker holds an active lease", async () => {
+    const store = createMemoryWorkflowStore();
+    const wf = defineWorkflow({
+      name: "lease.blocked",
+      input: z.object({}),
+      run: async () => ({ ok: true }),
+    });
+    const engine = new WorkflowEngine({ store });
+    engine.register(wf);
+    const instance = await engine.start(wf, {}, manual);
+    await store.claimRunnable(1, { workerId: "owner", leaseMs: 60_000 });
+    await expect(engine.execute(instance.id)).rejects.toMatchObject({ code: "NOT_FOUND" });
+  });
+});
+
 describe("side effect replay", () => {
   it("replays completed step after partial progress", async () => {
     const store = createMemoryWorkflowStore();

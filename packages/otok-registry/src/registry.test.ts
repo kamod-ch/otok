@@ -97,4 +97,15 @@ describe("compatibility", () => {
     const outdated = findOutdated({ "@kamod-ch/otok-kysely": "0.9.0" }, registry.extensions);
     expect(outdated[0]?.latest).toBe("1.0.0");
   });
+
+  it("lists repo snapshot targets for core toolchain packages", async () => {
+    const registry = await loadBundledRegistry();
+    const core = resolveExtension(registry, "@kamod-ch/otok");
+    const cli = resolveExtension(registry, "otok-cli");
+    const adapter = resolveExtension(registry, "otok-adapter-node");
+    expect(core?.version).toBe("2.0.0");
+    expect(cli?.version).toBe("2.0.0");
+    expect(adapter?.version).toBe("2.0.0");
+    expect(resolveExtension(registry, "otok")?.name).toBe("@kamod-ch/otok");
+  });
 });

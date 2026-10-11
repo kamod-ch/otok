@@ -56,29 +56,39 @@ function prefersReducedMotion(): boolean {
   return window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 }
 
+type ViewTransitionLike = {
+  finished: Promise<void>;
+  updateCallbackDone: Promise<void>;
+};
+
+function isAnimationAbort(error: unknown): boolean {
+  return error instanceof DOMException && (error.name === "TimeoutError" || error.name === "AbortError");
+}
+
 export async function withViewTransition(update: () => void | Promise<void>): Promise<void> {
   if (typeof document !== "undefined" && "startViewTransition" in document && !prefersReducedMotion()) {
-    let updatePromise: Promise<void> = Promise.resolve();
-    const transition = (
-      document as Document & { startViewTransition: (cb: () => void) => { finished: Promise<void> } }
-    ).startViewTransition(() => {
-      try {
-        updatePromise = Promise.resolve(update());
-      } catch (error) {
-        updatePromise = Promise.reject(error);
-      }
-    });
-
-    await updatePromise;
-
+    let transition: ViewTransitionLike;
     try {
-      await transition.finished;
+      transition = (
+        document as Document & {
+          startViewTransition: (cb: () => void | Promise<void>) => ViewTransitionLike;
+        }
+      ).startViewTransition(() => Promise.resolve().then(update));
     } catch (error) {
-      // Browsers may abort view transitions if the DOM update takes too long or
-      // another navigation starts. The DOM has already been updated, so keep the
-      // navigation instead of surfacing a noisy unhandled TimeoutError/AbortError.
-      if (error instanceof DOMException && (error.name === "TimeoutError" || error.name === "AbortError")) return;
       throw error;
+    }
+
+    const finishedOutcome = transition.finished.then(
+      () => ({ ok: true as const }),
+      (error: unknown) => ({ ok: false as const, error }),
+    );
+
+    await transition.updateCallbackDone;
+
+    const finished = await finishedOutcome;
+    if (!finished.ok) {
+      if (isAnimationAbort(finished.error)) return;
+      throw finished.error;
     }
     return;
   }

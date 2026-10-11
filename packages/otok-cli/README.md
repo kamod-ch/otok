@@ -31,6 +31,17 @@ pnpm otok doctor --fix
 
 Set `OTOK_REGISTRY_OFFLINE=1` to use the bundled registry only. See [@kamod-ch/otok-registry](../otok-registry/docs/users.md) for details.
 
+## Upgrade
+
+```bash
+pnpm otok upgrade --dry-run
+pnpm otok upgrade --core-only --json
+```
+
+`otok upgrade` resolves target versions from the bundled registry snapshot (offline when `OTOK_REGISTRY_OFFLINE=1`). It upgrades `@kamod-ch/otok`, `@kamod-ch/otok-vite-plugin`, `otok-cli`, and the unscoped `otok-adapter-*` packages together when you pass `--core-only`. Extension plugins are included only in the default (full) mode.
+
+Legacy npm name `otok` is treated as an alias of `@kamod-ch/otok`; do not keep both in `package.json`. Workspace, link, and git version specs are reported as diagnostics — the CLI will not claim “up to date” when targets cannot be resolved.
+
 ## Add options
 
 | Flag             | Description                                                    |

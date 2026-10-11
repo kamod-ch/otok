@@ -1,8 +1,28 @@
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
+import { AiClient } from "./client/ai-client.js";
+import { createMemoryBudgetStore } from "./budget/memory-store.js";
+import { configureTestProvider, createTestProvider, resetTestProvider } from "./providers/test.js";
 import { redactText, containsSecrets, stripEnvValues } from "./redaction/redact.js";
 import { sanitizeContextOutput, collectAiContext, generateAiContext } from "./context/generate.js";
 import { Hono } from "hono";
 import { mountMcpRoutes, isRouteMcpAllowed } from "./mcp/server.js";
+
+describe("agent execution policy", () => {
+  it("applies the same budget gate before the first provider round", async () => {
+    configureTestProvider({ defaultResponse: "ok" });
+    const budgetStore = createMemoryBudgetStore({ maxTokensPerUser: 1 });
+    await budgetStore.record({ userId: "u1" }, { promptTokens: 1, completionTokens: 0, totalTokens: 1 });
+    const provider = createTestProvider();
+    const streamSpy = vi.spyOn(provider, "stream");
+    const client = new AiClient({ provider, defaultModel: "test", budgetStore });
+
+    await expect(
+      client.agent({ messages: [{ role: "user", content: "x" }], budget: { userId: "u1", maxTokens: 1 } }),
+    ).rejects.toThrow(/budget/i);
+    expect(streamSpy).not.toHaveBeenCalled();
+    resetTestProvider();
+  });
+});
 
 describe("redaction", () => {
   it("redacts API keys and bearer tokens", () => {

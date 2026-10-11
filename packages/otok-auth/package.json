@@ -84,8 +84,10 @@
     "@kamod-ch/otok-test": "workspace:*",
     "@node-rs/argon2": "^2.2.1",
     "@types/node": "^26.6.3",
+    "@types/pg": "^8.23.1",
     "hono": "^4.13.12",
     "kysely": "^0.29.6",
+    "pg": "^8.23.0",
     "preact": "^11.0.0",
     "typescript": "~7.0.2",
     "vitest": "^5.0.3"

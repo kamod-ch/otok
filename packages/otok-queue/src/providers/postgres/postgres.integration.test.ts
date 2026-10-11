@@ -8,6 +8,13 @@ import { createPostgresQueueProvider } from "./store.js";
 import { DEAD_LETTER_TABLE, IDEMPOTENCY_TABLE, JOBS_TABLE, type QueueDatabase } from "./schema.js";
 
 const databaseUrl = process.env.OTOK_QUEUE_PG_TEST_URL;
+const requireDatabaseTests = process.env.OTOK_REQUIRE_DATABASE_TESTS === "1";
+
+if (requireDatabaseTests && !databaseUrl) {
+  throw new Error(
+    "OTOK_REQUIRE_DATABASE_TESTS=1 but OTOK_QUEUE_PG_TEST_URL is missing. Point it at a disposable Postgres database used only for queue integration tests.",
+  );
+}
 
 function makeProvider(
   db: Kysely<QueueDatabase>,

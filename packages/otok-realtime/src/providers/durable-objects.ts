@@ -41,6 +41,7 @@ export function defineDurableObjectProvider(options: DurableObjectProviderOption
       "Store event history inside the DO for Last-Event-ID replay.",
       "Use DO alarms for heartbeat sweep and stale connection cleanup.",
       "Never pass auth tokens in query strings — validate Authorization header in the Worker.",
+      "For Workers SSE + DO rooms use @kamod-ch/otok-realtime/cloudflare objectName() (rt/v1/...) — not the legacy DEFAULT_DURABLE_OBJECT_CONTRACT.objectName string.",
     ],
   };
 }

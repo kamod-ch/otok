@@ -17,6 +17,7 @@ export class StepExecutor implements StepRunner {
     private readonly store: WorkflowStore,
     private readonly defaultRetry: ReturnType<typeof resolveRetryPolicy>,
     private readonly observability?: WorkflowObservability,
+    private readonly heldLease?: { leaseToken: string },
   ) {}
 
   getCompletedSteps(): StepRecord[] {
@@ -35,7 +36,7 @@ export class StepExecutor implements StepRunner {
     let attempt = existing?.attempt ?? 0;
 
     this.observability?.onStepStart?.(this.instance, name);
-    await this.store.updateInstance(this.instance.id, { currentStep: name, status: "running" });
+    await this.patchInstance({ currentStep: name, status: "running" });
 
     const execute = async (): Promise<T> => {
       await this.assertRunnable();
@@ -48,7 +49,7 @@ export class StepExecutor implements StepRunner {
         startedAt: new Date().toISOString(),
         idempotencyKey: options.idempotencyKey,
       };
-      await this.store.saveStep(running);
+      await this.persistStep(running);
 
       let result: T;
       if (options.timeoutMs) {
@@ -63,7 +64,7 @@ export class StepExecutor implements StepRunner {
         output: result,
         completedAt: new Date().toISOString(),
       };
-      await this.store.saveStep(completed);
+      await this.persistStep(completed);
       this.completedSteps.push(completed);
       this.observability?.onStepComplete?.(this.instance, name, result);
       return result;
@@ -82,9 +83,31 @@ export class StepExecutor implements StepRunner {
         error: error instanceof Error ? error.message : String(error),
         completedAt: new Date().toISOString(),
       };
-      await this.store.saveStep(failed);
+      await this.persistStep(failed);
       throw error;
     }
+  }
+
+  private async patchInstance(patch: Partial<WorkflowInstance>): Promise<void> {
+    if (this.heldLease) {
+      const ok = await this.store.updateInstanceIfHeld(this.instance.id, patch, this.heldLease);
+      if (!ok) {
+        throw new WorkflowException("LEASE_LOST", `Lease lost for workflow "${this.instance.id}"`);
+      }
+      return;
+    }
+    await this.store.updateInstance(this.instance.id, patch);
+  }
+
+  private async persistStep(step: StepRecord): Promise<void> {
+    if (this.heldLease) {
+      const ok = await this.store.saveStepIfHeld(step, this.heldLease);
+      if (!ok) {
+        throw new WorkflowException("LEASE_LOST", `Lease lost for workflow "${this.instance.id}"`);
+      }
+      return;
+    }
+    await this.store.saveStep(step);
   }
 
   async sleep(name: string, ms: number): Promise<void> {
@@ -98,7 +121,7 @@ export class StepExecutor implements StepRunner {
     const existing = await this.store.getStep(this.instance.id, name);
     if (existing?.status === "completed") return;
 
-    await this.store.saveStep({
+    await this.persistStep({
       instanceId: this.instance.id,
       stepName: name,
       status: "running",
@@ -106,7 +129,7 @@ export class StepExecutor implements StepRunner {
       startedAt: new Date().toISOString(),
       output: metadata,
     });
-    await this.store.updateInstance(this.instance.id, {
+    await this.patchInstance({
       status: "waiting_approval",
       currentStep: name,
     });
@@ -140,6 +163,9 @@ export class StepExecutor implements StepRunner {
     if (fresh.status === "paused") {
       throw new WorkflowException("PAUSED", "Workflow is paused");
     }
+    if (this.heldLease && fresh.leaseToken && fresh.leaseToken !== this.heldLease.leaseToken) {
+      throw new WorkflowException("LEASE_LOST", `Lease lost for workflow "${this.instance.id}"`);
+    }
   }
 }
 
@@ -148,8 +174,9 @@ export function createStepRunner(
   store: WorkflowStore,
   defaultRetry: ReturnType<typeof resolveRetryPolicy>,
   observability?: WorkflowObservability,
+  heldLease?: { leaseToken: string },
 ): StepExecutor {
-  return new StepExecutor(instance, store, defaultRetry, observability);
+  return new StepExecutor(instance, store, defaultRetry, observability, heldLease);
 }
 
 export async function computeProgress(store: WorkflowStore, instanceId: string, totalHint?: number): Promise<number> {

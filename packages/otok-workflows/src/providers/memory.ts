@@ -2,6 +2,8 @@ import { randomUUID } from "node:crypto";
 import type {
   ClaimRunnableOptions,
   ClaimedWorkflowInstance,
+  HeldLeaseWriteOptions,
+  RenewLeaseOptions,
   StepRecord,
   WorkflowDeadLetter,
   WorkflowInstance,
@@ -41,6 +43,44 @@ export class MemoryWorkflowStore implements WorkflowStore {
     const current = this.instances.get(id);
     if (!current) return;
     this.instances.set(id, { ...current, ...structuredClone(patch), updatedAt: new Date().toISOString() });
+  }
+
+  async renewLease(instanceId: string, leaseToken: string, options: RenewLeaseOptions = {}) {
+    const now = options.now ?? new Date();
+    const leaseMs = options.leaseMs ?? 30_000;
+    const current = this.instances.get(instanceId);
+    if (!current || current.leaseToken !== leaseToken) return false;
+    if (current.leaseUntil && new Date(current.leaseUntil) <= now) return false;
+    this.instances.set(instanceId, {
+      ...current,
+      leaseUntil: new Date(now.getTime() + leaseMs).toISOString(),
+      updatedAt: now.toISOString(),
+    });
+    return true;
+  }
+
+  async updateInstanceIfHeld(
+    id: string,
+    patch: Partial<WorkflowInstance>,
+    held?: HeldLeaseWriteOptions,
+  ): Promise<boolean> {
+    const current = this.instances.get(id);
+    if (!current) return false;
+    if (held?.leaseToken && current.leaseToken && current.leaseToken !== held.leaseToken) {
+      return false;
+    }
+    await this.updateInstance(id, patch);
+    return true;
+  }
+
+  async saveStepIfHeld(step: StepRecord, held?: HeldLeaseWriteOptions): Promise<boolean> {
+    if (held?.leaseToken) {
+      const current = this.instances.get(step.instanceId);
+      if (!current) return false;
+      if (current.leaseToken && current.leaseToken !== held.leaseToken) return false;
+    }
+    await this.saveStep(step);
+    return true;
   }
 
   async listInstances(filter?: {

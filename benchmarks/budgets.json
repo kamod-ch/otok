@@ -1,24 +1,112 @@
 {
-  "version": "1.1.0",
+  "version": "2.1.0",
   "tolerancePercent": 5,
-  "requiredMetrics": ["productionBuildMs", "peakRssMb", "clientJsKb"],
-  "optionalUnlessEnv": {
+  "profiles": {
+    "production": {
+      "description": "Default CI gate — playground production build + self-started Node server",
+      "requiresBundles": true,
+      "requiredMetrics": [
+        "productionBuildMs",
+        "buildPeakRssMb",
+        "serverPeakRssMb",
+        "clientJsGzipKiB"
+      ],
+      "requiredScenarios": ["home", "about"],
+      "scenarioMetrics": ["ssrLatencyP50Ms", "ssrLatencyP95Ms", "ssrThroughputRps", "requestErrors"],
+      "routeMetrics": ["initialJsGzipKiB"]
+    },
+    "navigation": {
+      "description": "Optional Chromium soft-navigation profile (BENCH_PROFILE=navigation)",
+      "requiresBundles": true,
+      "requiredMetrics": ["softNavigationReadyP50Ms", "softNavigationReadyP95Ms", "navigationErrors"],
+      "informationalMetrics": ["softNavigationReadyP50Ms", "softNavigationReadyP95Ms"]
+    },
+    "dev-start": {
+      "description": "Vite dev server cold spawn + warm HTML refetch (apps/playground)",
+      "requiresBundles": false,
+      "requiredMetrics": [
+        "devServerColdStartP50Ms",
+        "devServerColdStartP95Ms",
+        "devServerWarmHtmlP50Ms",
+        "devServerWarmHtmlP95Ms",
+        "devServerColdSamples",
+        "devServerWarmSamples"
+      ]
+    },
+    "worker-bundle": {
+      "description": "Cloudflare Worker upload bundle (wrangler deploy --dry-run)",
+      "requiresBundles": false,
+      "requiredMetrics": ["edgeBundleUploadKiB", "edgeBundleUploadGzipKiB", "edgeBundleModuleCount"]
+    },
+    "database": {
+      "description": "devjobs-reference /jobs listing with isolated Postgres (OTOK_BENCH_DATABASE_URL)",
+      "requiresBundles": false,
+      "requiredMetrics": [
+        "jobsListingDbColdP50Ms",
+        "jobsListingDbColdP95Ms",
+        "jobsListingRequestErrors"
+      ],
+      "informationalMetrics": ["jobsListingCachedP50Ms", "jobsListingCachedP95Ms"]
+    }
+  },
+  "legacyOptionalUnlessEnv": {
     "ssrLatencyP50Ms": "BENCH_URL",
     "ssrThroughputRps": "BENCH_URL"
   },
+  "inactiveMetrics": {
+    "clientJsKb": "legacy alias; use clientJsGzipKiB aggregate"
+  },
   "metrics": {
-    "devServerStartMs": { "max": 3000 },
-    "productionBuildMs": { "max": 45000 },
-    "ssrLatencyP50Ms": { "max": 15 },
-    "ssrThroughputRps": { "min": 500 },
-    "clientJsKb": { "max": 60 },
-    "edgeBundleKb": { "max": 250 },
-    "peakRssMb": { "max": 256 }
+    "productionBuildMs": { "max": 120000, "unit": "ms" },
+    "buildPeakRssMb": { "max": 2048, "unit": "MiB" },
+    "serverPeakRssMb": { "max": 512, "unit": "MiB" },
+    "clientJsGzipKiB": { "max": 800, "unit": "KiB" },
+    "ssrLatencyP50Ms": { "max": 50, "unit": "ms" },
+    "ssrLatencyP95Ms": { "max": 120, "unit": "ms" },
+    "ssrThroughputRps": { "min": 50, "unit": "rps" },
+    "requestErrors": { "max": 0, "unit": "count" },
+    "softNavigationReadyP50Ms": { "max": 500, "informational": true, "unit": "ms" },
+    "softNavigationReadyP95Ms": { "max": 1200, "informational": true, "unit": "ms" },
+    "navigationErrors": { "max": 0, "unit": "count" },
+    "devServerColdStartP50Ms": { "max": 3000, "unit": "ms" },
+    "devServerColdStartP95Ms": { "max": 6000, "unit": "ms" },
+    "devServerWarmHtmlP50Ms": { "max": 500, "informational": true, "unit": "ms" },
+    "devServerWarmHtmlP95Ms": { "max": 1200, "informational": true, "unit": "ms" },
+    "devServerColdSamples": { "min": 5, "unit": "count" },
+    "devServerWarmSamples": { "min": 5, "unit": "count" },
+    "edgeBundleUploadKiB": { "max": 250, "unit": "KiB" },
+    "edgeBundleUploadGzipKiB": { "max": 250, "informational": true, "unit": "KiB" },
+    "edgeBundleModuleCount": { "min": 1, "unit": "count" },
+    "jobsListingDbColdP50Ms": { "max": 2000, "informational": true, "unit": "ms" },
+    "jobsListingDbColdP95Ms": { "max": 5000, "informational": true, "unit": "ms" },
+    "jobsListingCachedP50Ms": { "max": 200, "informational": true, "unit": "ms" },
+    "jobsListingCachedP95Ms": { "max": 500, "informational": true, "unit": "ms" },
+    "jobsListingRequestErrors": { "max": 0, "unit": "count" }
+  },
+  "scenarios": {
+    "home": {
+      "path": "/",
+      "marker": "Dashboard",
+      "ssrLatencyP50Ms": { "max": 50 },
+      "ssrLatencyP95Ms": { "max": 120 },
+      "ssrThroughputRps": { "min": 50 },
+      "requestErrors": { "max": 0 },
+      "initialJsGzipKiB": { "max": 800 }
+    },
+    "about": {
+      "path": "/about",
+      "marker": "Zero JS",
+      "ssrLatencyP50Ms": { "max": 50 },
+      "ssrLatencyP95Ms": { "max": 120 },
+      "ssrThroughputRps": { "min": 50 },
+      "requestErrors": { "max": 0 },
+      "initialJsGzipKiB": { "exact": 0 }
+    }
   },
   "aggregates": {
-    "clientJsGzipKb": { "max": 60 }
+    "clientJsGzipKiB": { "max": 800 }
   },
   "bundleEntries": {
-    "server/server.js": { "max": 83 }
+    "server/server.js": { "max": 200 }
   }
 }

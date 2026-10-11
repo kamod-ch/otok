@@ -114,4 +114,61 @@ describe("otok vite plugin", () => {
     expect(code).toContain("const __OtokDefaultIsland =");
     expect(code).toContain("export default __OtokDefaultIsland");
   });
+
+  it("generates registry keys for unique islands", () => {
+    withFixture(
+      {
+        "src/app/islands/Counter.tsx": "export default function Counter() {}",
+        "src/app/islands/Widget.tsx": "export default function Widget() {}",
+      },
+      (root) => {
+        const islands = __testing.scanIslands(root, "src/app", "src/app/islands", "src/app/routes");
+        const code = __testing.generateIslandsModule(islands);
+        expect(code).toContain('"Counter"');
+        expect(code).toContain('"Widget"');
+      },
+    );
+  });
+
+  it("rejects duplicate island basenames in different folders", () => {
+    withFixture(
+      {
+        "src/app/islands/a/Counter.tsx": "export default function Counter() {}",
+        "src/app/islands/b/Counter.tsx": "export default function Counter() {}",
+      },
+      (root) => {
+        expect(() => __testing.scanIslands(root, "src/app", "src/app/islands", "src/app/routes")).toThrow(
+          /registry key collision "Counter"/,
+        );
+      },
+    );
+  });
+
+  it("rejects main id colliding with another file alias", () => {
+    withFixture(
+      {
+        "src/app/islands/Foo.tsx": "export default function Foo() {}",
+        "src/app/routes/$foo.tsx": "export default function RouteIsland() {}",
+      },
+      (root) => {
+        expect(() => __testing.scanIslands(root, "src/app", "src/app/islands", "src/app/routes")).toThrow(
+          /registry key collision "foo"/i,
+        );
+      },
+    );
+  });
+
+  it("fails islands module generation used by the vite load hook on collision", () => {
+    withFixture(
+      {
+        "src/app/islands/a/Counter.tsx": "export default function Counter() {}",
+        "src/app/islands/b/Counter.tsx": "export default function Counter() {}",
+      },
+      (root) => {
+        expect(() => {
+          __testing.generateIslandsModule(__testing.scanIslands(root, "src/app", "src/app/islands", "src/app/routes"));
+        }).toThrow(/registry key collision/);
+      },
+    );
+  });
 });

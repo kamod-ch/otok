@@ -7,7 +7,7 @@ on:
 
 jobs:
   otok-benchmark:
-    name: Otok self-benchmark
+    name: Otok self-benchmark (production + navigation)
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6
@@ -21,17 +21,124 @@ jobs:
 
       - run: pnpm install --frozen-lockfile
 
-      - run: pnpm build
+      - run: pnpm -r --filter './packages/*' build
 
-      - name: Run Otok benchmark
+      - name: Install Playwright Chromium (navigation profile)
+        run: pnpm --filter playground exec playwright install --with-deps chromium
+
+      - name: Run Otok benchmark (production + navigation)
         run: pnpm bench:otok
         env:
           BENCH_GIT_SHA: ${{ github.sha }}
+          BENCH_PROFILE: navigation
 
-      - name: Budget check
+      - name: Budget check (production profile)
         run: pnpm budget:check
+        env:
+          BENCH_PROFILE: production
+
+      - name: Budget check (navigation profile)
+        run: pnpm budget:check
+        env:
+          BENCH_PROFILE: navigation
 
       - uses: actions/upload-artifact@v4
+        if: always()
         with:
-          name: benchmark-results
+          name: benchmark-results-production
+          path: |
+            benchmarks/results/latest.json
+            benchmarks/results/bundles.json
+            benchmarks/results/navigation.json
+
+  dev-start-benchmark:
+    name: Dev server start profile
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 22
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - name: Run dev-start benchmark
+        run: BENCH_PROFILE=dev-start pnpm bench:otok
+        env:
+          BENCH_GIT_SHA: ${{ github.sha }}
+          BENCH_DEV_COLD_RUNS: "5"
+      - name: Budget check (dev-start)
+        run: BENCH_PROFILE=dev-start pnpm budget:check
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: benchmark-results-dev-start
+          path: benchmarks/results/latest.json
+
+  worker-bundle-benchmark:
+    name: Worker upload bundle profile
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 22
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm -r --filter './packages/*' build
+      - name: Install Cloudflare deployment example dependencies
+        run: pnpm install
+        working-directory: examples/deployment/cloudflare
+      - name: Run worker-bundle benchmark
+        run: BENCH_PROFILE=worker-bundle pnpm bench:otok
+        env:
+          BENCH_GIT_SHA: ${{ github.sha }}
+      - name: Budget check (worker-bundle)
+        run: BENCH_PROFILE=worker-bundle pnpm budget:check
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: benchmark-results-worker-bundle
+          path: |
+            benchmarks/results/latest.json
+            examples/deployment/cloudflare/benchmark-worker-bundle.json
+
+  database-benchmark:
+    name: Database-backed /jobs profile
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: otok
+          POSTGRES_PASSWORD: otok_ci_test
+          POSTGRES_DB: otok_bench_test
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U otok -d otok_bench_test"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+    steps:
+      - uses: actions/checkout@v6
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 22
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm -r --filter './packages/*' build
+      - name: Run database benchmark
+        run: BENCH_PROFILE=database pnpm bench:otok
+        env:
+          BENCH_GIT_SHA: ${{ github.sha }}
+          OTOK_BENCH_DATABASE_URL: postgresql://otok:otok_ci_test@localhost:5432/otok_bench_test
+      - name: Budget check (database)
+        run: BENCH_PROFILE=database pnpm budget:check
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: benchmark-results-database
           path: benchmarks/results/latest.json

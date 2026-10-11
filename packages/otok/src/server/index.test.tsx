@@ -1,6 +1,6 @@
 import { Hono } from "hono";
 import { setCookie } from "hono/cookie";
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 import { createOtokHandler } from "./index.js";
 import type { OtokRoute } from "../shared/routes.js";
 import { fail, isOtokResponse, json, notFound, redirect, validationError } from "../shared/routes.js";
@@ -1082,5 +1082,77 @@ describe("createOtokHandler", () => {
     controller.abort();
 
     await expect(reader.read()).rejects.toThrow();
+  });
+
+  it("returns 400 for malformed route param encoding before loader runs", async () => {
+    const loader = vi.fn(async () => ({ ok: true }));
+    const action = vi.fn(async () => json({ ok: true }));
+    const app = new Hono();
+    app.all(
+      "*",
+      createOtokHandler({
+        routes: [
+          {
+            id: "users.[id]",
+            path: "/users/:id",
+            pattern: /^\/users\/([^/]+)\/?$/,
+            params: ["id"],
+            module: {
+              default: Page as OtokRoute["module"]["default"],
+              loader,
+              action,
+            },
+          },
+        ],
+        errorRoute: {
+          ...route("/_error", /^\/_error\/?$/),
+          module: { default: ErrorRoute as OtokRoute["module"]["default"] },
+        },
+      }),
+    );
+
+    for (const path of ["/users/%", "/users/%ZZ", "/users/%E0%A4"]) {
+      loader.mockClear();
+      action.mockClear();
+      const getRes = await app.request(path);
+      expect(getRes.status).toBe(400);
+      expect(loader).not.toHaveBeenCalled();
+
+      const postRes = await app.request(path, { method: "POST" });
+      expect(postRes.status).toBe(400);
+      expect(action).not.toHaveBeenCalled();
+
+      const dataRes = await app.request(path, { headers: { "x-otok-data": "1" } });
+      expect(dataRes.status).toBe(400);
+    }
+
+    loader.mockClear();
+    const okRes = await app.request("/users/alice");
+    expect(okRes.status).toBe(200);
+    expect(loader).toHaveBeenCalled();
+  });
+
+  it("keeps URIError from loader as internal error (500)", async () => {
+    const app = new Hono();
+    app.all(
+      "*",
+      createOtokHandler({
+        routes: [
+          {
+            ...route("/throws", /^\/throws\/?$/),
+            module: {
+              default: Page as OtokRoute["module"]["default"],
+              loader: () => {
+                decodeURIComponent("%");
+                return {};
+              },
+            },
+          },
+        ],
+      }),
+    );
+
+    const response = await app.request("/throws");
+    expect(response.status).toBe(500);
   });
 });

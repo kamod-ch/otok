@@ -4,7 +4,7 @@ import { h, Fragment } from "preact";
 import type { ComponentType, VNode } from "preact";
 import renderToString from "preact-render-to-string";
 import { composeDeferredHtmlStream, composeHtmlStream, pageHtml, type ViteManifest } from "./html.js";
-import { matchRoute } from "./router.js";
+import { matchRoute, type RouteMatch } from "./router.js";
 import {
   applyCacheHeaders,
   buildRenderContext,
@@ -171,12 +171,12 @@ export function createOtokHandler(options: CreateOtokHandlerOptions): Handler {
 
   return async (c: Context) => {
     const url = new URL(c.req.url);
-    const match = matchRoute(options.routes, url.pathname);
+    let match: RouteMatch | undefined;
     const requestId = otokDevtoolsBeginRequest(c.req.method, url.pathname);
     const trace: ActiveDevtoolsTrace | null = requestId
       ? {
           requestId,
-          route: match?.route.path ?? url.pathname,
+          route: url.pathname,
           middlewareMs: 0,
           loaderMs: 0,
           renderMs: 0,
@@ -186,6 +186,9 @@ export function createOtokHandler(options: CreateOtokHandlerOptions): Handler {
     activeDevtoolsTrace = trace;
 
     try {
+      match = matchRoute(options.routes, url.pathname);
+      if (trace && match) trace.route = match.route.path;
+
       if (!match) {
         const notFoundRoute = options.notFoundRoute ?? options.notFound;
         if (!notFoundRoute) {
@@ -199,22 +202,26 @@ export function createOtokHandler(options: CreateOtokHandlerOptions): Handler {
         return response;
       }
 
-      if (trace) trace.route = match.route.path;
+      const routeMatch = match;
 
       if (isActionRequest(c.req.method)) {
         const response = mergeContextHeaders(
           c,
-          await runRouteMiddleware(c, match.route, () => handleAction(c, match.route, match.params, options)),
+          await runRouteMiddleware(c, routeMatch.route, () =>
+            handleAction(c, routeMatch.route, routeMatch.params, options),
+          ),
         );
-        await finalizeDevtoolsRequest(trace, c, response, match.route.module);
+        await finalizeDevtoolsRequest(trace, c, response, routeMatch.route.module);
         return response;
       }
 
       const response = mergeContextHeaders(
         c,
-        await runRouteMiddleware(c, match.route, () => renderRoute(c, match.route, match.params, options)),
+        await runRouteMiddleware(c, routeMatch.route, () =>
+          renderRoute(c, routeMatch.route, routeMatch.params, options),
+        ),
       );
-      await finalizeDevtoolsRequest(trace, c, response, match.route.module);
+      await finalizeDevtoolsRequest(trace, c, response, routeMatch.route.module);
       return response;
     } catch (error) {
       const response = mergeContextHeaders(c, await handleRenderError(c, error, options));
@@ -460,7 +467,7 @@ async function renderRoute(
     if (actionData !== undefined) {
       return dataResponseFromActionResult(actionData, resolvedData);
     }
-    return buildDataResponse({ loaderData: serializeLoaderData(resolvedData) });
+    return buildDataResponse({ loaderData: serializeLoaderData(resolvedData) }, status);
   }
 
   const progressiveDeferred = deferredEnabled && plan.streaming && slotsPresent;

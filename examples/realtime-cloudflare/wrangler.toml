@@ -1,0 +1,15 @@
+name = "realtime-cloudflare"
+main = "src/worker.ts"
+compatibility_date = "2025-04-01"
+
+[[durable_objects.bindings]]
+name = "REALTIME_ROOM"
+class_name = "RealtimeRoom"
+
+[[migrations]]
+tag = "v1"
+new_classes = ["RealtimeRoom"]
+
+[vars]
+REALTIME_INTERNAL_SECRET = "local-internal-secret-for-tests-only"
+REALTIME_PUBLISH_SECRET = "local-publish-secret"

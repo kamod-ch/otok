@@ -93,9 +93,13 @@ export function configureSecurityApp(app: Hono, options: SecurityPluginOptions):
 
   const trustedHosts = options.trustedHosts ?? (isProduction() ? [] : undefined);
   const trustedOrigins = options.trustedOrigins ?? [];
-  if (trustedHosts && trustedHosts.length > 0) {
-    app.use("*", createHostValidationMiddleware(trustedHosts, trustedOrigins));
-  } else if (isProduction() && options.strict !== false) {
+  const hostList = trustedHosts ?? [];
+  const hasTrustedHosts = hostList.length > 0;
+  const hasTrustedOrigins = trustedOrigins.length > 0;
+  if (hasTrustedHosts || hasTrustedOrigins) {
+    app.use("*", createHostValidationMiddleware(hostList, trustedOrigins));
+  }
+  if (!hasTrustedHosts && isProduction() && options.strict !== false) {
     console.warn("otok-security: trustedHosts is empty in production. Set trustedHosts to your public hostnames.");
   }
 

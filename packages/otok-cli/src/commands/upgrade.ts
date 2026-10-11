@@ -1,4 +1,13 @@
-import { findOutdated, resolveExtension } from "@kamod-ch/otok-registry";
+import { resolveExtension } from "@kamod-ch/otok-registry";
+import {
+  compareVersions,
+  CORE_UPGRADE_PACKAGE_NAMES,
+  hasConflictingCorePackages,
+  isUnsupportedVersionSpec,
+  LEGACY_CORE_PACKAGE_NAME,
+  parseInstalledVersion,
+  CORE_PACKAGE_NAME,
+} from "../package-identities.js";
 import { loadProjectSnapshot, loadRegistryForProject } from "../registry-context.js";
 import { detectPackageManager, installCommand } from "../detect-manager.js";
 import { findProjectRoot, confirm, fail, ok, runCommand, warn } from "../utils.js";
@@ -11,6 +20,13 @@ export interface UpgradePlan {
   reason: string;
 }
 
+export interface UpgradePlanResult {
+  plans: UpgradePlan[];
+  diagnostics: string[];
+}
+
+const CORE_UPGRADE_SET = new Set<string>(CORE_UPGRADE_PACKAGE_NAMES);
+
 function usage(): string {
   return `Usage: otok upgrade [options]
 
@@ -19,7 +35,7 @@ Upgrade Otok core, adapters, and registry-tracked extensions.
 Options:
   --dry-run           Show planned upgrades without installing
   --skip-install      Print commands only
-  --core-only         Upgrade otok, vite-plugin, and adapters only
+  --core-only         Upgrade core, vite-plugin, cli, and adapters only
   --json              Print JSON plan
   --help, -h
 `;
@@ -56,56 +72,90 @@ export function parseUpgradeArgv(argv: string[]) {
   return { options, plans: null as UpgradePlan[] | null };
 }
 
-export async function buildUpgradePlan(root: string, coreOnly = false): Promise<UpgradePlan[]> {
+function resolveRegistryTarget(
+  registry: Awaited<ReturnType<typeof loadRegistryForProject>>,
+  packageName: string,
+): string | undefined {
+  return resolveExtension(registry, packageName)?.version;
+}
+
+export async function buildUpgradePlan(root: string, coreOnly = false): Promise<UpgradePlanResult> {
   const project = await loadProjectSnapshot(root);
   const registry = await loadRegistryForProject(root);
   const installed = { ...project.dependencies, ...project.devDependencies };
   const plans: UpgradePlan[] = [];
+  const diagnostics: string[] = [];
 
-  const corePackages = ["otok", "@kamod-ch/otok-vite-plugin", "otok-cli"];
-  const adapterPackages = ["otok-adapter-node", "otok-adapter-cloudflare", "otok-adapter-static"];
+  if (hasConflictingCorePackages(installed)) {
+    diagnostics.push(
+      "Conflicting core dependencies: both @kamod-ch/otok and legacy otok are declared — remove one before upgrading.",
+    );
+  }
 
-  for (const pkg of corePackages) {
-    const current = installed[pkg]?.replace(/^[\^~>=<]*/, "");
-    if (!current) continue;
-    // Target 1.0 when released; until then suggest latest from registry narrative
-    const target = pkg === "otok" ? "1.0.0" : current.startsWith("0.") ? "1.0.0" : current;
-    if (current !== target && semverLt(current, target)) {
-      plans.push({ package: pkg, from: current, to: target, reason: "Otok 1.0 core alignment" });
+  for (const pkg of CORE_UPGRADE_PACKAGE_NAMES) {
+    if (pkg === LEGACY_CORE_PACKAGE_NAME && installed[CORE_PACKAGE_NAME]) {
+      continue;
     }
+    const spec = installed[pkg];
+    if (!spec) continue;
+
+    if (isUnsupportedVersionSpec(spec)) {
+      diagnostics.push(
+        `${pkg}: unsupported version spec "${spec}" — registry upgrades require semver or range specs (not workspace/link/git).`,
+      );
+      continue;
+    }
+
+    const current = parseInstalledVersion(spec);
+    if (!current) continue;
+
+    const target = resolveRegistryTarget(registry, pkg);
+    if (!target) {
+      diagnostics.push(`${pkg}: no upgrade target in the bundled registry snapshot.`);
+      continue;
+    }
+
+    if (compareVersions(current, target) >= 0) {
+      continue;
+    }
+
+    plans.push({
+      package: pkg,
+      from: current,
+      to: target,
+      reason:
+        pkg === LEGACY_CORE_PACKAGE_NAME ? "Registry snapshot (legacy otok package name)" : "Registry snapshot target",
+    });
   }
 
   if (!coreOnly) {
-    for (const adapter of adapterPackages) {
-      const current = installed[adapter]?.replace(/^[\^~>=<]*/, "");
-      if (current && semverLt(current, "1.0.0")) {
-        plans.push({ package: adapter, from: current, to: "1.0.0", reason: "Adapter 1.0" });
-      }
-    }
+    for (const ext of registry.extensions) {
+      if (CORE_UPGRADE_SET.has(ext.name)) continue;
+      const spec = installed[ext.name];
+      if (!spec) continue;
 
-    const outdated = findOutdated(installed, registry.extensions);
-    for (const row of outdated) {
-      const entry = resolveExtension(registry, row.name);
+      if (isUnsupportedVersionSpec(spec)) {
+        diagnostics.push(`${ext.name}: unsupported version spec "${spec}".`);
+        continue;
+      }
+
+      const current = parseInstalledVersion(spec);
+      if (!current) continue;
+
+      if (compareVersions(current, ext.version) >= 0) {
+        continue;
+      }
+
       plans.push({
-        package: row.name,
-        from: row.installed,
-        to: row.latest,
-        reason: entry?.deprecated ? "Deprecated — upgrade recommended" : "Registry latest",
+        package: ext.name,
+        from: current,
+        to: ext.version,
+        reason: ext.deprecated ? "Deprecated — upgrade recommended" : "Registry latest",
       });
     }
   }
 
-  return dedupePlans(plans);
-}
-
-function semverLt(a: string, b: string): boolean {
-  const pa = a.split(".").map(Number);
-  const pb = b.split(".").map(Number);
-  for (let i = 0; i < 3; i++) {
-    if ((pa[i] ?? 0) < (pb[i] ?? 0)) return true;
-    if ((pa[i] ?? 0) > (pb[i] ?? 0)) return false;
-  }
-  return false;
+  return { plans: dedupePlans(plans), diagnostics };
 }
 
 function dedupePlans(plans: UpgradePlan[]): UpgradePlan[] {
@@ -124,15 +174,24 @@ export async function runUpgradeCommand(argv: string[]): Promise<number> {
     }
 
     const root = await findProjectRoot(process.cwd());
-    const plans = await buildUpgradePlan(root, parsed.options.coreOnly);
+    const { plans, diagnostics } = await buildUpgradePlan(root, parsed.options.coreOnly);
 
     if (parsed.options.json) {
-      process.stdout.write(`${JSON.stringify({ plans }, null, 2)}\n`);
+      process.stdout.write(`${JSON.stringify({ plans, diagnostics }, null, 2)}\n`);
       return 0;
     }
 
+    for (const message of diagnostics) {
+      warn(message);
+    }
+
     if (plans.length === 0) {
-      ok("All packages are up to date for the current upgrade target.");
+      if (diagnostics.length > 0) {
+        warn("No upgrades planned — resolve the diagnostics above.");
+        recordTelemetry({ event: "cli.upgrade", success: false, durationMs: Date.now() - started });
+        return 1;
+      }
+      ok("All installed packages match the current registry snapshot targets.");
       recordTelemetry({ event: "cli.upgrade", success: true, durationMs: Date.now() - started });
       return 0;
     }
@@ -141,7 +200,7 @@ export async function runUpgradeCommand(argv: string[]): Promise<number> {
     for (const plan of plans) {
       process.stdout.write(`  ${plan.package}: ${plan.from} → ${plan.to} (${plan.reason})\n`);
     }
-    process.stdout.write("\nSee docs/1.0/migration-guide-0.4-to-1.0.md before upgrading to 1.0.\n\n");
+    process.stdout.write("\n");
 
     if (parsed.options.dryRun || parsed.options.skipInstall) {
       const manager = await detectPackageManager(root);
