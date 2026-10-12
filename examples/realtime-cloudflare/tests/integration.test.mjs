@@ -1,6 +1,8 @@
 import assert from "node:assert/strict";
 import { spawn } from "node:child_process";
 import { once } from "node:events";
+import { mkdtemp, rm } from "node:fs/promises";
+import os from "node:os";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import test from "node:test";
@@ -29,36 +31,73 @@ async function readSseUntil(text, res, maxBytes = 16_000) {
   return buf;
 }
 
+function signalWrangler(proc, signal) {
+  try {
+    if (process.platform === "win32") proc.kill(signal);
+    else process.kill(-proc.pid, signal);
+  } catch (error) {
+    if (error.code !== "ESRCH") throw error;
+  }
+}
+
+async function stopWrangler(proc) {
+  if (proc.exitCode !== null || proc.signalCode !== null) return;
+  const exited = once(proc, "exit");
+  signalWrangler(proc, "SIGTERM");
+  await Promise.race([exited, sleep(5_000, undefined, { ref: false })]);
+  if (proc.exitCode === null && proc.signalCode === null) {
+    signalWrangler(proc, "SIGKILL");
+    await Promise.race([exited, sleep(1_000, undefined, { ref: false })]);
+  }
+}
+
 async function startWrangler() {
-  const proc = spawn("pnpm", ["exec", "wrangler", "dev", "--port", String(port), "--local-protocol", "http"], {
+  const stateDir = await mkdtemp(path.join(os.tmpdir(), "realtime-cloudflare-"));
+  const wrangler = path.join(root, "node_modules", ".bin", process.platform === "win32" ? "wrangler.cmd" : "wrangler");
+  const proc = spawn(wrangler, ["dev", "--port", String(port), "--local-protocol", "http", "--persist-to", stateDir], {
     cwd: root,
+    detached: process.platform !== "win32",
     stdio: ["ignore", "pipe", "pipe"],
     env: { ...process.env, FORCE_COLOR: "0" },
   });
 
-  let ready = false;
+  let output = "";
+  let spawnError;
   const onData = (chunk) => {
-    const s = chunk.toString();
-    if (s.includes("Ready on") || s.includes("Listening on")) ready = true;
+    output = (output + chunk.toString()).slice(-16_000);
   };
+  proc.on("error", (error) => {
+    spawnError = error;
+  });
   proc.stdout.on("data", onData);
   proc.stderr.on("data", onData);
 
-  for (let i = 0; i < 120 && !ready; i++) {
-    await sleep(250);
+  const deadline = Date.now() + 60_000;
+  while (Date.now() < deadline) {
+    if (spawnError || proc.exitCode !== null || proc.signalCode !== null) {
+      await rm(stateDir, { recursive: true, force: true });
+      throw new Error(
+        `wrangler dev failed${spawnError ? `: ${spawnError.message}` : ` with code ${proc.exitCode}`}\n${output}`,
+      );
+    }
+    try {
+      await fetch(base, { signal: AbortSignal.timeout(1_000) });
+      return { proc, stateDir };
+    } catch {
+      await sleep(250);
+    }
   }
-  if (!ready) {
-    proc.kill("SIGTERM");
-    throw new Error("wrangler dev did not become ready");
-  }
-  return proc;
+
+  await stopWrangler(proc);
+  await rm(stateDir, { recursive: true, force: true });
+  throw new Error(`wrangler dev did not become ready\n${output}`);
 }
 
 test("cloudflare realtime integration", { timeout: 120_000 }, async (t) => {
-  const proc = await startWrangler();
+  const { proc, stateDir } = await startWrangler();
   t.after(async () => {
-    proc.kill("SIGTERM");
-    await Promise.race([once(proc, "exit"), sleep(5_000)]);
+    await stopWrangler(proc);
+    await rm(stateDir, { recursive: true, force: true });
   });
 
   await t.test("denies publish on deny channel", async () => {
