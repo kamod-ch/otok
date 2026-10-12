@@ -19,9 +19,7 @@ export function assertFiniteNonNegativeNumber(value, label) {
 export async function fetchValidatedHtml(url, { timeoutMs = 10_000, marker, signal } = {}) {
   const controller = new AbortController();
   const timer = setTimeout(() => controller.abort(), timeoutMs);
-  const merged = signal
-    ? AbortSignal.any([signal, controller.signal])
-    : controller.signal;
+  const merged = signal ? AbortSignal.any([signal, controller.signal]) : controller.signal;
   try {
     const res = await fetch(url, { headers: { accept: "text/html" }, signal: merged });
     if (res.status !== 200) {
@@ -42,13 +40,7 @@ export async function fetchValidatedHtml(url, { timeoutMs = 10_000, marker, sign
 }
 
 export async function measureLatencySeries(url, options = {}) {
-  const {
-    warmup = 20,
-    samples = 200,
-    timeoutMs = 10_000,
-    marker,
-    signal,
-  } = options;
+  const { warmup = 20, samples = 200, timeoutMs = 10_000, marker, signal } = options;
   const timings = [];
   const total = warmup + samples;
   for (let i = 0; i < total; i += 1) {
@@ -65,13 +57,7 @@ export async function measureLatencySeries(url, options = {}) {
 }
 
 export async function measureThroughputRps(url, options = {}) {
-  const {
-    durationMs = 10_000,
-    concurrency = 10,
-    timeoutMs = 10_000,
-    marker,
-    signal,
-  } = options;
+  const { durationMs = 10_000, concurrency = 10, timeoutMs = 10_000, marker, signal } = options;
   const started = performance.now();
   const deadline = started + durationMs;
   let successes = 0;

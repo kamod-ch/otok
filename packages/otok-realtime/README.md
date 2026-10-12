@@ -58,11 +58,7 @@ await fetchSseClient({
 Optional subpath for Plan 036 — **not** a remote `RealtimeProvider.subscribe()` bridge.
 
 ```ts
-import {
-  RealtimeRoom,
-  createCloudflareRealtimeApp,
-  objectName,
-} from "@kamod-ch/otok-realtime/cloudflare";
+import { RealtimeRoom, createCloudflareRealtimeApp, objectName } from "@kamod-ch/otok-realtime/cloudflare";
 ```
 
 - SSE MVP with DO-backed replay (`Last-Event-ID`), retention, heartbeat, backpressure

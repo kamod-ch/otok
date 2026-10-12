@@ -300,7 +300,11 @@ export function createKyselyWorkflowStore(
         .execute();
     },
 
-    async renewLease(instanceId: string, leaseToken: string, renewOptions: import("../../types.js").RenewLeaseOptions = {}) {
+    async renewLease(
+      instanceId: string,
+      leaseToken: string,
+      renewOptions: import("../../types.js").RenewLeaseOptions = {},
+    ) {
       const now = renewOptions.now ?? new Date();
       const leaseMs = renewOptions.leaseMs ?? defaultLeaseMs;
       const until = new Date(now.getTime() + leaseMs);
@@ -332,7 +336,10 @@ export function createKyselyWorkflowStore(
       if (patch.leaseToken !== undefined) values.lease_token = patch.leaseToken;
       if (patch.leaseUntil !== undefined) values.lease_until = patch.leaseUntil;
 
-      let q = db.updateTable(INSTANCES_TABLE).set(values as never).where("id", "=", id);
+      let q = db
+        .updateTable(INSTANCES_TABLE)
+        .set(values as never)
+        .where("id", "=", id);
       if (held?.leaseToken) {
         q = q.where("lease_token", "=", held.leaseToken);
       }

@@ -105,9 +105,7 @@
     "home": {
       "initialJsGzipKiB": 15.701171875,
       "assetCount": 1,
-      "executableUrls": [
-        "/assets/client--DYTK7jx.js"
-      ]
+      "executableUrls": ["/assets/client--DYTK7jx.js"]
     },
     "about": {
       "initialJsGzipKiB": 0,

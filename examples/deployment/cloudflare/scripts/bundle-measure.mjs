@@ -11,8 +11,7 @@ import { gzipSync } from "node:zlib";
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..");
 const outDir = process.env.WRANGLER_BUNDLE_OUTDIR ?? join(root, ".wrangler", "bench-upload-bundle");
-const reportPath =
-  process.env.OTOK_WORKER_BUNDLE_REPORT_PATH ?? join(root, "benchmark-worker-bundle.json");
+const reportPath = process.env.OTOK_WORKER_BUNDLE_REPORT_PATH ?? join(root, "benchmark-worker-bundle.json");
 
 function walkFiles(dir, base = dir) {
   const entries = [];
@@ -57,7 +56,9 @@ export function summarizeBundleDirectory(dir) {
     moduleCount: modules.length,
     assetBytesSeparate: assetBytes,
     modules,
-    artifactHash: createHash("sha256").update(JSON.stringify(modules.map((m) => [m.path, m.rawBytes]))).digest("hex"),
+    artifactHash: createHash("sha256")
+      .update(JSON.stringify(modules.map((m) => [m.path, m.rawBytes])))
+      .digest("hex"),
   };
 }
 

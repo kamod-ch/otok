@@ -18,11 +18,7 @@ test("collectProcessTreePids includes child process on linux", async (t) => {
     t.skip("Linux /proc required");
     return;
   }
-  const child = spawn(
-    process.execPath,
-    ["-e", "setInterval(() => {}, 1000)"],
-    { stdio: "ignore" },
-  );
+  const child = spawn(process.execPath, ["-e", "setInterval(() => {}, 1000)"], { stdio: "ignore" });
   await new Promise((r) => setTimeout(r, 50));
   const pids = collectProcessTreePids(child.pid);
   assert.ok(pids.includes(child.pid));
@@ -34,11 +30,9 @@ test("samplePeakTreeRss tracks growing tree on linux", async (t) => {
     t.skip("Linux /proc required");
     return;
   }
-  const child = spawn(
-    process.execPath,
-    ["-e", "const b=Buffer.alloc(8*1024*1024); setInterval(()=>{}, 200)"],
-    { stdio: "ignore" },
-  );
+  const child = spawn(process.execPath, ["-e", "const b=Buffer.alloc(8*1024*1024); setInterval(()=>{}, 200)"], {
+    stdio: "ignore",
+  });
   const started = Date.now();
   const result = await samplePeakTreeRss(child.pid, {
     intervalMs: 10,

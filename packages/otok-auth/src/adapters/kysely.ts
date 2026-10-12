@@ -63,11 +63,9 @@ export function createKyselySessionAdapter<TUser>(options: KyselySessionAdapterO
   const now = () => new Date();
 
   async function fetchRow(tokenHash: string): Promise<SessionRow | undefined> {
-    return db
-      .selectFrom(table)
-      .selectAll()
-      .where("tokenHash", "=", tokenHash)
-      .executeTakeFirst() as Promise<SessionRow | undefined>;
+    return db.selectFrom(table).selectAll().where("tokenHash", "=", tokenHash).executeTakeFirst() as Promise<
+      SessionRow | undefined
+    >;
   }
 
   async function resolveActiveRecord(tokenHash: string): Promise<ResolvedSessionRecord | null> {

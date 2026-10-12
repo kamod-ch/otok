@@ -166,11 +166,7 @@ export interface WorkflowStore {
   /** Extend lease while the token still matches. Returns false when reclaimed or expired. */
   renewLease(instanceId: string, leaseToken: string, options?: RenewLeaseOptions): Promise<boolean>;
   /** Unconditional when `held` is omitted; otherwise fenced on matching `lease_token`. */
-  updateInstanceIfHeld(
-    id: string,
-    patch: Partial<WorkflowInstance>,
-    held?: HeldLeaseWriteOptions,
-  ): Promise<boolean>;
+  updateInstanceIfHeld(id: string, patch: Partial<WorkflowInstance>, held?: HeldLeaseWriteOptions): Promise<boolean>;
   saveStepIfHeld(step: StepRecord, held?: HeldLeaseWriteOptions): Promise<boolean>;
   listInstances(filter?: {
     status?: WorkflowStatus;

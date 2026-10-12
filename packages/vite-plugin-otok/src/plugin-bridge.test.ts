@@ -26,10 +26,9 @@ async function invokeViteHook(plugin: Plugin, hook: ViteBuildHook, options?: { s
   const registered = plugin[hook];
   if (!registered) return;
   const handler = typeof registered === "function" ? registered : registered.handler;
-  await (handler as unknown as (opts: { ssr: boolean }) => Promise<void>).call(
-    plugin as unknown as object,
-    { ssr: options?.ssr ?? false },
-  );
+  await (handler as unknown as (opts: { ssr: boolean }) => Promise<void>).call(plugin as unknown as object, {
+    ssr: options?.ssr ?? false,
+  });
 }
 
 async function initOtokPlugin(root: string, options?: { typegen?: boolean; ssr?: boolean }) {

@@ -7,10 +7,7 @@ test("assertBenchDatabaseUrl rejects missing URL", () => {
 });
 
 test("assertBenchDatabaseUrl rejects non-allowlisted database names", () => {
-  assert.throws(
-    () => assertBenchDatabaseUrl("postgres://u:p@localhost:5432/production"),
-    /allowlisted/,
-  );
+  assert.throws(() => assertBenchDatabaseUrl("postgres://u:p@localhost:5432/production"), /allowlisted/);
 });
 
 test("assertBenchDatabaseUrl accepts bench/test database names", () => {

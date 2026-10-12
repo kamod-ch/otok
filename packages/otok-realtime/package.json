@@ -65,8 +65,8 @@
     "zod": "^4.6.5"
   },
   "devDependencies": {
-    "@kamod-ch/otok": "workspace:*",
     "@cloudflare/workers-types": "^5.20261001.1",
+    "@kamod-ch/otok": "workspace:*",
     "@types/node": "^26.6.3",
     "@types/ws": "^8.18.2",
     "hono": "^4.13.12",

@@ -36,8 +36,7 @@ export function createSessionManager<TUser>(
   };
 
   function setSessionCookies(c: Context, token: string, absoluteExpiresAt?: Date): void {
-    const cookieMaxAge =
-      absoluteExpiresAt !== undefined ? remainingMaxAgeSeconds(absoluteExpiresAt) : maxAgeSeconds;
+    const cookieMaxAge = absoluteExpiresAt !== undefined ? remainingMaxAgeSeconds(absoluteExpiresAt) : maxAgeSeconds;
     if (cookieMaxAge <= 0) return;
 
     const secure = resolveSecure(c, config.secure);

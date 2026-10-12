@@ -27,11 +27,7 @@ export class MemoryOutboxStore implements OutboxStore, LeasedOutboxStore {
 
   private claimable(nowIso: string, record: MemoryRow): boolean {
     if (record.status === "pending" && record.availableAt <= nowIso) return true;
-    if (
-      record.status === "processing" &&
-      record.leaseExpiresAt &&
-      record.leaseExpiresAt <= nowIso
-    ) {
+    if (record.status === "processing" && record.leaseExpiresAt && record.leaseExpiresAt <= nowIso) {
       return true;
     }
     return false;
@@ -50,7 +46,11 @@ export class MemoryOutboxStore implements OutboxStore, LeasedOutboxStore {
     return claimed.map((r) => ({ ...r }));
   }
 
-  async claimLeased(limit: number, now = new Date(), leaseMs = DEFAULT_OUTBOX_LEASE_MS): Promise<ClaimedOutboxRecord[]> {
+  async claimLeased(
+    limit: number,
+    now = new Date(),
+    leaseMs = DEFAULT_OUTBOX_LEASE_MS,
+  ): Promise<ClaimedOutboxRecord[]> {
     const nowIso = now.toISOString();
     const expiresIso = new Date(now.getTime() + leaseMs).toISOString();
     const claimed: ClaimedOutboxRecord[] = [];
@@ -74,7 +74,12 @@ export class MemoryOutboxStore implements OutboxStore, LeasedOutboxStore {
     return claimed;
   }
 
-  async renewLease(id: string, leaseToken: string, leaseMs = DEFAULT_OUTBOX_LEASE_MS, now = new Date()): Promise<boolean> {
+  async renewLease(
+    id: string,
+    leaseToken: string,
+    leaseMs = DEFAULT_OUTBOX_LEASE_MS,
+    now = new Date(),
+  ): Promise<boolean> {
     const record = this.records.find((r) => r.id === id);
     if (!record || record.leaseToken !== leaseToken || record.status !== "processing") return false;
     const nowIso = now.toISOString();

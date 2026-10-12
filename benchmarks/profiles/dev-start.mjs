@@ -21,10 +21,14 @@ const PORT = Number(process.env.BENCH_DEV_PORT ?? 5198);
 export async function measureColdStartMs(port) {
   const baseUrl = `http://127.0.0.1:${port}`;
   const t0 = performance.now();
-  const child = spawnDetached("pnpm", ["--filter", "playground", "dev", "--", "--host", "127.0.0.1", "--port", String(port), "--strictPort"], {
-    cwd: repoRoot,
-    env: { ...process.env, NODE_ENV: "development" },
-  });
+  const child = spawnDetached(
+    "pnpm",
+    ["--filter", "playground", "dev", "--", "--host", "127.0.0.1", "--port", String(port), "--strictPort"],
+    {
+      cwd: repoRoot,
+      env: { ...process.env, NODE_ENV: "development" },
+    },
+  );
 
   try {
     const deadline = Date.now() + 120_000;
@@ -80,10 +84,14 @@ export async function runDevStartProfile() {
   const coldP95 = percentileNearestRank(coldMs, 95);
 
   const warmPort = PORT + 100;
-  const warmChild = spawnDetached("pnpm", ["--filter", "playground", "dev", "--", "--host", "127.0.0.1", "--port", String(warmPort), "--strictPort"], {
-    cwd: repoRoot,
-    env: { ...process.env, NODE_ENV: "development" },
-  });
+  const warmChild = spawnDetached(
+    "pnpm",
+    ["--filter", "playground", "dev", "--", "--host", "127.0.0.1", "--port", String(warmPort), "--strictPort"],
+    {
+      cwd: repoRoot,
+      env: { ...process.env, NODE_ENV: "development" },
+    },
+  );
   const warmBase = `http://127.0.0.1:${warmPort}`;
   let warm;
   try {

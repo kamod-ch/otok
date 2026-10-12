@@ -22,12 +22,7 @@ export type {
   EventContext,
   InferEventPayload,
 } from "./types.js";
-export {
-  DEFAULT_RETRY_POLICY,
-  DEFAULT_OUTBOX_LEASE_MS,
-  isLeasedOutboxStore,
-  OutboxLeaseError,
-} from "./types.js";
+export { DEFAULT_RETRY_POLICY, DEFAULT_OUTBOX_LEASE_MS, isLeasedOutboxStore, OutboxLeaseError } from "./types.js";
 
 export {
   createCorrelationId,

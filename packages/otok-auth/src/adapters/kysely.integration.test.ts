@@ -28,7 +28,8 @@ async function createIsolatedTable(db: Kysely<TestDb>, suffix: string): Promise<
   const table = tableNameForSuffix(suffix);
   const physical = `session_rot_${suffix.charAt(0).toLowerCase()}${suffix.slice(1)}`;
   await sql.raw(`DROP TABLE IF EXISTS ${physical}`).execute(db);
-  await sql.raw(`
+  await sql
+    .raw(`
     CREATE TABLE ${physical} (
       user_id TEXT NOT NULL,
       token_hash TEXT PRIMARY KEY,
@@ -39,7 +40,8 @@ async function createIsolatedTable(db: Kysely<TestDb>, suffix: string): Promise<
       created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
       last_seen_at TIMESTAMPTZ
     )
-  `).execute(db);
+  `)
+    .execute(db);
   return table;
 }
 
@@ -108,7 +110,11 @@ describe.skipIf(!databaseUrl)("kysely session adapter postgres integration", () 
     });
 
     const login = await loginApp.request("/login");
-    const token = login.headers.getSetCookie().find((v) => v.startsWith("sid="))!.split("=")[1]!.split(";")[0]!;
+    const token = login.headers
+      .getSetCookie()
+      .find((v) => v.startsWith("sid="))!
+      .split("=")[1]!
+      .split(";")[0]!;
     const cookie = `sid=${token}`;
 
     const [r1, r2] = await Promise.all([

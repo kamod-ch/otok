@@ -58,9 +58,13 @@ function securityApp(options: Parameters<typeof configureSecurityApp>[1]) {
     hit = true;
     return c.text("ok");
   });
-  return { app, wasHit: () => hit, resetHit: () => {
-    hit = false;
-  } };
+  return {
+    app,
+    wasHit: () => hit,
+    resetHit: () => {
+      hit = false;
+    },
+  };
 }
 
 describe("trusted host and origin validation", () => {
@@ -88,10 +92,12 @@ describe("trusted host and origin validation", () => {
     expect((await app.request("/", { headers: { host: "evil.test" } })).status).toBe(400);
     expect((await app.request("/", { headers: { host: "localhost" } })).status).toBe(200);
     expect(
-      (await app.request("/", {
-        method: "POST",
-        headers: { host: "localhost", origin: "https://evil.test" },
-      })).status,
+      (
+        await app.request("/", {
+          method: "POST",
+          headers: { host: "localhost", origin: "https://evil.test" },
+        })
+      ).status,
     ).toBe(200);
   });
 
@@ -102,28 +108,34 @@ describe("trusted host and origin validation", () => {
     });
     resetHit();
     expect(
-      (await app.request("/", {
-        method: "POST",
-        headers: { host: "localhost", origin: "https://trusted.test" },
-      })).status,
+      (
+        await app.request("/", {
+          method: "POST",
+          headers: { host: "localhost", origin: "https://trusted.test" },
+        })
+      ).status,
     ).toBe(200);
     expect(wasHit()).toBe(true);
 
     resetHit();
     expect(
-      (await app.request("/", {
-        method: "POST",
-        headers: { host: "evil.test", origin: "https://trusted.test" },
-      })).status,
+      (
+        await app.request("/", {
+          method: "POST",
+          headers: { host: "evil.test", origin: "https://trusted.test" },
+        })
+      ).status,
     ).toBe(400);
     expect(wasHit()).toBe(false);
 
     resetHit();
     expect(
-      (await app.request("/", {
-        method: "POST",
-        headers: { host: "localhost", origin: "https://evil.test" },
-      })).status,
+      (
+        await app.request("/", {
+          method: "POST",
+          headers: { host: "localhost", origin: "https://evil.test" },
+        })
+      ).status,
     ).toBe(403);
     expect(wasHit()).toBe(false);
   });
@@ -131,10 +143,12 @@ describe("trusted host and origin validation", () => {
   it("allows GET with foreign origin and POST without origin header", async () => {
     const { app, wasHit } = securityApp({ trustedOrigins: ["https://trusted.test"] });
     expect(
-      (await app.request("/", {
-        method: "GET",
-        headers: { origin: "https://evil.test" },
-      })).status,
+      (
+        await app.request("/", {
+          method: "GET",
+          headers: { origin: "https://evil.test" },
+        })
+      ).status,
     ).toBe(200);
     expect((await app.request("/", { method: "POST" })).status).toBe(200);
     expect(wasHit()).toBe(true);
@@ -143,10 +157,12 @@ describe("trusted host and origin validation", () => {
   it("normalizes trailing slash on trusted origins", async () => {
     const { app } = securityApp({ trustedOrigins: ["https://trusted.test/"] });
     expect(
-      (await app.request("/", {
-        method: "PUT",
-        headers: { origin: "https://trusted.test" },
-      })).status,
+      (
+        await app.request("/", {
+          method: "PUT",
+          headers: { origin: "https://trusted.test" },
+        })
+      ).status,
     ).toBe(200);
   });
 

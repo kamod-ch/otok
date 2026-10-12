@@ -14,7 +14,7 @@ export function gitInfo(cwd = repoRoot) {
   const sha = spawnSync("git", ["rev-parse", "HEAD"], { cwd, encoding: "utf8" });
   const dirty = spawnSync("git", ["status", "--porcelain"], { cwd, encoding: "utf8" });
   return {
-    gitSha: sha.status === 0 ? sha.stdout.trim() : process.env.BENCH_GIT_SHA ?? "unknown",
+    gitSha: sha.status === 0 ? sha.stdout.trim() : (process.env.BENCH_GIT_SHA ?? "unknown"),
     dirty: dirty.status === 0 ? dirty.stdout.trim().length > 0 : null,
   };
 }

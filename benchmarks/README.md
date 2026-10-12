@@ -14,13 +14,13 @@ Results: `benchmarks/results/latest.json`, `benchmarks/results/bundles.json`.
 
 ## Profiles
 
-| `BENCH_PROFILE` | What it measures | Bundles file required |
-| --------------- | ---------------- | --------------------- |
-| `production` (default) | Playground production build, RSS, SSR `/` + `/about`, client JS | yes |
-| `navigation` | Above + Playwright soft navigation | yes |
-| `dev-start` | Vite dev cold spawn (5×) + warm HTML refetch on `apps/playground` | no |
-| `worker-bundle` | Wrangler `deploy --dry-run` upload module sizes (`examples/deployment/cloudflare`) | no |
-| `database` | `devjobs-reference` production `/jobs` with isolated Postgres | no |
+| `BENCH_PROFILE`        | What it measures                                                                   | Bundles file required |
+| ---------------------- | ---------------------------------------------------------------------------------- | --------------------- |
+| `production` (default) | Playground production build, RSS, SSR `/` + `/about`, client JS                    | yes                   |
+| `navigation`           | Above + Playwright soft navigation                                                 | yes                   |
+| `dev-start`            | Vite dev cold spawn (5×) + warm HTML refetch on `apps/playground`                  | no                    |
+| `worker-bundle`        | Wrangler `deploy --dry-run` upload module sizes (`examples/deployment/cloudflare`) | no                    |
+| `database`             | `devjobs-reference` production `/jobs` with isolated Postgres                      | no                    |
 
 Profiles are **not comparable** to each other (different origins, units, and runtime assumptions).
 
@@ -39,13 +39,13 @@ OTOK_BENCH_DATABASE_URL='postgres://…/otok_bench_test' BENCH_PROFILE=database 
 
 ## Environment
 
-| Variable | Default | Purpose |
-| -------- | ------- | ------- |
-| `BENCH_PROFILE` | `production` | See table above |
-| `BENCH_PORT` | `4188` | Production playground server |
-| `BENCH_DEV_PORT` | `5198` | Base port for dev-start cold runs |
-| `OTOK_BENCH_DATABASE_URL` | _(required for database)_ | Isolated Postgres; DB name must match allowlist |
-| `OTOK_BENCH_DATABASE_ALLOWLIST` | `bench,test,…` | Override isolation tokens |
+| Variable                        | Default                   | Purpose                                         |
+| ------------------------------- | ------------------------- | ----------------------------------------------- |
+| `BENCH_PROFILE`                 | `production`              | See table above                                 |
+| `BENCH_PORT`                    | `4188`                    | Production playground server                    |
+| `BENCH_DEV_PORT`                | `5198`                    | Base port for dev-start cold runs               |
+| `OTOK_BENCH_DATABASE_URL`       | _(required for database)_ | Isolated Postgres; DB name must match allowlist |
+| `OTOK_BENCH_DATABASE_ALLOWLIST` | `bench,test,…`            | Override isolation tokens                       |
 
 ## Tests
 

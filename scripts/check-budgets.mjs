@@ -48,7 +48,8 @@ function checkBound(label, actual, spec, options = {}) {
       const msg = `${label}: ${value} exceeds budget ${spec.max} (+${tolerance}% tolerance)`;
       if (informational) warnings.push(`${msg} (informational)`);
       else errors.push(msg);
-    } else if (value > spec.max) warnings.push(`${label}: ${value} slightly exceeds budget ${spec.max} (within noise band)`);
+    } else if (value > spec.max)
+      warnings.push(`${label}: ${value} slightly exceeds budget ${spec.max} (within noise band)`);
   }
   if (spec.min !== undefined) {
     const hard = spec.min * (1 - tolerance / 100);
@@ -56,7 +57,8 @@ function checkBound(label, actual, spec, options = {}) {
       const msg = `${label}: ${value} below minimum ${spec.min} (-${tolerance}% tolerance)`;
       if (informational) warnings.push(`${msg} (informational)`);
       else errors.push(msg);
-    } else if (value < spec.min) warnings.push(`${label}: ${value} slightly below minimum ${spec.min} (within noise band)`);
+    } else if (value < spec.min)
+      warnings.push(`${label}: ${value} slightly below minimum ${spec.min} (within noise band)`);
   }
 }
 
@@ -76,8 +78,7 @@ if (!profile) {
   errors.push(`Unknown BENCH_PROFILE "${profileName}"`);
 }
 
-const requiresBundles =
-  profile?.requiresBundles ?? (profileName === "production" || profileName === "navigation");
+const requiresBundles = profile?.requiresBundles ?? (profileName === "production" || profileName === "navigation");
 
 let results;
 let bundles;
@@ -99,11 +100,7 @@ if (results && bundles) {
   if (results.runId && bundles.runId && results.runId !== bundles.runId) {
     errors.push(`Run ID mismatch: results=${results.runId} bundles=${bundles.runId}`);
   }
-  if (
-    results.artifactHash &&
-    bundles.artifactHash &&
-    results.artifactHash !== bundles.artifactHash
-  ) {
+  if (results.artifactHash && bundles.artifactHash && results.artifactHash !== bundles.artifactHash) {
     errors.push(`Artifact hash mismatch between results and bundles`);
   }
 }

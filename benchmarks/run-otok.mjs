@@ -37,7 +37,7 @@ function gitInfo() {
   const sha = spawnSync("git", ["rev-parse", "HEAD"], { cwd: root, encoding: "utf8" });
   const dirty = spawnSync("git", ["status", "--porcelain"], { cwd: root, encoding: "utf8" });
   return {
-    gitSha: sha.status === 0 ? sha.stdout.trim() : process.env.BENCH_GIT_SHA ?? "unknown",
+    gitSha: sha.status === 0 ? sha.stdout.trim() : (process.env.BENCH_GIT_SHA ?? "unknown"),
     dirty: dirty.status === 0 ? dirty.stdout.trim().length > 0 : null,
   };
 }
@@ -212,15 +212,11 @@ async function main() {
     report.metrics.clientJsGzipKiB = bundles.aggregates?.clientJsGzipKiB;
 
     if (profile === "navigation") {
-      const nav = spawnSync(
-        "pnpm",
-        ["exec", "playwright", "test", "--config", "benchmark/playwright.config.ts"],
-        {
-          cwd: playground,
-          stdio: "inherit",
-          env: { ...process.env, BENCH_URL: baseUrl },
-        },
-      );
+      const nav = spawnSync("pnpm", ["exec", "playwright", "test", "--config", "benchmark/playwright.config.ts"], {
+        cwd: playground,
+        stdio: "inherit",
+        env: { ...process.env, BENCH_URL: baseUrl },
+      });
       if (nav.status !== 0) throw new Error("navigation profile playwright tests failed");
       const navFile = join(resultsDir, "navigation.json");
       if (existsSync(navFile)) {

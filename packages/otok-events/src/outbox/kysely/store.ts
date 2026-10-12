@@ -52,11 +52,7 @@ function rowToClaimed(row: OutboxRow, leaseToken: string, leaseExpiresAt: string
   return { ...base, leaseToken, leaseExpiresAt };
 }
 
-async function assertNoActiveLease(
-  db: Kysely<EventsDatabase>,
-  id: string,
-  operation: string,
-): Promise<void> {
+async function assertNoActiveLease(db: Kysely<EventsDatabase>, id: string, operation: string): Promise<void> {
   const row = await db
     .selectFrom(OUTBOX_TABLE)
     .select(["lease_token", "status"])
@@ -134,9 +130,7 @@ export function createKyselyOutboxStore(
           RETURNING o.*
         `.execute(db);
 
-        return result.rows.map((row) =>
-          rowToClaimed(row, row.lease_token as string, row.lease_expires_at as string),
-        );
+        return result.rows.map((row) => rowToClaimed(row, row.lease_token as string, row.lease_expires_at as string));
       }
 
       const claimed: ClaimedOutboxRecord[] = [];

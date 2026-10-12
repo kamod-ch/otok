@@ -390,46 +390,27 @@
       "./loader": {
         "classification": "public",
         "typesFile": "dist/loader.d.ts",
-        "exports": [
-          "defineAiAction",
-          "defineAiLoader",
-          "getAiClient",
-          "tryGetAiRuntime"
-        ]
+        "exports": ["defineAiAction", "defineAiLoader", "getAiClient", "tryGetAiRuntime"]
       },
       "./plugin": {
         "classification": "public",
         "typesFile": "dist/plugin.d.ts",
-        "exports": [
-          "configureAiApp"
-        ]
+        "exports": ["configureAiApp"]
       },
       "./cli": {
         "classification": "experimental",
         "typesFile": "dist/cli/index.d.ts",
-        "exports": [
-          "AI_CONTEXT_HELP",
-          "parseAiContextArgv",
-          "runAiContextCommand"
-        ]
+        "exports": ["AI_CONTEXT_HELP", "parseAiContextArgv", "runAiContextCommand"]
       },
       "./tools": {
         "classification": "public",
         "typesFile": "dist/tools/define-tool.d.ts",
-        "exports": [
-          "InferToolInput",
-          "InferToolOutput",
-          "aiSchema",
-          "defineAiTool"
-        ]
+        "exports": ["InferToolInput", "InferToolOutput", "aiSchema", "defineAiTool"]
       },
       "./mcp": {
         "classification": "public",
         "typesFile": "dist/mcp/index.d.ts",
-        "exports": [
-          "isRouteMcpAllowed",
-          "mountMcpRoutes"
-        ]
+        "exports": ["isRouteMcpAllowed", "mountMcpRoutes"]
       },
       "./rag": {
         "classification": "experimental",
@@ -683,12 +664,7 @@
       ".": {
         "classification": "public",
         "typesFile": "dist/index.d.ts",
-        "exports": [
-          "PluginContractExpectation",
-          "PluginContractOptions",
-          "assertPluginContract",
-          "env"
-        ]
+        "exports": ["PluginContractExpectation", "PluginContractOptions", "assertPluginContract", "env"]
       }
     },
     "@kamod-ch/otok-queue": {
@@ -718,11 +694,7 @@
       "./providers/memory": {
         "classification": "public",
         "typesFile": "dist/providers/memory.d.ts",
-        "exports": [
-          "createMemoryQueueProvider",
-          "createTestQueueProvider",
-          "getMemoryProviderInternals"
-        ]
+        "exports": ["createMemoryQueueProvider", "createTestQueueProvider", "getMemoryProviderInternals"]
       },
       "./providers/postgres": {
         "classification": "public",
@@ -741,11 +713,7 @@
       "./worker": {
         "classification": "public",
         "typesFile": "dist/worker/run-worker.d.ts",
-        "exports": [
-          "QueueWorkerHandle",
-          "QueueWorkerOptions",
-          "runQueueWorker"
-        ]
+        "exports": ["QueueWorkerHandle", "QueueWorkerOptions", "runQueueWorker"]
       }
     },
     "@kamod-ch/otok-realtime": {
@@ -790,12 +758,7 @@
       "./plugin": {
         "classification": "public",
         "typesFile": "dist/plugin.d.ts",
-        "exports": [
-          "RealtimePluginOptions",
-          "RealtimeProviderConfig",
-          "configureRealtimeApp",
-          "createRealtimeProvider"
-        ]
+        "exports": ["RealtimePluginOptions", "RealtimeProviderConfig", "configureRealtimeApp", "createRealtimeProvider"]
       },
       "./client": {
         "classification": "public",
@@ -811,11 +774,7 @@
       "./providers/redis": {
         "classification": "public",
         "typesFile": "dist/providers/redis.d.ts",
-        "exports": [
-          "RedisPubSubAdapter",
-          "RedisRealtimeConfig",
-          "createRedisProvider"
-        ]
+        "exports": ["RedisPubSubAdapter", "RedisRealtimeConfig", "createRedisProvider"]
       },
       "./providers/durable-objects": {
         "classification": "public",
@@ -855,11 +814,7 @@
       "./crm": {
         "classification": "experimental",
         "typesFile": "dist/crm/index.d.ts",
-        "exports": [
-          "companiesChannel",
-          "crmChannels",
-          "crmPresenceChannel"
-        ]
+        "exports": ["companiesChannel", "crmChannels", "crmPresenceChannel"]
       }
     },
     "@kamod-ch/otok-registry": {
@@ -1018,12 +973,7 @@
       "./plugin": {
         "classification": "public",
         "typesFile": "dist/plugin.d.ts",
-        "exports": [
-          "WorkflowProviderConfig",
-          "WorkflowsPluginOptions",
-          "configureWorkflowsApp",
-          "createWorkflowStore"
-        ]
+        "exports": ["WorkflowProviderConfig", "WorkflowsPluginOptions", "configureWorkflowsApp", "createWorkflowStore"]
       },
       "./providers/kysely": {
         "classification": "public",
@@ -1039,11 +989,7 @@
       "./crm": {
         "classification": "experimental",
         "typesFile": "dist/crm/index.d.ts",
-        "exports": [
-          "companyInputSchema",
-          "crmWorkflows",
-          "enrichCompany"
-        ]
+        "exports": ["companyInputSchema", "crmWorkflows", "enrichCompany"]
       }
     },
     "@kamod-ch/otok-vite-plugin": {

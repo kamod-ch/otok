@@ -5,12 +5,7 @@
     "production": {
       "description": "Default CI gate — playground production build + self-started Node server",
       "requiresBundles": true,
-      "requiredMetrics": [
-        "productionBuildMs",
-        "buildPeakRssMb",
-        "serverPeakRssMb",
-        "clientJsGzipKiB"
-      ],
+      "requiredMetrics": ["productionBuildMs", "buildPeakRssMb", "serverPeakRssMb", "clientJsGzipKiB"],
       "requiredScenarios": ["home", "about"],
       "scenarioMetrics": ["ssrLatencyP50Ms", "ssrLatencyP95Ms", "ssrThroughputRps", "requestErrors"],
       "routeMetrics": ["initialJsGzipKiB"]
@@ -41,11 +36,7 @@
     "database": {
       "description": "devjobs-reference /jobs listing with isolated Postgres (OTOK_BENCH_DATABASE_URL)",
       "requiresBundles": false,
-      "requiredMetrics": [
-        "jobsListingDbColdP50Ms",
-        "jobsListingDbColdP95Ms",
-        "jobsListingRequestErrors"
-      ],
+      "requiredMetrics": ["jobsListingDbColdP50Ms", "jobsListingDbColdP95Ms", "jobsListingRequestErrors"],
       "informationalMetrics": ["jobsListingCachedP50Ms", "jobsListingCachedP95Ms"]
     }
   },

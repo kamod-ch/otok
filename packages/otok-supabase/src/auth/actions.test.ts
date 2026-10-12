@@ -2,11 +2,7 @@ import { Hono } from "hono";
 import { describe, expect, it, vi } from "vitest";
 import type { OtokActionContext } from "@kamod-ch/otok/server";
 import type { SupabaseEnv } from "../types.js";
-import {
-  signInWithPasswordAction,
-  signUpAction,
-  updatePasswordAction,
-} from "./actions.js";
+import { signInWithPasswordAction, signUpAction, updatePasswordAction } from "./actions.js";
 
 type FakeClient = ReturnType<typeof createFakeClient>;
 

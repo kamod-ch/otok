@@ -28,10 +28,11 @@ export function assertBenchDatabaseUrl(url) {
   const dbMatch = url.match(/\/([^/?]+)(?:\?|$)/);
   const dbName = dbMatch?.[1] ?? "";
   if (!dbName) throw new Error("OTOK_BENCH_DATABASE_URL must include a database name");
-  const allowed =
-    process.env.OTOK_BENCH_DATABASE_ALLOWLIST ??
-    "bench,test,_bench,_test,otok_queue_test,otok_bench";
-  const tokens = allowed.split(",").map((t) => t.trim()).filter(Boolean);
+  const allowed = process.env.OTOK_BENCH_DATABASE_ALLOWLIST ?? "bench,test,_bench,_test,otok_queue_test,otok_bench";
+  const tokens = allowed
+    .split(",")
+    .map((t) => t.trim())
+    .filter(Boolean);
   const ok = tokens.some((t) => dbName.includes(t));
   if (!ok) {
     throw new Error(

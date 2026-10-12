@@ -1,8 +1,4 @@
-import type {
-  CreateSessionRecordInput,
-  SessionAdapter,
-  SessionRotationReplacement,
-} from "../session/types.js";
+import type { CreateSessionRecordInput, SessionAdapter, SessionRotationReplacement } from "../session/types.js";
 
 export interface MemorySessionRecord {
   tokenHash: string;

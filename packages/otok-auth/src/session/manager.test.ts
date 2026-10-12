@@ -150,7 +150,11 @@ describe("createSessionManager", () => {
     });
 
     const login = await app.request("/login");
-    const token = login.headers.getSetCookie().find((v) => v.startsWith("sid="))!.split("=")[1]!.split(";")[0]!;
+    const token = login.headers
+      .getSetCookie()
+      .find((v) => v.startsWith("sid="))!
+      .split("=")[1]!
+      .split(";")[0]!;
     const rotate = await app.request("/rotate", {
       method: "POST",
       headers: { cookie: `sid=${token}` },
@@ -186,7 +190,11 @@ describe("createSessionManager", () => {
     });
 
     const login = await app.request("/login");
-    const oldToken = login.headers.getSetCookie().find((v) => v.startsWith("sid="))!.split("=")[1]!.split(";")[0]!;
+    const oldToken = login.headers
+      .getSetCookie()
+      .find((v) => v.startsWith("sid="))!
+      .split("=")[1]!
+      .split(";")[0]!;
     const rotate = await app.request("/rotate", {
       method: "POST",
       headers: { cookie: `sid=${oldToken}` },
@@ -225,7 +233,11 @@ describe("createSessionManager", () => {
     });
 
     const login = await app.request("/login");
-    const token = login.headers.getSetCookie().find((v) => v.startsWith("sid="))!.split("=")[1]!.split(";")[0]!;
+    const token = login.headers
+      .getSetCookie()
+      .find((v) => v.startsWith("sid="))!
+      .split("=")[1]!
+      .split(";")[0]!;
     const cookie = `sid=${token}`;
 
     const [a, b] = await Promise.all([

@@ -1,12 +1,7 @@
 // @vitest-environment jsdom
 
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import {
-  restoreScrollPosition,
-  saveScrollPosition,
-  scrollToHashFromUrl,
-  withViewTransition,
-} from "./scroll.js";
+import { restoreScrollPosition, saveScrollPosition, scrollToHashFromUrl, withViewTransition } from "./scroll.js";
 
 type TransitionHandles = {
   updateCallbackDone: Promise<void>;
