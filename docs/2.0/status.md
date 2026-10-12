@@ -5,11 +5,11 @@
 
 ## Version truth
 
-| Source | What it means |
-|--------|----------------|
-| `packages/otok/package.json` (`@kamod-ch/otok`) | **2.0.0** in this repository — the current framework line under active development. |
-| `pnpm create otok` / template `package.json` files | Scaffold pins (for example `^2.0.0`) — verify [npm](https://www.npmjs.com/package/@kamod-ch/otok) before assuming a release exists. |
-| Historical docs under `docs/1.0/` and `docs/stabilization/` | **Point-in-time evidence** from earlier stabilization work — preserved verbatim with dated banners. |
+| Source                                                      | What it means                                                                                                                       |
+| ----------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------- |
+| `packages/otok/package.json` (`@kamod-ch/otok`)             | **2.0.0** in this repository — the current framework line under active development.                                                 |
+| `pnpm create otok` / template `package.json` files          | Scaffold pins (for example `^2.0.0`) — verify [npm](https://www.npmjs.com/package/@kamod-ch/otok) before assuming a release exists. |
+| Historical docs under `docs/1.0/` and `docs/stabilization/` | **Point-in-time evidence** from earlier stabilization work — preserved verbatim with dated banners.                                 |
 
 The workspace root `package.json` version (`0.1.0`) is a private meta version only; it is **not** the framework semver.
 

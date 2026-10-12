@@ -4,12 +4,12 @@ This guide summarizes **documented, in-repo** differences when moving from early
 
 ## Package names
 
-| Legacy / informal | Current |
-|-------------------|---------|
-| npm name `otok` | **`@kamod-ch/otok`** (legacy name may appear as a registry alias only — do not keep both in `package.json`) |
-| Unscoped adapters | **`otok-adapter-node`**, **`otok-adapter-cloudflare`**, **`otok-adapter-static`** (still unscoped) |
-| Vite integration | **`@kamod-ch/otok-vite-plugin`** |
-| CLI | **`otok-cli`** (unscoped) |
+| Legacy / informal | Current                                                                                                     |
+| ----------------- | ----------------------------------------------------------------------------------------------------------- |
+| npm name `otok`   | **`@kamod-ch/otok`** (legacy name may appear as a registry alias only — do not keep both in `package.json`) |
+| Unscoped adapters | **`otok-adapter-node`**, **`otok-adapter-cloudflare`**, **`otok-adapter-static`** (still unscoped)          |
+| Vite integration  | **`@kamod-ch/otok-vite-plugin`**                                                                            |
+| CLI               | **`otok-cli`** (unscoped)                                                                                   |
 
 Use `otok upgrade --dry-run` with `OTOK_REGISTRY_OFFLINE=1` to compare installed versions against the **bundled registry snapshot** in `@kamod-ch/otok-registry`. Snapshot targets are repo metadata, not a claim that npm serves those tarballs yet.
 
