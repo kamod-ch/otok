@@ -10,6 +10,7 @@ Build fast, progressively enhanced web apps with server-side rendering, file-bas
 ![npm](https://img.shields.io/npm/v/@kamod-ch/otok?label=%40kamod-ch%2Fotok)
 ![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)
 ![Node.js](https://img.shields.io/badge/node-%3E%3D20-339933?logo=node.js&logoColor=white)
+[![Preact 11](https://img.shields.io/badge/Preact-11-673AB8?logo=preact&logoColor=white)](https://preactjs.com/)
 
 [Documentation](https://kamod-ch.github.io/otok/) · [Quick start](#quick-start) · [Examples](./examples) · [Roadmap](./apps/docs/content/project/roadmap.md) · [Discussions](https://github.com/kamod-ch/otok/discussions)
 
