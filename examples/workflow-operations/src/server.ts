@@ -35,5 +35,5 @@ const app = createWorkflowOpsApp({
 
 const port = Number.parseInt(process.env.WORKFLOW_OPS_PORT ?? "5190", 10);
 serve({ fetch: app.fetch, port }, () => {
-  console.log(`workflow-operations listening on http://127.0.0.1:${port}`);
+  console.info(`workflow-operations listening on http://127.0.0.1:${port}`);
 });
