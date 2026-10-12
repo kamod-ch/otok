@@ -7,6 +7,11 @@ node_modules/
 /plans
 *.tsbuildinfo
 /docs/*
+!/docs/2.0/
+/docs/2.0/*
+!/docs/2.0/status.md
+!/docs/2.0/migration.md
+!/docs/node-support.md
 !/docs/governance/
 /docs/governance/*
 !/docs/governance/api-export-snapshot.json
