@@ -47,7 +47,6 @@ describe.skipIf(!databaseUrl)("postgres queue integration", () => {
 
   afterAll(async () => {
     await db?.destroy().catch(() => undefined);
-    await pool?.end().catch(() => undefined);
   }, hookTimeout);
 
   it("claims jobs exclusively across two workers", async () => {
@@ -96,7 +95,6 @@ describe.skipIf(!databaseUrl)("postgres queue integration", () => {
       await provider2.complete(job!.id, job!.leaseToken);
     } finally {
       await restartDb.destroy();
-      await restartPool.end();
     }
   });
 
