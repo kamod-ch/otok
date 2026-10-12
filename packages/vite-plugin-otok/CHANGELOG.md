@@ -1,5 +1,19 @@
 # @kamod-ch/otok-vite-plugin
 
+## 2.1.0
+
+### Minor Changes
+
+- Release all public Otok workspace packages as version 2.1.0.
+
+### Patch Changes
+
+- 3a98f5e: Await Otok plugin container `buildStart` and `buildEnd` hooks in the Vite bridge so async plugin and adapter lifecycle work completes before Vite proceeds.
+- 3a98f5e: Fail the build on island registry key collisions instead of warning and overwriting hydration mappings.
+- Updated dependencies
+  - @kamod-ch/otok-config@2.1.0
+  - @kamod-ch/otok-route-typegen@2.1.0
+
 ## 0.6.1
 
 ### Patch Changes

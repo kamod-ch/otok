@@ -1,5 +1,27 @@
 # @kamod-ch/otok-supabase
 
+## 2.1.0
+
+### Minor Changes
+
+- Release all public Otok workspace packages as version 2.1.0.
+
+### Patch Changes
+
+- 3a98f5e: Normalize redirect targets before allowlist and origin checks: reject control characters and backslashes, canonicalize path segments via URL parsing, and return safe canonical Location values to block open-redirect normalization gaps.
+- 3a98f5e: Pass Supabase auth passwords through without trimming while keeping trimmed validation for email and other text fields.
+- Updated dependencies [3a98f5e]
+- Updated dependencies [3a98f5e]
+- Updated dependencies [00aac39]
+- Updated dependencies [00aac39]
+- Updated dependencies [00aac39]
+- Updated dependencies [00aac39]
+- Updated dependencies [00aac39]
+- Updated dependencies [00aac39]
+- Updated dependencies
+- Updated dependencies [00aac39]
+  - @kamod-ch/otok@2.1.0
+
 ## 1.1.0
 
 ### Minor Changes

@@ -1,6 +1,6 @@
 {
   "name": "@kamod-ch/otok-forum",
-  "version": "2.0.0",
+  "version": "2.1.0",
   "description": "Production-ready optional forum extension for Otok — SSR, Kysely, permissions, moderation.",
   "homepage": "https://github.com/kamod-ch/otok/tree/main/packages/otok-forum#readme",
   "bugs": {
@@ -63,7 +63,7 @@
     "vitest": "^5.0.3"
   },
   "peerDependencies": {
-    "@kamod-ch/otok": ">=0.6.1",
+    "@kamod-ch/otok": ">=2.1.0",
     "hono": ">=4",
     "kysely": ">=0.27.0",
     "preact": ">=10.26.0"

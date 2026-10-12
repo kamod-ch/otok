@@ -1,6 +1,6 @@
 {
   "name": "otok-adapter-node",
-  "version": "2.0.0",
+  "version": "2.1.0",
   "description": "Node.js deployment adapter for Otok with standalone server builds, static assets, and graceful shutdown.",
   "homepage": "https://github.com/kamod-ch/otok/tree/main/packages/otok-adapter-node#readme",
   "bugs": {
@@ -43,7 +43,7 @@
     "vitest": "^5.0.3"
   },
   "peerDependencies": {
-    "@kamod-ch/otok": ">=0.6.1",
+    "@kamod-ch/otok": ">=2.1.0",
     "vite": ">=6"
   },
   "engines": {

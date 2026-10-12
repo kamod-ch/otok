@@ -1,6 +1,6 @@
 {
   "name": "@kamod-ch/otok-queue",
-  "version": "2.0.0",
+  "version": "2.1.0",
   "description": "Provider-based job queue for Otok — typed jobs, retry, idempotency, cron, and in-memory dev provider.",
   "homepage": "https://github.com/kamod-ch/otok/tree/main/packages/otok-queue#readme",
   "bugs": {
@@ -55,7 +55,7 @@
     "vitest": "^5.0.3"
   },
   "peerDependencies": {
-    "@kamod-ch/otok": ">=0.6.1",
+    "@kamod-ch/otok": ">=2.1.0",
     "hono": ">=4",
     "kysely": ">=0.27.0",
     "pg": ">=8.0.0"

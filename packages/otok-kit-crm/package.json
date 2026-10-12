@@ -1,6 +1,6 @@
 {
   "name": "@kamod-ch/otok-kit-crm",
-  "version": "2.0.0",
+  "version": "2.1.0",
   "description": "Composable Swiss B2B CRM kit for Otok — organizations, companies, contacts, pipelines, audit, search, import/export.",
   "homepage": "https://github.com/kamod-ch/otok/tree/main/packages/otok-kit-crm#readme",
   "bugs": {
@@ -64,7 +64,7 @@
     "vitest": "^5.0.3"
   },
   "peerDependencies": {
-    "@kamod-ch/otok": ">=0.6.1",
+    "@kamod-ch/otok": ">=2.1.0",
     "kysely": ">=0.27.0"
   },
   "peerDependenciesMeta": {

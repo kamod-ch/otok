@@ -1,6 +1,6 @@
 {
   "name": "@kamod-ch/otok-realtime",
-  "version": "2.0.0",
+  "version": "2.1.0",
   "description": "Typed SSE and WebSocket realtime for Otok — channels, rooms, presence, and scalable providers.",
   "homepage": "https://github.com/kamod-ch/otok/tree/main/packages/otok-realtime#readme",
   "bugs": {
@@ -75,7 +75,7 @@
     "ws": "^8.22.0"
   },
   "peerDependencies": {
-    "@kamod-ch/otok": ">=0.6.1",
+    "@kamod-ch/otok": ">=2.1.0",
     "hono": ">=4"
   },
   "peerDependenciesMeta": {

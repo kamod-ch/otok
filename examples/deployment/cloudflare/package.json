@@ -16,8 +16,8 @@
     "bundle:measure": "node ./scripts/bundle-measure.mjs"
   },
   "dependencies": {
-    "@kamod-ch/otok": "^2.0.0",
-    "@kamod-ch/otok-vite-plugin": "^2.0.0",
+    "@kamod-ch/otok": "^2.1.0",
+    "@kamod-ch/otok-vite-plugin": "^2.1.0",
     "@preact/preset-vite": "^2.10.6",
     "hono": "^4.13.12",
     "preact": "^11.0.0",

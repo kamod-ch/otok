@@ -1,6 +1,6 @@
 {
   "name": "@kamod-ch/otok-discussions",
-  "version": "2.0.0",
+  "version": "2.1.0",
   "description": "Subject-scoped discussions for Otok — headless domain core, adapters, optional Kamod UI, and plugin routes.",
   "homepage": "https://github.com/kamod-ch/otok/tree/main/packages/otok-discussions#readme",
   "bugs": {
@@ -110,10 +110,10 @@
   },
   "peerDependencies": {
     "@kamod-ch/icons": ">=1.0.0",
-    "@kamod-ch/otok": ">=1.0.0",
-    "@kamod-ch/otok-auth": ">=1.0.0",
-    "@kamod-ch/otok-queue": ">=0.1.0",
-    "@kamod-ch/otok-realtime": ">=0.1.0",
+    "@kamod-ch/otok": ">=2.1.0",
+    "@kamod-ch/otok-auth": ">=2.1.0",
+    "@kamod-ch/otok-queue": ">=2.1.0",
+    "@kamod-ch/otok-realtime": ">=2.1.0",
     "@kamod-ch/ui": ">=1.0.0",
     "hono": ">=4",
     "kysely": ">=0.27.0",

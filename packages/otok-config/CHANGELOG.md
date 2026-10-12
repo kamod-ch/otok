@@ -1,5 +1,11 @@
 # @kamod-ch/otok-config
 
+## 2.1.0
+
+### Minor Changes
+
+- Release all public Otok workspace packages as version 2.1.0.
+
 ## 0.3.0
 
 ### Minor Changes

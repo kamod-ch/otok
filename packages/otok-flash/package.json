@@ -1,6 +1,6 @@
 {
   "name": "@kamod-ch/otok-flash",
-  "version": "2.0.0",
+  "version": "2.1.0",
   "description": "Signed flash cookies for Otok PRG redirects and SSR toasts.",
   "homepage": "https://github.com/kamod-ch/otok/tree/main/packages/otok-flash#readme",
   "bugs": {
@@ -45,7 +45,7 @@
     "vitest": "^5.0.3"
   },
   "peerDependencies": {
-    "@kamod-ch/otok": ">=0.6.1",
+    "@kamod-ch/otok": ">=2.1.0",
     "hono": ">=4"
   },
   "engines": {

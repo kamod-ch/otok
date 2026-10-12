@@ -1,5 +1,25 @@
 # otok
 
+## 2.1.0
+
+### Minor Changes
+
+- Release all public Otok workspace packages as version 2.1.0.
+
+### Patch Changes
+
+- 3a98f5e: Return HTTP 400 for malformed route parameter percent-encoding during matching instead of an unhandled URIError.
+- 3a98f5e: Await view transition updateCallbackDone so async DOM updates finish before treating animation aborts as success.
+- 00aac39: Harden action idempotency with scoped storage keys, payload fingerprints, 409 conflicts, pending/completed/error states, bounded memory store, and safe response replay (no Set-Cookie). Memory store remains process-local only.
+- 00aac39: Fix HTML server cache isolation: versioned cache keys (route id, URL, query, verified scope, Vary), skip shared cache for personalized requests without scope, honor noStore/Set-Cookie/errors, drop unsupported in-process SWR stale serves, and bound the memory provider.
+- 00aac39: Stabilize island hydration during soft navigation: unmount replaced hydrated roots, decouple navigation completion from deferred strategies, invalidate stale async imports, and run DOM swaps inside view transitions (respecting reduced motion).
+- 00aac39: Add PostgreSQL queue provider with lease-based claiming, worker runtime, cron dedupe, and `PostgresIdempotencyStore` for durable HTTP idempotency. Document at-least-once delivery in ADR-001.
+- 00aac39: Fix progressive form soft-nav: distinguish submit outcomes, render 400/422 HTML without native resubmit, preserve submitter/encoding, stale-response guards, loading/error UI, and stable idempotency keys for retries.
+- 00aac39: Add API export snapshot baseline, strict budget gates, pack-consumer verification, reproducible build check, release-check orchestration, and gate self-tests.
+- 00aac39: Harden soft navigation prefetch with TTL, redirect-aware cache entries, Cache-Control guards, scope invalidation, in-flight deduplication, and mutation-triggered cache clears.
+- Updated dependencies
+  - @kamod-ch/otok-config@2.1.0
+
 ## 0.6.1
 
 ### Patch Changes

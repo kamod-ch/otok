@@ -1,5 +1,15 @@
 # @kamod-ch/otok-registry
 
+## 2.1.0
+
+### Minor Changes
+
+- Release all public Otok workspace packages as version 2.1.0.
+
+### Patch Changes
+
+- 3a98f5e: Align CLI upgrade and doctor with scoped core package names and registry snapshot targets instead of hardcoded 1.0.0 upgrade paths.
+
 ## 0.2.1
 
 ### Patch Changes

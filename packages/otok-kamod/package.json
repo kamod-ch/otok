@@ -1,6 +1,6 @@
 {
   "name": "@kamod-ch/otok-kamod",
-  "version": "2.0.0",
+  "version": "2.1.0",
   "description": "Optional Kamod UI integration for Otok — Tailwind, themes, forms, and ecosystem helpers.",
   "homepage": "https://github.com/kamod-ch/otok/tree/main/packages/otok-kamod#readme",
   "bugs": {
@@ -68,7 +68,7 @@
   "peerDependencies": {
     "@kamod-ch/hooks": ">=1.0.0",
     "@kamod-ch/icons": ">=1.0.0",
-    "@kamod-ch/otok": ">=0.6.1",
+    "@kamod-ch/otok": ">=2.1.0",
     "@kamod-ch/signals": ">=1.0.0",
     "@kamod-ch/themes": ">=0.2.0",
     "@kamod-ch/ui": ">=1.0.0",

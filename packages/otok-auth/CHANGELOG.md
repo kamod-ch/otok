@@ -1,5 +1,27 @@
 # @kamod-ch/otok-auth
 
+## 2.1.0
+
+### Minor Changes
+
+- Release all public Otok workspace packages as version 2.1.0.
+
+### Patch Changes
+
+- 3a98f5e: Normalize redirect targets before allowlist and origin checks: reject control characters and backslashes, canonicalize path segments via URL parsing, and return safe canonical Location values to block open-redirect normalization gaps.
+- 3a98f5e: Add optional atomic `rotateRecord` on session adapters (Kysely and memory implementations) and route session rotation through it when available. Kysely gains `resolveRecord` with active-session filtering; manual rotation without metadata is a documented no-op instead of logging users out. Cookie max-age respects remaining absolute session expiry.
+- Updated dependencies [3a98f5e]
+- Updated dependencies [3a98f5e]
+- Updated dependencies [00aac39]
+- Updated dependencies [00aac39]
+- Updated dependencies [00aac39]
+- Updated dependencies [00aac39]
+- Updated dependencies [00aac39]
+- Updated dependencies [00aac39]
+- Updated dependencies
+- Updated dependencies [00aac39]
+  - @kamod-ch/otok@2.1.0
+
 ## 2.0.0
 
 ### Minor Changes

@@ -1,6 +1,6 @@
 {
   "name": "@kamod-ch/otok-stripe",
-  "version": "2.0.0",
+  "version": "2.1.0",
   "description": "Stripe Checkout and webhook helpers for Otok apps.",
   "homepage": "https://github.com/kamod-ch/otok/tree/main/packages/otok-stripe#readme",
   "bugs": {
@@ -53,7 +53,7 @@
     "vitest": "^5.0.3"
   },
   "peerDependencies": {
-    "@kamod-ch/otok": ">=0.6.1",
+    "@kamod-ch/otok": ">=2.1.0",
     "hono": ">=4",
     "stripe": ">=17"
   },

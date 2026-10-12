@@ -1,5 +1,16 @@
 # otok-adapter-contract
 
+## 2.1.0
+
+### Minor Changes
+
+- Release all public Otok workspace packages as version 2.1.0.
+
+### Patch Changes
+
+- Updated dependencies
+  - @kamod-ch/otok-config@2.1.0
+
 ## 0.1.2
 
 ### Patch Changes
