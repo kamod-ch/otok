@@ -47,6 +47,7 @@ export async function configureAiApp(app: Hono, options: AiPluginOptions): Promi
     redact: options.redact ?? true,
     mcpRoutes: options.mcpRoutes ?? [],
     mcpPath: options.mcpPath ?? "/api/mcp",
+    mcpStreamablePath: options.mcpStreamablePath === false ? false : (options.mcpStreamablePath ?? "/api/mcp/stream"),
     llmsPath: options.llmsPath ?? "/llms.txt",
   };
 
@@ -71,8 +72,9 @@ export async function configureAiApp(app: Hono, options: AiPluginOptions): Promi
     return c.body(body);
   });
 
-  mountMcpRoutes(app, {
+  await mountMcpRoutes(app, {
     path: runtime.mcpPath,
+    streamablePath: runtime.mcpStreamablePath || undefined,
     allowedRoutes: runtime.mcpRoutes,
     fetchImpl: (path, init) => Promise.resolve(app.request(path, init)),
   });

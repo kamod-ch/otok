@@ -84,6 +84,14 @@ const errorReporter: ErrorReporter = {
 
 Built-in redaction covers `authorization`, `cookie`, `password`, `token`, `secret`, `_csrf`, and more. Extend with `redactKeys`.
 
+### Request URL sanitization
+
+`sanitizeRequestPath()` (from `@kamod-ch/otok/shared` or `@kamod-ch/otok-observability`) strips query strings, URL fragments, and credentials from request URLs before they appear in logs or error reports. Known auth paths (for example `/invite/:token`, `/auth/:provider/callback`) are normalized to route templates; high-entropy path segments on unknown routes are replaced with `:redacted`. When the Otok handler has matched a route, observability logs the route pattern instead of the raw pathname.
+
+On parse or validation failure the path becomes `/[url-unavailable]` — the original URL is never used as a fallback.
+
+**Limits:** Static path segments on custom token routes are only masked when they match built-in templates or heuristics (length/entropy). Add app-specific templates via route patterns on the Hono context (`OTOK_MATCHED_ROUTE_PATTERN_KEY`) or pass `routePattern` to `sanitizeRequestPath`. OpenTelemetry HTTP instrumentation that bypasses this helper may still emit raw URLs unless configured to use `sanitizeOpenTelemetryRequestUrl`.
+
 ## API
 
 | Export                          | Purpose                |

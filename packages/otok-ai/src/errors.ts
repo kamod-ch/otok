@@ -8,8 +8,8 @@ export class OtokAiError extends Error {
 }
 
 export class OtokAiConfigError extends OtokAiError {
-  constructor(message: string) {
-    super("CONFIG_ERROR", message);
+  constructor(message: string, options?: { cause?: unknown }) {
+    super("CONFIG_ERROR", message, options);
     this.name = "OtokAiConfigError";
   }
 }

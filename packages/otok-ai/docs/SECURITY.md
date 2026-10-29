@@ -53,9 +53,35 @@ Applied to `/api/ai/*` routes.
 
 ## MCP (Model Context Protocol)
 
+Otok AI exposes two MCP surfaces:
+
+| Endpoint                         | Config                                                                  | Protocol                                                             |
+| -------------------------------- | ----------------------------------------------------------------------- | -------------------------------------------------------------------- |
+| Legacy discovery + `POST …/call` | `mcpPath` (default `/api/mcp`)                                          | `otok-mcp/1` (Otok-specific JSON)                                    |
+| Streamable HTTP                  | `mcpStreamablePath` (default `/api/mcp/stream`, set `false` to disable) | Official MCP over HTTP via `@hono/mcp` + `@modelcontextprotocol/sdk` |
+
+Install peers for the standard transport:
+
+```bash
+pnpm add @hono/mcp @modelcontextprotocol/sdk
+```
+
+Set `mcpStreamablePath: false` when you only need legacy `otok-mcp/1` and want to avoid loading Streamable MCP at startup.
+
+```ts
+ai({
+  mcpRoutes: ["/api/companies"],
+  mcpPath: "/api/mcp",
+  mcpStreamablePath: "/api/mcp/stream",
+});
+```
+
+Connect a spec-compliant client to `POST/GET/DELETE` on the streamable path (for example `@modelcontextprotocol/sdk` `StreamableHTTPClientTransport`). Tools mirror allowlisted GET routes; query arguments are forwarded as search params. Authorization and CSRF headers from the MCP request are forwarded into the internal `app.request()` call so route middleware still runs.
+
 - Only routes in `mcpRoutes: readonly string[]` are exposed.
 - No automatic route discovery — **explicit opt-in required**.
 - MCP proxy uses internal `fetchImpl`; does not bypass auth middleware on target routes.
+- Reserved MCP argument keys: `route`, `path`, `method`, `url`.
 
 ## Tool Calls
 

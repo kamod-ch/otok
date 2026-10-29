@@ -1,5 +1,6 @@
 import { randomUUID } from "node:crypto";
 import type { Hono } from "hono";
+import { OTOK_MATCHED_ROUTE_PATTERN_KEY, sanitizeRequestPath } from "@kamod-ch/otok/shared";
 import { defineMiddleware, type OtokMiddleware } from "@kamod-ch/otok/server";
 import { captureError } from "./error-reporting.js";
 import {
@@ -29,10 +30,14 @@ export function createRequestIdMiddleware(runtime: ObservabilityRuntime): OtokMi
   });
 }
 
+function resolveLoggedPath(c: Parameters<OtokMiddleware>[0]): string {
+  const routePattern = c.get(OTOK_MATCHED_ROUTE_PATTERN_KEY as never) as string | undefined;
+  return sanitizeRequestPath(c.req.url, { routePattern });
+}
+
 export function createRequestLoggingMiddleware(runtime: ObservabilityRuntime): OtokMiddleware {
   return defineMiddleware(async (c, next) => {
     const start = performance.now();
-    const url = new URL(c.req.url);
     const logger = c.get(LOGGER_CONTEXT_KEY as never) as
       | ReturnType<ObservabilityRuntime["logger"]["child"]>
       | undefined;
@@ -43,7 +48,7 @@ export function createRequestLoggingMiddleware(runtime: ObservabilityRuntime): O
       await captureError(runtime.errorReporter, {
         error,
         requestId: c.get(REQUEST_ID_CONTEXT_KEY as never) as string | undefined,
-        route: url.pathname,
+        route: resolveLoggedPath(c),
         method: c.req.method,
       });
       throw error;
@@ -53,7 +58,7 @@ export function createRequestLoggingMiddleware(runtime: ObservabilityRuntime): O
         const timing = (c.get(TIMING_CONTEXT_KEY as never) as HandlerTiming | undefined) ?? {};
         logger.info("request completed", {
           method: c.req.method,
-          path: url.pathname,
+          path: resolveLoggedPath(c),
           status: c.res.status,
           durationMs,
           ...timing,

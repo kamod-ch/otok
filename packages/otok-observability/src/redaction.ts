@@ -64,3 +64,10 @@ export function createRedactor(extraKeys: string[] = []) {
 }
 
 export type Redactor = ReturnType<typeof createRedactor>;
+
+export {
+  OTOK_MATCHED_ROUTE_PATTERN_KEY,
+  SANITIZE_REQUEST_PATH_FALLBACK,
+  sanitizeRequestPath,
+  type SanitizeRequestPathOptions,
+} from "@kamod-ch/otok/shared";

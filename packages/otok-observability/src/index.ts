@@ -2,9 +2,9 @@ export { createConsoleErrorReporter, captureError } from "./error-reporting.js";
 export { createJsonLogger, resolveLogger } from "./logger.js";
 export { defineLoader, defineAction, recordRenderDuration, recordPluginHookDuration } from "./loader.js";
 export { configureObservabilityApp, createRequestIdMiddleware, createRequestLoggingMiddleware } from "./middleware.js";
-export { createOtelTracer, resolveTracer } from "./otel.js";
+export { createOtelTracer, resolveTracer, sanitizeOpenTelemetryRequestUrl } from "./otel.js";
 export { default } from "./plugin.js";
-export { createRedactor, type Redactor } from "./redaction.js";
+export { createRedactor, sanitizeRequestPath, type Redactor, type SanitizeRequestPathOptions } from "./redaction.js";
 export {
   getObservabilityRuntime,
   registerObservabilityRuntime,

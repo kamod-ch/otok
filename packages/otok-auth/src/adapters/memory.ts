@@ -94,7 +94,7 @@ export function createMemorySessionAdapter<TUser>(options: MemorySessionAdapterO
       await withExclusive(async () => {
         await ensureLoaded();
         const session = sessions.find((entry) => entry.tokenHash === tokenHash);
-        if (!session) return;
+        if (!session || !isActive(session)) return;
         session.lastSeenAt = new Date();
         await persist();
       });

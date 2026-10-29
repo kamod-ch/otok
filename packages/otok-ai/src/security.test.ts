@@ -74,7 +74,7 @@ describe("MCP permissions", () => {
 
   it("rejects calls to non-allowlisted tools", async () => {
     const app = new Hono();
-    mountMcpRoutes(app, {
+    await mountMcpRoutes(app, {
       path: "/api/mcp",
       allowedRoutes: ["/public"],
       fetchImpl: async () => new Response("{}"),
@@ -91,7 +91,7 @@ describe("MCP permissions", () => {
   it("allows calls to allowlisted routes", async () => {
     const app = new Hono();
     app.get("/public", (c) => c.json({ ok: true }));
-    mountMcpRoutes(app, {
+    await mountMcpRoutes(app, {
       path: "/api/mcp",
       allowedRoutes: ["/public"],
       fetchImpl: (path, init) => Promise.resolve(app.request(path, init)),

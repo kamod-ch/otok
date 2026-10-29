@@ -262,7 +262,10 @@ export interface AiPluginOptions {
   rateLimit?: { windowMs: number; max: number };
   /** Routes exposed via MCP (explicit allowlist) */
   mcpRoutes?: readonly string[];
+  /** Legacy otok-mcp/1 discovery + /call endpoint */
   mcpPath?: string;
+  /** Standard MCP Streamable HTTP endpoint (Model Context Protocol over HTTP) */
+  mcpStreamablePath?: string | false;
   /** Path for llms.txt */
   llmsPath?: string;
 }
@@ -276,5 +279,6 @@ export interface AiRuntime {
   redact: boolean;
   mcpRoutes: readonly string[];
   mcpPath: string;
+  mcpStreamablePath: string | false;
   llmsPath: string;
 }

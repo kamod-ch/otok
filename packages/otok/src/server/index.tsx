@@ -15,6 +15,7 @@ import {
   type HandlerRenderOptions,
 } from "./rendering.js";
 import { withIslandRenderContext } from "../shared/island-context.js";
+import { OTOK_MATCHED_ROUTE_PATTERN_KEY, sanitizeRequestPath } from "../shared/request-url.js";
 import {
   isOtokHttpError,
   json,
@@ -172,11 +173,11 @@ export function createOtokHandler(options: CreateOtokHandlerOptions): Handler {
   return async (c: Context) => {
     const url = new URL(c.req.url);
     let match: RouteMatch | undefined;
-    const requestId = otokDevtoolsBeginRequest(c.req.method, url.pathname);
+    const requestId = otokDevtoolsBeginRequest(c.req.method, sanitizeRequestPath(c.req.url));
     const trace: ActiveDevtoolsTrace | null = requestId
       ? {
           requestId,
-          route: url.pathname,
+          route: sanitizeRequestPath(c.req.url),
           middlewareMs: 0,
           loaderMs: 0,
           renderMs: 0,
@@ -187,6 +188,9 @@ export function createOtokHandler(options: CreateOtokHandlerOptions): Handler {
 
     try {
       match = matchRoute(options.routes, url.pathname);
+      if (match) {
+        c.set(OTOK_MATCHED_ROUTE_PATTERN_KEY as never, match.route.path);
+      }
       if (trace && match) trace.route = match.route.path;
 
       if (!match) {
@@ -196,6 +200,7 @@ export function createOtokHandler(options: CreateOtokHandlerOptions): Handler {
           await finalizeDevtoolsRequest(trace, c, response, undefined);
           return response;
         }
+        c.set(OTOK_MATCHED_ROUTE_PATTERN_KEY as never, notFoundRoute.path);
         if (trace) trace.route = notFoundRoute.path;
         const response = mergeContextHeaders(c, await renderRoute(c, notFoundRoute, {}, options, 404));
         await finalizeDevtoolsRequest(trace, c, response, notFoundRoute.module);

@@ -1,7 +1,7 @@
 {
   "version": 1,
   "baselineRelease": "1.0.0-draft",
-  "generatedAt": "2026-10-11T22:27:50.934Z",
+  "generatedAt": "2026-10-28T21:32:35.260Z",
   "note": "Review aid for public/experimental export surfaces — not a semver proof.",
   "packages": {
     "@kamod-ch/otok": {
@@ -165,10 +165,13 @@
           "OTOK_HISTORY_STATE_KEY",
           "OTOK_IDEMPOTENCY_FIELD",
           "OTOK_IDEMPOTENCY_HEADER",
+          "OTOK_MATCHED_ROUTE_PATTERN_KEY",
           "OTOK_NO_NAV_ATTR",
           "OTOK_PAGE_ATTR",
           "OTOK_SWAP_ATTR",
           "OtokHttpError",
+          "SANITIZE_REQUEST_PATH_FALLBACK",
+          "SanitizeRequestPathOptions",
           "THEME_STORAGE_KEY",
           "createIdempotencyKey",
           "cssEscape",
@@ -186,6 +189,7 @@
           "registerRenderedIsland",
           "resolveDarkModeFromCookie",
           "resolveIslandId",
+          "sanitizeRequestPath",
           "validationError",
           "withIslandRenderContext"
         ]
@@ -410,7 +414,13 @@
       "./mcp": {
         "classification": "public",
         "typesFile": "dist/mcp/index.d.ts",
-        "exports": ["isRouteMcpAllowed", "mountMcpRoutes"]
+        "exports": [
+          "createStreamableMcpServer",
+          "isRouteMcpAllowed",
+          "mountLegacyOtokMcpRoutes",
+          "mountMcpRoutes",
+          "mountStreamableMcpRoutes"
+        ]
       },
       "./rag": {
         "classification": "experimental",

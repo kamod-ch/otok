@@ -74,3 +74,9 @@ export {
   OTOK_IDEMPOTENCY_FIELD,
   OTOK_IDEMPOTENCY_HEADER,
 } from "./mutations.js";
+export {
+  OTOK_MATCHED_ROUTE_PATTERN_KEY,
+  SANITIZE_REQUEST_PATH_FALLBACK,
+  sanitizeRequestPath,
+  type SanitizeRequestPathOptions,
+} from "./request-url.js";

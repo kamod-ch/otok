@@ -96,7 +96,13 @@ export function createKyselySessionAdapter<TUser>(options: KyselySessionAdapterO
       return resolveUser(tokenHash);
     },
     async touchRecord(tokenHash) {
-      await db.updateTable(table).set({ lastSeenAt: now() }).where("tokenHash", "=", tokenHash).execute();
+      await db
+        .updateTable(table)
+        .set({ lastSeenAt: now() })
+        .where("tokenHash", "=", tokenHash)
+        .where("revokedAt", "is", null)
+        .where("expiresAt", ">", now())
+        .execute();
     },
     async resolveRecord(tokenHash) {
       return resolveActiveRecord(tokenHash);

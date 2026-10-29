@@ -24,6 +24,14 @@ Framework-wide AI integration for [Otok](https://github.com/kamod-ch/otok) — n
 pnpm add @kamod-ch/otok-ai
 ```
 
+For **standard MCP Streamable HTTP** (default path `/api/mcp/stream`), also install peer packages:
+
+```bash
+pnpm add @hono/mcp @modelcontextprotocol/sdk
+```
+
+Legacy **`otok-mcp/1`** (`GET /api/mcp`, `POST /api/mcp/call`) works without those packages. Set `mcpStreamablePath: false` on the `ai()` plugin if you do not use Streamable MCP.
+
 ## Plugin setup
 
 ```ts
@@ -36,6 +44,7 @@ export default defineConfig({
       provider: process.env.OPENAI_API_KEY ? { type: "openai", defaultModel: "gpt-4o-mini" } : { type: "test" },
       rateLimit: { windowMs: 60_000, max: 30 },
       mcpRoutes: ["/api/companies", "/api/tasks"],
+      mcpStreamablePath: "/api/mcp/stream",
     }),
   ],
 });
