@@ -178,13 +178,16 @@ CREATE TABLE IF NOT EXISTS ${CRON_DEDUPE_TABLE} (
 );
 `;
 
-function rowToInstance(row: WorkflowsDatabase[typeof INSTANCES_TABLE]): WorkflowInstance {
+function rowToInstance(
+  row: WorkflowsDatabase[typeof INSTANCES_TABLE],
+  dialect: WorkflowsDialect,
+): WorkflowInstance {
   return {
     id: row.id,
     workflowName: row.workflow_name,
     status: row.status as WorkflowStatus,
-    input: fromDbJson(row.input),
-    output: row.output != null ? fromDbJson(row.output) : undefined,
+    input: fromDbJson(row.input, dialect),
+    output: row.output != null ? fromDbJson(row.output, dialect) : undefined,
     progress: row.progress,
     currentStep: row.current_step ?? undefined,
     idempotencyKey: row.idempotency_key ?? undefined,
@@ -200,7 +203,7 @@ function rowToInstance(row: WorkflowsDatabase[typeof INSTANCES_TABLE]): Workflow
     completedAt: row.completed_at ?? undefined,
     error: row.error ?? undefined,
     requestId: row.request_id ?? undefined,
-    metadata: row.metadata != null ? fromDbJson(row.metadata) : undefined,
+    metadata: row.metadata != null ? fromDbJson(row.metadata, dialect) : undefined,
   };
 }
 
@@ -267,7 +270,7 @@ export function createKyselyWorkflowStore(
 
     async getInstance(id: string) {
       const row = await db.selectFrom(INSTANCES_TABLE).selectAll().where("id", "=", id).executeTakeFirst();
-      return row ? rowToInstance(row) : null;
+      return row ? rowToInstance(row, dialect) : null;
     },
 
     async findByIdempotencyKey(key: string) {
@@ -276,7 +279,7 @@ export function createKyselyWorkflowStore(
         .selectAll()
         .where("idempotency_key", "=", key)
         .executeTakeFirst();
-      return row ? rowToInstance(row) : null;
+      return row ? rowToInstance(row, dialect) : null;
     },
 
     async updateInstance(id: string, patch: Partial<WorkflowInstance>) {
@@ -390,7 +393,7 @@ export function createKyselyWorkflowStore(
       if (filter?.status) q = q.where("status", "=", filter.status);
       if (filter?.workflowName) q = q.where("workflow_name", "=", filter.workflowName);
       if (filter?.limit) q = q.limit(filter.limit);
-      return q.execute().then((rows) => rows.map(rowToInstance));
+      return q.execute().then((rows) => rows.map((row) => rowToInstance(row, dialect)));
     },
 
     async getStep(instanceId: string, stepName: string) {
@@ -406,7 +409,7 @@ export function createKyselyWorkflowStore(
         stepName: row.step_name,
         status: row.status as StepRecord["status"],
         attempt: row.attempt,
-        output: row.output != null ? fromDbJson(row.output) : undefined,
+        output: row.output != null ? fromDbJson(row.output, dialect) : undefined,
         error: row.error ?? undefined,
         startedAt: row.started_at ?? undefined,
         completedAt: row.completed_at ?? undefined,
@@ -448,7 +451,7 @@ export function createKyselyWorkflowStore(
         stepName: row.step_name,
         status: row.status as StepRecord["status"],
         attempt: row.attempt,
-        output: row.output != null ? fromDbJson(row.output) : undefined,
+        output: row.output != null ? fromDbJson(row.output, dialect) : undefined,
         error: row.error ?? undefined,
         startedAt: row.started_at ?? undefined,
         completedAt: row.completed_at ?? undefined,
@@ -516,7 +519,7 @@ export function createKyselyWorkflowStore(
           `.execute(db);
           const row = result.rows[0] as WorkflowsDatabase[typeof INSTANCES_TABLE] | undefined;
           if (!row) break;
-          claimed.push({ ...rowToInstance(row), leaseToken: rowToken });
+          claimed.push({ ...rowToInstance(row, dialect), leaseToken: rowToken });
         }
         return claimed;
       }
@@ -531,7 +534,7 @@ export function createKyselyWorkflowStore(
 
       for (const row of candidates) {
         if (claimed.length >= limit) break;
-        const instance = rowToInstance(row);
+        const instance = rowToInstance(row, dialect);
         if (!isRunnableInstance(instance, now)) continue;
         if (instance.status === "running" && instance.leaseUntil && new Date(instance.leaseUntil) > now) continue;
 

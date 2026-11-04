@@ -240,11 +240,15 @@ export function parseJson<T = unknown>(raw: string | unknown): T {
   return raw as T;
 }
 
-export function toDbJson(value: unknown, dialect: "sqlite" | "postgres"): string | unknown {
-  if (dialect === "postgres") return value;
+export function toDbJson(value: unknown, _dialect: "sqlite" | "postgres"): string {
+  // pg does not JSON-encode primitive strings or arrays when binding parameters,
+  // so always provide valid JSON text for both supported dialects.
   return serializeJson(value);
 }
 
-export function fromDbJson<T>(raw: string | unknown): T {
+export function fromDbJson<T>(raw: string | unknown, dialect?: "sqlite" | "postgres"): T {
+  // pg decodes JSONB before returning it. In particular, a JSON string is
+  // returned as the unquoted string and must not be parsed a second time.
+  if (dialect === "postgres") return raw as T;
   return parseJson<T>(raw);
 }

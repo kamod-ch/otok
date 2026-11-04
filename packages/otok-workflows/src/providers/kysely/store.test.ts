@@ -6,6 +6,7 @@ import { describe, expect, it } from "vitest";
 import { Kysely, SqliteDialect } from "kysely";
 import { defineWorkflow, z } from "../../define-workflow.js";
 import { WorkflowEngine } from "../../engine.js";
+import { fromDbJson, toDbJson } from "../../types.js";
 import { createKyselyWorkflowStore, migrateWorkflowsSchema, type WorkflowsDatabase } from "./store.js";
 
 function createSqliteStore() {
@@ -15,6 +16,12 @@ function createSqliteStore() {
 }
 
 describe("kysely workflow store", () => {
+  it("encodes postgres JSON parameters and preserves decoded scalar strings", () => {
+    expect(toDbJson("x", "postgres")).toBe('"x"');
+    expect(toDbJson([1, 2], "postgres")).toBe("[1,2]");
+    expect(fromDbJson("123", "postgres")).toBe("123");
+  });
+
   it("round-trips nested JSON on sqlite", async () => {
     const { db, sqlite } = createSqliteStore();
     await migrateWorkflowsSchema(db, "sqlite");
