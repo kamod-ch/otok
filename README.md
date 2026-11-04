@@ -231,7 +231,7 @@ Use Playwright for hydration, progressive enhancement, and browser behavior.
 
 ## Project Status
 
-The framework core in this repository is **`@kamod-ch/otok` 2.0.0** — active monorepo development, **not** proof that npm already serves that version or that every extension is production-ready. Read the current status before upgrading apps:
+The framework core in this repository is **`@kamod-ch/otok` 2.1.0** — active monorepo development, **not** proof that npm already serves that version or that every extension is production-ready. Read the current status before upgrading apps:
 
 - **[Otok 2.x repository status](./docs/2.0/status.md)** — supported tooling, verified gates, honest limits
 - **[2.x migration notes](./docs/2.0/migration.md)** — names, imports, and doc map from 0.x-era material
