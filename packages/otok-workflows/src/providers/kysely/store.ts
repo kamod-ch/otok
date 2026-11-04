@@ -178,10 +178,7 @@ CREATE TABLE IF NOT EXISTS ${CRON_DEDUPE_TABLE} (
 );
 `;
 
-function rowToInstance(
-  row: WorkflowsDatabase[typeof INSTANCES_TABLE],
-  dialect: WorkflowsDialect,
-): WorkflowInstance {
+function rowToInstance(row: WorkflowsDatabase[typeof INSTANCES_TABLE], dialect: WorkflowsDialect): WorkflowInstance {
   return {
     id: row.id,
     workflowName: row.workflow_name,
