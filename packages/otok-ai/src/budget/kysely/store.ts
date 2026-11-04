@@ -36,6 +36,11 @@ function microFromDb(value: string | number): number {
   return Number(value);
 }
 
+function timestampFromDb(value: unknown): string {
+  if (value instanceof Date) return value.toISOString();
+  return new Date(String(value)).toISOString();
+}
+
 function rowId(periodStart: string, orgId: string, userId: string): string {
   return `${periodStart}:${orgId}:${userId}`;
 }
@@ -127,7 +132,8 @@ export function createKyselyAiBudgetStore(db: Db, options: KyselyAiBudgetStoreOp
     periodEnd: string;
   } | null> {
     const { start, end } = periodBounds(nowFn());
-    const id = rowId(periodStart, orgId, userId);
+    const normalizedPeriodStart = timestampFromDb(periodStart);
+    const id = rowId(normalizedPeriodStart, orgId, userId);
     let row = await withRowLock(trx.selectFrom(USAGE_TABLE).selectAll().where("id", "=", id)).executeTakeFirst();
 
     if (!row || !isWithinPeriod(nowFn(), String(row.period_start), String(row.period_end))) {
@@ -173,8 +179,8 @@ export function createKyselyAiBudgetStore(db: Db, options: KyselyAiBudgetStoreOp
       tokensReserved: Number(row.tokens_reserved),
       costMicroUsdUsed: microFromDb(row.cost_micro_usd_used),
       costMicroUsdReserved: microFromDb(row.cost_micro_usd_reserved),
-      periodStart: String(row.period_start),
-      periodEnd: String(row.period_end),
+      periodStart: timestampFromDb(row.period_start),
+      periodEnd: timestampFromDb(row.period_end),
     };
   }
 
