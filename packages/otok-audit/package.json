@@ -49,17 +49,17 @@
   },
   "dependencies": {
     "@kamod-ch/otok-config": "workspace:*",
-    "zod": "^4.6.5"
+    "zod": "^4.6.7"
   },
   "devDependencies": {
     "@kamod-ch/otok": "workspace:*",
     "@types/better-sqlite3": "^9.6.0",
-    "@types/node": "^26.6.3",
-    "better-sqlite3": "^12.11.1",
-    "hono": "^4.13.12",
-    "kysely": "^0.29.6",
+    "@types/node": "^26.6.6",
+    "better-sqlite3": "^13.0.3",
+    "hono": "^4.13.16",
+    "kysely": "^0.29.8",
     "typescript": "~7.0.2",
-    "vitest": "^5.0.3"
+    "vitest": "^5.1.0"
   },
   "peerDependencies": {
     "@kamod-ch/otok": ">=2.1.0",

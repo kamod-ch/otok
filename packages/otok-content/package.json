@@ -46,16 +46,16 @@
   "dependencies": {
     "@kamod-ch/otok-config": "workspace:*",
     "gray-matter": "^4.0.3",
-    "markdown-it": "^15.0.2",
+    "markdown-it": "^15.0.3",
     "tinyglobby": "^0.2.17",
-    "zod": "^4.6.5"
+    "zod": "^4.6.7"
   },
   "devDependencies": {
     "@kamod-ch/otok": "workspace:*",
     "@types/markdown-it": "^14.2.0",
-    "@types/node": "^26.6.3",
+    "@types/node": "^26.6.6",
     "typescript": "~7.0.2",
-    "vitest": "^5.0.3"
+    "vitest": "^5.1.0"
   },
   "peerDependencies": {
     "@kamod-ch/otok": ">=2.1.0",

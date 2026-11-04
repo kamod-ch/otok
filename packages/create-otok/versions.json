@@ -10,7 +10,7 @@
   "@kamod-ch/otok-validation": "^2.1.0",
   "@kamod-ch/otok-security": "^2.1.0",
   "@kamod-ch/otok-seo": "^2.1.0",
-  "@kamod-ui/core": "^0.1.5",
+  "@kamod-ch/ui": "^2.1.0",
   "@kamod-ch/ui": "^1.1.0",
   "@kamod-ch/icons": "^1.0.0",
   "otok-adapter-node": "^2.1.0",

@@ -1,4 +1,4 @@
-import { Avatar, AvatarFallback, Button, Card, CardContent, CardHeader, CardTitle, Input } from "@kamod-ui/core";
+import { Avatar, AvatarFallback, Button, Card, CardContent, CardHeader, CardTitle, Input } from "@kamod-ch/ui";
 import { useState } from "preact/hooks";
 import type { ChatMessage } from "../data/dashboard";
 

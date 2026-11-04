@@ -60,7 +60,7 @@
     "@kamod-ch/otok-kit-admin": "workspace:*",
     "@kamod-ch/otok-kit-crm": "workspace:*",
     "@kamod-ch/otok-kit-saas": "workspace:*",
-    "@types/node": "^26.6.3"
+    "@types/node": "^26.6.6"
   },
   "engines": {
     "node": ">=20"

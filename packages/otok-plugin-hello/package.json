@@ -33,10 +33,10 @@
   },
   "devDependencies": {
     "@kamod-ch/otok": "workspace:*",
-    "@types/node": "^26.6.3",
-    "hono": "^4.13.12",
+    "@types/node": "^26.6.6",
+    "hono": "^4.13.16",
     "typescript": "~7.0.2",
-    "vitest": "^5.0.3"
+    "vitest": "^5.1.0"
   },
   "peerDependencies": {
     "@kamod-ch/otok": ">=2.1.0",

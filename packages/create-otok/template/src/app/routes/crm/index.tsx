@@ -1,4 +1,4 @@
-import { Button } from "@kamod-ui/core";
+import { Button } from "@kamod-ch/ui";
 import { Island } from "@kamod-ch/otok/client";
 import type { OtokActionContext, OtokContext } from "@kamod-ch/otok/server";
 import CompaniesTable from "../../islands/crm-companies-table";

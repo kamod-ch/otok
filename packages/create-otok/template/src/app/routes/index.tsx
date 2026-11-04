@@ -1,4 +1,4 @@
-import { Badge, Button, Card, CardContent, CardHeader, CardTitle } from "@kamod-ui/core";
+import { Badge, Button, Card, CardContent, CardHeader, CardTitle } from "@kamod-ch/ui";
 import { Island } from "@kamod-ch/otok/client";
 import { ExerciseChart } from "../components/exercise-chart";
 import { PaymentsTable } from "../components/payments-table";

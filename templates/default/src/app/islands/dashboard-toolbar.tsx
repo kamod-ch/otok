@@ -8,7 +8,7 @@ import {
   CommandItem,
   CommandList,
   ThemeToggle,
-} from "@kamod-ui/core";
+} from "@kamod-ch/ui";
 import { useEffect, useState } from "preact/hooks";
 
 const commands = [

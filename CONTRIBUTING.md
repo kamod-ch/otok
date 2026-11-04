@@ -36,13 +36,13 @@ pnpm sync:scaffold    # sync playground changes into templates
 
 ## Local Kamod UI (optional)
 
-The playground and full template depend on the published `@kamod-ui/core` package from npm. To develop against a local Kamod checkout, add a pnpm override in the workspace root:
+The playground and full template depend on the published `@kamod-ch/ui` package from npm. To develop against a local Kamod checkout, add a pnpm override in the workspace root:
 
 ```json
 {
   "pnpm": {
     "overrides": {
-      "@kamod-ui/core": "link:../kamod-ui/packages/core"
+      "@kamod-ch/ui": "link:../kamod-ui/packages/core"
     }
   }
 }

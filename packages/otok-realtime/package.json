@@ -62,17 +62,17 @@
   },
   "dependencies": {
     "@kamod-ch/otok-config": "workspace:*",
-    "zod": "^4.6.5"
+    "zod": "^4.6.7"
   },
   "devDependencies": {
-    "@cloudflare/workers-types": "^5.20261001.1",
+    "@cloudflare/workers-types": "^5.20261103.1",
     "@kamod-ch/otok": "workspace:*",
-    "@types/node": "^26.6.3",
+    "@types/node": "^26.6.6",
     "@types/ws": "^8.18.2",
-    "hono": "^4.13.12",
+    "hono": "^4.13.16",
     "typescript": "~7.0.2",
-    "vitest": "^5.0.3",
-    "ws": "^8.22.0"
+    "vitest": "^5.1.0",
+    "ws": "^8.22.1"
   },
   "peerDependencies": {
     "@kamod-ch/otok": ">=2.1.0",

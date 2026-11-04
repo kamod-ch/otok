@@ -12,7 +12,7 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@kamod-ui/core";
+} from "@kamod-ch/ui";
 import type { TeamMember } from "../data/dashboard";
 
 type TeamMembersProps = {

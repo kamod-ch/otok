@@ -1,6 +1,6 @@
 import { useState } from "preact/hooks";
 import { useAction, useNavigationBlocker, LoadingBoundary } from "@kamod-ch/otok/client";
-import { Input } from "@kamod-ui/core";
+import { Input } from "@kamod-ch/ui";
 import type { Company } from "../data/crm";
 
 export interface CompanyEditorProps {

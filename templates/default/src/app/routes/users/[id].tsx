@@ -1,4 +1,4 @@
-import { Badge, Card, CardContent, CardHeader, CardTitle } from "@kamod-ui/core";
+import { Badge, Card, CardContent, CardHeader, CardTitle } from "@kamod-ch/ui";
 import type { OtokContext } from "@kamod-ch/otok/server";
 
 export const loader = async ({ params }: OtokContext) => ({

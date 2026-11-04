@@ -33,7 +33,7 @@ const matrix = {
   "@kamod-ch/otok-validation": caret(readVersion("packages/otok-validation")),
   "@kamod-ch/otok-security": caret(readVersion("packages/otok-security")),
   "@kamod-ch/otok-seo": caret(readVersion("packages/otok-seo")),
-  "@kamod-ui/core": "^0.1.5",
+  "@kamod-ch/ui": "^2.1.0",
   "@kamod-ch/ui": "^1.1.0",
   "@kamod-ch/icons": "^1.0.0",
   "otok-adapter-node": caret(readVersion("packages/otok-adapter-node")),

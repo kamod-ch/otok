@@ -1,4 +1,4 @@
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@kamod-ui/core";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@kamod-ch/ui";
 import type { ExerciseDay } from "../data/dashboard";
 
 type ExerciseChartProps = {

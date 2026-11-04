@@ -38,11 +38,11 @@
   "devDependencies": {
     "@kamod-ch/otok": "workspace:*",
     "@kamod-ch/otok-test": "workspace:*",
-    "@types/node": "^26.6.3",
-    "hono": "^4.13.12",
-    "preact": "^11.0.0",
+    "@types/node": "^26.6.6",
+    "hono": "^4.13.16",
+    "preact": "^11.1.1",
     "typescript": "~7.0.2",
-    "vitest": "^5.0.3"
+    "vitest": "^5.1.0"
   },
   "peerDependencies": {
     "@kamod-ch/otok": ">=2.1.0",

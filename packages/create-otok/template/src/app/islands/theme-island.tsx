@@ -1,4 +1,4 @@
-import { ThemeToggle } from "@kamod-ui/core";
+import { ThemeToggle } from "@kamod-ch/ui";
 
 export default function ThemeIsland() {
   return (

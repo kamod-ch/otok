@@ -16,7 +16,7 @@ The workspace root `package.json` version (`0.1.0`) is a private meta version on
 ## Toolchain (from manifests)
 
 - **Node.js:** `>=20` (`engines.node`); CI exercises 20.x and 22.x — see [node-support.md](../node-support.md).
-- **pnpm:** declared in the root `package.json` `packageManager` field (currently **pnpm 12.5.1**). Use Corepack or match that major when contributing.
+- **pnpm:** declared in the root `package.json` `packageManager` field (currently **pnpm 12.17.0**). Use Corepack or match that major when contributing.
 
 ## Verified gates in this repo
 

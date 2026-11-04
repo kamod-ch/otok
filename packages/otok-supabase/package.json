@@ -71,17 +71,17 @@
   },
   "dependencies": {
     "@supabase/ssr": "^0.12.7",
-    "ws": "^8.22.0"
+    "ws": "^8.22.1"
   },
   "devDependencies": {
     "@kamod-ch/otok": "workspace:*",
     "@kamod-ch/otok-test": "workspace:*",
-    "@supabase/supabase-js": "^2.117.2",
-    "@types/node": "^26.6.3",
+    "@supabase/supabase-js": "^2.118.0",
+    "@types/node": "^26.6.6",
     "@types/ws": "^8.18.2",
-    "hono": "^4.13.12",
+    "hono": "^4.13.16",
     "typescript": "~7.0.2",
-    "vitest": "^5.0.3"
+    "vitest": "^5.1.0"
   },
   "peerDependencies": {
     "@kamod-ch/otok": ">=2.1.0",

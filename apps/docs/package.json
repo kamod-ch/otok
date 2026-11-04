@@ -16,9 +16,9 @@
     "test": "preactpress check"
   },
   "devDependencies": {
-    "@kamod-ch/brand": "^0.1.12",
-    "@kamod-ch/preactpress": "^2.2.1",
-    "preact": "^11.0.0",
+    "@kamod-ch/brand": "^0.4.0",
+    "@kamod-ch/preactpress": "^3.3.0",
+    "preact": "^11.1.1",
     "typescript": "^7.0.2"
   }
 }

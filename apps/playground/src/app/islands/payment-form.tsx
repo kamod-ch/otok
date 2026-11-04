@@ -9,7 +9,7 @@ import {
   Label,
   RadioGroup,
   SelectableCard,
-} from "@kamod-ui/core";
+} from "@kamod-ch/ui";
 
 export default function PaymentForm() {
   return (

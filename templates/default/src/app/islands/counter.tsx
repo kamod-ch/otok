@@ -1,4 +1,4 @@
-import { Button } from "@kamod-ui/core";
+import { Button } from "@kamod-ch/ui";
 import { useState } from "preact/hooks";
 
 export default function Counter({ init = 0 }: { init?: number }) {

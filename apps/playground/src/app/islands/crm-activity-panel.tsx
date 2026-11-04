@@ -1,6 +1,6 @@
 import { useEffect, useState } from "preact/hooks";
 import { useFetcher, LoadingBoundary } from "@kamod-ch/otok/client";
-import { Input, Button } from "@kamod-ui/core";
+import { Input, Button } from "@kamod-ch/ui";
 import type { Activity } from "../data/crm";
 
 export interface ActivityPanelProps {

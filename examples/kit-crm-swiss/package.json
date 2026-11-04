@@ -27,23 +27,23 @@
     "@kamod-ch/otok-search": "workspace:*",
     "@kamod-ch/otok-validation": "workspace:*",
     "@kamod-ch/otok-workflows": "workspace:*",
-    "@kamod-ch/ui": "^1.3.0",
-    "hono": "^4.13.12",
-    "kysely": "^0.29.6",
+    "@kamod-ch/ui": "^2.1.0",
+    "hono": "^4.13.16",
+    "kysely": "^0.29.8",
     "otok-adapter-node": "workspace:*",
-    "pg": "^8.23.0",
-    "preact": "^11.0.0",
-    "zod": "^4.6.5"
+    "pg": "^8.23.1",
+    "preact": "^11.1.1",
+    "zod": "^4.6.7"
   },
   "devDependencies": {
     "@kamod-ch/otok-vite-plugin": "workspace:*",
-    "@playwright/test": "^1.63.0",
+    "@playwright/test": "^1.64.1",
     "@preact/preset-vite": "^2.10.6",
-    "@tailwindcss/vite": "^4.3.3",
-    "@types/node": "^26.6.3",
+    "@tailwindcss/vite": "^4.3.4",
+    "@types/node": "^26.6.6",
     "otok-cli": "workspace:*",
-    "tailwindcss": "^4.3.3",
+    "tailwindcss": "^4.3.4",
     "typescript": "~7.0.2",
-    "vite": "^8.3.1"
+    "vite": "^8.3.5"
   }
 }

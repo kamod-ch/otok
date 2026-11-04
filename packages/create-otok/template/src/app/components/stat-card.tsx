@@ -1,4 +1,4 @@
-import { Card, CardContent, CardHeader, CardTitle } from "@kamod-ui/core";
+import { Card, CardContent, CardHeader, CardTitle } from "@kamod-ch/ui";
 import type { ComponentChildren } from "preact";
 
 type StatCardProps = {

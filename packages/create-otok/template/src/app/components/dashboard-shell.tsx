@@ -1,4 +1,4 @@
-import { Avatar, AvatarFallback, Button, Separator } from "@kamod-ui/core";
+import { Avatar, AvatarFallback, Button, Separator } from "@kamod-ch/ui";
 import type { ComponentChildren } from "preact";
 import { dashboardNavGroups, isNavItemActive } from "./dashboard-nav";
 import { dashboardUser } from "../data/dashboard";

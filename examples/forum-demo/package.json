@@ -12,16 +12,16 @@
   "dependencies": {
     "@kamod-ch/otok": "workspace:*",
     "@kamod-ch/otok-forum": "workspace:*",
-    "better-sqlite3": "^12.11.1",
-    "kysely": "^0.29.6",
+    "better-sqlite3": "^13.0.3",
+    "kysely": "^0.29.8",
     "otok-adapter-node": "workspace:*",
-    "preact": "^11.0.0"
+    "preact": "^11.1.1"
   },
   "devDependencies": {
     "@kamod-ch/otok-vite-plugin": "workspace:*",
     "@types/better-sqlite3": "^9.6.0",
-    "@types/node": "^26.6.3",
+    "@types/node": "^26.6.6",
     "typescript": "~7.0.2",
-    "vite": "^8.3.1"
+    "vite": "^8.3.5"
   }
 }

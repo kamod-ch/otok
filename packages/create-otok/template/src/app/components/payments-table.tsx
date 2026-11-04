@@ -11,7 +11,7 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@kamod-ui/core";
+} from "@kamod-ch/ui";
 import type { PaymentRow } from "../data/dashboard";
 
 type PaymentsTableProps = {

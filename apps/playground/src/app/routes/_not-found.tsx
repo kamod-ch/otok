@@ -1,4 +1,4 @@
-import { Button, Card, CardContent, CardHeader, CardTitle } from "@kamod-ui/core";
+import { Button, Card, CardContent, CardHeader, CardTitle } from "@kamod-ch/ui";
 
 export const head = () => ({
   title: "Not found | Otok Playground",

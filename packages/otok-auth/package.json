@@ -82,15 +82,15 @@
   "devDependencies": {
     "@kamod-ch/otok": "workspace:*",
     "@kamod-ch/otok-test": "workspace:*",
-    "@node-rs/argon2": "^2.2.1",
-    "@types/node": "^26.6.3",
+    "@node-rs/argon2": "^2.2.2",
+    "@types/node": "^26.6.6",
     "@types/pg": "^8.23.1",
-    "hono": "^4.13.12",
-    "kysely": "^0.29.6",
-    "pg": "^8.23.0",
-    "preact": "^11.0.0",
+    "hono": "^4.13.16",
+    "kysely": "^0.29.8",
+    "pg": "^8.23.1",
+    "preact": "^11.1.1",
     "typescript": "~7.0.2",
-    "vitest": "^5.0.3"
+    "vitest": "^5.1.0"
   },
   "peerDependencies": {
     "@kamod-ch/otok": ">=2.1.0",

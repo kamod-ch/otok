@@ -52,3 +52,5 @@ minimumReleaseAgeExclude:
   - oxlint@1.86.0
   - "@kamod-ch/brand@0.1.11 || 0.1.12"
   - "@hono/mcp@0.3.5"
+  - "@kamod-ch/themes@0.2.2"
+  - "@kamod-ch/ui@2.1.0"

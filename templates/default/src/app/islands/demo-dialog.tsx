@@ -8,7 +8,7 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "@kamod-ui/core";
+} from "@kamod-ch/ui";
 
 export default function DemoDialog({ label }: { label: string }) {
   return (
