@@ -1,4 +1,20 @@
-# Migration: `@kamod-ch/otok-oauth` 1.0 → 1.1
+# `@kamod-ch/otok-oauth` migration guide
+
+## 2.x → 3.x: oauth4webapi
+
+Version 3 replaces the deprecated Arctic dependency with `oauth4webapi`. The `oauth()` plugin and `createOAuthFlow()` APIs are unchanged, and applications no longer need to install `arctic`.
+
+All providers now use S256 PKCE. If an application calls the exported low-level `createGitHubClient()`, `createGoogleClient()`, `createMicrosoftClient()`, or `createGitLabClient()` helpers directly, note that `createAuthorizationURL()` is now asynchronous and takes `(state, codeVerifier, scopes)`. `validateAuthorizationCode()` takes `(code, codeVerifier, state)`.
+
+```ts
+const client = createGitHubClient(config);
+const authorizationURL = await client.createAuthorizationURL(state, codeVerifier, scopes);
+const tokens = await client.validateAuthorizationCode(code, codeVerifier, state);
+```
+
+Remove `arctic` from the application's dependencies after upgrading.
+
+## 1.0 → 1.1: plugins
 
 Version 1.1 adds **Otok plugins** while keeping the composition API from 1.0.
 

@@ -1,4 +1,4 @@
-import { generateCodeVerifier, generateState } from "arctic";
+import { generateRandomCodeVerifier, generateRandomState } from "oauth4webapi";
 import type { Context } from "hono";
 import type { Hono } from "hono";
 import { deleteCookie, getCookie, setCookie } from "hono/cookie";
@@ -98,26 +98,24 @@ export function createOAuthFlow<TUser>(options: OAuthFlowOptions<TUser>): OAuthF
       if (providerError) return fail(c, "provider_error");
 
       try {
-        const state = generateState();
+        const state = generateRandomState();
         const next = safeNextPath(c.req.query("next"), allowlist);
         const link = c.req.query("link") === "1";
-        let codeVerifier: string | null = null;
+        const codeVerifier = generateRandomCodeVerifier();
         let authorizationURL: URL;
 
         if (provider === "github") {
           const client = createGitHubClient(config);
-          authorizationURL = client.createAuthorizationURL(state, githubScopes(config));
+          authorizationURL = await client.createAuthorizationURL(state, codeVerifier, githubScopes(config));
         } else if (provider === "google") {
           const client = createGoogleClient(config);
-          codeVerifier = generateCodeVerifier();
-          authorizationURL = client.createAuthorizationURL(state, codeVerifier, googleScopes(config));
+          authorizationURL = await client.createAuthorizationURL(state, codeVerifier, googleScopes(config));
         } else if (provider === "microsoft") {
           const client = createMicrosoftClient(config as MicrosoftProviderConfig);
-          codeVerifier = generateCodeVerifier();
-          authorizationURL = client.createAuthorizationURL(state, codeVerifier, microsoftScopes(config));
+          authorizationURL = await client.createAuthorizationURL(state, codeVerifier, microsoftScopes(config));
         } else if (provider === "gitlab") {
           const client = createGitLabClient(config as GitLabProviderConfig);
-          authorizationURL = client.createAuthorizationURL(state, gitlabScopes(config));
+          authorizationURL = await client.createAuthorizationURL(state, codeVerifier, gitlabScopes(config));
         } else {
           return fail(c, "provider_unavailable");
         }
@@ -173,26 +171,26 @@ export function createOAuthFlow<TUser>(options: OAuthFlowOptions<TUser>): OAuthF
         let accessToken: string;
         let refreshToken: string | null = null;
 
+        if (!payload.codeVerifier) return fail(c, "pkce_error");
+
         if (provider === "github") {
           const client = createGitHubClient(config);
-          const tokens = await client.validateAuthorizationCode(code);
+          const tokens = await client.validateAuthorizationCode(code, payload.codeVerifier, returnedState);
           accessToken = tokens.accessToken();
           refreshToken = tokens.hasRefreshToken() ? tokens.refreshToken() : null;
         } else if (provider === "google") {
-          if (!payload.codeVerifier) return fail(c, "pkce_error");
           const client = createGoogleClient(config);
-          const tokens = await client.validateAuthorizationCode(code, payload.codeVerifier);
+          const tokens = await client.validateAuthorizationCode(code, payload.codeVerifier, returnedState);
           accessToken = tokens.accessToken();
           refreshToken = tokens.hasRefreshToken() ? tokens.refreshToken() : null;
         } else if (provider === "microsoft") {
-          if (!payload.codeVerifier) return fail(c, "pkce_error");
           const client = createMicrosoftClient(config as MicrosoftProviderConfig);
-          const tokens = await client.validateAuthorizationCode(code, payload.codeVerifier);
+          const tokens = await client.validateAuthorizationCode(code, payload.codeVerifier, returnedState);
           accessToken = tokens.accessToken();
           refreshToken = tokens.hasRefreshToken() ? tokens.refreshToken() : null;
         } else if (provider === "gitlab") {
           const client = createGitLabClient(config as GitLabProviderConfig);
-          const tokens = await client.validateAuthorizationCode(code);
+          const tokens = await client.validateAuthorizationCode(code, payload.codeVerifier, returnedState);
           accessToken = tokens.accessToken();
           refreshToken = tokens.hasRefreshToken() ? tokens.refreshToken() : null;
         } else {

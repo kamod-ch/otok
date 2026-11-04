@@ -6,47 +6,6 @@ import { sealOAuthState } from "./state.js";
 
 const secret = "test-oauth-secret-at-least-32-chars!!";
 
-const githubTokens = {
-  accessToken: () => "gh-access-token",
-  hasRefreshToken: () => false,
-  refreshToken: () => null,
-};
-
-const googleTokens = {
-  accessToken: () => "google-access-token",
-  hasRefreshToken: () => false,
-  refreshToken: () => null,
-};
-
-vi.mock("arctic", () => {
-  class GitHub {
-    createAuthorizationURL(state: string, scopes: string[]) {
-      return new URL(`https://github.com/login/oauth/authorize?state=${state}&scope=${scopes.join("+")}`);
-    }
-    async validateAuthorizationCode(_code: string) {
-      return githubTokens;
-    }
-  }
-
-  class Google {
-    createAuthorizationURL(state: string, codeVerifier: string, scopes: string[]) {
-      return new URL(
-        `https://accounts.google.com/o/oauth2/v2/auth?state=${state}&code_challenge=${codeVerifier}&scope=${scopes.join("+")}`,
-      );
-    }
-    async validateAuthorizationCode(_code: string, _codeVerifier: string) {
-      return googleTokens;
-    }
-  }
-
-  return {
-    GitHub,
-    Google,
-    generateState: () => "fixed-state",
-    generateCodeVerifier: () => "fixed-verifier",
-  };
-});
-
 afterEach(() => {
   vi.unstubAllGlobals();
   vi.restoreAllMocks();
@@ -101,8 +60,11 @@ describe("createOAuthFlow", () => {
 
     const response = await app.request("http://localhost/auth/github?next=/studio");
     expect(response.status).toBe(302);
-    expect(response.headers.get("location")).toContain("github.com/login/oauth/authorize");
-    expect(response.headers.get("location")).toContain("state=fixed-state");
+    const location = new URL(response.headers.get("location") ?? "");
+    expect(location.origin + location.pathname).toBe("https://github.com/login/oauth/authorize");
+    expect(location.searchParams.get("state")).toBeTruthy();
+    expect(location.searchParams.get("code_challenge_method")).toBe("S256");
+    expect(location.searchParams.get("code_challenge")).toBeTruthy();
 
     const setCookie = response.headers.get("set-cookie") ?? "";
     expect(setCookie).toContain("otok_oauth_state=");
@@ -115,23 +77,25 @@ describe("createOAuthFlow", () => {
 
     vi.stubGlobal(
       "fetch",
-      vi.fn(async (url: string) => {
-        if (url.includes("api.github.com/user/emails")) {
-          return {
-            ok: true,
-            json: async () => [{ email: "dev@example.com", primary: true, verified: true }],
-          };
+      vi.fn(async (input: string | URL | Request) => {
+        const url = typeof input === "string" ? input : input instanceof URL ? input.href : input.url;
+        if (url.includes("github.com/login/oauth/access_token")) {
+          return Response.json({
+            access_token: "gh-access-token",
+            token_type: "bearer",
+            id_token: "unused.invalid.jwt",
+          });
         }
-        return {
-          ok: true,
-          json: async () => ({
-            id: 7,
-            login: "dev",
-            name: "Dev",
-            email: null,
-            avatar_url: null,
-          }),
-        };
+        if (url.includes("api.github.com/user/emails")) {
+          return Response.json([{ email: "dev@example.com", primary: true, verified: true }]);
+        }
+        return Response.json({
+          id: 7,
+          login: "dev",
+          name: "Dev",
+          email: null,
+          avatar_url: null,
+        });
       }),
     );
 
@@ -139,7 +103,7 @@ describe("createOAuthFlow", () => {
       {
         provider: "github",
         state: "fixed-state",
-        codeVerifier: null,
+        codeVerifier: "fixed-verifier",
         next: "/studio",
         issuedAt: Date.now(),
       },

@@ -1,15 +1,15 @@
 # @kamod-ch/otok-oauth
 
-OAuth login helpers (GitHub, Google) for [Otok](https://github.com/kamod-ch/otok) apps.
+OAuth login helpers (GitHub, Google, Microsoft Entra ID, and GitLab) for [Otok](https://github.com/kamod-ch/otok) apps.
 
 Ships as an **Otok plugin** (`oauth()`) and as **`createOAuthFlow`** for manual wiring. Sessions come from `@kamod-ch/otok-auth`.
 
-See [MIGRATION.md](./MIGRATION.md) when upgrading from 1.0.
+See [MIGRATION.md](./MIGRATION.md) when upgrading between major versions.
 
 ## Install
 
 ```bash
-pnpm add @kamod-ch/otok-oauth @kamod-ch/otok-auth arctic hono @kamod-ch/otok
+pnpm add @kamod-ch/otok-oauth @kamod-ch/otok-auth hono @kamod-ch/otok
 ```
 
 ## Plugin (recommended)
@@ -135,13 +135,15 @@ const adapter: OAuthAdapter<User> = {
 
 ## Exports
 
-| Subpath                                 | Purpose                                   |
-| --------------------------------------- | ----------------------------------------- |
-| `@kamod-ch/otok-oauth`                  | `createOAuthFlow`, errors, `OAuthProfile` |
-| `@kamod-ch/otok-oauth/adapter`          | `OAuthAdapter`, `OAuthProfile`            |
-| `@kamod-ch/otok-oauth/providers/github` | GitHub client helpers                     |
-| `@kamod-ch/otok-oauth/providers/google` | Google client helpers                     |
-| `@kamod-ch/otok-oauth/state`            | Signed OAuth state cookie helpers         |
+| Subpath                                    | Purpose                                   |
+| ------------------------------------------ | ----------------------------------------- |
+| `@kamod-ch/otok-oauth`                     | `createOAuthFlow`, errors, `OAuthProfile` |
+| `@kamod-ch/otok-oauth/adapter`             | `OAuthAdapter`, `OAuthProfile`            |
+| `@kamod-ch/otok-oauth/providers/github`    | GitHub client helpers                     |
+| `@kamod-ch/otok-oauth/providers/google`    | Google client helpers                     |
+| `@kamod-ch/otok-oauth/providers/microsoft` | Microsoft Entra ID client helpers         |
+| `@kamod-ch/otok-oauth/providers/gitlab`    | GitLab client helpers                     |
+| `@kamod-ch/otok-oauth/state`               | Signed OAuth state cookie helpers         |
 
 ## Env vars (app)
 
@@ -157,7 +159,8 @@ GOOGLE_REDIRECT_URI=         # e.g. http://localhost:3000/auth/google/callback
 
 ## Design notes
 
-- Uses [Arctic](https://arcticjs.dev) for provider clients (GitHub authorization code; Google with PKCE).
+- Uses [`oauth4webapi`](https://github.com/panva/oauth4webapi) for standards-based OAuth requests and response validation.
+- Every provider uses Authorization Code Flow with S256 PKCE.
 - State and PKCE verifier are stored in a short-lived signed httpOnly cookie.
 - `?next=` is open-redirect safe (same-origin relative paths only).
 - Account linking, refresh-token storage, and additional providers are out of scope for v1.

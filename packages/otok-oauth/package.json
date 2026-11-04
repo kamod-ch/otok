@@ -59,11 +59,13 @@
     "typecheck": "tsc -p tsconfig.json --noEmit",
     "test": "vitest run"
   },
+  "dependencies": {
+    "oauth4webapi": "^3.8.8"
+  },
   "devDependencies": {
     "@kamod-ch/otok": "workspace:*",
     "@kamod-ch/otok-auth": "workspace:*",
     "@types/node": "^26.6.6",
-    "arctic": "^3.7.0",
     "hono": "^4.13.16",
     "typescript": "~7.0.2",
     "vitest": "^5.1.0"
@@ -71,7 +73,6 @@
   "peerDependencies": {
     "@kamod-ch/otok": ">=2.1.0",
     "@kamod-ch/otok-auth": ">=2.1.0",
-    "arctic": ">=3.0.0",
     "hono": ">=4"
   },
   "peerDependenciesMeta": {
