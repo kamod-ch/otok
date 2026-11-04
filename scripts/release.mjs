@@ -115,9 +115,13 @@ const config = await loadConfig();
 const packageDirs = resolvePackageDirs(config);
 const tagPackage = config.tagPackage ?? packageDirs[0];
 const qaCommand = config.qaCommand ?? "pnpm release:check";
-const commitMessage = config.commitMessage ?? ((version) => `chore: release v${version}`);
+const commitMessage =
+  config.commitMessage ?? ((version) => `chore: release v${version}`);
 const syncLockfile = config.syncLockfile === true;
-const syncLockfileCommands = config.syncLockfileCommands ?? ["pnpm syncpack:fix", "pnpm install --lockfile-only"];
+const syncLockfileCommands = config.syncLockfileCommands ?? [
+  "pnpm syncpack:fix",
+  "pnpm install --lockfile-only",
+];
 
 if (!allowed.has(bump)) {
   fail(`invalid release type: ${bump}. Use one of: patch, minor, major`);
@@ -136,7 +140,9 @@ if (status) {
 const tagPkg = readPackageJson(tagPackage);
 const packageName = tagPkg.name;
 const currentVersion = tagPkg.version;
-console.log(`[release] Preparing ${packageName}@${currentVersion}${dryRun ? " (dry run)" : ""}`);
+console.log(
+  `[release] Preparing ${packageName}@${currentVersion}${dryRun ? " (dry run)" : ""}`,
+);
 
 run("pnpm install --frozen-lockfile");
 run(qaCommand);
@@ -166,7 +172,9 @@ if (syncLockfile) {
 }
 
 const gitPaths = config.gitPaths ?? [
-  ...packageDirs.map((dir) => (dir === "." ? "package.json" : path.posix.join(dir, "package.json"))),
+  ...packageDirs.map((dir) =>
+    dir === "." ? "package.json" : path.posix.join(dir, "package.json"),
+  ),
   ...(existsSync(path.join(repoRoot, "pnpm-lock.yaml")) ? ["pnpm-lock.yaml"] : []),
 ];
 
@@ -178,5 +186,7 @@ run("git push origin main");
 run(`git push origin v${newVersion}`);
 
 console.log("\n[release] Release tag pushed successfully.");
-console.log("[release] GitHub Actions will publish to npm with provenance (see .github/workflows/publish.yml).");
+console.log(
+  "[release] GitHub Actions will publish to npm with provenance (see .github/workflows/publish.yml).",
+);
 console.log(`[release] npm: https://www.npmjs.com/package/${packageName}/v/${newVersion}`);
