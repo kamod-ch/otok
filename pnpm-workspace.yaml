@@ -3,6 +3,11 @@ packages:
   - "apps/*"
   - "examples/*"
 
+peerDependencyRules:
+  allowedVersions:
+    "@kamod-ch/hooks>preact": "11"
+    "@kamod-ch/signals>preact": "11"
+
 allowBuilds:
   better-sqlite3: true
   esbuild: false

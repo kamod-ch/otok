@@ -12,9 +12,9 @@
     "@hono/node-server": "^2.1.6",
     "@kamod-ch/otok": "workspace:*",
     "@kamod-ch/otok-vite-plugin": "workspace:*",
-    "hono": "^4.13.16",
+    "hono": "^4.13.17",
     "otok-cli": "workspace:*",
-    "preact": "^11.1.1"
+    "preact": "^11.2.0"
   },
   "devDependencies": {
     "@hono/vite-dev-server": "^0.26.1",

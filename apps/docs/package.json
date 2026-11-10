@@ -18,7 +18,7 @@
   "devDependencies": {
     "@kamod-ch/brand": "^0.4.0",
     "@kamod-ch/preactpress": "^3.3.0",
-    "preact": "^11.1.1",
+    "preact": "^11.2.0",
     "typescript": "^7.0.2"
   }
 }

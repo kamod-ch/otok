@@ -10,13 +10,13 @@
   "dependencies": {
     "@kamod-ch/otok": "workspace:*",
     "@kamod-ch/otok-devtools": "workspace:*",
-    "preact": "^11.1.1"
+    "preact": "^11.2.0"
   },
   "devDependencies": {
     "@hono/vite-dev-server": "^0.26.1",
     "@kamod-ch/otok-vite-plugin": "workspace:*",
     "@types/node": "^26.6.6",
-    "hono": "^4.13.16",
+    "hono": "^4.13.17",
     "typescript": "~7.0.2",
     "vite": "^8.3.5"
   }
