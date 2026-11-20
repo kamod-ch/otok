@@ -1,5 +1,11 @@
 # @kamod-ch/otok-oauth
 
+## 3.0.0
+
+### Major Changes
+
+- 2097aee: Replace the deprecated Arctic provider clients with oauth4webapi and enable S256 PKCE for every supported OAuth provider. The high-level plugin and flow APIs remain unchanged; low-level provider client helpers are now asynchronous and require PKCE inputs.
+
 ## 2.1.0
 
 ### Minor Changes
