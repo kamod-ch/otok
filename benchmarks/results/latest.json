@@ -1,13 +1,13 @@
 {
-  "runId": "a0f64590-95c9-4bc8-b0b3-dc74c7f9ddfc",
+  "runId": "1c8eb09d-4df4-4682-89d5-e20a36589320",
   "profile": "production",
-  "generatedAt": "2026-10-11T22:03:11.347Z",
-  "startedAt": "2026-10-11T22:02:44.528Z",
-  "gitSha": "f917210e29fc44395c8c80cefa41ae87bde219f1",
+  "generatedAt": "2026-11-17T11:12:08.237Z",
+  "startedAt": "2026-11-17T11:11:43.355Z",
+  "gitSha": "f1c49f48c70dd394495ba46c76e1ca3ed40f4f8a",
   "dirty": true,
-  "lockfileSha256": "92bbc913dd18828f007ebdac1485a860e07a763f22e4a7fd79f081eeac12a8ec",
-  "nodeVersion": "v24.18.0",
-  "pnpmVersion": "pnpm/12.5.1 npm/? node/? linux x64",
+  "lockfileSha256": "3f9aa94888798ddb05266259a4806491b6c25d1a1eae762ee580e91893162324",
+  "nodeVersion": "v22.23.5",
+  "pnpmVersion": "pnpm/12.21.0 npm/? node/? linux x64",
   "os": {
     "platform": "linux",
     "arch": "x64",
@@ -27,24 +27,24 @@
     "throughputConcurrency": 10,
     "quantile": "nearest-rank p50/p95"
   },
-  "artifactHash": "80ab4605d16a1b65",
+  "artifactHash": "807b6554cb2098ba",
   "metrics": {
-    "productionBuildMs": 2084,
-    "buildPeakRssMb": 617.57,
-    "serverPeakRssMb": 329.52,
-    "clientJsGzipKiB": 59.619140625
+    "productionBuildMs": 2182,
+    "buildPeakRssMb": 813.27,
+    "serverPeakRssMb": 206.34,
+    "clientJsGzipKiB": 67.419921875
   },
   "scenarios": {
     "home": {
-      "ssrLatencyP50Ms": 5.21,
-      "ssrLatencyP95Ms": 29.69,
-      "ssrThroughputRps": 372.29,
+      "ssrLatencyP50Ms": 2.53,
+      "ssrLatencyP95Ms": 21.29,
+      "ssrThroughputRps": 419.23,
       "requestErrors": 0
     },
     "about": {
-      "ssrLatencyP50Ms": 2.23,
-      "ssrLatencyP95Ms": 22.81,
-      "ssrThroughputRps": 1302.85,
+      "ssrLatencyP50Ms": 0.83,
+      "ssrLatencyP95Ms": 19.75,
+      "ssrThroughputRps": 1679.95,
       "requestErrors": 0
     }
   },

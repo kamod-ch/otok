@@ -18,7 +18,7 @@
     "db:status": "otok db:status"
   },
   "dependencies": {
-    "@hono/node-server": "^2.1.6",
+    "@hono/node-server": "^2.1.9",
     "@kamod-ch/otok": "^2.1.0",
     "@kamod-ch/otok-auth": "^2.1.0",
     "@kamod-ch/otok-i18n": "^2.1.0",
@@ -27,11 +27,11 @@
     "@kamod-ch/otok-security": "^2.1.0",
     "@kamod-ch/otok-seo": "^2.1.0",
     "@kamod-ch/otok-validation": "^2.1.0",
-    "@kamod-ch/ui": "^2.1.0",
+    "@kamod-ch/ui": "^2.2.0",
     "@preact/signals": "^2.11.4",
-    "better-sqlite3": "^12.6.2",
-    "hono": "^4.13.17",
-    "kysely": "^0.29.8",
+    "better-sqlite3": "^12.11.1",
+    "hono": "^4.13.19",
+    "kysely": "^0.29.9",
     "preact": "^11.2.0",
     "zod": "^4.6.7"
   },
@@ -39,13 +39,13 @@
     "@hono/vite-dev-server": "^0.26.1",
     "@kamod-ch/otok-vite-plugin": "^2.1.0",
     "@preact/preset-vite": "^2.10.6",
-    "@tailwindcss/vite": "^4.3.4",
+    "@tailwindcss/vite": "^4.3.5",
     "@types/better-sqlite3": "^9.6.0",
     "@types/node": "^26.6.6",
     "otok-cli": "^2.1.0",
-    "tailwindcss": "^4.3.4",
+    "tailwindcss": "^4.3.5",
     "typescript": "~7.0.2",
-    "vite": "^8.3.5",
+    "vite": "^8.3.8",
     "vitest": "^5.1.0"
   }
 }

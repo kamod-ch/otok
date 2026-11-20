@@ -53,7 +53,7 @@
     "test": "pnpm --filter @kamod-ch/otok-kit-crm build && pnpm --filter @kamod-ch/otok-kit-saas build && pnpm --filter @kamod-ch/otok-kit-admin build && pnpm build && node --test ./test/create-otok.test.mjs ./test/preset-matrix.test.mjs ./test/preset-sync.test.mjs"
   },
   "dependencies": {
-    "@clack/prompts": "^1.8.1",
+    "@clack/prompts": "^1.9.0",
     "@kamod-ch/otok-config": "workspace:*"
   },
   "devDependencies": {

@@ -44,12 +44,12 @@
     "test": "vitest run"
   },
   "devDependencies": {
-    "@aws-sdk/client-s3": "^3.1161.0",
-    "@aws-sdk/s3-request-presigner": "^3.1161.0",
+    "@aws-sdk/client-s3": "^3.1170.0",
+    "@aws-sdk/s3-request-presigner": "^3.1170.0",
     "@kamod-ch/otok": "workspace:*",
     "@kamod-ch/otok-test": "workspace:*",
     "@types/node": "^26.6.6",
-    "hono": "^4.13.17",
+    "hono": "^4.13.19",
     "typescript": "~7.0.2",
     "vitest": "^5.1.0"
   },

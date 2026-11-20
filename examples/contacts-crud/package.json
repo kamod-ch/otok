@@ -14,9 +14,9 @@
     "@kamod-ch/otok": "workspace:*",
     "@kamod-ch/otok-kysely": "workspace:*",
     "@kamod-ch/otok-validation": "workspace:*",
-    "better-sqlite3": "^12.6.2",
-    "hono": "^4.13.17",
-    "kysely": "^0.29.8",
+    "better-sqlite3": "^12.11.1",
+    "hono": "^4.13.19",
+    "kysely": "^0.29.9",
     "preact": "^11.2.0",
     "zod": "^4.6.7"
   },
@@ -24,6 +24,6 @@
     "@kamod-ch/otok-vite-plugin": "workspace:*",
     "otok-cli": "workspace:*",
     "typescript": "~7.0.2",
-    "vite": "^8.3.5"
+    "vite": "^8.3.8"
   }
 }

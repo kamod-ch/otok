@@ -14,26 +14,26 @@
     "test:e2e": "playwright test"
   },
   "dependencies": {
-    "@hono/node-server": "^2.1.6",
+    "@hono/node-server": "^2.1.9",
     "@kamod-ch/otok": "workspace:*",
     "@kamod-ch/otok-kamod": "workspace:*",
     "@kamod-ch/otok-plugin-hello": "workspace:*",
     "@kamod-ch/themes": "^0.2.2",
-    "@kamod-ch/ui": "^2.1.0",
+    "@kamod-ch/ui": "^2.2.0",
     "@preact/signals": "^2.11.4",
-    "hono": "^4.13.17",
+    "hono": "^4.13.19",
     "preact": "^11.2.0"
   },
   "devDependencies": {
     "@hono/vite-dev-server": "^0.26.1",
     "@kamod-ch/otok-vite-plugin": "workspace:*",
-    "@playwright/test": "^1.64.1",
+    "@playwright/test": "^1.65.1",
     "@preact/preset-vite": "^2.10.6",
-    "@tailwindcss/vite": "^4.3.4",
+    "@tailwindcss/vite": "^4.3.5",
     "@types/node": "^26.6.6",
-    "tailwindcss": "^4.3.4",
+    "tailwindcss": "^4.3.5",
     "typescript": "~7.0.2",
-    "vite": "^8.3.5",
+    "vite": "^8.3.8",
     "vitest": "^5.1.0"
   }
 }

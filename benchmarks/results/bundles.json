@@ -1,111 +1,117 @@
 {
-  "generatedAt": "2026-10-11T22:03:11.472Z",
-  "runId": "a0f64590-95c9-4bc8-b0b3-dc74c7f9ddfc",
-  "artifactHash": "80ab4605d16a1b65",
+  "generatedAt": "2026-11-17T11:12:08.323Z",
+  "runId": "1c8eb09d-4df4-4682-89d5-e20a36589320",
+  "artifactHash": "807b6554cb2098ba",
   "project": "apps/playground",
   "unit": "kibibytes (1024 bytes) for KiB fields",
   "entries": {
-    "client/assets/chat-card-C0JmE-TE.js": {
-      "rawBytes": 1451,
-      "gzipBytes": 783
+    "client/assets/chat-card-DTniYNIw.js": {
+      "rawBytes": 1441,
+      "gzipBytes": 780
     },
-    "client/assets/chunk-4BJJOHZT-CcgE9Ixk.js": {
-      "rawBytes": 10067,
-      "gzipBytes": 4066
+    "client/assets/chunk-74UY733C-ZjJ-aADN.js": {
+      "rawBytes": 940,
+      "gzipBytes": 511
     },
-    "client/assets/chunk-5FBD2NTR-rfwHJ_QQ.js": {
-      "rawBytes": 30159,
-      "gzipBytes": 9522
+    "client/assets/chunk-AQ6FLGWX-0Jhl9RDc.js": {
+      "rawBytes": 7665,
+      "gzipBytes": 3012
     },
-    "client/assets/chunk-67J4KBOW-C1-C9TjT.js": {
-      "rawBytes": 1621,
-      "gzipBytes": 695
+    "client/assets/chunk-KX6KJ5KR-d8GakzJi.js": {
+      "rawBytes": 817,
+      "gzipBytes": 424
     },
-    "client/assets/chunk-6RASPU5N-CzKWnGGG.js": {
-      "rawBytes": 882,
-      "gzipBytes": 485
+    "client/assets/chunk-MWZEG6OW-CjX74pT0.js": {
+      "rawBytes": 3175,
+      "gzipBytes": 1374
     },
-    "client/assets/chunk-MJG6UKD4-MsQzpiMv.js": {
-      "rawBytes": 1473,
-      "gzipBytes": 705
+    "client/assets/chunk-NGMK5UIN-DFKZDaa1.js": {
+      "rawBytes": 2261,
+      "gzipBytes": 1001
     },
-    "client/assets/chunk-PGOCR4LG-CVPXdoXc.js": {
-      "rawBytes": 2311,
-      "gzipBytes": 1030
+    "client/assets/chunk-Q44CDZMQ-BPDadAvX.js": {
+      "rawBytes": 4668,
+      "gzipBytes": 1886
     },
-    "client/assets/chunk-PPYJQNE5-DMoxCir2.js": {
-      "rawBytes": 2187,
-      "gzipBytes": 1009
+    "client/assets/chunk-QL72NVVJ-C5Kt-t4R.js": {
+      "rawBytes": 4572,
+      "gzipBytes": 1950
     },
-    "client/assets/cleanup-probe-BhC0O7JB.js": {
+    "client/assets/chunk-VCGZMZIT-1FHO95S6.js": {
+      "rawBytes": 1609,
+      "gzipBytes": 701
+    },
+    "client/assets/cleanup-probe-DHDlytuC.js": {
       "rawBytes": 541,
-      "gzipBytes": 331
+      "gzipBytes": 330
     },
-    "client/assets/client--DYTK7jx.js": {
-      "rawBytes": 45523,
-      "gzipBytes": 16078
+    "client/assets/client-BOQIrzYF.js": {
+      "rawBytes": 46032,
+      "gzipBytes": 16283
     },
-    "client/assets/counter-EO24PYwh.js": {
+    "client/assets/counter-DgJsU15_.js": {
       "rawBytes": 363,
-      "gzipBytes": 283
+      "gzipBytes": 281
     },
-    "client/assets/crm-activity-panel-CxoVIIrD.js": {
+    "client/assets/crm-activity-panel-Dv92wAb5.js": {
       "rawBytes": 1431,
-      "gzipBytes": 774
+      "gzipBytes": 772
     },
-    "client/assets/crm-companies-table-8yDrJtec.js": {
+    "client/assets/crm-companies-table-Bcmv1f0X.js": {
       "rawBytes": 2003,
-      "gzipBytes": 859
+      "gzipBytes": 860
     },
-    "client/assets/crm-company-editor-CxXKzs_X.js": {
+    "client/assets/crm-company-editor-BWEnlShT.js": {
       "rawBytes": 1733,
-      "gzipBytes": 901
+      "gzipBytes": 900
     },
-    "client/assets/dashboard-toolbar-CGnH2otI.js": {
-      "rawBytes": 5581,
-      "gzipBytes": 2252
+    "client/assets/dashboard-toolbar-C4376-B8.js": {
+      "rawBytes": 5649,
+      "gzipBytes": 2269
     },
-    "client/assets/demo-dialog-_6z1YBmY.js": {
-      "rawBytes": 880,
-      "gzipBytes": 474
+    "client/assets/demo-dialog-pY2rmb2h.js": {
+      "rawBytes": 922,
+      "gzipBytes": 493
     },
-    "client/assets/dist-BHqbPkih.js": {
-      "rawBytes": 39941,
-      "gzipBytes": 12633
+    "client/assets/dist-DyLutTKe.js": {
+      "rawBytes": 71861,
+      "gzipBytes": 25283
     },
-    "client/assets/payment-form-V_xuedk1.js": {
-      "rawBytes": 4238,
-      "gzipBytes": 1671
+    "client/assets/payment-form-v5CmmrQy.js": {
+      "rawBytes": 4542,
+      "gzipBytes": 1765
     },
-    "client/assets/signals.module-P1m5H5gj.js": {
-      "rawBytes": 7770,
-      "gzipBytes": 2967
+    "client/assets/signals.module-CJAYjP-X.js": {
+      "rawBytes": 7969,
+      "gzipBytes": 3034
     },
-    "client/assets/strategy-lab-BcmL8nAf.js": {
+    "client/assets/strategy-lab-C6XQN-dc.js": {
       "rawBytes": 390,
-      "gzipBytes": 289
+      "gzipBytes": 288
     },
-    "client/assets/team-members-BAy6oLNc.js": {
-      "rawBytes": 7951,
-      "gzipBytes": 3000
+    "client/assets/team-members-DCOBgl__.js": {
+      "rawBytes": 11745,
+      "gzipBytes": 4595
     },
-    "client/assets/theme-island-ChJbD6f8.js": {
-      "rawBytes": 297,
-      "gzipBytes": 243
+    "client/assets/theme-island-9wLkoJpr.js": {
+      "rawBytes": 302,
+      "gzipBytes": 246
     },
     "server/server.js": {
-      "rawBytes": 402389,
-      "gzipBytes": 84988
+      "rawBytes": 192357,
+      "gzipBytes": 48152
     }
   },
   "aggregates": {
-    "clientJsGzipKiB": 59.619140625
+    "clientJsGzipKiB": 67.419921875
   },
   "routes": {
     "home": {
-      "initialJsGzipKiB": 15.701171875,
+      "initialJsGzipKiB": 15.9013671875,
       "assetCount": 1,
-      "executableUrls": ["/assets/client--DYTK7jx.js"]
+      "executableUrls": [
+        "/assets/client-BOQIrzYF.js"
+      ]
     },
     "about": {
       "initialJsGzipKiB": 0,

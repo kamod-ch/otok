@@ -12,8 +12,8 @@
   "dependencies": {
     "@kamod-ch/otok": "workspace:*",
     "@kamod-ch/otok-forum": "workspace:*",
-    "better-sqlite3": "^12.6.2",
-    "kysely": "^0.29.8",
+    "better-sqlite3": "^12.11.1",
+    "kysely": "^0.29.9",
     "otok-adapter-node": "workspace:*",
     "preact": "^11.2.0"
   },
@@ -22,6 +22,6 @@
     "@types/better-sqlite3": "^9.6.0",
     "@types/node": "^26.6.6",
     "typescript": "~7.0.2",
-    "vite": "^8.3.5"
+    "vite": "^8.3.8"
   }
 }

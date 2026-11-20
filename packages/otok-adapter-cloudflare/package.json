@@ -39,7 +39,7 @@
     "@types/node": "^26.6.6",
     "otok-adapter-contract": "workspace:*",
     "typescript": "~7.0.2",
-    "vite": "^8.3.5",
+    "vite": "^8.3.8",
     "vitest": "^5.1.0"
   },
   "peerDependencies": {

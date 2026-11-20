@@ -97,7 +97,7 @@ function createTemplatePackageJson() {
   delete pkg.scripts["test:e2e"];
   pkg.scripts.check = "pnpm typecheck && pnpm build";
 
-  pkg.dependencies["@kamod-ch/ui"] = "^2.1.0";
+  pkg.dependencies["@kamod-ch/ui"] = "^2.2.0";
   pkg.dependencies["@kamod-ch/otok"] = `^${runtimePkg.version}`;
   delete pkg.dependencies.otok;
   delete pkg.dependencies["@kamod-ch/otok-plugin-hello"];
