@@ -3,7 +3,7 @@ name: Weekly Maintenance
 on:
   schedule:
     - cron: "0 9 * * 1" # Jeden Montag um 09:00 UTC
-  workflow_dispatch:      # Ermöglicht manuellen Test-Start per Klick
+  workflow_dispatch: # Ermöglicht manuellen Test-Start per Klick
 
 jobs:
   weekly:
