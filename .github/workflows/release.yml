@@ -7,6 +7,10 @@ on:
 
 jobs:
   release:
+    permissions:
+      contents: write
+      pull-requests: write
+      id-token: write
     uses: kamod-ch/.github/.github/workflows/release.yml@main
     secrets:
       BOT_TOKEN: ${{ secrets.BOT_TOKEN }}
