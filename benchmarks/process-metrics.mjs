@@ -17,11 +17,17 @@ export function readProcessRssKb(pid) {
 }
 
 export function readProcessVmHwmKb(pid) {
-  const statusPath = `/proc/${pid}/status`;
-  if (!existsSync(statusPath)) return 0;
-  const status = readFileSync(statusPath, "utf8");
-  const match = /VmHWM:\s+(\d+)/.exec(status);
-  return match ? Number(match[1]) : 0;
+  try {
+    const status = readFileSync(`/proc/${pid}/status`, "utf8");
+    const match = status.match(/^VmHWM:\s+(\d+)\s+kB$/m);
+    return match ? Number(match[1]) : 0;
+  } catch (error) {
+    // Kindprozess wurde zwischen PID-Ermittlung und Auslesen bereits beendet
+    if (error && (error.code === "ENOENT" || error.code === "ESRCH")) {
+      return 0;
+    }
+    throw error;
+  }
 }
 
 export function collectProcessTreePids(rootPid) {
