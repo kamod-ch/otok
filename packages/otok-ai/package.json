@@ -89,7 +89,7 @@
   },
   "peerDependencies": {
     "@hono/mcp": "^0.3.4",
-    "@kamod-ch/otok": ">=2.1.0",
+    "@kamod-ch/otok": ">=2.3.1",
     "@kamod-ch/otok-workflows": ">=2.1.0",
     "@modelcontextprotocol/sdk": "^1.29.0",
     "hono": ">=4",

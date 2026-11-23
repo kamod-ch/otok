@@ -82,7 +82,7 @@
     "vitest": "^5.1.1"
   },
   "peerDependencies": {
-    "@kamod-ch/otok": ">=2.1.0",
+    "@kamod-ch/otok": ">=2.3.1",
     "hono": ">=4",
     "kysely": ">=0.27.0"
   },

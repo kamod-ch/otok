@@ -1,5 +1,14 @@
 # @kamod-ch/otok-oauth
 
+## 3.0.1
+
+### Patch Changes
+
+- e3d72da: Update runtime dependencies (hono, oauth4webapi and related packages).
+- Updated dependencies [e3d72da]
+  - @kamod-ch/otok@2.3.1
+  - @kamod-ch/otok-auth@2.1.0
+
 ## 3.0.0
 
 ### Major Changes
