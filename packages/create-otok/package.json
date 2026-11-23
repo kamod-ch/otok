@@ -1,6 +1,6 @@
 {
   "name": "create-otok",
-  "version": "2.1.0",
+  "version": "2.3.1",
   "description": "Scaffold a new Otok app with presets, layers, and reproducible versions.",
   "homepage": "https://github.com/kamod-ch/otok/tree/main/packages/create-otok#readme",
   "bugs": {

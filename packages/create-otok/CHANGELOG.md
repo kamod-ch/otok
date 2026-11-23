@@ -1,5 +1,11 @@
 # create-otok
 
+## 2.3.1
+
+### Patch Changes
+
+- e3d72da: Update runtime dependencies (hono, oauth4webapi and related packages).
+
 ## 2.1.0
 
 ### Minor Changes
