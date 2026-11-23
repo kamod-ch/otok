@@ -52,7 +52,7 @@
     "@kamod-ch/otok-i18n": "workspace:*",
     "@kamod-ch/otok-test": "workspace:*",
     "@types/node": "^26.6.6",
-    "hono": "^4.13.19",
+    "hono": "^4.13.20",
     "preact": "^11.2.0",
     "typescript": "~7.0.2",
     "vitest": "^5.1.1"

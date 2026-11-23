@@ -9,10 +9,10 @@
     "typegen": "otok typegen"
   },
   "dependencies": {
-    "@hono/node-server": "^2.1.9",
+    "@hono/node-server": "^2.1.11",
     "@kamod-ch/otok": "workspace:*",
     "@kamod-ch/otok-vite-plugin": "workspace:*",
-    "hono": "^4.13.19",
+    "hono": "^4.13.20",
     "otok-cli": "workspace:*",
     "preact": "^11.2.0"
   },

@@ -10,7 +10,7 @@
   "dependencies": {
     "@kamod-ch/otok": "workspace:*",
     "@kamod-ch/otok-supabase": "workspace:*",
-    "hono": "^4.13.19",
+    "hono": "^4.13.20",
     "preact": "^11.2.0"
   },
   "devDependencies": {

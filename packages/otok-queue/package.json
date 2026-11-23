@@ -48,7 +48,7 @@
     "@kamod-ch/otok-test": "workspace:*",
     "@types/node": "^26.6.6",
     "@types/pg": "^8.23.1",
-    "hono": "^4.13.19",
+    "hono": "^4.13.20",
     "kysely": "^0.29.9",
     "pg": "^8.23.1",
     "typescript": "~7.0.2",

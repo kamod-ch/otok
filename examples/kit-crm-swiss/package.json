@@ -28,7 +28,7 @@
     "@kamod-ch/otok-validation": "workspace:*",
     "@kamod-ch/otok-workflows": "workspace:*",
     "@kamod-ch/ui": "^2.2.0",
-    "hono": "^4.13.19",
+    "hono": "^4.13.20",
     "kysely": "^0.29.9",
     "otok-adapter-node": "workspace:*",
     "pg": "^8.23.1",
