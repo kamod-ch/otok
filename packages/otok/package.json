@@ -69,11 +69,11 @@
   },
   "dependencies": {
     "@kamod-ch/otok-config": "workspace:*",
-    "hono": "^4.13.19",
+    "hono": "^4.13.20",
     "preact-render-to-string": "^6.8.3"
   },
   "devDependencies": {
-    "@hono/node-server": "^2.1.9",
+    "@hono/node-server": "^2.1.11",
     "@types/node": "^26.6.6",
     "jsdom": "^27.4.0",
     "kysely": "^0.29.9",

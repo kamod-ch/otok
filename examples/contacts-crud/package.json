@@ -15,7 +15,7 @@
     "@kamod-ch/otok-kysely": "workspace:*",
     "@kamod-ch/otok-validation": "workspace:*",
     "better-sqlite3": "^12.11.1",
-    "hono": "^4.13.19",
+    "hono": "^4.13.20",
     "kysely": "^0.29.9",
     "preact": "^11.2.0",
     "zod": "^4.6.7"

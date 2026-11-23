@@ -14,14 +14,14 @@
     "test:e2e": "playwright test"
   },
   "dependencies": {
-    "@hono/node-server": "^2.1.9",
+    "@hono/node-server": "^2.1.11",
     "@kamod-ch/otok": "workspace:*",
     "@kamod-ch/otok-kamod": "workspace:*",
     "@kamod-ch/otok-plugin-hello": "workspace:*",
     "@kamod-ch/themes": "^0.2.2",
     "@kamod-ch/ui": "^2.2.0",
     "@preact/signals": "^2.11.4",
-    "hono": "^4.13.19",
+    "hono": "^4.13.20",
     "preact": "^11.2.0"
   },
   "devDependencies": {

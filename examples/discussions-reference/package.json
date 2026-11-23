@@ -19,7 +19,7 @@
     "docker:down": "docker compose down"
   },
   "dependencies": {
-    "@hono/node-server": "^2.1.9",
+    "@hono/node-server": "^2.1.11",
     "@kamod-ch/icons": "^2.0.0",
     "@kamod-ch/otok": "workspace:*",
     "@kamod-ch/otok-auth": "workspace:*",
@@ -33,7 +33,7 @@
     "@kamod-ch/otok-validation": "workspace:*",
     "@kamod-ch/ui": "^2.2.0",
     "@preact/signals": "^2.11.4",
-    "hono": "^4.13.19",
+    "hono": "^4.13.20",
     "kysely": "^0.29.9",
     "otok-adapter-node": "workspace:*",
     "pg": "^8.23.1",
